@@ -10,6 +10,7 @@ const Header = () => {
   const navItems = [
     { label: 'Domov', href: '/' },
     { label: 'Obchod', href: '/shop' },
+    { label: 'Konfigurátor', href: '/configurator' },
     { label: 'O nás', href: '/about' },
     { label: 'FAQ', href: '/faq' },
     { label: 'Kontakt', href: '/contact' },
