@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Check, ShoppingCart, ChevronLeft, ChevronRight, Expand } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import saunaBarrel from "@/assets/sauna-barrel.jpg";
 import saunaCube from "@/assets/sauna-cube.jpg";
 import saunaTraditional from "@/assets/sauna-traditional.jpg";
@@ -46,16 +47,51 @@ const electricHeaters = [
 ];
 
 const woodTypes = [
-  { id: "spruce", name: "Smrek", price: 0 },
-  { id: "thermowood", name: "Thermowood", price: 890 },
-  { id: "cedar", name: "Červený céder", price: 1450 },
+  { id: "spruce", name: "Smrek", price: 0, image: saunaInterior },
+  { id: "thermowood", name: "Thermowood", price: 890, image: saunaBarrel },
+  { id: "cedar", name: "Červený céder", price: 1450, image: saunaTraditional },
+];
+
+const chimneys = [
+  { id: "none", name: "Bez komína", price: 0, image: saunaBarrel },
+  { id: "basic", name: "Základný komín", price: 180, image: saunaCube },
+  { id: "insulated", name: "Izolovaný komín", price: 320, image: saunaTraditional },
+  { id: "premium", name: "Premium nerez", price: 480, image: saunaInterior },
+];
+
+const doors = [
+  { id: "wood", name: "Drevené dvere", price: 0, image: saunaTraditional },
+  { id: "glass", name: "Sklenené dvere", price: 290, image: saunaCube },
+  { id: "panoramic", name: "Panoramatické", price: 450, image: saunaBarrel },
+  { id: "colored", name: "Tónované sklo", price: 380, image: saunaInterior },
+];
+
+const roofs = [
+  { id: "shingle", name: "Šindle", price: 0, image: saunaBarrel },
+  { id: "metal", name: "Plechová krytina", price: 350, image: saunaCube },
+  { id: "green", name: "Zelená strecha", price: 890, image: saunaTraditional },
+  { id: "flat", name: "Plochá strecha", price: 420, image: saunaInterior },
+];
+
+const windows = [
+  { id: "none", name: "Bez okna", price: 0, image: saunaInterior },
+  { id: "small", name: "Malé okno", price: 180, image: saunaBarrel },
+  { id: "medium", name: "Stredné okno", price: 280, image: saunaCube },
+  { id: "panoramic", name: "Panoramatické", price: 520, image: saunaTraditional },
+];
+
+const ledLights = [
+  { id: "none", name: "Bez LED", price: 0, image: saunaInterior },
+  { id: "basic", name: "Základné LED", price: 190, image: saunaBarrel },
+  { id: "rgb", name: "RGB LED", price: 340, image: saunaCube },
+  { id: "fiber", name: "Hviezdne nebo", price: 680, image: saunaTraditional },
 ];
 
 const extras = [
   { id: "terrace", name: "Terasa", price: 680 },
-  { id: "window", name: "Panoramatické okno", price: 380 },
-  { id: "led", name: "LED osvetlenie", price: 290 },
   { id: "bench", name: "Vonkajšia lavica", price: 220 },
+  { id: "thermometer", name: "Teplomer a vlhkomer", price: 45 },
+  { id: "bucket", name: "Drevená nádoba", price: 65 },
 ];
 
 const Configurator = () => {
@@ -65,6 +101,11 @@ const Configurator = () => {
     heaterType: "wood",
     heater: "harvia-m3",
     wood: "spruce",
+    chimney: "basic",
+    door: "wood",
+    roof: "shingle",
+    window: "none",
+    led: "none",
     extras: [] as string[],
   });
 
@@ -72,11 +113,15 @@ const Configurator = () => {
 
   const selectedType = saunaTypes.find(t => t.id === config.type);
   const selectedSize = sizes.find(s => s.id === config.size);
-  const selectedHeaterType = heaterTypes.find(h => h.id === config.heaterType);
   const selectedHeater = config.heaterType === "wood" 
     ? woodHeaters.find(h => h.id === config.heater)
     : electricHeaters.find(h => h.id === config.heater);
   const selectedWood = woodTypes.find(w => w.id === config.wood);
+  const selectedChimney = chimneys.find(c => c.id === config.chimney);
+  const selectedDoor = doors.find(d => d.id === config.door);
+  const selectedRoof = roofs.find(r => r.id === config.roof);
+  const selectedWindow = windows.find(w => w.id === config.window);
+  const selectedLed = ledLights.find(l => l.id === config.led);
 
   const images = [selectedType?.image || saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
 
@@ -85,24 +130,34 @@ const Configurator = () => {
     price += selectedSize?.price || 0;
     price += selectedHeater?.price || 0;
     price += selectedWood?.price || 0;
+    price += selectedChimney?.price || 0;
+    price += selectedDoor?.price || 0;
+    price += selectedRoof?.price || 0;
+    price += selectedWindow?.price || 0;
+    price += selectedLed?.price || 0;
     config.extras.forEach(extraId => {
       const extra = extras.find(e => e.id === extraId);
       if (extra) price += extra.price;
     });
     return Math.round(price * 1.15);
-  }, [config, selectedType, selectedSize, selectedHeater, selectedWood]);
+  }, [config, selectedType, selectedSize, selectedHeater, selectedWood, selectedChimney, selectedDoor, selectedRoof, selectedWindow, selectedLed]);
 
   const totalPrice = useMemo(() => {
     let price = selectedType?.basePrice || 0;
     price += selectedSize?.price || 0;
     price += selectedHeater?.price || 0;
     price += selectedWood?.price || 0;
+    price += selectedChimney?.price || 0;
+    price += selectedDoor?.price || 0;
+    price += selectedRoof?.price || 0;
+    price += selectedWindow?.price || 0;
+    price += selectedLed?.price || 0;
     config.extras.forEach(extraId => {
       const extra = extras.find(e => e.id === extraId);
       if (extra) price += extra.price;
     });
     return price;
-  }, [config, selectedType, selectedSize, selectedHeater, selectedWood]);
+  }, [config, selectedType, selectedSize, selectedHeater, selectedWood, selectedChimney, selectedDoor, selectedRoof, selectedWindow, selectedLed]);
 
   const toggleExtra = (id: string) => {
     setConfig(prev => ({
@@ -131,8 +186,8 @@ const Configurator = () => {
           </nav>
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Image Gallery */}
-            <div className="space-y-4">
+            {/* Image Gallery - Sticky */}
+            <div className="lg:sticky lg:top-28 lg:h-fit space-y-4">
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-card group">
                 {discount > 0 && (
                   <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-destructive text-destructive-foreground text-sm font-bold rounded-full">
@@ -180,209 +235,10 @@ const Configurator = () => {
                   </button>
                 ))}
               </div>
-            </div>
 
-            {/* Configuration Panel */}
-            <div className="space-y-6">
-              {/* Title & Price */}
-              <div>
-                <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
-                  {selectedType?.name} {selectedSize?.name}
-                </h1>
-                <div className="flex items-baseline gap-3">
-                  <span className="text-muted-foreground line-through text-lg">
-                    {originalPrice.toLocaleString()} €
-                  </span>
-                  <span className="text-3xl font-bold text-primary">
-                    {totalPrice.toLocaleString()} €
-                  </span>
-                </div>
-              </div>
-
-              {/* Configuration Options */}
-              <div className="space-y-6 border-t border-border/50 pt-6">
-                
-                {/* Sauna Type */}
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                    Typ sauny <span className="text-primary">*</span>
-                  </h3>
-                  <div className="flex gap-2">
-                    {saunaTypes.map(type => (
-                      <button
-                        key={type.id}
-                        onClick={() => setConfig(prev => ({ ...prev, type: type.id }))}
-                        className={cn(
-                          "flex flex-col items-center p-3 rounded-xl border-2 transition-all min-w-[100px]",
-                          config.type === type.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border/50 hover:border-primary/50 bg-card/50"
-                        )}
-                      >
-                        <img 
-                          src={type.image} 
-                          alt={type.name}
-                          className="w-16 h-12 object-cover rounded-md mb-2"
-                        />
-                        <span className="text-xs font-medium text-center">{type.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Size */}
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                    Veľkosť <span className="text-primary">*</span>
-                  </h3>
-                  <div className="flex gap-2">
-                    {sizes.map(size => (
-                      <button
-                        key={size.id}
-                        onClick={() => setConfig(prev => ({ ...prev, size: size.id }))}
-                        className={cn(
-                          "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all min-w-[70px]",
-                          config.size === size.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border/50 hover:border-primary/50 bg-card/50"
-                        )}
-                      >
-                        <span className="text-lg font-bold">{size.name}</span>
-                        <span className="text-xs text-muted-foreground">{size.capacity}</span>
-                        {size.price > 0 && (
-                          <span className="text-xs text-primary mt-1">+{size.price} €</span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Heater Type */}
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                    Typ ohrievača <span className="text-primary">*</span>
-                  </h3>
-                  <div className="flex gap-2">
-                    {heaterTypes.map(heater => (
-                      <button
-                        key={heater.id}
-                        onClick={() => setConfig(prev => ({ 
-                          ...prev, 
-                          heaterType: heater.id,
-                          heater: heater.id === "wood" ? "harvia-m3" : heater.id === "electric" ? "harvia-6kw" : "none"
-                        }))}
-                        className={cn(
-                          "flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all min-w-[100px]",
-                          config.heaterType === heater.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border/50 hover:border-primary/50 bg-card/50"
-                        )}
-                      >
-                        <span className="text-2xl mb-1">{heater.icon}</span>
-                        <span className="text-xs font-medium text-center">{heater.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Specific Heater Model */}
-                {config.heaterType !== "none" && (
-                  <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">
-                      {config.heaterType === "wood" ? "Pec na drevo" : "Elektrický ohrievač"}
-                    </h3>
-                    <div className="flex gap-2 flex-wrap">
-                      {(config.heaterType === "wood" ? woodHeaters : electricHeaters).map(heater => (
-                        <button
-                          key={heater.id}
-                          onClick={() => setConfig(prev => ({ ...prev, heater: heater.id }))}
-                          className={cn(
-                            "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all min-w-[90px]",
-                            config.heater === heater.id
-                              ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50"
-                          )}
-                        >
-                          <span className="text-xs font-medium text-center mb-1">{heater.name}</span>
-                          <span className={cn(
-                            "text-xs",
-                            heater.price > 0 ? "text-primary" : "text-muted-foreground"
-                          )}>
-                            {heater.price > 0 ? `+${heater.price} €` : "0 €"}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Wood Type */}
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                    Typ dreva <span className="text-primary">*</span>
-                  </h3>
-                  <div className="flex gap-2">
-                    {woodTypes.map(wood => (
-                      <button
-                        key={wood.id}
-                        onClick={() => setConfig(prev => ({ ...prev, wood: wood.id }))}
-                        className={cn(
-                          "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all min-w-[100px]",
-                          config.wood === wood.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border/50 hover:border-primary/50 bg-card/50"
-                        )}
-                      >
-                        <span className="text-sm font-medium">{wood.name}</span>
-                        <span className={cn(
-                          "text-xs mt-1",
-                          wood.price > 0 ? "text-primary" : "text-muted-foreground"
-                        )}>
-                          {wood.price > 0 ? `+${wood.price} €` : "V cene"}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Extras */}
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3">
-                    Príslušenstvo
-                  </h3>
-                  <div className="flex gap-2 flex-wrap">
-                    {extras.map(extra => (
-                      <button
-                        key={extra.id}
-                        onClick={() => toggleExtra(extra.id)}
-                        className={cn(
-                          "flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all",
-                          config.extras.includes(extra.id)
-                            ? "border-primary bg-primary/5"
-                            : "border-border/50 hover:border-primary/50 bg-card/50"
-                        )}
-                      >
-                        <div className={cn(
-                          "w-4 h-4 rounded border flex items-center justify-center transition-all",
-                          config.extras.includes(extra.id)
-                            ? "bg-primary border-primary"
-                            : "border-muted-foreground"
-                        )}>
-                          {config.extras.includes(extra.id) && (
-                            <Check className="w-3 h-3 text-primary-foreground" />
-                          )}
-                        </div>
-                        <span className="text-sm font-medium">{extra.name}</span>
-                        <span className="text-xs text-primary">+{extra.price} €</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Final Price & CTA */}
-              <div className="border-t border-border/50 pt-6 space-y-4">
-                <div className="flex items-center justify-between">
+              {/* Price Summary - Desktop */}
+              <div className="hidden lg:block border border-border/50 rounded-2xl p-6 bg-card/50">
+                <div className="flex items-center justify-between mb-4">
                   <span className="text-lg font-medium">Celková cena</span>
                   <div className="text-right">
                     <span className="text-muted-foreground line-through text-sm mr-2">
@@ -394,20 +250,422 @@ const Configurator = () => {
                   </div>
                 </div>
                 
-                <div className="flex gap-3">
-                  <Link to="/contact" className="flex-1">
+                <Link to="/contact" className="block">
+                  <Button variant="luxury" size="lg" className="w-full gap-2">
+                    <ShoppingCart className="w-5 h-5" />
+                    Odoslať dopyt
+                  </Button>
+                </Link>
+                
+                <p className="text-xs text-muted-foreground text-center mt-3">
+                  * Cena nezahŕňa dopravu a inštaláciu
+                </p>
+              </div>
+            </div>
+
+            {/* Configuration Panel - Scrollable */}
+            <ScrollArea className="lg:h-[calc(100vh-8rem)]">
+              <div className="space-y-8 pr-4">
+                {/* Title */}
+                <div>
+                  <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
+                    {selectedType?.name} {selectedSize?.name}
+                  </h1>
+                  <div className="flex items-baseline gap-3 lg:hidden">
+                    <span className="text-muted-foreground line-through text-lg">
+                      {originalPrice.toLocaleString()} €
+                    </span>
+                    <span className="text-3xl font-bold text-primary">
+                      {totalPrice.toLocaleString()} €
+                    </span>
+                  </div>
+                </div>
+
+                {/* Configuration Options */}
+                <div className="space-y-8">
+                  
+                  {/* Sauna Type */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                      Typ sauny <span className="text-primary">*</span>
+                    </h3>
+                    <div className="grid grid-cols-3 gap-3">
+                      {saunaTypes.map(type => (
+                        <button
+                          key={type.id}
+                          onClick={() => setConfig(prev => ({ ...prev, type: type.id }))}
+                          className={cn(
+                            "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                            config.type === type.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                          )}
+                        >
+                          <img 
+                            src={type.image} 
+                            alt={type.name}
+                            className="w-full h-16 object-cover rounded-lg mb-2"
+                          />
+                          <span className="text-xs font-medium text-center">{type.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Size */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                      Veľkosť <span className="text-primary">*</span>
+                    </h3>
+                    <div className="grid grid-cols-4 gap-2">
+                      {sizes.map(size => (
+                        <button
+                          key={size.id}
+                          onClick={() => setConfig(prev => ({ ...prev, size: size.id }))}
+                          className={cn(
+                            "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all",
+                            config.size === size.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                          )}
+                        >
+                          <span className="text-lg font-bold">{size.name}</span>
+                          <span className="text-xs text-muted-foreground">{size.capacity}</span>
+                          {size.price > 0 && (
+                            <span className="text-xs text-primary mt-1">+{size.price} €</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Wood Type */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                      Typ dreva <span className="text-primary">*</span>
+                    </h3>
+                    <div className="grid grid-cols-3 gap-3">
+                      {woodTypes.map(wood => (
+                        <button
+                          key={wood.id}
+                          onClick={() => setConfig(prev => ({ ...prev, wood: wood.id }))}
+                          className={cn(
+                            "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                            config.wood === wood.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                          )}
+                        >
+                          <img 
+                            src={wood.image} 
+                            alt={wood.name}
+                            className="w-full h-16 object-cover rounded-lg mb-2"
+                          />
+                          <span className="text-xs font-medium">{wood.name}</span>
+                          <span className={cn(
+                            "text-xs mt-1",
+                            wood.price > 0 ? "text-primary" : "text-muted-foreground"
+                          )}>
+                            {wood.price > 0 ? `+${wood.price} €` : "V cene"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Heater Type */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                      Typ ohrievača <span className="text-primary">*</span>
+                    </h3>
+                    <div className="grid grid-cols-3 gap-2">
+                      {heaterTypes.map(heater => (
+                        <button
+                          key={heater.id}
+                          onClick={() => setConfig(prev => ({ 
+                            ...prev, 
+                            heaterType: heater.id,
+                            heater: heater.id === "wood" ? "harvia-m3" : heater.id === "electric" ? "harvia-6kw" : "none"
+                          }))}
+                          className={cn(
+                            "flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all",
+                            config.heaterType === heater.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                          )}
+                        >
+                          <span className="text-2xl mb-1">{heater.icon}</span>
+                          <span className="text-xs font-medium text-center">{heater.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Specific Heater Model */}
+                  {config.heaterType !== "none" && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-foreground mb-3">
+                        {config.heaterType === "wood" ? "Pec na drevo" : "Elektrický ohrievač"}
+                      </h3>
+                      <div className="grid grid-cols-2 gap-2">
+                        {(config.heaterType === "wood" ? woodHeaters : electricHeaters).map(heater => (
+                          <button
+                            key={heater.id}
+                            onClick={() => setConfig(prev => ({ ...prev, heater: heater.id }))}
+                            className={cn(
+                              "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all",
+                              config.heater === heater.id
+                                ? "border-primary bg-primary/5"
+                                : "border-border/50 hover:border-primary/50 bg-card/50"
+                            )}
+                          >
+                            <span className="text-sm font-medium text-center mb-1">{heater.name}</span>
+                            <span className={cn(
+                              "text-xs",
+                              heater.price > 0 ? "text-primary" : "text-muted-foreground"
+                            )}>
+                              {heater.price > 0 ? `+${heater.price} €` : "0 €"}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Chimney */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground mb-3">
+                      Komín
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {chimneys.map(chimney => (
+                        <button
+                          key={chimney.id}
+                          onClick={() => setConfig(prev => ({ ...prev, chimney: chimney.id }))}
+                          className={cn(
+                            "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                            config.chimney === chimney.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                          )}
+                        >
+                          <img 
+                            src={chimney.image} 
+                            alt={chimney.name}
+                            className="w-full h-16 object-cover rounded-lg mb-2"
+                          />
+                          <span className="text-xs font-medium text-center">{chimney.name}</span>
+                          <span className={cn(
+                            "text-xs mt-1",
+                            chimney.price > 0 ? "text-primary" : "text-muted-foreground"
+                          )}>
+                            {chimney.price > 0 ? `+${chimney.price} €` : "V cene"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Door */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground mb-3">
+                      Dvere
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {doors.map(door => (
+                        <button
+                          key={door.id}
+                          onClick={() => setConfig(prev => ({ ...prev, door: door.id }))}
+                          className={cn(
+                            "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                            config.door === door.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                          )}
+                        >
+                          <img 
+                            src={door.image} 
+                            alt={door.name}
+                            className="w-full h-16 object-cover rounded-lg mb-2"
+                          />
+                          <span className="text-xs font-medium text-center">{door.name}</span>
+                          <span className={cn(
+                            "text-xs mt-1",
+                            door.price > 0 ? "text-primary" : "text-muted-foreground"
+                          )}>
+                            {door.price > 0 ? `+${door.price} €` : "V cene"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Roof */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground mb-3">
+                      Strecha
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {roofs.map(roof => (
+                        <button
+                          key={roof.id}
+                          onClick={() => setConfig(prev => ({ ...prev, roof: roof.id }))}
+                          className={cn(
+                            "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                            config.roof === roof.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                          )}
+                        >
+                          <img 
+                            src={roof.image} 
+                            alt={roof.name}
+                            className="w-full h-16 object-cover rounded-lg mb-2"
+                          />
+                          <span className="text-xs font-medium text-center">{roof.name}</span>
+                          <span className={cn(
+                            "text-xs mt-1",
+                            roof.price > 0 ? "text-primary" : "text-muted-foreground"
+                          )}>
+                            {roof.price > 0 ? `+${roof.price} €` : "V cene"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Windows */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground mb-3">
+                      Okná
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {windows.map(window => (
+                        <button
+                          key={window.id}
+                          onClick={() => setConfig(prev => ({ ...prev, window: window.id }))}
+                          className={cn(
+                            "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                            config.window === window.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                          )}
+                        >
+                          <img 
+                            src={window.image} 
+                            alt={window.name}
+                            className="w-full h-16 object-cover rounded-lg mb-2"
+                          />
+                          <span className="text-xs font-medium text-center">{window.name}</span>
+                          <span className={cn(
+                            "text-xs mt-1",
+                            window.price > 0 ? "text-primary" : "text-muted-foreground"
+                          )}>
+                            {window.price > 0 ? `+${window.price} €` : "V cene"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* LED Lights */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground mb-3">
+                      LED osvetlenie
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {ledLights.map(led => (
+                        <button
+                          key={led.id}
+                          onClick={() => setConfig(prev => ({ ...prev, led: led.id }))}
+                          className={cn(
+                            "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                            config.led === led.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                          )}
+                        >
+                          <img 
+                            src={led.image} 
+                            alt={led.name}
+                            className="w-full h-16 object-cover rounded-lg mb-2"
+                          />
+                          <span className="text-xs font-medium text-center">{led.name}</span>
+                          <span className={cn(
+                            "text-xs mt-1",
+                            led.price > 0 ? "text-primary" : "text-muted-foreground"
+                          )}>
+                            {led.price > 0 ? `+${led.price} €` : "V cene"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Extras */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground mb-3">
+                      Príslušenstvo
+                    </h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      {extras.map(extra => (
+                        <button
+                          key={extra.id}
+                          onClick={() => toggleExtra(extra.id)}
+                          className={cn(
+                            "flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all",
+                            config.extras.includes(extra.id)
+                              ? "border-primary bg-primary/5"
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                          )}
+                        >
+                          <div className={cn(
+                            "w-5 h-5 rounded border-2 flex items-center justify-center transition-all shrink-0",
+                            config.extras.includes(extra.id)
+                              ? "bg-primary border-primary"
+                              : "border-muted-foreground"
+                          )}>
+                            {config.extras.includes(extra.id) && (
+                              <Check className="w-3 h-3 text-primary-foreground" />
+                            )}
+                          </div>
+                          <div className="text-left">
+                            <span className="text-sm font-medium block">{extra.name}</span>
+                            <span className="text-xs text-primary">+{extra.price} €</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile CTA */}
+                <div className="lg:hidden border-t border-border/50 pt-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-medium">Celková cena</span>
+                    <div className="text-right">
+                      <span className="text-muted-foreground line-through text-sm mr-2">
+                        {originalPrice.toLocaleString()} €
+                      </span>
+                      <span className="text-3xl font-bold text-primary">
+                        {totalPrice.toLocaleString()} €
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <Link to="/contact" className="block">
                     <Button variant="luxury" size="lg" className="w-full gap-2">
                       <ShoppingCart className="w-5 h-5" />
                       Odoslať dopyt
                     </Button>
                   </Link>
+                  
+                  <p className="text-xs text-muted-foreground text-center">
+                    * Cena nezahŕňa dopravu a inštaláciu
+                  </p>
                 </div>
-                
-                <p className="text-xs text-muted-foreground text-center">
-                  * Cena nezahŕňa dopravu a inštaláciu. Kontaktujte nás pre presnú kalkuláciu.
-                </p>
               </div>
-            </div>
+            </ScrollArea>
           </div>
         </div>
       </main>
