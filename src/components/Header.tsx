@@ -8,12 +8,11 @@ const Header = () => {
   const location = useLocation();
 
   const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Shop', href: '/shop' },
-    { label: 'Custom', href: '/#custom' },
-    { label: 'About', href: '/#about' },
-    { label: 'FAQ', href: '/#faq' },
-    { label: 'Contact', href: '/#contact' },
+    { label: 'Domov', href: '/' },
+    { label: 'Obchod', href: '/shop' },
+    { label: 'O nás', href: '/about' },
+    { label: 'FAQ', href: '/faq' },
+    { label: 'Kontakt', href: '/contact' },
   ];
 
   return (
@@ -30,20 +29,9 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navItems.map((item) => {
-              const isActive = location.pathname === item.href || 
-                (item.href.startsWith('/#') && location.pathname === '/' && location.hash === item.href.slice(1));
+              const isActive = location.pathname === item.href;
               
-              return item.href.startsWith('/#') ? (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={`text-sm font-medium transition-colors duration-300 tracking-wide uppercase ${
-                    isActive ? 'text-primary' : 'text-foreground/70 hover:text-primary'
-                  }`}
-                >
-                  {item.label}
-                </a>
-              ) : (
+              return (
                 <Link
                   key={item.label}
                   to={item.href}
@@ -66,9 +54,11 @@ const Header = () => {
               </span>
             </button>
             
-            <Button variant="luxury" size="sm" className="hidden md:inline-flex">
-              Get Quote
-            </Button>
+            <Link to="/contact">
+              <Button variant="luxury" size="sm" className="hidden md:inline-flex">
+                Dopyt
+              </Button>
+            </Link>
 
             {/* Mobile Menu Button */}
             <button
@@ -84,30 +74,21 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="lg:hidden mt-4 pb-4 border-t border-border/30 pt-4">
             <div className="flex flex-col gap-4">
-              {navItems.map((item) =>
-                item.href.startsWith('/#') ? (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wide uppercase"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.label}
-                  </a>
-                ) : (
-                  <Link
-                    key={item.label}
-                    to={item.href}
-                    className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wide uppercase"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                )
-              )}
-              <Button variant="luxury" size="sm" className="mt-2">
-                Get Quote
-              </Button>
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wide uppercase"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
+                <Button variant="luxury" size="sm" className="mt-2 w-full">
+                  Dopyt
+                </Button>
+              </Link>
             </div>
           </nav>
         )}
