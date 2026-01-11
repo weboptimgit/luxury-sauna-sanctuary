@@ -68,9 +68,11 @@ const Products = () => {
 
         {/* CTA */}
         <div className="text-center mt-12">
-          <Button variant="luxury" size="lg">
-            View All Products
-          </Button>
+          <Link to="/shop">
+            <Button variant="luxury" size="lg">
+              View All Products
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
