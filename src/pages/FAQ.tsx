@@ -8,11 +8,12 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { HelpCircle, MessageCircle } from "lucide-react";
+import { HelpCircle, MessageCircle, Sparkles } from "lucide-react";
 
 const faqCategories = [
   {
     category: "Všeobecné otázky",
+    icon: "🏠",
     questions: [
       {
         question: "Aké typy saún ponúkate?",
@@ -30,6 +31,7 @@ const faqCategories = [
   },
   {
     category: "Objednávka a dodanie",
+    icon: "📦",
     questions: [
       {
         question: "Aká je dodacia lehota?",
@@ -47,6 +49,7 @@ const faqCategories = [
   },
   {
     category: "Technické otázky",
+    icon: "⚡",
     questions: [
       {
         question: "Aké sú požiadavky na elektrickú prípojku?",
@@ -64,6 +67,7 @@ const faqCategories = [
   },
   {
     category: "Záruka a servis",
+    icon: "🛡️",
     questions: [
       {
         question: "Aká je záručná doba?",
@@ -81,6 +85,7 @@ const faqCategories = [
   },
   {
     category: "Platba a financovanie",
+    icon: "💳",
     questions: [
       {
         question: "Aké platobné metódy akceptujete?",
@@ -104,15 +109,20 @@ const FAQ = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-charcoal-900 to-background">
-        <div className="container mx-auto px-4 text-center">
-          <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-6">
-            <HelpCircle className="w-8 h-8 text-amber-400" />
+      <section className="pt-32 pb-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
+        <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute top-40 right-1/4 w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
+        
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8">
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium text-primary">Potrebujete pomoc?</span>
           </div>
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-            Často kladené <span className="text-gradient">Otázky</span>
+            Často kladené <span className="text-gradient-amber">Otázky</span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Nájdite odpovede na najčastejšie otázky o našich produktoch a službách
           </p>
         </div>
@@ -123,20 +133,22 @@ const FAQ = () => {
         <div className="container mx-auto px-4 max-w-4xl">
           {faqCategories.map((category, categoryIndex) => (
             <div key={categoryIndex} className="mb-12">
-              <h2 className="font-display text-2xl font-bold text-foreground mb-6 flex items-center">
-                <span className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center mr-3 text-amber-400 text-sm font-bold">
-                  {categoryIndex + 1}
-                </span>
-                {category.category}
-              </h2>
-              <Accordion type="single" collapsible className="space-y-4">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-xl">
+                  {category.icon}
+                </div>
+                <h2 className="font-display text-2xl font-bold text-foreground">
+                  {category.category}
+                </h2>
+              </div>
+              <Accordion type="single" collapsible className="space-y-3">
                 {category.questions.map((faq, index) => (
                   <AccordionItem
                     key={index}
                     value={`${categoryIndex}-${index}`}
-                    className="bg-charcoal-800/30 rounded-xl border border-amber-500/10 px-6 overflow-hidden"
+                    className="group bg-card/50 hover:bg-card/80 rounded-xl border border-border/30 hover:border-primary/20 px-6 overflow-hidden transition-all duration-300 data-[state=open]:border-primary/30 data-[state=open]:bg-card/80"
                   >
-                    <AccordionTrigger className="text-foreground hover:text-amber-400 transition-colors py-5 text-left">
+                    <AccordionTrigger className="text-foreground hover:text-primary transition-colors py-5 text-left font-medium hover:no-underline">
                       {faq.question}
                     </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground pb-5 leading-relaxed">
@@ -151,20 +163,25 @@ const FAQ = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-charcoal-800/30">
-        <div className="container mx-auto px-4 text-center">
-          <MessageCircle className="w-12 h-12 text-amber-400 mx-auto mb-6" />
-          <h2 className="font-display text-3xl font-bold text-foreground mb-4">
-            Nenašli ste odpoveď?
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-            Náš tím je tu pre vás. Neváhajte nás kontaktovať s akoukoľvek otázkou.
-          </p>
-          <Link to="/contact">
-            <Button variant="luxury" size="lg">
-              Kontaktujte nás
-            </Button>
-          </Link>
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/5 via-transparent to-transparent" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-6">
+              <MessageCircle className="w-7 h-7 text-primary" />
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Nenašli ste odpoveď?
+            </h2>
+            <p className="text-muted-foreground mb-8 leading-relaxed">
+              Náš tím je tu pre vás. Neváhajte nás kontaktovať s akoukoľvek otázkou.
+            </p>
+            <Link to="/contact">
+              <Button variant="luxury" size="lg" className="px-8">
+                Kontaktujte nás
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
