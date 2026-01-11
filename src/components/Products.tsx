@@ -1,34 +1,14 @@
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import saunaBarrel from '@/assets/sauna-barrel.jpg';
-import saunaCube from '@/assets/sauna-cube.jpg';
-import saunaTraditional from '@/assets/sauna-traditional.jpg';
+import { products } from '@/data/products';
 
-const products = [
-  {
-    id: 1,
-    name: 'Barrel Sauna',
-    category: 'Outdoor',
-    price: 'From €8,900',
-    image: saunaBarrel,
-    description: 'Classic barrel design with optimal heat circulation',
-  },
-  {
-    id: 2,
-    name: 'Cube Sauna',
-    category: 'Modern',
-    price: 'From €12,500',
-    image: saunaCube,
-    description: 'Contemporary minimalist design with panoramic views',
-  },
-  {
-    id: 3,
-    name: 'Traditional Cabin',
-    category: 'Classic',
-    price: 'From €15,900',
-    image: saunaTraditional,
-    description: 'Authentic Finnish log cabin sauna experience',
-  },
-];
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 0,
+  }).format(price);
+};
 
 const Products = () => {
   return (
@@ -59,7 +39,7 @@ const Products = () => {
               {/* Image */}
               <div className="relative aspect-square overflow-hidden">
                 <img
-                  src={product.image}
+                  src={product.images[0]}
                   alt={product.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -72,12 +52,14 @@ const Products = () => {
               {/* Content */}
               <div className="p-6">
                 <h3 className="font-display text-2xl font-semibold mb-2">{product.name}</h3>
-                <p className="text-muted-foreground text-sm mb-4">{product.description}</p>
+                <p className="text-muted-foreground text-sm mb-4">{product.shortDescription}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-primary font-semibold text-lg">{product.price}</span>
-                  <Button variant="luxuryOutline" size="sm">
-                    View Details
-                  </Button>
+                  <span className="text-primary font-semibold text-lg">From {formatPrice(product.price)}</span>
+                  <Link to={`/product/${product.id}`}>
+                    <Button variant="luxuryOutline" size="sm">
+                      View Details
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
