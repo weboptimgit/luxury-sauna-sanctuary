@@ -2,10 +2,11 @@ import { useState, useMemo } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Check, ShoppingCart, ChevronLeft, ChevronRight, Expand } from "lucide-react";
+import { Check, ShoppingCart, ChevronLeft, ChevronRight, Expand, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/hooks/use-toast";
 import saunaBarrel from "@/assets/sauna-barrel.jpg";
 import saunaCube from "@/assets/sauna-cube.jpg";
 import saunaTraditional from "@/assets/sauna-traditional.jpg";
@@ -170,6 +171,50 @@ const Configurator = () => {
 
   const discount = Math.round(((originalPrice - totalPrice) / originalPrice) * 100);
 
+  const { toast } = useToast();
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+
+  const addToCart = async () => {
+    setIsAddingToCart(true);
+    
+    try {
+      const response = await fetch("https://brelax.weboptim.eu/wp-json/sauna/v1/add-to-cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          product_id: "__BASE_PRODUCT_ID__",
+          qty: 1,
+          options: config,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Nepodarilo sa pridať do košíka");
+      }
+
+      toast({
+        title: "Pridané do košíka",
+        description: "Produkt bol úspešne pridaný do košíka.",
+      });
+
+      // Redirect to checkout page
+      window.location.href = "https://brelax.weboptim.eu/pokladna/";
+    } catch (error) {
+      console.error("Add to cart error:", error);
+      toast({
+        title: "Chyba",
+        description: error instanceof Error ? error.message : "Nepodarilo sa pridať do košíka",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -250,12 +295,20 @@ const Configurator = () => {
                   </div>
                 </div>
                 
-                <Link to="/contact" className="block">
-                  <Button variant="luxury" size="lg" className="w-full gap-2">
+                <Button 
+                  variant="luxury" 
+                  size="lg" 
+                  className="w-full gap-2"
+                  onClick={addToCart}
+                  disabled={isAddingToCart}
+                >
+                  {isAddingToCart ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
                     <ShoppingCart className="w-5 h-5" />
-                    Odoslať dopyt
-                  </Button>
-                </Link>
+                  )}
+                  {isAddingToCart ? "Pridávam..." : "Pridať do košíka"}
+                </Button>
                 
                 <p className="text-xs text-muted-foreground text-center mt-3">
                   * Cena nezahŕňa dopravu a inštaláciu
@@ -653,12 +706,20 @@ const Configurator = () => {
                     </div>
                   </div>
                   
-                  <Link to="/contact" className="block">
-                    <Button variant="luxury" size="lg" className="w-full gap-2">
+                  <Button 
+                    variant="luxury" 
+                    size="lg" 
+                    className="w-full gap-2"
+                    onClick={addToCart}
+                    disabled={isAddingToCart}
+                  >
+                    {isAddingToCart ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
                       <ShoppingCart className="w-5 h-5" />
-                      Odoslať dopyt
-                    </Button>
-                  </Link>
+                    )}
+                    {isAddingToCart ? "Pridávam..." : "Pridať do košíka"}
+                  </Button>
                   
                   <p className="text-xs text-muted-foreground text-center">
                     * Cena nezahŕňa dopravu a inštaláciu
