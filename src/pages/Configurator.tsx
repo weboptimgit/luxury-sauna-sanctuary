@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, ShoppingCart, ChevronLeft, ChevronRight, ChevronDown, Expand, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -104,6 +104,15 @@ const Configurator = () => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+    if (target.scrollTop > 50) {
+      setShowScrollIndicator(false);
+    }
+  }, []);
 
   // Načítaj config z WP
   useEffect(() => {
@@ -488,13 +497,18 @@ const Configurator = () => {
 
             <div className="relative">
               {/* Scroll indicator */}
-              <div className="absolute bottom-0 left-0 right-4 h-20 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10 flex items-end justify-center pb-2 lg:flex hidden">
+              <div 
+                className={cn(
+                  "absolute bottom-0 left-0 right-4 h-20 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10 items-end justify-center pb-2 hidden lg:flex transition-opacity duration-300",
+                  showScrollIndicator ? "opacity-100" : "opacity-0"
+                )}
+              >
                 <div className="flex flex-col items-center gap-1 text-muted-foreground animate-bounce">
                   <span className="text-xs">Scrolluj pre viac možností</span>
                   <ChevronDown className="w-4 h-4" />
                 </div>
               </div>
-              <ScrollArea className="lg:h-[calc(100vh-8rem)]">
+              <ScrollArea className="lg:h-[calc(100vh-8rem)]" onScrollCapture={handleScroll}>
                 <div className="space-y-8 pr-4 pb-24">
                   <div>
                     <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
