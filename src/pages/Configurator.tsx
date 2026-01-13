@@ -314,12 +314,7 @@ const Configurator = () => {
 
   const images = [selectedType?.image || saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
 
-  // ✅ ak heaterType nie je wood, komín vizuálne nastav na none (rovnako to robí server)
-  useEffect(() => {
-    if (apiConfig?.settings?.chimneyOnlyWithWoodHeater && config.heaterType !== "wood" && config.chimney !== "none") {
-      setConfig((prev) => ({ ...prev, chimney: "none" }));
-    }
-  }, [config.heaterType, config.chimney, apiConfig?.settings?.chimneyOnlyWithWoodHeater]);
+  // Poznámka: chimney reset je teraz hore v hlavnom useEffect
 
   // ✅ ceny v UI (len vizuálne) – reálna cena je server-side v plugine
   const originalPrice = useMemo(() => {
@@ -625,6 +620,8 @@ const Configurator = () => {
                                   : heater.id === "electric"
                                     ? electricHeaters.find((x) => x.id !== "none")?.id || "none"
                                     : "none",
+                              // Reset chimney if not wood heater
+                              chimney: heater.id !== "wood" && apiConfig?.settings?.chimneyOnlyWithWoodHeater ? "none" : prev.chimney,
                             }))
                           }
                           className={cn(
