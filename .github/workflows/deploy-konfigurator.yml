@@ -34,5 +34,5 @@ jobs:
           protocol: ftps
           local-dir: dist/
           server-dir: ${{ secrets.SFTP_PATH }}
-          dangerous-clean-slate: true
+          dangerous-clean-slate: false
           timeout: 600000
