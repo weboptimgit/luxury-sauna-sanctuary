@@ -199,7 +199,7 @@ const Configurator = () => {
     setIsAddingToCart(true);
 
     try {
-      const response = await fetch("https://brelax.weboptim.eu/wp-json/sauna/v1/add-to-cart", {
+      const response = await fetch("/wp-json/sauna/v1/add-to-cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -223,7 +223,7 @@ const Configurator = () => {
       });
 
       // Redirect to checkout page
-      window.location.href = "https://brelax.weboptim.eu/pokladna/";
+      window.location.href = "/kosik/";
     } catch (error) {
       console.error("Add to cart error:", error);
       toast({
