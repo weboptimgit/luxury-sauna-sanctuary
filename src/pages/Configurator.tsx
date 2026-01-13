@@ -142,7 +142,7 @@ const Configurator = () => {
           wood: safe(prev.wood, data.woods, defaultWood),
           heaterType: safe(prev.heaterType, data.heaterTypes as any, defaultHeaterType),
           heater: (prev.heaterType === "wood" ? data.woodHeaters : data.electricHeaters)?.some(
-            (h) => h.id === prev.heater
+            (h) => h.id === prev.heater,
           )
             ? prev.heater
             : defaultHeater,
@@ -186,82 +186,82 @@ const Configurator = () => {
   }
 
   // Mapovanie API config → UI arrays
-  const saunaTypes = apiConfig.types.map((t) => ({
+  const saunaTypes = (apiConfig?.types ?? []).map((t) => ({
     id: t.id,
     name: t.label,
     basePrice: t.basePrice || 0,
     image: typeImages[t.id] || saunaBarrel,
   }));
 
-  const sizes = apiConfig.sizes.map((s) => ({
+  const sizes = (apiConfig?.sizes ?? []).map((s) => ({
     id: s.id,
     name: s.label,
     capacity: s.capacity || "",
     price: s.price || 0,
   }));
 
-  const woodTypes = apiConfig.woods.map((w) => ({
+  const woodTypes = (apiConfig?.woods ?? []).map((w) => ({
     id: w.id,
     name: w.label,
     price: w.price || 0,
     image: woodImages[w.id] || saunaInterior,
   }));
 
-  const heaterTypes = apiConfig.heaterTypes.map((h) => ({
+  const heaterTypes = (apiConfig?.heaterTypes ?? []).map((h) => ({
     id: h.id,
     name: h.label,
     price: 0,
     icon: heaterTypeIcons[h.id] || "•",
   }));
 
-  const woodHeaters = apiConfig.woodHeaters.map((h) => ({
+  const woodHeaters = (apiConfig?.woodHeaters ?? []).map((h) => ({
     id: h.id,
     name: h.label,
     price: h.price || 0,
   }));
 
-  const electricHeaters = apiConfig.electricHeaters.map((h) => ({
+  const electricHeaters = (apiConfig?.electricHeaters ?? []).map((h) => ({
     id: h.id,
     name: h.label,
     price: h.price || 0,
   }));
 
-  const chimneys = apiConfig.chimneys.map((c) => ({
+  const chimneys = (apiConfig?.chimneys ?? []).map((c) => ({
     id: c.id,
     name: c.label,
     price: c.price || 0,
     image: chimneyImages[c.id] || saunaBarrel,
   }));
 
-  const doors = apiConfig.doors.map((d) => ({
+  const doors = (apiConfig?.doors ?? []).map((d) => ({
     id: d.id,
     name: d.label,
     price: d.price || 0,
     image: doorImages[d.id] || saunaTraditional,
   }));
 
-  const roofs = apiConfig.roofs.map((r) => ({
+  const roofs = (apiConfig?.roofs ?? []).map((r) => ({
     id: r.id,
     name: r.label,
     price: r.price || 0,
     image: roofImages[r.id] || saunaBarrel,
   }));
 
-  const windows = apiConfig.windows.map((w) => ({
+  const windows = (apiConfig?.windows ?? []).map((w) => ({
     id: w.id,
     name: w.label,
     price: w.price || 0,
     image: windowImages[w.id] || saunaInterior,
   }));
 
-  const ledLights = apiConfig.leds.map((l) => ({
+  const ledLights = (apiConfig?.leds ?? []).map((l) => ({
     id: l.id,
     name: l.label,
     price: l.price || 0,
     image: ledImages[l.id] || saunaInterior,
   }));
 
-  const extras = apiConfig.extras.map((e) => ({
+  const extras = (apiConfig?.extras ?? []).map((e) => ({
     id: e.id,
     name: e.label,
     price: e.price || 0,
@@ -299,7 +299,19 @@ const Configurator = () => {
       if (extra) price += extra.price;
     });
     return Math.round(price * 1.15);
-  }, [config, selectedType, selectedSize, selectedHeater, selectedWood, selectedChimney, selectedDoor, selectedRoof, selectedWindow, selectedLed, extras]);
+  }, [
+    config,
+    selectedType,
+    selectedSize,
+    selectedHeater,
+    selectedWood,
+    selectedChimney,
+    selectedDoor,
+    selectedRoof,
+    selectedWindow,
+    selectedLed,
+    extras,
+  ]);
 
   const totalPrice = useMemo(() => {
     let price = selectedType?.basePrice || 0;
@@ -316,7 +328,19 @@ const Configurator = () => {
       if (extra) price += extra.price;
     });
     return price;
-  }, [config, selectedType, selectedSize, selectedHeater, selectedWood, selectedChimney, selectedDoor, selectedRoof, selectedWindow, selectedLed, extras]);
+  }, [
+    config,
+    selectedType,
+    selectedSize,
+    selectedHeater,
+    selectedWood,
+    selectedChimney,
+    selectedDoor,
+    selectedRoof,
+    selectedWindow,
+    selectedLed,
+    extras,
+  ]);
 
   const toggleExtra = (id: string) => {
     setConfig((prev) => ({
@@ -421,7 +445,7 @@ const Configurator = () => {
                       "relative w-20 h-20 rounded-lg overflow-hidden transition-all",
                       currentImageIndex === index
                         ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
-                        : "opacity-60 hover:opacity-100"
+                        : "opacity-60 hover:opacity-100",
                     )}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover" />
@@ -482,7 +506,7 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.type === type.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                              : "border-border/50 hover:border-primary/50 bg-card/50",
                           )}
                         >
                           <img src={type.image} alt={type.name} className="w-16 h-16 rounded-lg object-cover mb-2" />
@@ -504,7 +528,7 @@ const Configurator = () => {
                             "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all",
                             config.size === size.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                              : "border-border/50 hover:border-primary/50 bg-card/50",
                           )}
                         >
                           <span className="font-bold">{size.name}</span>
@@ -527,7 +551,7 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.wood === wood.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                              : "border-border/50 hover:border-primary/50 bg-card/50",
                           )}
                         >
                           <img src={wood.image} alt={wood.name} className="w-16 h-16 rounded-lg object-cover mb-2" />
@@ -563,7 +587,7 @@ const Configurator = () => {
                             "flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all",
                             config.heaterType === heater.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                              : "border-border/50 hover:border-primary/50 bg-card/50",
                           )}
                         >
                           <span className="text-2xl mb-1">{heater.icon}</span>
@@ -588,11 +612,16 @@ const Configurator = () => {
                               "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all",
                               config.heater === heater.id
                                 ? "border-primary bg-primary/5"
-                                : "border-border/50 hover:border-primary/50 bg-card/50"
+                                : "border-border/50 hover:border-primary/50 bg-card/50",
                             )}
                           >
                             <span className="text-sm font-medium">{heater.name}</span>
-                            <span className={cn("text-xs", (heater.price || 0) > 0 ? "text-primary" : "text-muted-foreground")}>
+                            <span
+                              className={cn(
+                                "text-xs",
+                                (heater.price || 0) > 0 ? "text-primary" : "text-muted-foreground",
+                              )}
+                            >
                               {(heater.price || 0) > 0 ? `+${heater.price} €` : "0 €"}
                             </span>
                           </button>
@@ -616,10 +645,14 @@ const Configurator = () => {
                               ? "opacity-50 cursor-not-allowed border-border/50 bg-card/50"
                               : config.chimney === chimney.id
                                 ? "border-primary bg-primary/5"
-                                : "border-border/50 hover:border-primary/50 bg-card/50"
+                                : "border-border/50 hover:border-primary/50 bg-card/50",
                           )}
                         >
-                          <img src={chimney.image} alt={chimney.name} className="w-12 h-12 rounded-lg object-cover mb-2" />
+                          <img
+                            src={chimney.image}
+                            alt={chimney.name}
+                            className="w-12 h-12 rounded-lg object-cover mb-2"
+                          />
                           <span className="text-sm font-medium">{chimney.name}</span>
                           <span className={cn("text-xs", chimney.price > 0 ? "text-primary" : "text-muted-foreground")}>
                             {chimney.price > 0 ? `+${chimney.price} €` : "V cene"}
@@ -641,7 +674,7 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.door === door.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                              : "border-border/50 hover:border-primary/50 bg-card/50",
                           )}
                         >
                           <img src={door.image} alt={door.name} className="w-12 h-12 rounded-lg object-cover mb-2" />
@@ -666,7 +699,7 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.roof === roof.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                              : "border-border/50 hover:border-primary/50 bg-card/50",
                           )}
                         >
                           <img src={roof.image} alt={roof.name} className="w-12 h-12 rounded-lg object-cover mb-2" />
@@ -691,10 +724,14 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.window === window.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                              : "border-border/50 hover:border-primary/50 bg-card/50",
                           )}
                         >
-                          <img src={window.image} alt={window.name} className="w-12 h-12 rounded-lg object-cover mb-2" />
+                          <img
+                            src={window.image}
+                            alt={window.name}
+                            className="w-12 h-12 rounded-lg object-cover mb-2"
+                          />
                           <span className="text-sm font-medium">{window.name}</span>
                           <span className={cn("text-xs", window.price > 0 ? "text-primary" : "text-muted-foreground")}>
                             {window.price > 0 ? `+${window.price} €` : "V cene"}
@@ -716,7 +753,7 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.led === led.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                              : "border-border/50 hover:border-primary/50 bg-card/50",
                           )}
                         >
                           <img src={led.image} alt={led.name} className="w-12 h-12 rounded-lg object-cover mb-2" />
@@ -741,7 +778,7 @@ const Configurator = () => {
                             "flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all",
                             config.extras.includes(extra.id)
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50"
+                              : "border-border/50 hover:border-primary/50 bg-card/50",
                           )}
                         >
                           <div className="w-5 h-5 rounded border-2 border-primary flex items-center justify-center">
@@ -776,7 +813,11 @@ const Configurator = () => {
                     onClick={addToCart}
                     disabled={isAddingToCart}
                   >
-                    {isAddingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShoppingCart className="w-5 h-5" />}
+                    {isAddingToCart ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <ShoppingCart className="w-5 h-5" />
+                    )}
                     {isAddingToCart ? "Pridávam..." : "Pridať do košíka"}
                   </Button>
 
