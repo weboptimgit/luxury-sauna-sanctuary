@@ -12,7 +12,7 @@ import saunaInterior from "@/assets/sauna-interior.jpg";
 
 // Configuration options
 const saunaTypes = [
-  { id: "barrel", name: "Sudová sauna", basePrice: 4900, image: saunaBarrel },
+  { id: "barrel", name: "SudováA sauna", basePrice: 4900, image: saunaBarrel },
   { id: "cube", name: "Kubická sauna", basePrice: 7500, image: saunaCube },
   { id: "cabin", name: "Tradičná kabína", basePrice: 9900, image: saunaTraditional },
 ];
