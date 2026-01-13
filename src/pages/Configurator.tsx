@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import ConfiguratorHeader from "@/components/ConfiguratorHeader";
+import ConfiguratorFooter from "@/components/ConfiguratorFooter";
 import saunaBarrel from "@/assets/sauna-barrel.jpg";
 import saunaCube from "@/assets/sauna-cube.jpg";
 import saunaTraditional from "@/assets/sauna-traditional.jpg";
@@ -336,14 +336,14 @@ const Configurator = () => {
   if (isLoadingConfig || !apiConfig) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
+        <ConfiguratorHeader />
         <div className="flex items-center justify-center pt-32 pb-16">
           <div className="flex items-center gap-3 text-muted-foreground">
             <Loader2 className="w-5 h-5 animate-spin" />
             Načítavam konfigurátor…
           </div>
         </div>
-        <Footer />
+        <ConfiguratorFooter />
       </div>
     );
   }
@@ -397,17 +397,17 @@ const Configurator = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <ConfiguratorHeader />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
-            <Link to="/" className="hover:text-primary transition-colors">
+            <a href="https://brelax.weboptim.eu/" className="hover:text-primary transition-colors">
               Domov
-            </Link>
+            </a>
             <span>/</span>
-            <Link to="/shop" className="hover:text-primary transition-colors">
+            <a href="https://brelax.weboptim.eu/obchod/" className="hover:text-primary transition-colors">
               Sauny
-            </Link>
+            </a>
             <span>/</span>
             <span className="text-foreground">Konfigurátor</span>
           </nav>
@@ -835,7 +835,7 @@ const Configurator = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      <ConfiguratorFooter />
     </div>
   );
 };
