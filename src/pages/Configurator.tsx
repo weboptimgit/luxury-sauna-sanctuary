@@ -1,6 +1,4 @@
 import { useState, useMemo } from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Check, ShoppingCart, ChevronLeft, ChevronRight, Expand, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -238,9 +236,7 @@ const Configurator = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-
-      <main className="pt-24 pb-16">
+      <main className="py-8">
         <div className="container mx-auto px-4">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
@@ -702,8 +698,6 @@ const Configurator = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };
