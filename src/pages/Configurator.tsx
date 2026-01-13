@@ -173,19 +173,7 @@ const Configurator = () => {
     }
   }, [config.heaterType, config.chimney, apiConfig?.settings?.chimneyOnlyWithWoodHeater]);
 
-  // Loading state
-  if (isLoadingConfig || !apiConfig) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex items-center gap-3 text-muted-foreground">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          Načítavam konfigurátor…
-        </div>
-      </div>
-    );
-  }
-
-  // Mapovanie API config → UI arrays
+  // Mapovanie API config → UI arrays (bezpečné s fallback na prázdne polia)
   const saunaTypes = (apiConfig?.types ?? []).map((t) => ({
     id: t.id,
     name: t.label,
@@ -283,7 +271,7 @@ const Configurator = () => {
 
   const images = [selectedType?.image || saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
 
-  // Ceny v UI (len vizuálne)
+  // Ceny v UI (len vizuálne) - useMemo PRED conditional return
   const originalPrice = useMemo(() => {
     let price = selectedType?.basePrice || 0;
     price += selectedSize?.price || 0;
@@ -341,6 +329,18 @@ const Configurator = () => {
     selectedLed,
     extras,
   ]);
+
+  // Loading state - AŽ PO useMemo
+  if (isLoadingConfig || !apiConfig) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex items-center gap-3 text-muted-foreground">
+          <Loader2 className="w-5 h-5 animate-spin" />
+          Načítavam konfigurátor…
+        </div>
+      </div>
+    );
+  }
 
   const toggleExtra = (id: string) => {
     setConfig((prev) => ({
