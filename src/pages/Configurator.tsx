@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Check, ShoppingCart, ChevronLeft, ChevronRight, Expand, Loader2 } from "lucide-react";
+import { Check, ShoppingCart, ChevronLeft, ChevronRight, ChevronDown, Expand, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -486,21 +486,29 @@ const Configurator = () => {
               </div>
             </div>
 
-            <ScrollArea className="lg:h-[calc(100vh-8rem)]">
-              <div className="space-y-8 pr-4">
-                <div>
-                  <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
-                    {selectedType?.name} {selectedSize?.name}
-                  </h1>
-                  <div className="flex items-baseline gap-3 lg:hidden">
-                    <span className="text-muted-foreground line-through text-lg">
-                      {originalPrice.toLocaleString()} €
-                    </span>
-                    <span className="text-3xl font-bold text-primary">{totalPrice.toLocaleString()} €</span>
-                  </div>
+            <div className="relative">
+              {/* Scroll indicator */}
+              <div className="absolute bottom-0 left-0 right-4 h-20 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10 flex items-end justify-center pb-2 lg:flex hidden">
+                <div className="flex flex-col items-center gap-1 text-muted-foreground animate-bounce">
+                  <span className="text-xs">Scrolluj pre viac možností</span>
+                  <ChevronDown className="w-4 h-4" />
                 </div>
+              </div>
+              <ScrollArea className="lg:h-[calc(100vh-8rem)]">
+                <div className="space-y-8 pr-4 pb-24">
+                  <div>
+                    <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
+                      {selectedType?.name} {selectedSize?.name}
+                    </h1>
+                    <div className="flex items-baseline gap-3 lg:hidden">
+                      <span className="text-muted-foreground line-through text-lg">
+                        {originalPrice.toLocaleString()} €
+                      </span>
+                      <span className="text-3xl font-bold text-primary">{totalPrice.toLocaleString()} €</span>
+                    </div>
+                  </div>
 
-                <div className="space-y-6">
+                  <div className="space-y-6">
                   {/* Typ sauny */}
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground mb-3">Typ sauny *</h3>
@@ -833,6 +841,7 @@ const Configurator = () => {
               </div>
             </ScrollArea>
           </div>
+        </div>
         </div>
       </main>
       <ConfiguratorFooter />
