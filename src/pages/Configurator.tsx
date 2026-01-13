@@ -113,13 +113,29 @@ const Configurator = () => {
     (async () => {
       try {
         setIsLoadingConfig(true);
+        console.log("[Configurator] Fetching config from /wp-json/sauna/v1/config");
         const res = await fetch("/wp-json/sauna/v1/config", { credentials: "include" });
-        if (!res.ok) throw new Error("Nepodarilo sa načítať konfiguráciu.");
+        console.log("[Configurator] Response status:", res.status);
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("[Configurator] API error response:", errorText);
+          throw new Error("Nepodarilo sa načítať konfiguráciu. Status: " + res.status);
+        }
+        
         const data = (await res.json()) as ApiConfig;
+        console.log("[Configurator] Received config:", data);
 
         if (cancelled) return;
 
+        // Validácia že dáta majú správnu štruktúru
+        if (!data || !data.types || !Array.isArray(data.types)) {
+          console.error("[Configurator] Invalid data structure:", data);
+          throw new Error("API vrátila neplatnú štruktúru dát");
+        }
+
         setApiConfig(data);
+        console.log("[Configurator] Config set successfully");
 
         // ak by admin zmenil IDčka v plugine, tak si bezpečne nastavíme defaulty
         const safe = (id: string, list: { id: string }[], fallback: string) =>
@@ -157,11 +173,15 @@ const Configurator = () => {
           led: safe(prev.led, data.leds, "none"),
         }));
       } catch (e) {
+        console.error("[Configurator] Error:", e);
         const msg = e instanceof Error ? e.message : "Chyba pri načítaní konfigurácie.";
         toast({ title: "Chyba", description: msg, variant: "destructive" });
         setApiConfig(null);
       } finally {
-        if (!cancelled) setIsLoadingConfig(false);
+        if (!cancelled) {
+          console.log("[Configurator] Setting isLoadingConfig to false");
+          setIsLoadingConfig(false);
+        }
       }
     })();
 
@@ -170,13 +190,25 @@ const Configurator = () => {
     };
   }, [toast]);
 
-  // keď ešte nemáme config, ukáž loader
-  if (isLoadingConfig || !apiConfig) {
+  // keď ešte nemáme config, ukáž loader alebo error
+  if (isLoadingConfig) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex items-center gap-3 text-muted-foreground">
           <Loader2 className="w-5 h-5 animate-spin" />
           Načítavam konfigurátor…
+        </div>
+      </div>
+    );
+  }
+
+  if (!apiConfig) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <p className="text-destructive font-medium">Nepodarilo sa načítať konfigurátor</p>
+          <p className="text-muted-foreground text-sm">Skontrolujte konzolu prehliadača (F12) pre detaily.</p>
+          <Button onClick={() => window.location.reload()}>Skúsiť znova</Button>
         </div>
       </div>
     );
