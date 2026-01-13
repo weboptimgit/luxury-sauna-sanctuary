@@ -30,11 +30,9 @@ type ApiConfig = {
 const Configurator = () => {
   const { toast } = useToast();
 
-  // ✅ 1) načítaný config z WP (single source of truth)
   const [apiConfig, setApiConfig] = useState<ApiConfig | null>(null);
   const [isLoadingConfig, setIsLoadingConfig] = useState(true);
 
-  // ✅ 2) lokálne UI doplnky (obrázky + ikonky) – zostávajú v Reacte
   const typeImages: Record<string, string> = {
     barrel: saunaBarrel,
     cube: saunaCube,
@@ -88,7 +86,6 @@ const Configurator = () => {
     wood: "🔥",
   };
 
-  // ✅ 3) config state (IDčka)
   const [config, setConfig] = useState({
     type: "barrel",
     size: "3m",
@@ -106,38 +103,21 @@ const Configurator = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
-  // ✅ načítaj config z WP
+  // Načítaj config z WP
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
       try {
         setIsLoadingConfig(true);
-        console.log("[Configurator] Fetching config from /wp-json/sauna/v1/config");
         const res = await fetch("/wp-json/sauna/v1/config", { credentials: "include" });
-        console.log("[Configurator] Response status:", res.status);
-        
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error("[Configurator] API error response:", errorText);
-          throw new Error("Nepodarilo sa načítať konfiguráciu. Status: " + res.status);
-        }
-        
+        if (!res.ok) throw new Error("Nepodarilo sa načítať konfiguráciu.");
         const data = (await res.json()) as ApiConfig;
-        console.log("[Configurator] Received config:", data);
 
         if (cancelled) return;
 
-        // Validácia že dáta majú správnu štruktúru
-        if (!data || !data.types || !Array.isArray(data.types)) {
-          console.error("[Configurator] Invalid data structure:", data);
-          throw new Error("API vrátila neplatnú štruktúru dát");
-        }
-
         setApiConfig(data);
-        console.log("[Configurator] Config set successfully");
 
-        // ak by admin zmenil IDčka v plugine, tak si bezpečne nastavíme defaulty
         const safe = (id: string, list: { id: string }[], fallback: string) =>
           list?.some((x) => x.id === id) ? id : fallback;
 
@@ -162,7 +142,7 @@ const Configurator = () => {
           wood: safe(prev.wood, data.woods, defaultWood),
           heaterType: safe(prev.heaterType, data.heaterTypes as any, defaultHeaterType),
           heater: (prev.heaterType === "wood" ? data.woodHeaters : data.electricHeaters)?.some(
-            (h) => h.id === prev.heater,
+            (h) => h.id === prev.heater
           )
             ? prev.heater
             : defaultHeater,
@@ -173,15 +153,11 @@ const Configurator = () => {
           led: safe(prev.led, data.leds, "none"),
         }));
       } catch (e) {
-        console.error("[Configurator] Error:", e);
         const msg = e instanceof Error ? e.message : "Chyba pri načítaní konfigurácie.";
         toast({ title: "Chyba", description: msg, variant: "destructive" });
         setApiConfig(null);
       } finally {
-        if (!cancelled) {
-          console.log("[Configurator] Setting isLoadingConfig to false");
-          setIsLoadingConfig(false);
-        }
+        if (!cancelled) setIsLoadingConfig(false);
       }
     })();
 
@@ -190,8 +166,15 @@ const Configurator = () => {
     };
   }, [toast]);
 
-  // keď ešte nemáme config, ukáž loader alebo error
-  if (isLoadingConfig) {
+  // Chimney reset - MUSÍ byť pred conditional return!
+  useEffect(() => {
+    if (apiConfig?.settings?.chimneyOnlyWithWoodHeater && config.heaterType !== "wood" && config.chimney !== "none") {
+      setConfig((prev) => ({ ...prev, chimney: "none" }));
+    }
+  }, [config.heaterType, config.chimney, apiConfig?.settings?.chimneyOnlyWithWoodHeater]);
+
+  // Loading state
+  if (isLoadingConfig || !apiConfig) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex items-center gap-3 text-muted-foreground">
@@ -202,19 +185,7 @@ const Configurator = () => {
     );
   }
 
-  if (!apiConfig) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <p className="text-destructive font-medium">Nepodarilo sa načítať konfigurátor</p>
-          <p className="text-muted-foreground text-sm">Skontrolujte konzolu prehliadača (F12) pre detaily.</p>
-          <Button onClick={() => window.location.reload()}>Skúsiť znova</Button>
-        </div>
-      </div>
-    );
-  }
-
-  // ✅ mapovanie API config → UI arrays (name, price, image, icon…)
+  // Mapovanie API config → UI arrays
   const saunaTypes = apiConfig.types.map((t) => ({
     id: t.id,
     name: t.label,
@@ -239,7 +210,7 @@ const Configurator = () => {
   const heaterTypes = apiConfig.heaterTypes.map((h) => ({
     id: h.id,
     name: h.label,
-    price: 0, // cenu rieši model ohrievača
+    price: 0,
     icon: heaterTypeIcons[h.id] || "•",
   }));
 
@@ -296,15 +267,13 @@ const Configurator = () => {
     price: e.price || 0,
   }));
 
-  // ✅ selected položky
+  // Selected položky
   const selectedType = saunaTypes.find((t) => t.id === config.type);
   const selectedSize = sizes.find((s) => s.id === config.size);
-
   const selectedHeater =
     config.heaterType === "wood"
       ? woodHeaters.find((h) => h.id === config.heater)
       : electricHeaters.find((h) => h.id === config.heater);
-
   const selectedWood = woodTypes.find((w) => w.id === config.wood);
   const selectedChimney = chimneys.find((c) => c.id === config.chimney);
   const selectedDoor = doors.find((d) => d.id === config.door);
@@ -314,9 +283,7 @@ const Configurator = () => {
 
   const images = [selectedType?.image || saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
 
-  // Poznámka: chimney reset je teraz hore v hlavnom useEffect
-
-  // ✅ ceny v UI (len vizuálne) – reálna cena je server-side v plugine
+  // Ceny v UI (len vizuálne)
   const originalPrice = useMemo(() => {
     let price = selectedType?.basePrice || 0;
     price += selectedSize?.price || 0;
@@ -332,19 +299,7 @@ const Configurator = () => {
       if (extra) price += extra.price;
     });
     return Math.round(price * 1.15);
-  }, [
-    config,
-    selectedType,
-    selectedSize,
-    selectedHeater,
-    selectedWood,
-    selectedChimney,
-    selectedDoor,
-    selectedRoof,
-    selectedWindow,
-    selectedLed,
-    extras,
-  ]);
+  }, [config, selectedType, selectedSize, selectedHeater, selectedWood, selectedChimney, selectedDoor, selectedRoof, selectedWindow, selectedLed, extras]);
 
   const totalPrice = useMemo(() => {
     let price = selectedType?.basePrice || 0;
@@ -361,19 +316,7 @@ const Configurator = () => {
       if (extra) price += extra.price;
     });
     return price;
-  }, [
-    config,
-    selectedType,
-    selectedSize,
-    selectedHeater,
-    selectedWood,
-    selectedChimney,
-    selectedDoor,
-    selectedRoof,
-    selectedWindow,
-    selectedLed,
-    extras,
-  ]);
+  }, [config, selectedType, selectedSize, selectedHeater, selectedWood, selectedChimney, selectedDoor, selectedRoof, selectedWindow, selectedLed, extras]);
 
   const toggleExtra = (id: string) => {
     setConfig((prev) => ({
@@ -478,7 +421,7 @@ const Configurator = () => {
                       "relative w-20 h-20 rounded-lg overflow-hidden transition-all",
                       currentImageIndex === index
                         ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
-                        : "opacity-60 hover:opacity-100",
+                        : "opacity-60 hover:opacity-100"
                     )}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover" />
@@ -526,11 +469,10 @@ const Configurator = () => {
                   </div>
                 </div>
 
-                <div className="space-y-8">
+                <div className="space-y-6">
+                  {/* Typ sauny */}
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                      Typ sauny <span className="text-primary">*</span>
-                    </h3>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">Typ sauny *</h3>
                     <div className="grid grid-cols-3 gap-3">
                       {saunaTypes.map((type) => (
                         <button
@@ -540,21 +482,20 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.type === type.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50",
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
                           )}
                         >
-                          <img src={type.image} alt={type.name} className="w-full h-16 object-cover rounded-lg mb-2" />
-                          <span className="text-xs font-medium text-center">{type.name}</span>
+                          <img src={type.image} alt={type.name} className="w-16 h-16 rounded-lg object-cover mb-2" />
+                          <span className="text-sm font-medium">{type.name}</span>
                         </button>
                       ))}
                     </div>
                   </div>
 
+                  {/* Veľkosť */}
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                      Veľkosť <span className="text-primary">*</span>
-                    </h3>
-                    <div className="grid grid-cols-4 gap-2">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">Veľkosť *</h3>
+                    <div className="grid grid-cols-4 gap-3">
                       {sizes.map((size) => (
                         <button
                           key={size.id}
@@ -563,21 +504,20 @@ const Configurator = () => {
                             "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all",
                             config.size === size.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50",
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
                           )}
                         >
-                          <span className="text-lg font-bold">{size.name}</span>
+                          <span className="font-bold">{size.name}</span>
                           <span className="text-xs text-muted-foreground">{size.capacity}</span>
-                          {size.price > 0 && <span className="text-xs text-primary mt-1">+{size.price} €</span>}
+                          {size.price > 0 && <span className="text-xs text-primary">+{size.price} €</span>}
                         </button>
                       ))}
                     </div>
                   </div>
 
+                  {/* Typ dreva */}
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                      Typ dreva <span className="text-primary">*</span>
-                    </h3>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">Typ dreva *</h3>
                     <div className="grid grid-cols-3 gap-3">
                       {woodTypes.map((wood) => (
                         <button
@@ -587,14 +527,12 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.wood === wood.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50",
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
                           )}
                         >
-                          <img src={wood.image} alt={wood.name} className="w-full h-16 object-cover rounded-lg mb-2" />
-                          <span className="text-xs font-medium">{wood.name}</span>
-                          <span
-                            className={cn("text-xs mt-1", wood.price > 0 ? "text-primary" : "text-muted-foreground")}
-                          >
+                          <img src={wood.image} alt={wood.name} className="w-16 h-16 rounded-lg object-cover mb-2" />
+                          <span className="text-sm font-medium">{wood.name}</span>
+                          <span className={cn("text-xs", wood.price > 0 ? "text-primary" : "text-muted-foreground")}>
                             {wood.price > 0 ? `+${wood.price} €` : "V cene"}
                           </span>
                         </button>
@@ -602,11 +540,10 @@ const Configurator = () => {
                     </div>
                   </div>
 
+                  {/* Typ ohrievača */}
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                      Typ ohrievača <span className="text-primary">*</span>
-                    </h3>
-                    <div className="grid grid-cols-3 gap-2">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">Typ ohrievača *</h3>
+                    <div className="grid grid-cols-3 gap-3">
                       {heaterTypes.map((heater) => (
                         <button
                           key={heater.id}
@@ -620,30 +557,29 @@ const Configurator = () => {
                                   : heater.id === "electric"
                                     ? electricHeaters.find((x) => x.id !== "none")?.id || "none"
                                     : "none",
-                              // Reset chimney if not wood heater
-                              chimney: heater.id !== "wood" && apiConfig?.settings?.chimneyOnlyWithWoodHeater ? "none" : prev.chimney,
                             }))
                           }
                           className={cn(
                             "flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all",
                             config.heaterType === heater.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50",
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
                           )}
                         >
                           <span className="text-2xl mb-1">{heater.icon}</span>
-                          <span className="text-xs font-medium text-center">{heater.name}</span>
+                          <span className="text-sm font-medium">{heater.name}</span>
                         </button>
                       ))}
                     </div>
                   </div>
 
+                  {/* Model ohrievača */}
                   {config.heaterType !== "none" && (
                     <div>
-                      <h3 className="text-sm font-semibold text-foreground mb-3">
+                      <h3 className="text-sm font-medium text-muted-foreground mb-3">
                         {config.heaterType === "wood" ? "Pec na drevo" : "Elektrický ohrievač"}
                       </h3>
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-2 gap-3">
                         {(config.heaterType === "wood" ? woodHeaters : electricHeaters).map((heater) => (
                           <button
                             key={heater.id}
@@ -652,16 +588,11 @@ const Configurator = () => {
                               "flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all",
                               config.heater === heater.id
                                 ? "border-primary bg-primary/5"
-                                : "border-border/50 hover:border-primary/50 bg-card/50",
+                                : "border-border/50 hover:border-primary/50 bg-card/50"
                             )}
                           >
-                            <span className="text-sm font-medium text-center mb-1">{heater.name}</span>
-                            <span
-                              className={cn(
-                                "text-xs",
-                                (heater.price || 0) > 0 ? "text-primary" : "text-muted-foreground",
-                              )}
-                            >
+                            <span className="text-sm font-medium">{heater.name}</span>
+                            <span className={cn("text-xs", (heater.price || 0) > 0 ? "text-primary" : "text-muted-foreground")}>
                               {(heater.price || 0) > 0 ? `+${heater.price} €` : "0 €"}
                             </span>
                           </button>
@@ -670,9 +601,10 @@ const Configurator = () => {
                     </div>
                   )}
 
+                  {/* Komín */}
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">Komín</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">Komín</h3>
+                    <div className="grid grid-cols-4 gap-3">
                       {chimneys.map((chimney) => (
                         <button
                           key={chimney.id}
@@ -684,18 +616,12 @@ const Configurator = () => {
                               ? "opacity-50 cursor-not-allowed border-border/50 bg-card/50"
                               : config.chimney === chimney.id
                                 ? "border-primary bg-primary/5"
-                                : "border-border/50 hover:border-primary/50 bg-card/50",
+                                : "border-border/50 hover:border-primary/50 bg-card/50"
                           )}
                         >
-                          <img
-                            src={chimney.image}
-                            alt={chimney.name}
-                            className="w-full h-16 object-cover rounded-lg mb-2"
-                          />
-                          <span className="text-xs font-medium text-center">{chimney.name}</span>
-                          <span
-                            className={cn("text-xs mt-1", chimney.price > 0 ? "text-primary" : "text-muted-foreground")}
-                          >
+                          <img src={chimney.image} alt={chimney.name} className="w-12 h-12 rounded-lg object-cover mb-2" />
+                          <span className="text-sm font-medium">{chimney.name}</span>
+                          <span className={cn("text-xs", chimney.price > 0 ? "text-primary" : "text-muted-foreground")}>
                             {chimney.price > 0 ? `+${chimney.price} €` : "V cene"}
                           </span>
                         </button>
@@ -703,9 +629,10 @@ const Configurator = () => {
                     </div>
                   </div>
 
+                  {/* Dvere */}
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">Dvere</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">Dvere</h3>
+                    <div className="grid grid-cols-4 gap-3">
                       {doors.map((door) => (
                         <button
                           key={door.id}
@@ -714,14 +641,12 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.door === door.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50",
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
                           )}
                         >
-                          <img src={door.image} alt={door.name} className="w-full h-16 object-cover rounded-lg mb-2" />
-                          <span className="text-xs font-medium text-center">{door.name}</span>
-                          <span
-                            className={cn("text-xs mt-1", door.price > 0 ? "text-primary" : "text-muted-foreground")}
-                          >
+                          <img src={door.image} alt={door.name} className="w-12 h-12 rounded-lg object-cover mb-2" />
+                          <span className="text-sm font-medium">{door.name}</span>
+                          <span className={cn("text-xs", door.price > 0 ? "text-primary" : "text-muted-foreground")}>
                             {door.price > 0 ? `+${door.price} €` : "V cene"}
                           </span>
                         </button>
@@ -729,9 +654,10 @@ const Configurator = () => {
                     </div>
                   </div>
 
+                  {/* Strecha */}
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">Strecha</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">Strecha</h3>
+                    <div className="grid grid-cols-4 gap-3">
                       {roofs.map((roof) => (
                         <button
                           key={roof.id}
@@ -740,14 +666,12 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.roof === roof.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50",
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
                           )}
                         >
-                          <img src={roof.image} alt={roof.name} className="w-full h-16 object-cover rounded-lg mb-2" />
-                          <span className="text-xs font-medium text-center">{roof.name}</span>
-                          <span
-                            className={cn("text-xs mt-1", roof.price > 0 ? "text-primary" : "text-muted-foreground")}
-                          >
+                          <img src={roof.image} alt={roof.name} className="w-12 h-12 rounded-lg object-cover mb-2" />
+                          <span className="text-sm font-medium">{roof.name}</span>
+                          <span className={cn("text-xs", roof.price > 0 ? "text-primary" : "text-muted-foreground")}>
                             {roof.price > 0 ? `+${roof.price} €` : "V cene"}
                           </span>
                         </button>
@@ -755,9 +679,10 @@ const Configurator = () => {
                     </div>
                   </div>
 
+                  {/* Okná */}
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">Okná</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">Okná</h3>
+                    <div className="grid grid-cols-4 gap-3">
                       {windows.map((window) => (
                         <button
                           key={window.id}
@@ -766,18 +691,12 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.window === window.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50",
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
                           )}
                         >
-                          <img
-                            src={window.image}
-                            alt={window.name}
-                            className="w-full h-16 object-cover rounded-lg mb-2"
-                          />
-                          <span className="text-xs font-medium text-center">{window.name}</span>
-                          <span
-                            className={cn("text-xs mt-1", window.price > 0 ? "text-primary" : "text-muted-foreground")}
-                          >
+                          <img src={window.image} alt={window.name} className="w-12 h-12 rounded-lg object-cover mb-2" />
+                          <span className="text-sm font-medium">{window.name}</span>
+                          <span className={cn("text-xs", window.price > 0 ? "text-primary" : "text-muted-foreground")}>
                             {window.price > 0 ? `+${window.price} €` : "V cene"}
                           </span>
                         </button>
@@ -785,9 +704,10 @@ const Configurator = () => {
                     </div>
                   </div>
 
+                  {/* LED osvetlenie */}
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">LED osvetlenie</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">LED osvetlenie</h3>
+                    <div className="grid grid-cols-4 gap-3">
                       {ledLights.map((led) => (
                         <button
                           key={led.id}
@@ -796,14 +716,12 @@ const Configurator = () => {
                             "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                             config.led === led.id
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50",
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
                           )}
                         >
-                          <img src={led.image} alt={led.name} className="w-full h-16 object-cover rounded-lg mb-2" />
-                          <span className="text-xs font-medium text-center">{led.name}</span>
-                          <span
-                            className={cn("text-xs mt-1", led.price > 0 ? "text-primary" : "text-muted-foreground")}
-                          >
+                          <img src={led.image} alt={led.name} className="w-12 h-12 rounded-lg object-cover mb-2" />
+                          <span className="text-sm font-medium">{led.name}</span>
+                          <span className={cn("text-xs", led.price > 0 ? "text-primary" : "text-muted-foreground")}>
                             {led.price > 0 ? `+${led.price} €` : "V cene"}
                           </span>
                         </button>
@@ -811,9 +729,10 @@ const Configurator = () => {
                     </div>
                   </div>
 
+                  {/* Príslušenstvo */}
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3">Príslušenstvo</h3>
-                    <div className="grid grid-cols-2 gap-2">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-3">Príslušenstvo</h3>
+                    <div className="grid grid-cols-1 gap-2">
                       {extras.map((extra) => (
                         <button
                           key={extra.id}
@@ -822,22 +741,15 @@ const Configurator = () => {
                             "flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all",
                             config.extras.includes(extra.id)
                               ? "border-primary bg-primary/5"
-                              : "border-border/50 hover:border-primary/50 bg-card/50",
+                              : "border-border/50 hover:border-primary/50 bg-card/50"
                           )}
                         >
-                          <div
-                            className={cn(
-                              "w-5 h-5 rounded border-2 flex items-center justify-center transition-all shrink-0",
-                              config.extras.includes(extra.id)
-                                ? "bg-primary border-primary"
-                                : "border-muted-foreground",
-                            )}
-                          >
-                            {config.extras.includes(extra.id) && <Check className="w-3 h-3 text-primary-foreground" />}
+                          <div className="w-5 h-5 rounded border-2 border-primary flex items-center justify-center">
+                            {config.extras.includes(extra.id) && <Check className="w-3 h-3 text-primary" />}
                           </div>
-                          <div className="text-left">
-                            <span className="text-sm font-medium block">{extra.name}</span>
-                            <span className="text-xs text-primary">+{extra.price} €</span>
+                          <div className="flex-1 text-left">
+                            <span className="font-medium">{extra.name}</span>
+                            <span className="text-primary ml-2">+{extra.price} €</span>
                           </div>
                         </button>
                       ))}
@@ -845,8 +757,9 @@ const Configurator = () => {
                   </div>
                 </div>
 
-                <div className="lg:hidden border-t border-border/50 pt-6 space-y-4">
-                  <div className="flex items-center justify-between">
+                {/* Mobile price summary */}
+                <div className="lg:hidden border border-border/50 rounded-2xl p-6 bg-card/50">
+                  <div className="flex items-center justify-between mb-4">
                     <span className="text-lg font-medium">Celková cena</span>
                     <div className="text-right">
                       <span className="text-muted-foreground line-through text-sm mr-2">
@@ -863,15 +776,11 @@ const Configurator = () => {
                     onClick={addToCart}
                     disabled={isAddingToCart}
                   >
-                    {isAddingToCart ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                    ) : (
-                      <ShoppingCart className="w-5 h-5" />
-                    )}
+                    {isAddingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShoppingCart className="w-5 h-5" />}
                     {isAddingToCart ? "Pridávam..." : "Pridať do košíka"}
                   </Button>
 
-                  <p className="text-xs text-muted-foreground text-center">* Cena nezahŕňa dopravu a inštaláciu</p>
+                  <p className="text-xs text-muted-foreground text-center mt-3">* Cena nezahŕňa dopravu a inštaláciu</p>
                 </div>
               </div>
             </ScrollArea>
