@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { Menu, X, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { label: 'Domov', href: 'https://brelax.weboptim.eu/' },
-    { label: 'Obchod', href: 'https://brelax.weboptim.eu/obchod/' },
-    { label: 'O nás', href: 'https://brelax.weboptim.eu/o-nas/' },
-    { label: 'FAQ', href: 'https://brelax.weboptim.eu/faq/' },
-    { label: 'Kontakt', href: 'https://brelax.weboptim.eu/kontakt/' },
+    { label: 'Domov', href: 'https://brelax.weboptim.eu/', external: true },
+    { label: 'Obchod', href: 'https://brelax.weboptim.eu/obchod/', external: true },
+    { label: 'Konfigurátor', href: '/configurator', external: false },
+    { label: 'O nás', href: 'https://brelax.weboptim.eu/o-nas/', external: true },
+    { label: 'FAQ', href: 'https://brelax.weboptim.eu/faq/', external: true },
+    { label: 'Kontakt', href: 'https://brelax.weboptim.eu/kontakt/', external: true },
   ];
 
   return (
@@ -26,15 +28,25 @@ const ConfiguratorHeader = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
-            {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-sm font-medium transition-colors duration-300 tracking-wide uppercase text-foreground/70 hover:text-primary"
-              >
-                {item.label}
-              </a>
-            ))}
+            {navItems.map((item) => 
+              item.external ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="text-sm font-medium transition-colors duration-300 tracking-wide uppercase text-foreground/70 hover:text-primary"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  className="text-sm font-medium transition-colors duration-300 tracking-wide uppercase text-primary"
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
           </nav>
 
           {/* Actions */}
@@ -69,16 +81,27 @@ const ConfiguratorHeader = () => {
         {isMenuOpen && (
           <nav className="lg:hidden mt-4 pb-4 border-t border-border/30 pt-4">
             <div className="flex flex-col gap-4">
-              {navItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wide uppercase"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.label}
-                </a>
-              ))}
+              {navItems.map((item) => 
+                item.external ? (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wide uppercase"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.label}
+                    to={item.href}
+                    className="text-sm font-medium text-primary transition-colors duration-300 tracking-wide uppercase"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
               <a href="https://brelax.weboptim.eu/kontakt/" onClick={() => setIsMenuOpen(false)}>
                 <Button variant="luxury" size="sm" className="mt-2 w-full">
                   Dopyt
