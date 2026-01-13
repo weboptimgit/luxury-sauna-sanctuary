@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import saunaBarrel from "@/assets/sauna-barrel.jpg";
 import saunaCube from "@/assets/sauna-cube.jpg";
 import saunaTraditional from "@/assets/sauna-traditional.jpg";
@@ -333,11 +335,15 @@ const Configurator = () => {
   // Loading state - AŽ PO useMemo
   if (isLoadingConfig || !apiConfig) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex items-center gap-3 text-muted-foreground">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          Načítavam konfigurátor…
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center pt-32 pb-16">
+          <div className="flex items-center gap-3 text-muted-foreground">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            Načítavam konfigurátor…
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -391,7 +397,8 @@ const Configurator = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="py-8">
+      <Header />
+      <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
             <Link to="/" className="hover:text-primary transition-colors">
@@ -828,6 +835,7 @@ const Configurator = () => {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 };
