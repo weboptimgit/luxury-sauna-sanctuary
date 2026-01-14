@@ -49,12 +49,12 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-4">
-            <button className="relative p-2 text-foreground/70 hover:text-primary transition-colors">
+            <Link to="/cart" className="relative p-2 text-foreground/70 hover:text-primary transition-colors">
               <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
-                0
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs font-medium rounded-full flex items-center justify-center">
+                1
               </span>
-            </button>
+            </Link>
             
             <Link to="/contact">
               <Button variant="luxury" size="sm" className="hidden md:inline-flex">
