@@ -332,28 +332,42 @@ const ProductDetail = () => {
           {/* Product Details Tabs */}
           <div className="mt-16 lg:mt-24">
             <Tabs defaultValue="description" className="w-full">
-              <TabsList className="w-full max-w-md mx-auto grid grid-cols-2 mb-8">
-                <TabsTrigger value="description" className="text-base">Popis produktu</TabsTrigger>
-                <TabsTrigger value="specifications" className="text-base">Ďalšie informácie</TabsTrigger>
-              </TabsList>
+              <div className="border-b border-border/30 mb-8">
+                <TabsList className="bg-transparent h-auto p-0 w-full max-w-2xl mx-auto flex justify-center gap-8">
+                  <TabsTrigger 
+                    value="description" 
+                    className="bg-transparent text-lg font-display font-medium px-1 pb-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Popis produktu
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="specifications" 
+                    className="bg-transparent text-lg font-display font-medium px-1 pb-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Ďalšie informácie
+                  </TabsTrigger>
+                </TabsList>
+              </div>
               
-              <TabsContent value="description" className="max-w-4xl mx-auto">
+              <TabsContent value="description" className="max-w-4xl mx-auto mt-0">
                 <div className="prose prose-lg max-w-none">
-                  <div className="bg-card rounded-lg border border-border/30 p-8">
-                    <h3 className="font-display text-2xl font-semibold mb-4 text-foreground">
+                  <div className="bg-card rounded-xl border border-border/30 p-8 lg:p-10 shadow-sm">
+                    <h3 className="font-display text-2xl lg:text-3xl font-semibold mb-6 text-foreground">
                       {product.name}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed mb-6">
+                    <p className="text-muted-foreground leading-relaxed text-lg mb-8">
                       {product.description}
                     </p>
                     
-                    <h4 className="font-display text-xl font-semibold mb-4 text-foreground">
+                    <h4 className="font-display text-xl font-semibold mb-5 text-foreground">
                       Kľúčové vlastnosti
                     </h4>
-                    <ul className="space-y-3">
+                    <ul className="space-y-4">
                       {product.features.map((feature, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <Check className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                        <li key={index} className="flex items-start gap-4">
+                          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                            <Check className="w-4 h-4 text-primary" />
+                          </div>
                           <span className="text-muted-foreground">{feature}</span>
                         </li>
                       ))}
@@ -362,19 +376,19 @@ const ProductDetail = () => {
                 </div>
               </TabsContent>
               
-              <TabsContent value="specifications">
-                <div className="max-w-3xl mx-auto bg-card rounded-lg border border-border/30 overflow-hidden">
+              <TabsContent value="specifications" className="mt-0">
+                <div className="max-w-3xl mx-auto bg-card rounded-xl border border-border/30 overflow-hidden shadow-sm">
                   <table className="w-full">
                     <tbody>
                       {product.specifications.map((spec, index) => (
                         <tr
                           key={index}
-                          className={`${index % 2 === 0 ? 'bg-secondary/10' : 'bg-transparent'}`}
+                          className={`${index % 2 === 0 ? 'bg-secondary/10' : 'bg-transparent'} border-b border-border/10 last:border-b-0`}
                         >
-                          <td className="px-6 py-4 font-medium text-foreground border-r border-border/20 w-1/3">
+                          <td className="px-6 lg:px-8 py-5 font-medium text-foreground border-r border-border/20 w-2/5">
                             {spec.label}
                           </td>
-                          <td className="px-6 py-4 text-muted-foreground">
+                          <td className="px-6 lg:px-8 py-5 text-muted-foreground">
                             {spec.value}
                           </td>
                         </tr>
