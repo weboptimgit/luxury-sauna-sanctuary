@@ -22,28 +22,51 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 
-// Variant options
+// Variant options with price modifiers
 const sizeOptions = [
-  { value: 'small', label: '2.0m × 1.8m × 2.0m (2-3 osoby)' },
-  { value: 'medium', label: '2.4m × 2.1m × 2.1m (4-6 osôb)' },
-  { value: 'large', label: '3.0m × 2.5m × 2.4m (6-8 osôb)' },
-  { value: 'xlarge', label: '4.0m × 3.0m × 2.8m (8-10 osôb)' },
+  { value: 'small', label: '2.0m × 1.8m × 2.0m (2-3 osoby)', priceModifier: -1500 },
+  { value: 'medium', label: '2.4m × 2.1m × 2.1m (4-6 osôb)', priceModifier: 0 },
+  { value: 'large', label: '3.0m × 2.5m × 2.4m (6-8 osôb)', priceModifier: 2500 },
+  { value: 'xlarge', label: '4.0m × 3.0m × 2.8m (8-10 osôb)', priceModifier: 5500 },
 ];
 
 const colorOptions = [
-  { value: 'natural', label: 'Prírodné drevo' },
-  { value: 'honey', label: 'Medový odtieň' },
-  { value: 'dark', label: 'Tmavý orech' },
-  { value: 'black', label: 'Čierna' },
+  { value: 'natural', label: 'Prírodné drevo', priceModifier: 0 },
+  { value: 'honey', label: 'Medový odtieň', priceModifier: 300 },
+  { value: 'dark', label: 'Tmavý orech', priceModifier: 500 },
+  { value: 'black', label: 'Čierna', priceModifier: 700 },
 ];
+
+// Calculate price range for a product
+const calculatePriceRange = (basePrice: number) => {
+  const minSizeModifier = Math.min(...sizeOptions.map(s => s.priceModifier));
+  const maxSizeModifier = Math.max(...sizeOptions.map(s => s.priceModifier));
+  const minColorModifier = Math.min(...colorOptions.map(c => c.priceModifier));
+  const maxColorModifier = Math.max(...colorOptions.map(c => c.priceModifier));
+  
+  return {
+    min: basePrice + minSizeModifier + minColorModifier,
+    max: basePrice + maxSizeModifier + maxColorModifier,
+  };
+};
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id || '');
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [selectedSize, setSelectedSize] = useState('medium');
-  const [selectedColor, setSelectedColor] = useState('natural');
+  const [selectedSize, setSelectedSize] = useState<string>('');
+  const [selectedColor, setSelectedColor] = useState<string>('');
+
+  // Calculate current price based on selected variants
+  const selectedSizeOption = sizeOptions.find(s => s.value === selectedSize);
+  const selectedColorOption = colorOptions.find(c => c.value === selectedColor);
+  
+  const hasSelectedVariants = selectedSize && selectedColor;
+  const currentPrice = product ? 
+    product.price + (selectedSizeOption?.priceModifier || 0) + (selectedColorOption?.priceModifier || 0) 
+    : 0;
+  const priceRange = product ? calculatePriceRange(product.price) : { min: 0, max: 0 };
 
   if (!product) {
     return (
@@ -159,14 +182,34 @@ const ProductDetail = () => {
               </div>
 
               {/* Price */}
-              <div className="flex items-baseline gap-4 py-4 border-y border-border/30">
-                <span className="font-display text-4xl text-primary font-semibold">
-                  {formatPrice(product.price)}
-                </span>
-                {product.originalPrice && (
-                  <span className="text-xl text-muted-foreground line-through">
-                    {formatPrice(product.originalPrice)}
-                  </span>
+              <div className="flex flex-col gap-1 py-4 border-y border-border/30">
+                <div className="flex items-baseline gap-4">
+                  {hasSelectedVariants ? (
+                    <>
+                      <span className="font-display text-4xl text-primary font-semibold">
+                        {formatPrice(currentPrice)}
+                      </span>
+                      {product.originalPrice && (
+                        <span className="text-xl text-muted-foreground line-through">
+                          {formatPrice(product.originalPrice + (selectedSizeOption?.priceModifier || 0) + (selectedColorOption?.priceModifier || 0))}
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-display text-4xl text-primary font-semibold">
+                        od {formatPrice(priceRange.min)}
+                      </span>
+                      <span className="text-lg text-muted-foreground">
+                        – {formatPrice(priceRange.max)}
+                      </span>
+                    </>
+                  )}
+                </div>
+                {!hasSelectedVariants && (
+                  <p className="text-sm text-muted-foreground">
+                    Vyberte rozmer a farbu pre presnú cenu
+                  </p>
                 )}
               </div>
 
@@ -182,7 +225,12 @@ const ProductDetail = () => {
                     <SelectContent className="bg-background border-border z-50">
                       {sizeOptions.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                          <span className="flex justify-between items-center gap-4 w-full">
+                            <span>{option.label}</span>
+                            <span className={`text-sm ${option.priceModifier > 0 ? 'text-primary' : option.priceModifier < 0 ? 'text-green-600' : 'text-muted-foreground'}`}>
+                              {option.priceModifier > 0 ? `+${formatPrice(option.priceModifier)}` : option.priceModifier < 0 ? formatPrice(option.priceModifier) : '—'}
+                            </span>
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -199,7 +247,12 @@ const ProductDetail = () => {
                     <SelectContent className="bg-background border-border z-50">
                       {colorOptions.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                          <span className="flex justify-between items-center gap-4 w-full">
+                            <span>{option.label}</span>
+                            <span className={`text-sm ${option.priceModifier > 0 ? 'text-primary' : 'text-muted-foreground'}`}>
+                              {option.priceModifier > 0 ? `+${formatPrice(option.priceModifier)}` : '—'}
+                            </span>
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>
