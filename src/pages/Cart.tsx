@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import saunaBarrel from '@/assets/sauna-barrel.jpg';
 
 interface CartItem {
   id: string;
@@ -19,13 +20,13 @@ interface CartItem {
 const Cart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
-      id: '1',
-      name: 'Elaris',
-      price: 6990,
-      image: '/placeholder.svg',
-      dimensions: '2,75 × 2,20 × 2,35 m',
-      color: 'Biela',
-      quantity: 9,
+      id: 'barrel-sauna',
+      name: 'Barrel Sauna',
+      price: 8900,
+      image: saunaBarrel,
+      dimensions: '2,40 × 2,10 × 2,10 m',
+      color: 'Prírodná',
+      quantity: 1,
     },
   ]);
 
