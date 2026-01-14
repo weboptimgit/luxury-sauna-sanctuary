@@ -1,6 +1,14 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState } from 'react';
 import { ArrowLeft, Check, Truck, Shield, Phone, Minus, Plus } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
@@ -14,11 +22,28 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 
+// Variant options
+const sizeOptions = [
+  { value: 'small', label: '2.0m × 1.8m × 2.0m (2-3 osoby)' },
+  { value: 'medium', label: '2.4m × 2.1m × 2.1m (4-6 osôb)' },
+  { value: 'large', label: '3.0m × 2.5m × 2.4m (6-8 osôb)' },
+  { value: 'xlarge', label: '4.0m × 3.0m × 2.8m (8-10 osôb)' },
+];
+
+const colorOptions = [
+  { value: 'natural', label: 'Prírodné drevo' },
+  { value: 'honey', label: 'Medový odtieň' },
+  { value: 'dark', label: 'Tmavý orech' },
+  { value: 'black', label: 'Čierna' },
+];
+
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const product = getProductById(id || '');
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [selectedSize, setSelectedSize] = useState('medium');
+  const [selectedColor, setSelectedColor] = useState('natural');
 
   if (!product) {
     return (
@@ -145,11 +170,48 @@ const ProductDetail = () => {
                 )}
               </div>
 
+              {/* Variant Selectors */}
+              <div className="space-y-4">
+                {/* Size Selector */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Rozmer</label>
+                  <Select value={selectedSize} onValueChange={setSelectedSize}>
+                    <SelectTrigger className="w-full bg-background border-border/50">
+                      <SelectValue placeholder="Vyberte rozmer" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background border-border z-50">
+                      {sizeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Color Selector */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Farba</label>
+                  <Select value={selectedColor} onValueChange={setSelectedColor}>
+                    <SelectTrigger className="w-full bg-background border-border/50">
+                      <SelectValue placeholder="Vyberte farbu" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background border-border z-50">
+                      {colorOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
               {/* Stock Status */}
               <div className="flex items-center gap-2">
                 <div className={`w-3 h-3 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`} />
-                <span className={product.inStock ? 'text-green-500' : 'text-red-500'}>
-                  {product.inStock ? 'In Stock' : 'Out of Stock'}
+                <span className={product.inStock ? 'text-green-600' : 'text-red-600'}>
+                  {product.inStock ? 'Skladom' : 'Nie je skladom'}
                 </span>
               </div>
 
@@ -214,30 +276,61 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* Specifications Table */}
+          {/* Product Details Tabs */}
           <div className="mt-16 lg:mt-24">
-            <h2 className="font-display text-3xl font-light mb-8 text-center">
-              Technical <span className="text-gradient-amber font-semibold">Specifications</span>
-            </h2>
-            <div className="max-w-3xl mx-auto bg-card rounded-lg border border-border/30 overflow-hidden">
-              <table className="w-full">
-                <tbody>
-                  {product.specifications.map((spec, index) => (
-                    <tr
-                      key={index}
-                      className={`${index % 2 === 0 ? 'bg-secondary/10' : 'bg-transparent'}`}
-                    >
-                      <td className="px-6 py-4 font-medium text-foreground border-r border-border/20">
-                        {spec.label}
-                      </td>
-                      <td className="px-6 py-4 text-muted-foreground">
-                        {spec.value}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Tabs defaultValue="description" className="w-full">
+              <TabsList className="w-full max-w-md mx-auto grid grid-cols-2 mb-8">
+                <TabsTrigger value="description" className="text-base">Popis produktu</TabsTrigger>
+                <TabsTrigger value="specifications" className="text-base">Ďalšie informácie</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="description" className="max-w-4xl mx-auto">
+                <div className="prose prose-lg max-w-none">
+                  <div className="bg-card rounded-lg border border-border/30 p-8">
+                    <h3 className="font-display text-2xl font-semibold mb-4 text-foreground">
+                      {product.name}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed mb-6">
+                      {product.description}
+                    </p>
+                    
+                    <h4 className="font-display text-xl font-semibold mb-4 text-foreground">
+                      Kľúčové vlastnosti
+                    </h4>
+                    <ul className="space-y-3">
+                      {product.features.map((feature, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <Check className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                          <span className="text-muted-foreground">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="specifications">
+                <div className="max-w-3xl mx-auto bg-card rounded-lg border border-border/30 overflow-hidden">
+                  <table className="w-full">
+                    <tbody>
+                      {product.specifications.map((spec, index) => (
+                        <tr
+                          key={index}
+                          className={`${index % 2 === 0 ? 'bg-secondary/10' : 'bg-transparent'}`}
+                        >
+                          <td className="px-6 py-4 font-medium text-foreground border-r border-border/20 w-1/3">
+                            {spec.label}
+                          </td>
+                          <td className="px-6 py-4 text-muted-foreground">
+                            {spec.value}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
 
           {/* Related Products */}
