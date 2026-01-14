@@ -14,6 +14,7 @@ const Header = () => {
     { label: 'O nás', href: '/about' },
     { label: 'FAQ', href: '/faq' },
     { label: 'Kontakt', href: '/contact' },
+    { label: 'Dizajn', href: '/design-system' },
   ];
 
   return (
