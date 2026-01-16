@@ -195,8 +195,8 @@ const Checkout = () => {
                 Návrat do košíka
               </Link>
               
-              <Button variant="luxury" size="lg" className="min-w-[200px]">
-                Zadať objednávku
+              <Button asChild variant="luxury" size="lg" className="min-w-[200px]">
+                <Link to="/order-confirmation">Zadať objednávku</Link>
               </Button>
             </div>
           </div>
