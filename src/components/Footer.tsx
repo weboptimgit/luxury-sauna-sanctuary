@@ -1,4 +1,14 @@
+import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+
+const quickLinks = [
+  { name: 'Domov', href: '/' },
+  { name: 'Sauny', href: '/shop' },
+  { name: 'Zdravie a oddych', href: '/wellness' },
+  { name: 'O nás', href: '/about' },
+  { name: 'FAQ', href: '/faq' },
+  { name: 'Kontakt', href: '/contact' },
+];
 
 const Footer = () => {
   return (
@@ -29,13 +39,13 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-display text-lg font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-display text-lg font-semibold mb-4">Rýchle odkazy</h4>
             <ul className="space-y-3">
-              {['Home', 'Our Saunas', 'Custom Design', 'About Us', 'FAQ', 'Blog'].map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">
-                    {link}
-                  </a>
+              {quickLinks.map((link) => (
+                <li key={link.name}>
+                  <Link to={link.href} className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
