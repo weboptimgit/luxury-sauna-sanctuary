@@ -11,6 +11,7 @@ import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import About from "./pages/About";
 import Wellness from "./pages/Wellness";
+import CustomSaunasPage from "./pages/CustomSaunas";
 import Configurator from "./pages/Configurator";
 import DesignSystem from "./pages/DesignSystem";
 import Cart from "./pages/Cart";
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/faq" element={<FAQ />} />
           <Route path="/about" element={<About />} />
           <Route path="/wellness" element={<Wellness />} />
+          <Route path="/sauny-na-mieru" element={<CustomSaunasPage />} />
           <Route path="/konfigurator" element={<Configurator />} />
           <Route path="/design-system" element={<DesignSystem />} />
           <Route path="/cart" element={<Cart />} />
