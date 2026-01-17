@@ -4,6 +4,7 @@ import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react'
 const quickLinks = [
   { name: 'Domov', href: '/' },
   { name: 'Sauny', href: '/shop' },
+  { name: 'Sauny na mieru', href: '/sauny-na-mieru' },
   { name: 'Zdravie a oddych', href: '/wellness' },
   { name: 'O nás', href: '/about' },
   { name: 'FAQ', href: '/faq' },
