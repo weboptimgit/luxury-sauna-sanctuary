@@ -12,6 +12,7 @@ import saunaCube from "@/assets/sauna-cube.jpg";
 import saunaTraditional from "@/assets/sauna-traditional.jpg";
 import saunaInterior from "@/assets/sauna-interior.jpg";
 import hotTub from "@/assets/hot-tub.jpg";
+import saunaKit from "@/assets/Sauna-accessories-kit.jpg";
 
 type ProductType = "sauna" | "hottub";
 
@@ -144,11 +145,18 @@ const Configurator = () => {
     color4: saunaInterior,
   };
 
+  const saunaAccessoryImages: Record<string, string> = {
+    kit: saunaKit,
+  };
+
   // --- UI Options z API configu ---
   const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes);
   const saunaLedOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.ledOptions);
   const saunaBluetoothOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.bluetoothOptions);
-  const saunaAccessoryKitOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.accessoryKitOptions);
+  const saunaAccessoryKitOptions: ConfigOption[] = toUIOptions(
+    apiConfig?.sauna.accessoryKitOptions,
+    saunaAccessoryImages
+  );
   const saunaColorOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.colorOptions, saunaColorThumbs);
 
   const hotTubSizeOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.sizeOptions);
