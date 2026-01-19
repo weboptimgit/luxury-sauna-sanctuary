@@ -174,13 +174,13 @@ const Configurator = () => {
   };
 
   const ledImages: Record<string, string> = {
-    electric: electricHeater,
-    wood: woodHeater,
+    benches: ledBenches,
+    backrest: ledBackrest,
   };
 
   const heaterImages: Record<string, string> = {
-    benches: ledBenches,
-    backrest: ledBackrest,
+    electric: electricHeater,
+    wood: woodHeater,
   };
   
   // --- UI Options z API configu ---
