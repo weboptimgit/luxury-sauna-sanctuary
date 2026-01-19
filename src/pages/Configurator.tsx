@@ -151,7 +151,7 @@ const Configurator = () => {
   };
 
   const saunaSpeakerImage: Record<string, string> = {
-    kit: speaker,
+    bluetooth: speaker,
   };
   
   // --- UI Options z API configu ---
