@@ -355,6 +355,15 @@ const Configurator = () => {
       <ConfiguratorHeader />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
+          {/* Tlačidlo späť */}
+          <button
+            onClick={() => setProductType(null)}
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 group"
+          >
+            <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            <span>Späť na výber produktu</span>
+          </button>
+
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
             <a href="/" className="hover:text-primary transition-colors">
               Domov
