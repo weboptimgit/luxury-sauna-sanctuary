@@ -163,7 +163,6 @@ const Configurator = () => {
   
   // --- UI Options z API configu ---
   const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes);
-  const saunaLedOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.ledOptions);
   const saunaLedOptions: ConfigOption[] = toUIOptions(
     apiConfig?.sauna.ledOptions,
     ledImages
