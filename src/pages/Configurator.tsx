@@ -13,6 +13,7 @@ import saunaTraditional from "@/assets/sauna-traditional.jpg";
 import saunaInterior from "@/assets/sauna-interior.jpg";
 import hotTub from "@/assets/hot-tub.jpg";
 import saunaKit from "@/assets/Sauna-accessories-kit.jpg";
+import speaker from "@/assets/Bluetooth-speaker-system.png";
 
 type ProductType = "sauna" | "hottub";
 
@@ -149,10 +150,17 @@ const Configurator = () => {
     kit: saunaKit,
   };
 
+  const saunaSpeakerImage: Record<string, string> = {
+    kit: speaker,
+  };
+  
   // --- UI Options z API configu ---
   const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes);
   const saunaLedOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.ledOptions);
-  const saunaBluetoothOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.bluetoothOptions);
+  const saunaBluetoothOptions: ConfigOption[] = toUIOptions(
+    apiConfig?.sauna.bluetoothOptions,
+    saunaSpeakerImage
+  );
   const saunaAccessoryKitOptions: ConfigOption[] = toUIOptions(
     apiConfig?.sauna.accessoryKitOptions,
     saunaAccessoryImages
@@ -601,6 +609,7 @@ const Configurator = () => {
                               option={option}
                               isSelected={saunaConfig.bluetooth === option.id}
                               onClick={() => setSaunaConfig((prev) => ({ ...prev, bluetooth: option.id }))}
+                              showImage={true}
                             />
                           ))}
                         </div>
