@@ -8,10 +8,11 @@ const ConfiguratorHeader = () => {
 
   const navItems = [
     { label: 'Domov', href: 'https://brelax.weboptim.eu/', external: true },
-    { label: 'Obchod', href: 'https://brelax.weboptim.eu/obchod/', external: true },
+    { label: 'Fínske sauny', href: 'https://brelax.weboptim.eu/k/finske-sauny/', external: true },
+    { label: 'Infrasauny', href: 'https://brelax.weboptim.eu/k/infrasauny/', external: true },
+    { label: 'Kade', href: 'https://brelax.weboptim.eu/k/kade/', external: true },
+    { label: 'Doplnky', href: 'https://brelax.weboptim.eu/k/doplnky/', external: true },
     { label: 'Konfigurátor', href: '/konfigurator', external: false },
-    { label: 'O nás', href: 'https://brelax.weboptim.eu/o-nas/', external: true },
-    { label: 'FAQ', href: 'https://brelax.weboptim.eu/faq/', external: true },
     { label: 'Kontakt', href: 'https://brelax.weboptim.eu/kontakt/', external: true },
   ];
 
