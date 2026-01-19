@@ -6,13 +6,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import ConfiguratorHeader from "@/components/ConfiguratorHeader";
 import ConfiguratorFooter from "@/components/ConfiguratorFooter";
+
 import saunaBarrel from "@/assets/sauna-barrel.jpg";
 import saunaCube from "@/assets/sauna-cube.jpg";
 import saunaTraditional from "@/assets/sauna-traditional.jpg";
 import saunaInterior from "@/assets/sauna-interior.jpg";
 import hotTub from "@/assets/hot-tub.jpg";
 
-// Typy pre konfiguráciu
 type ProductType = "sauna" | "hottub";
 
 type ConfigOption = {
@@ -24,13 +24,86 @@ type ConfigOption = {
   description?: string;
 };
 
+type ApiOption = {
+  id: string;
+  label: string;
+  price: number;
+  originalPrice?: number;
+  description?: string;
+};
+
+type ApiConfig = {
+  products: { sauna: number; hottub: number };
+  sauna: {
+    basePrice: number;
+    heaterTypes: ApiOption[];
+    ledOptions: ApiOption[];
+    bluetoothOptions: ApiOption[];
+    accessoryKitOptions: ApiOption[];
+    colorOptions: ApiOption[]; // price ok aj keď 0
+  };
+  hottub: {
+    basePrice: number;
+    sizeOptions: ApiOption[];
+    jetsOptions: ApiOption[];
+    ledOptions: ApiOption[];
+    coverOptions: ApiOption[];
+    colorOptions: ApiOption[];
+  };
+};
+
+const toUIOptions = (api: ApiOption[] | undefined, withImages?: Record<string, string>): ConfigOption[] => {
+  if (!api) return [];
+  return api.map((o) => ({
+    id: o.id,
+    name: o.label,
+    price: Number(o.price || 0),
+    originalPrice: o.originalPrice,
+    description: o.description,
+    image: withImages?.[o.id],
+  }));
+};
+
 const Configurator = () => {
   const { toast } = useToast();
+
+  // --- API CONFIG ---
+  const [apiConfig, setApiConfig] = useState<ApiConfig | null>(null);
+  const [isConfigLoading, setIsConfigLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      try {
+        const res = await fetch("/wp-json/sauna/v1/config", {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Config sa nepodarilo načítať");
+        const data = (await res.json()) as ApiConfig;
+
+        if (mounted) setApiConfig(data);
+      } catch (e) {
+        console.error(e);
+        toast({
+          title: "Chyba",
+          description: "Nepodarilo sa načítať konfiguráciu.",
+          variant: "destructive",
+        });
+      } finally {
+        if (mounted) setIsConfigLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [toast]);
 
   // Výber produktu
   const [productType, setProductType] = useState<ProductType | null>(null);
 
-  // Sauna konfigurácia
+  // Sauna konfigurácia (ids musia sedieť s PHP configom)
   const [saunaConfig, setSaunaConfig] = useState({
     heaterType: "none",
     led: "none",
@@ -55,119 +128,81 @@ const Configurator = () => {
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
-    if (target.scrollTop > 50) {
-      setShowScrollIndicator(false);
-    }
+    if (target.scrollTop > 50) setShowScrollIndicator(false);
   }, []);
 
-  // Konfiguračné možnosti pre saunu
-  const saunaHeaterTypes: ConfigOption[] = [
-    { id: "none", name: "Bez ohrievača", price: 0, description: "Bez ohrievača" },
-    { id: "electric", name: "Elektrický ohrievač", price: 890, description: "Elektrický ohrievač" },
-    { id: "wood", name: "Ohrievač na drevo", price: 1290, description: "Klasický ohrievač na drevo" },
-  ];
-
-  const saunaLedOptions: ConfigOption[] = [
-    { id: "none", name: "Bez LED osvetlenia", price: 0 },
-    { id: "benches", name: "LED pod lavičkami", price: 269.10, originalPrice: 299 },
-    { id: "backrest", name: "LED v operadlách", price: 269.10, originalPrice: 299 },
-  ];
-
-  const saunaBluetoothOptions: ConfigOption[] = [
-    { id: "none", name: "Bez Bluetooth", price: 0 },
-    { id: "bluetooth", name: "S Bluetooth reproduktorom", price: 269.10, originalPrice: 299 },
-  ];
-
-  const saunaAccessoryKitOptions: ConfigOption[] = [
-    { id: "none", name: "Bez saunovej sady", price: 0 },
-    { id: "kit", name: "So saunovou sadou", price: 98.10, originalPrice: 109, description: "Vedierko s naberačkou, presýpacie hodiny a teplomer" },
-  ];
-
-  const saunaColorOptions: ConfigOption[] = [
-    { id: "none", name: "Bez farby", price: 0 },
-    { id: "color1", name: "Odtieň č. 1", price: 0, image: saunaBarrel },
-    { id: "color2", name: "Odtieň č. 2", price: 0, image: saunaCube },
-    { id: "color3", name: "Odtieň č. 3", price: 0, image: saunaTraditional },
-    { id: "color4", name: "Odtieň č. 4", price: 0, image: saunaInterior },
-  ];
-
-  // Konfiguračné možnosti pre kaďu
-  const hotTubSizeOptions: ConfigOption[] = [
-    { id: "standard", name: "Štandardná (4 osoby)", price: 0 },
-    { id: "large", name: "Veľká (6 osôb)", price: 890 },
-    { id: "xl", name: "XL (8 osôb)", price: 1490 },
-  ];
-
-  const hotTubJetsOptions: ConfigOption[] = [
-    { id: "none", name: "Bez trysiek", price: 0 },
-    { id: "basic", name: "Základné trysky", price: 490 },
-    { id: "massage", name: "Masážne trysky", price: 890, description: "Pokročilý masážny systém" },
-  ];
-
-  const hotTubLedOptions: ConfigOption[] = [
-    { id: "none", name: "Bez LED osvetlenia", price: 0 },
-    { id: "underwater", name: "Podvodné LED", price: 189 },
-    { id: "rgb", name: "RGB osvetlenie", price: 289, description: "Farebné LED s diaľkovým ovládaním" },
-  ];
-
-  const hotTubCoverOptions: ConfigOption[] = [
-    { id: "none", name: "Bez krytu", price: 0 },
-    { id: "standard", name: "Štandardný kryt", price: 290 },
-    { id: "premium", name: "Prémiový kryt", price: 490, description: "Tepelne izolovaný kryt" },
-  ];
-
-  const hotTubColorOptions: ConfigOption[] = [
-    { id: "none", name: "Prírodná", price: 0 },
-    { id: "dark", name: "Tmavá", price: 0 },
-    { id: "light", name: "Svetlá", price: 0 },
-  ];
-
-  // Obrazy pre galériu
+  // --- Images pre galériu ---
   const saunaImages = [saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
   const hotTubImages = [hotTub, saunaInterior, saunaCube];
-
   const images = productType === "hottub" ? hotTubImages : saunaImages;
 
-  // Výpočet ceny
+  // --- Mapovanie farieb na lokálne obrázky (len pre UI thumbnails) ---
+  const saunaColorThumbs: Record<string, string> = {
+    color1: saunaBarrel,
+    color2: saunaCube,
+    color3: saunaTraditional,
+    color4: saunaInterior,
+  };
+
+  // --- UI Options z API configu ---
+  const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes);
+  const saunaLedOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.ledOptions);
+  const saunaBluetoothOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.bluetoothOptions);
+  const saunaAccessoryKitOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.accessoryKitOptions);
+  const saunaColorOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.colorOptions, saunaColorThumbs);
+
+  const hotTubSizeOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.sizeOptions);
+  const hotTubJetsOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.jetsOptions);
+  const hotTubLedOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.ledOptions);
+  const hotTubCoverOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverOptions);
+  const hotTubColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.colorOptions);
+
+  // Výpočet ceny (z API configu)
   const totalPrice = useMemo(() => {
+    if (!productType || !apiConfig) return 0;
+
     if (productType === "sauna") {
-      const basePrice = 3990;
-      const heater = saunaHeaterTypes.find(h => h.id === saunaConfig.heaterType)?.price || 0;
-      const led = saunaLedOptions.find(l => l.id === saunaConfig.led)?.price || 0;
-      const bluetooth = saunaBluetoothOptions.find(b => b.id === saunaConfig.bluetooth)?.price || 0;
-      const kit = saunaAccessoryKitOptions.find(a => a.id === saunaConfig.accessoryKit)?.price || 0;
-      return basePrice + heater + led + bluetooth + kit;
-    } else if (productType === "hottub") {
-      const basePrice = 4990;
-      const size = hotTubSizeOptions.find(s => s.id === hotTubConfig.size)?.price || 0;
-      const jets = hotTubJetsOptions.find(j => j.id === hotTubConfig.jets)?.price || 0;
-      const led = hotTubLedOptions.find(l => l.id === hotTubConfig.led)?.price || 0;
-      const cover = hotTubCoverOptions.find(c => c.id === hotTubConfig.cover)?.price || 0;
-      return basePrice + size + jets + led + cover;
+      const basePrice = apiConfig.sauna.basePrice;
+      const heater = apiConfig.sauna.heaterTypes.find((h) => h.id === saunaConfig.heaterType)?.price ?? 0;
+      const led = apiConfig.sauna.ledOptions.find((l) => l.id === saunaConfig.led)?.price ?? 0;
+      const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
+      const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
+      const color = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
+
+      return basePrice + heater + led + bluetooth + kit + color;
     }
-    return 0;
-  }, [productType, saunaConfig, hotTubConfig]);
+
+    const basePrice = apiConfig.hottub.basePrice;
+    const size = apiConfig.hottub.sizeOptions.find((s) => s.id === hotTubConfig.size)?.price ?? 0;
+    const jets = apiConfig.hottub.jetsOptions.find((j) => j.id === hotTubConfig.jets)?.price ?? 0;
+    const led = apiConfig.hottub.ledOptions.find((l) => l.id === hotTubConfig.led)?.price ?? 0;
+    const cover = apiConfig.hottub.coverOptions.find((c) => c.id === hotTubConfig.cover)?.price ?? 0;
+    const color = apiConfig.hottub.colorOptions.find((c) => c.id === hotTubConfig.color)?.price ?? 0;
+
+    return basePrice + size + jets + led + cover + color;
+  }, [productType, apiConfig, saunaConfig, hotTubConfig]);
 
   const originalPrice = useMemo(() => Math.round(totalPrice * 1.15), [totalPrice]);
-
   const discount = originalPrice > 0 ? Math.round(((originalPrice - totalPrice) / originalPrice) * 100) : 0;
 
   const addToCart = async () => {
-    if (!productType) return;
-    
+    if (!productType || !apiConfig) return;
+
     setIsAddingToCart(true);
 
     try {
-      const config = productType === "sauna" ? saunaConfig : hotTubConfig;
-      
+      const options = productType === "sauna" ? { productType, ...saunaConfig } : { productType, ...hotTubConfig };
+
+      const product_id = apiConfig.products[productType];
+
       const response = await fetch("/wp-json/sauna/v1/add-to-cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
-          product_id: productType === "sauna" ? 96 : 97,
+          product_id,
           qty: 1,
-          options: { productType, ...config },
+          options,
         }),
       });
 
@@ -195,15 +230,15 @@ const Configurator = () => {
   };
 
   // Komponenta pre možnosť s X alebo obrázkom
-  const OptionCard = ({ 
-    option, 
-    isSelected, 
+  const OptionCard = ({
+    option,
+    isSelected,
     onClick,
     showImage = false,
-    size = "normal"
-  }: { 
-    option: ConfigOption; 
-    isSelected: boolean; 
+    size = "normal",
+  }: {
+    option: ConfigOption;
+    isSelected: boolean;
     onClick: () => void;
     showImage?: boolean;
     size?: "normal" | "small";
@@ -212,39 +247,38 @@ const Configurator = () => {
       onClick={onClick}
       className={cn(
         "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
-        isSelected
-          ? "border-primary bg-primary/5"
-          : "border-border/50 hover:border-primary/50 bg-card/50",
-        size === "small" && "p-2"
+        isSelected ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/50 bg-card/50",
+        size === "small" && "p-2",
       )}
     >
       {option.id === "none" ? (
-        <div className={cn(
-          "flex items-center justify-center rounded-lg bg-muted/50 mb-2",
-          size === "small" ? "w-12 h-12" : "w-16 h-16"
-        )}>
+        <div
+          className={cn(
+            "flex items-center justify-center rounded-lg bg-muted/50 mb-2",
+            size === "small" ? "w-12 h-12" : "w-16 h-16",
+          )}
+        >
           <X className={cn("text-muted-foreground", size === "small" ? "w-6 h-6" : "w-8 h-8")} />
         </div>
       ) : showImage && option.image ? (
-        <img 
-          src={option.image} 
-          alt={option.name} 
-          className={cn(
-            "rounded-lg object-cover mb-2",
-            size === "small" ? "w-12 h-12" : "w-16 h-16"
-          )}
+        <img
+          src={option.image}
+          alt={option.name}
+          className={cn("rounded-lg object-cover mb-2", size === "small" ? "w-12 h-12" : "w-16 h-16")}
         />
       ) : (
-        <div className={cn(
-          "flex items-center justify-center rounded-lg bg-primary/10 mb-2",
-          size === "small" ? "w-12 h-12" : "w-16 h-16"
-        )}>
+        <div
+          className={cn(
+            "flex items-center justify-center rounded-lg bg-primary/10 mb-2",
+            size === "small" ? "w-12 h-12" : "w-16 h-16",
+          )}
+        >
           <Check className={cn("text-primary", size === "small" ? "w-5 h-5" : "w-6 h-6")} />
         </div>
       )}
-      <span className={cn("font-medium text-center", size === "small" ? "text-xs" : "text-sm")}>
-        {option.name}
-      </span>
+
+      <span className={cn("font-medium text-center", size === "small" ? "text-xs" : "text-sm")}>{option.name}</span>
+
       {option.price > 0 ? (
         <div className="flex items-center gap-1">
           {option.originalPrice && (
@@ -252,17 +286,43 @@ const Configurator = () => {
               {option.originalPrice.toLocaleString()} €
             </span>
           )}
-          <span className="text-xs text-primary">
-            {option.price.toLocaleString()} €
-          </span>
+          <span className="text-xs text-primary">{option.price.toLocaleString()} €</span>
         </div>
       ) : (
-        <span className="text-xs text-muted-foreground">
-          {option.price === 0 ? "0,00 €" : "V cene"}
-        </span>
+        <span className="text-xs text-muted-foreground">{option.price === 0 ? "0,00 €" : "V cene"}</span>
       )}
     </button>
   );
+
+  // Loading state
+  if (isConfigLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin" />
+      </div>
+    );
+  }
+
+  // Ak config neprišiel, zastav UI (toast už ukázal chybu)
+  if (!apiConfig) {
+    return (
+      <div className="min-h-screen bg-background">
+        <ConfiguratorHeader />
+        <main className="pt-24 pb-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-xl mx-auto text-center">
+              <h1 className="font-display text-3xl font-bold mb-2">Konfigurátor</h1>
+              <p className="text-muted-foreground">
+                Konfiguráciu sa nepodarilo načítať. Skús refresh alebo skontroluj endpoint{" "}
+                <span className="font-mono">/wp-json/sauna/v1/config</span>.
+              </p>
+            </div>
+          </div>
+        </main>
+        <ConfiguratorFooter />
+      </div>
+    );
+  }
 
   // Výber produktu (sauna/kaďa)
   if (!productType) {
@@ -291,26 +351,27 @@ const Configurator = () => {
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {/* Sauna */}
               <button
-                onClick={() => setProductType("sauna")}
+                onClick={() => {
+                  setProductType("sauna");
+                  setCurrentImageIndex(0);
+                }}
                 className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50"
               >
                 <div className="aspect-[4/3] overflow-hidden">
-                  <img 
-                    src={saunaBarrel} 
-                    alt="Sauna" 
+                  <img
+                    src={saunaBarrel}
+                    alt="Sauna"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h2 className="font-display text-3xl font-bold text-foreground mb-2">
-                    Sauna
-                  </h2>
+                  <h2 className="font-display text-3xl font-bold text-foreground mb-2">Sauna</h2>
                   <p className="text-muted-foreground mb-4">
                     Nakonfigurujte si vlastnú saunu s výberom ohrievača, osvetlenia a príslušenstva.
                   </p>
                   <div className="flex items-center gap-2 text-primary font-medium">
-                    <span>Od 3 990 €</span>
+                    <span>Od {apiConfig.sauna.basePrice.toLocaleString()} €</span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -318,26 +379,27 @@ const Configurator = () => {
 
               {/* Kaďa */}
               <button
-                onClick={() => setProductType("hottub")}
+                onClick={() => {
+                  setProductType("hottub");
+                  setCurrentImageIndex(0);
+                }}
                 className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50"
               >
                 <div className="aspect-[4/3] overflow-hidden">
-                  <img 
-                    src={hotTub} 
-                    alt="Kaďa" 
+                  <img
+                    src={hotTub}
+                    alt="Kaďa"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h2 className="font-display text-3xl font-bold text-foreground mb-2">
-                    Kaďa
-                  </h2>
+                  <h2 className="font-display text-3xl font-bold text-foreground mb-2">Kaďa</h2>
                   <p className="text-muted-foreground mb-4">
                     Vyberte si veľkosť, trysky, osvetlenie a ďalšie doplnky pre vašu kaďu.
                   </p>
                   <div className="flex items-center gap-2 text-primary font-medium">
-                    <span>Od 4 990 €</span>
+                    <span>Od {apiConfig.hottub.basePrice.toLocaleString()} €</span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -369,16 +431,11 @@ const Configurator = () => {
               Domov
             </a>
             <span>/</span>
-            <button 
-              onClick={() => setProductType(null)}
-              className="hover:text-primary transition-colors"
-            >
+            <button onClick={() => setProductType(null)} className="hover:text-primary transition-colors">
               Konfigurátor
             </button>
             <span>/</span>
-            <span className="text-foreground">
-              {productType === "sauna" ? "Sauna" : "Kaďa"}
-            </span>
+            <span className="text-foreground">{productType === "sauna" ? "Sauna" : "Kaďa"}</span>
           </nav>
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
@@ -390,11 +447,13 @@ const Configurator = () => {
                     -{discount}%
                   </div>
                 )}
+
                 <img
                   src={images[currentImageIndex]}
                   alt={productType === "sauna" ? "Sauna" : "Kaďa"}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
+
                 <button className="absolute bottom-4 left-4 p-3 bg-background/80 backdrop-blur-sm rounded-full hover:bg-background transition-colors">
                   <Expand className="w-5 h-5" />
                 </button>
@@ -460,10 +519,10 @@ const Configurator = () => {
             {/* Pravá strana - konfigurácia */}
             <div className="relative">
               {/* Scroll indicator */}
-              <div 
+              <div
                 className={cn(
                   "absolute bottom-0 left-0 right-4 h-20 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10 items-end justify-center pb-2 hidden lg:flex transition-opacity duration-300",
-                  showScrollIndicator ? "opacity-100" : "opacity-0"
+                  showScrollIndicator ? "opacity-100" : "opacity-0",
                 )}
               >
                 <div className="flex flex-col items-center gap-1 text-muted-foreground animate-bounce">
@@ -471,6 +530,7 @@ const Configurator = () => {
                   <ChevronDown className="w-4 h-4" />
                 </div>
               </div>
+
               <ScrollArea className="lg:h-[calc(100vh-8rem)]" onScrollCapture={handleScroll}>
                 <div className="space-y-8 pr-4 pb-24">
                   <div>
@@ -498,7 +558,7 @@ const Configurator = () => {
                               key={option.id}
                               option={option}
                               isSelected={saunaConfig.heaterType === option.id}
-                              onClick={() => setSaunaConfig(prev => ({ ...prev, heaterType: option.id }))}
+                              onClick={() => setSaunaConfig((prev) => ({ ...prev, heaterType: option.id }))}
                             />
                           ))}
                         </div>
@@ -515,7 +575,7 @@ const Configurator = () => {
                               key={option.id}
                               option={option}
                               isSelected={saunaConfig.led === option.id}
-                              onClick={() => setSaunaConfig(prev => ({ ...prev, led: option.id }))}
+                              onClick={() => setSaunaConfig((prev) => ({ ...prev, led: option.id }))}
                             />
                           ))}
                         </div>
@@ -532,7 +592,7 @@ const Configurator = () => {
                               key={option.id}
                               option={option}
                               isSelected={saunaConfig.bluetooth === option.id}
-                              onClick={() => setSaunaConfig(prev => ({ ...prev, bluetooth: option.id }))}
+                              onClick={() => setSaunaConfig((prev) => ({ ...prev, bluetooth: option.id }))}
                             />
                           ))}
                         </div>
@@ -552,7 +612,7 @@ const Configurator = () => {
                               key={option.id}
                               option={option}
                               isSelected={saunaConfig.accessoryKit === option.id}
-                              onClick={() => setSaunaConfig(prev => ({ ...prev, accessoryKit: option.id }))}
+                              onClick={() => setSaunaConfig((prev) => ({ ...prev, accessoryKit: option.id }))}
                             />
                           ))}
                         </div>
@@ -569,7 +629,7 @@ const Configurator = () => {
                               key={option.id}
                               option={option}
                               isSelected={saunaConfig.color === option.id}
-                              onClick={() => setSaunaConfig(prev => ({ ...prev, color: option.id }))}
+                              onClick={() => setSaunaConfig((prev) => ({ ...prev, color: option.id }))}
                               showImage={true}
                               size="small"
                             />
@@ -590,7 +650,7 @@ const Configurator = () => {
                               key={option.id}
                               option={option}
                               isSelected={hotTubConfig.size === option.id}
-                              onClick={() => setHotTubConfig(prev => ({ ...prev, size: option.id }))}
+                              onClick={() => setHotTubConfig((prev) => ({ ...prev, size: option.id }))}
                             />
                           ))}
                         </div>
@@ -607,7 +667,7 @@ const Configurator = () => {
                               key={option.id}
                               option={option}
                               isSelected={hotTubConfig.jets === option.id}
-                              onClick={() => setHotTubConfig(prev => ({ ...prev, jets: option.id }))}
+                              onClick={() => setHotTubConfig((prev) => ({ ...prev, jets: option.id }))}
                             />
                           ))}
                         </div>
@@ -624,7 +684,7 @@ const Configurator = () => {
                               key={option.id}
                               option={option}
                               isSelected={hotTubConfig.led === option.id}
-                              onClick={() => setHotTubConfig(prev => ({ ...prev, led: option.id }))}
+                              onClick={() => setHotTubConfig((prev) => ({ ...prev, led: option.id }))}
                             />
                           ))}
                         </div>
@@ -641,7 +701,7 @@ const Configurator = () => {
                               key={option.id}
                               option={option}
                               isSelected={hotTubConfig.cover === option.id}
-                              onClick={() => setHotTubConfig(prev => ({ ...prev, cover: option.id }))}
+                              onClick={() => setHotTubConfig((prev) => ({ ...prev, cover: option.id }))}
                             />
                           ))}
                         </div>
@@ -658,7 +718,7 @@ const Configurator = () => {
                               key={option.id}
                               option={option}
                               isSelected={hotTubConfig.color === option.id}
-                              onClick={() => setHotTubConfig(prev => ({ ...prev, color: option.id }))}
+                              onClick={() => setHotTubConfig((prev) => ({ ...prev, color: option.id }))}
                             />
                           ))}
                         </div>
@@ -686,13 +746,15 @@ const Configurator = () => {
                     onClick={addToCart}
                     disabled={isAddingToCart}
                   >
-                    {isAddingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShoppingCart className="w-5 h-5" />}
+                    {isAddingToCart ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <ShoppingCart className="w-5 h-5" />
+                    )}
                     {isAddingToCart ? "Pridávam..." : "Pridať do košíka"}
                   </Button>
 
-                  <p className="text-xs text-muted-foreground text-center mt-3">
-                    * Cena nezahŕňa dopravu a inštaláciu
-                  </p>
+                  <p className="text-xs text-muted-foreground text-center mt-3">* Cena nezahŕňa dopravu a inštaláciu</p>
                 </div>
               </ScrollArea>
             </div>
