@@ -621,6 +621,7 @@ const Configurator = () => {
                               option={option}
                               isSelected={saunaConfig.accessoryKit === option.id}
                               onClick={() => setSaunaConfig((prev) => ({ ...prev, accessoryKit: option.id }))}
+                              showImage={true}
                             />
                           ))}
                         </div>
