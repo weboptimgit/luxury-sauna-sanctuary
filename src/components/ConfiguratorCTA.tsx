@@ -49,7 +49,7 @@ const ConfiguratorCTA = () => {
                   ))}
                 </div>
 
-                <Link to="/configurator">
+                <Link to="/konfigurator">
                   <Button variant="luxury" size="xl" className="group">
                     Spustiť konfigurátor
                     <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />

@@ -489,7 +489,7 @@ const Configurator = () => {
                     <div className="space-y-6">
                       {/* Typ ohrievača */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
                           Typ ohrievača <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
@@ -506,7 +506,7 @@ const Configurator = () => {
 
                       {/* LED osvetlenie */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
                           LED osvetlenie <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
@@ -523,7 +523,7 @@ const Configurator = () => {
 
                       {/* Bluetooth reproduktor */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
                           Bluetooth reproduktor <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-2 gap-3">
@@ -540,7 +540,7 @@ const Configurator = () => {
 
                       {/* Saunová sada */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
                           Saunová sada <span className="text-primary">*</span>
                         </h3>
                         <p className="text-xs text-muted-foreground mb-2 italic">
@@ -560,7 +560,7 @@ const Configurator = () => {
 
                       {/* Farba */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
                           Farba <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-5 gap-3">
@@ -581,7 +581,7 @@ const Configurator = () => {
                     <div className="space-y-6">
                       {/* Veľkosť */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
                           Veľkosť <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
@@ -598,7 +598,7 @@ const Configurator = () => {
 
                       {/* Trysky */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
                           Masážne trysky <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
@@ -615,7 +615,7 @@ const Configurator = () => {
 
                       {/* LED osvetlenie */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
                           LED osvetlenie <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
@@ -632,7 +632,7 @@ const Configurator = () => {
 
                       {/* Kryt */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
                           Kryt <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
@@ -649,7 +649,7 @@ const Configurator = () => {
 
                       {/* Farba */}
                       <div>
-                        <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                        <h3 className="text-lg font-semibold text-foreground mb-3">
                           Farba <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
