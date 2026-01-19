@@ -110,7 +110,7 @@ const Configurator = () => {
   // Sauna konfigurácia (ids musia sedieť s PHP configom)
   const [saunaConfig, setSaunaConfig] = useState({
     heaterType: "none",
-    led: "none",
+    led: [] as string[],
     bluetooth: "none",
     accessoryKit: "none",
     color: "none",
@@ -134,6 +134,21 @@ const Configurator = () => {
     const target = e.target as HTMLDivElement;
     if (target.scrollTop > 50) setShowScrollIndicator(false);
   }, []);
+
+  // --- LED multi helpers ---
+  const ledSelected = saunaConfig.led ?? [];
+  const isLedSelected = (id: string) => ledSelected.includes(id);
+  const toggleLed = (id: string) => {
+    setSaunaConfig((prev) => {
+      const current = prev.led ?? [];
+      const next = current.includes(id) ? current.filter((x) => x !== id) : [...current, id];
+      return { ...prev, led: next };
+    });
+  };
+  
+  const resetLed = () => {
+    setSaunaConfig((prev) => ({ ...prev, led: [] }));
+  };
 
   // --- Images pre galériu ---
   const saunaImages = [saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
@@ -190,12 +205,15 @@ const Configurator = () => {
     if (productType === "sauna") {
       const basePrice = apiConfig.sauna.basePrice;
       const heater = apiConfig.sauna.heaterTypes.find((h) => h.id === saunaConfig.heaterType)?.price ?? 0;
-      const led = apiConfig.sauna.ledOptions.find((l) => l.id === saunaConfig.led)?.price ?? 0;
+      const ledSum = (saunaConfig.led ?? []).reduce((sum, ledId) => {
+        const p = apiConfig.sauna.ledOptions.find((l) => l.id === ledId)?.price ?? 0;
+        return sum + p;
+      }, 0);
       const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
       const color = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
 
-      return basePrice + heater + led + bluetooth + kit + color;
+      return basePrice + heater + ledSum + bluetooth + kit + color;
     }
 
     const basePrice = apiConfig.hottub.basePrice;
@@ -596,15 +614,25 @@ const Configurator = () => {
                           LED osvetlenie <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
-                          {saunaLedOptions.map((option) => (
-                            <OptionCard
-                              key={option.id}
-                              option={option}
-                              isSelected={saunaConfig.led === option.id}
-                              onClick={() => setSaunaConfig((prev) => ({ ...prev, led: option.id }))}
-                              showImage={true}
-                            />
-                          ))}
+                          {/* Bez LED = reset */}
+                          <OptionCard
+                            option={{ id: "none", name: "Bez LED", price: 0 }}
+                            isSelected={ledSelected.length === 0}
+                            onClick={resetLed}
+                          />
+                        
+                          {/* Multi možnosti */}
+                          {saunaLedOptions
+                            .filter((o) => o.id !== "none")
+                            .map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={isLedSelected(option.id)}
+                                onClick={() => toggleLed(option.id)}
+                                showImage={true}
+                              />
+                            ))}
                         </div>
                       </div>
 
