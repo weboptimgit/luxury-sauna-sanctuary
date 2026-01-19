@@ -16,6 +16,8 @@ import saunaKit from "@/assets/Sauna-accessories-kit.jpg";
 import speaker from "@/assets/Bluetooth-speaker-system.png";
 import ledBenches from "@/assets/LED-lighting-under-the-benches.png";
 import ledBackrest from "@/assets/LED-lighting-in-the-back-supports-1.jpg";
+import electricHeater from "@/assets/Harvia-CILINDRO-9kw.png";
+import woodHeater from "@/assets/Harvia-M3.png";
 
 type ProductType = "sauna" | "hottub";
 
@@ -44,7 +46,7 @@ type ApiConfig = {
     ledOptions: ApiOption[];
     bluetoothOptions: ApiOption[];
     accessoryKitOptions: ApiOption[];
-    colorOptions: ApiOption[]; // price ok aj keď 0
+    colorOptions: ApiOption[];
   };
   hottub: {
     basePrice: number;
@@ -172,12 +174,20 @@ const Configurator = () => {
   };
 
   const ledImages: Record<string, string> = {
+    electric: electricHeater,
+    wood: woodHeater,
+  };
+
+  const heaterImages: Record<string, string> = {
     benches: ledBenches,
     backrest: ledBackrest,
   };
   
   // --- UI Options z API configu ---
-  const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes);
+  const saunaHeaterTypes: ConfigOption[] = toUIOptions(
+    apiConfig?.sauna.heaterTypes,
+    heaterImages
+  );
   const saunaLedOptions: ConfigOption[] = toUIOptions(
     apiConfig?.sauna.ledOptions,
     ledImages
@@ -603,6 +613,7 @@ const Configurator = () => {
                               option={option}
                               isSelected={saunaConfig.heaterType === option.id}
                               onClick={() => setSaunaConfig((prev) => ({ ...prev, heaterType: option.id }))}
+                              showImage={true}
                             />
                           ))}
                         </div>
