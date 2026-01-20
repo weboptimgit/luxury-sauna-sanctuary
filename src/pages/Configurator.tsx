@@ -1,6 +1,20 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Check, ShoppingCart, ChevronLeft, ChevronRight, ChevronDown, Expand, Loader2, X, Ruler, Flame, Lightbulb, Bluetooth, ArrowRight } from "lucide-react";
+import {
+  Check,
+  ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Expand,
+  Loader2,
+  X,
+  Ruler,
+  Flame,
+  Lightbulb,
+  Bluetooth,
+  ArrowRight,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
@@ -9,7 +23,7 @@ import ConfiguratorFooter from "@/components/ConfiguratorFooter";
 
 import saunaBarrel from "@/assets/sauna-barrel.jpg";
 import saunaCube from "@/assets/sauna-cube.jpg";
-import saunaTraditional from "@/assets/sauna-traditional.jpg";
+import saunaTraditional from "@/assets/ModulSauna-240×250-–-Thermo-wood-33-700x700.jpg";
 import saunaInterior from "@/assets/sauna-interior.jpg";
 import hotTub from "@/assets/hot-tub.jpg";
 import saunaKit from "@/assets/Sauna-accessories-kit.jpg";
@@ -185,7 +199,7 @@ const Configurator = () => {
 
   // Výber kategórie produktu (sauna / kaďa)
   const [productCategory, setProductCategory] = useState<ProductCategory | null>(null);
-  
+
   // Výber typu sauny
   const [selectedSaunaType, setSelectedSaunaType] = useState<SaunaType | null>(null);
 
@@ -227,14 +241,14 @@ const Configurator = () => {
       return { ...prev, led: next };
     });
   };
-  
+
   const resetLed = () => {
     setSaunaConfig((prev) => ({ ...prev, led: [] }));
   };
 
   // --- Images pre galériu ---
-  const saunaImages = selectedSaunaType 
-    ? [selectedSaunaType.image, saunaInterior, saunaBarrel] 
+  const saunaImages = selectedSaunaType
+    ? [selectedSaunaType.image, saunaInterior, saunaBarrel]
     : [saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
   const hotTubImages = [hotTub, saunaInterior, saunaCube];
   const images = productCategory === "hottub" ? hotTubImages : saunaImages;
@@ -264,23 +278,14 @@ const Configurator = () => {
     electric: electricHeater,
     wood: woodHeater,
   };
-  
+
   // --- UI Options z API configu ---
-  const saunaHeaterTypes: ConfigOption[] = toUIOptions(
-    apiConfig?.sauna.heaterTypes,
-    heaterImages
-  );
-  const saunaLedOptions: ConfigOption[] = toUIOptions(
-    apiConfig?.sauna.ledOptions,
-    ledImages
-  );
-  const saunaBluetoothOptions: ConfigOption[] = toUIOptions(
-    apiConfig?.sauna.bluetoothOptions,
-    saunaSpeakerImage
-  );
+  const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes, heaterImages);
+  const saunaLedOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.ledOptions, ledImages);
+  const saunaBluetoothOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.bluetoothOptions, saunaSpeakerImage);
   const saunaAccessoryKitOptions: ConfigOption[] = toUIOptions(
     apiConfig?.sauna.accessoryKitOptions,
-    saunaAccessoryImages
+    saunaAccessoryImages,
   );
   const saunaColorOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.colorOptions, saunaColorThumbs);
 
@@ -331,9 +336,10 @@ const Configurator = () => {
     setIsAddingToCart(true);
 
     try {
-      const options = productCategory === "sauna" 
-        ? { productCategory, saunaTypeId: selectedSaunaType?.id, ...saunaConfig } 
-        : { productCategory, ...hotTubConfig };
+      const options =
+        productCategory === "sauna"
+          ? { productCategory, saunaTypeId: selectedSaunaType?.id, ...saunaConfig }
+          : { productCategory, ...hotTubConfig };
 
       const product_id = apiConfig.products[productCategory];
 
@@ -538,7 +544,7 @@ const Configurator = () => {
                     Nakonfigurujte si vlastnú saunu s výberom ohrievača, osvetlenia a príslušenstva.
                   </p>
                   <div className="flex items-center gap-2 text-primary font-medium">
-                    <span>Od {Math.min(...saunaTypes.map(s => s.basePrice)).toLocaleString()} €</span>
+                    <span>Od {Math.min(...saunaTypes.map((s) => s.basePrice)).toLocaleString()} €</span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -635,14 +641,14 @@ const Configurator = () => {
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-                    
+
                     {/* Floating badge s rozmermi */}
                     <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 shadow-lg">
                       <Ruler className="w-4 h-4 text-primary" />
                       <span className="text-sm font-bold text-white tracking-wide">{sauna.dimensions}</span>
                     </div>
                   </div>
-                  
+
                   {/* Obsah karty */}
                   <div className="relative p-6 -mt-8">
                     {/* Glassmorphism panel */}
@@ -650,21 +656,30 @@ const Configurator = () => {
                       <h3 className="font-display text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
                         {sauna.name}
                       </h3>
-                      
+
                       {/* Dostupné možnosti - ikony */}
                       <div className="flex items-center gap-3 mb-5">
                         {sauna.hasHeater && (
-                          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20" title="Ohrievač">
+                          <div
+                            className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20"
+                            title="Ohrievač"
+                          >
                             <Flame className="w-5 h-5 text-primary" />
                           </div>
                         )}
                         {sauna.hasLed && (
-                          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20" title="LED osvetlenie">
+                          <div
+                            className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20"
+                            title="LED osvetlenie"
+                          >
                             <Lightbulb className="w-5 h-5 text-primary" />
                           </div>
                         )}
                         {sauna.hasBluetooth && (
-                          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20" title="Bluetooth">
+                          <div
+                            className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20"
+                            title="Bluetooth"
+                          >
                             <Bluetooth className="w-5 h-5 text-primary" />
                           </div>
                         )}
@@ -674,7 +689,9 @@ const Configurator = () => {
                       <div className="flex items-center justify-between pt-4 border-t border-white/10">
                         <div>
                           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Od</p>
-                          <span className="text-2xl font-bold text-gradient-amber">{sauna.basePrice.toLocaleString()} €</span>
+                          <span className="text-2xl font-bold text-gradient-amber">
+                            {sauna.basePrice.toLocaleString()} €
+                          </span>
                         </div>
                         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/30">
                           <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
@@ -874,7 +891,7 @@ const Configurator = () => {
                               isSelected={ledSelected.length === 0}
                               onClick={resetLed}
                             />
-                          
+
                             {/* Multi možnosti */}
                             {saunaLedOptions
                               .filter((o) => o.id !== "none")
