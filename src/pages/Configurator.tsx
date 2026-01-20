@@ -35,6 +35,8 @@ import woodHeater from "@/assets/Harvia-M3.png";
 
 type ProductCategory = "sauna" | "hottub";
 
+type WoodType = "spruce" | "thermo";
+
 type SaunaType = {
   id: string;
   name: string;
@@ -46,7 +48,14 @@ type SaunaType = {
   hasAccessoryKit: boolean;
   hasHeater: boolean;
   hasColor: boolean;
+  availableWoodTypes: WoodType[];
 };
+
+// Wood type options
+const woodTypeOptions: { id: WoodType; name: string; price: number }[] = [
+  { id: "spruce", name: "Smrekové drevo", price: 0 },
+  { id: "thermo", name: "Thermo wood", price: 500 },
+];
 
 // Typy saún - toto sa môže neskôr načítavať z API
 const saunaTypes: SaunaType[] = [
@@ -61,6 +70,7 @@ const saunaTypes: SaunaType[] = [
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
+    availableWoodTypes: ["spruce"], // len smrekové
   },
   {
     id: "modul-thermo",
@@ -73,6 +83,7 @@ const saunaTypes: SaunaType[] = [
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: false,
+    availableWoodTypes: ["thermo"], // len thermo
   },
   {
     id: "lux-mini",
@@ -85,6 +96,7 @@ const saunaTypes: SaunaType[] = [
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
+    availableWoodTypes: ["spruce", "thermo"], // obe možnosti
   },
   {
     id: "round-2m",
@@ -97,6 +109,7 @@ const saunaTypes: SaunaType[] = [
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: false,
+    availableWoodTypes: ["spruce", "thermo"], // obe možnosti
   },
   {
     id: "harmony-insulated",
@@ -109,6 +122,7 @@ const saunaTypes: SaunaType[] = [
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
+    availableWoodTypes: ["spruce"], // len smrekové
   },
 ];
 
@@ -210,6 +224,7 @@ const Configurator = () => {
     bluetooth: "none",
     accessoryKit: "none",
     color: "none",
+    woodType: "spruce" as WoodType,
   });
 
   // Kaďa konfigurácia
@@ -309,8 +324,9 @@ const Configurator = () => {
       const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
       const color = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
+      const woodPrice = woodTypeOptions.find((w) => w.id === saunaConfig.woodType)?.price ?? 0;
 
-      return basePrice + heater + ledSum + bluetooth + kit + color;
+      return basePrice + heater + ledSum + bluetooth + kit + color + woodPrice;
     }
 
     if (productCategory === "hottub") {
@@ -387,6 +403,7 @@ const Configurator = () => {
       bluetooth: "none",
       accessoryKit: "none",
       color: "none",
+      woodType: "spruce",
     });
   };
 
@@ -398,6 +415,7 @@ const Configurator = () => {
       bluetooth: "none",
       accessoryKit: "none",
       color: "none",
+      woodType: "spruce",
     });
     setCurrentImageIndex(0);
   };
@@ -628,6 +646,12 @@ const Configurator = () => {
                   key={sauna.id}
                   onClick={() => {
                     setSelectedSaunaType(sauna);
+                    // Auto-select wood type if only one option available
+                    if (sauna.availableWoodTypes.length === 1) {
+                      setSaunaConfig((prev) => ({ ...prev, woodType: sauna.availableWoodTypes[0] }));
+                    } else {
+                      setSaunaConfig((prev) => ({ ...prev, woodType: "spruce" }));
+                    }
                     setCurrentImageIndex(0);
                     setShowScrollIndicator(true);
                   }}
@@ -858,6 +882,51 @@ const Configurator = () => {
 
                   {productCategory === "sauna" && selectedSaunaType ? (
                     <div className="space-y-6">
+                      {/* Typ dreva */}
+                      {selectedSaunaType.availableWoodTypes.length > 0 && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">
+                            Typ dreva <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-2 gap-3">
+                            {woodTypeOptions
+                              .filter((w) => selectedSaunaType.availableWoodTypes.includes(w.id))
+                              .map((option) => (
+                                <button
+                                  key={option.id}
+                                  onClick={() => setSaunaConfig((prev) => ({ ...prev, woodType: option.id }))}
+                                  className={cn(
+                                    "flex flex-col items-center p-4 rounded-xl border-2 transition-all",
+                                    saunaConfig.woodType === option.id
+                                      ? "border-primary bg-primary/5"
+                                      : "border-border/50 hover:border-primary/50 bg-card/50",
+                                  )}
+                                >
+                                  <div
+                                    className={cn(
+                                      "flex items-center justify-center rounded-lg mb-2 w-16 h-16",
+                                      option.id === "thermo" ? "bg-primary/20" : "bg-muted/50",
+                                    )}
+                                  >
+                                    <span className="text-2xl">{option.id === "thermo" ? "🪵" : "🌲"}</span>
+                                  </div>
+                                  <span className="font-medium text-center text-sm">{option.name}</span>
+                                  {option.price > 0 ? (
+                                    <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
+                                  ) : (
+                                    <span className="text-xs text-muted-foreground">V cene</span>
+                                  )}
+                                </button>
+                              ))}
+                          </div>
+                          {selectedSaunaType.availableWoodTypes.length === 1 && (
+                            <p className="text-xs text-muted-foreground mt-2">
+                              Tento model je dostupný iba v prevedení {selectedSaunaType.availableWoodTypes[0] === "thermo" ? "Thermo wood" : "Smrekové drevo"}.
+                            </p>
+                          )}
+                        </div>
+                      )}
+
                       {/* Typ ohrievača */}
                       {selectedSaunaType.hasHeater && (
                         <div>
