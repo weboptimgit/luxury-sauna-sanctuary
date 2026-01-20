@@ -21,10 +21,11 @@ import { useToast } from "@/hooks/use-toast";
 import ConfiguratorHeader from "@/components/ConfiguratorHeader";
 import ConfiguratorFooter from "@/components/ConfiguratorFooter";
 
-import saunaBarrel from "@/assets/sauna-barrel.jpg";
-import saunaCube from "@/assets/sauna-cube.jpg";
+import saunaBarrel from "@/assets/2M-Round-sauna-1-2-700x700.jpg";
+import saunaCube from "@/assets/Frame-sauna-210×210-700x700.jpg";
 import saunaTraditional from "@/assets/ModulSauna-240×250-–-Thermo-wood-33-700x700.jpg";
-import saunaInterior from "@/assets/sauna-interior.jpg";
+import saunaInterior from "@/assets/LUX-sauna-245×300-14-700x700.jpg";
+import saunaHarmony from "@/assets/0TV_0205-700x700.jpg;
 import hotTub from "@/assets/hot-tub.jpg";
 import saunaKit from "@/assets/Sauna-accessories-kit.jpg";
 import speaker from "@/assets/Bluetooth-speaker-system.png";
@@ -67,12 +68,12 @@ const saunaTypes: SaunaType[] = [
     dimensions: "240×300",
     basePrice: 8990,
     image: saunaCube,
-    hasLed: true,
+    hasLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
-    availableWoodTypes: ["spruce"], // len smrekové
+    availableWoodTypes: ["spruce"],
   },
   {
     id: "modul-thermo",
@@ -80,12 +81,12 @@ const saunaTypes: SaunaType[] = [
     dimensions: "240×250",
     basePrice: 9490,
     image: saunaTraditional,
-    hasLed: true,
+    hasLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: false,
-    availableWoodTypes: ["thermo"], // len thermo
+    availableWoodTypes: ["thermo"],
   },
   {
     id: "lux-mini",
@@ -106,11 +107,11 @@ const saunaTypes: SaunaType[] = [
     dimensions: "Ø 200 cm",
     basePrice: 6990,
     image: saunaBarrel,
-    hasLed: false,
-    hasBluetooth: false,
+    hasLed: true,
+    hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
-    hasColor: false,
+    hasColor: true,
     availableWoodTypes: ["spruce", "thermo"], // obe možnosti
   },
   {
@@ -118,8 +119,8 @@ const saunaTypes: SaunaType[] = [
     name: "Insulated frame sauna Harmony",
     dimensions: "280×500",
     basePrice: 14990,
-    image: saunaCube,
-    hasLed: true,
+    image: saunaHarmony,
+    hasLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
