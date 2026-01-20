@@ -617,7 +617,7 @@ const Configurator = () => {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {saunaTypes.map((sauna, index) => (
+              {saunaTypes.map((sauna) => (
                 <button
                   key={sauna.id}
                   onClick={() => {
@@ -625,8 +625,7 @@ const Configurator = () => {
                     setCurrentImageIndex(0);
                     setShowScrollIndicator(true);
                   }}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 hover:border-primary/50 transition-all duration-500 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl text-left shadow-2xl hover:shadow-primary/10 animate-fade-in"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 hover:border-primary/50 transition-colors duration-300 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl text-left shadow-2xl hover:shadow-primary/10"
                 >
                   {/* Obrázok s overlay */}
                   <div className="aspect-[4/3] overflow-hidden relative">
