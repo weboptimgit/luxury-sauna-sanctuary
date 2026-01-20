@@ -77,7 +77,7 @@ const saunaTypes: SaunaType[] = [
   {
     id: "modul-thermo",
     name: "ModulSauna",
-    dimensions: "240×250 – Thermo wood",
+    dimensions: "240×250",
     basePrice: 9490,
     image: saunaTraditional,
     hasLed: true,
@@ -905,11 +905,7 @@ const Configurator = () => {
                                   )}
                                 >
                                   <div className="w-16 h-16 rounded-lg mb-2 overflow-hidden">
-                                    <img
-                                      src={option.image}
-                                      alt={option.name}
-                                      className="w-full h-full object-cover"
-                                    />
+                                    <img src={option.image} alt={option.name} className="w-full h-full object-cover" />
                                   </div>
                                   <span className="font-medium text-center text-sm">{option.name}</span>
                                   {option.price > 0 ? (
@@ -922,7 +918,8 @@ const Configurator = () => {
                           </div>
                           {selectedSaunaType.availableWoodTypes.length === 1 && (
                             <p className="text-xs text-muted-foreground mt-2">
-                              Tento model je dostupný iba v prevedení {selectedSaunaType.availableWoodTypes[0] === "thermo" ? "Thermo wood" : "Smrekové drevo"}.
+                              Tento model je dostupný iba v prevedení{" "}
+                              {selectedSaunaType.availableWoodTypes[0] === "thermo" ? "Thermo wood" : "Smrekové drevo"}.
                             </p>
                           )}
                         </div>
