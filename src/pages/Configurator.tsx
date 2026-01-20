@@ -25,7 +25,7 @@ import saunaBarrel from "@/assets/2M-Round-sauna-1-2-700x700.jpg";
 import saunaCube from "@/assets/Frame-sauna-210×210-700x700.jpg";
 import saunaTraditional from "@/assets/ModulSauna-240×250-–-Thermo-wood-33-700x700.jpg";
 import saunaInterior from "@/assets/LUX-sauna-245×300-14-700x700.jpg";
-import saunaHarmony from "@/assets/0TV_0205-700x700.jpg;
+import saunaHarmony from "@/assets/0TV_0205-700x700.jpg";
 import hotTub from "@/assets/hot-tub.jpg";
 import saunaKit from "@/assets/Sauna-accessories-kit.jpg";
 import speaker from "@/assets/Bluetooth-speaker-system.png";
