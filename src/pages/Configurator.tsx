@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Check, ShoppingCart, ChevronLeft, ChevronRight, ChevronDown, Expand, Loader2, X } from "lucide-react";
+import { Check, ShoppingCart, ChevronLeft, ChevronRight, ChevronDown, Expand, Loader2, X, Ruler, Flame, Lightbulb, Bluetooth, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
@@ -616,8 +616,8 @@ const Configurator = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              {saunaTypes.map((sauna) => (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {saunaTypes.map((sauna, index) => (
                 <button
                   key={sauna.id}
                   onClick={() => {
@@ -625,43 +625,62 @@ const Configurator = () => {
                     setCurrentImageIndex(0);
                     setShowScrollIndicator(true);
                   }}
-                  className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary transition-all bg-card/50 text-left"
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 hover:border-primary/50 transition-all duration-500 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl text-left shadow-2xl hover:shadow-primary/10 animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="aspect-[4/3] overflow-hidden">
+                  {/* Obrázok s overlay */}
+                  <div className="aspect-[4/3] overflow-hidden relative">
                     <img
                       src={sauna.image}
                       alt={sauna.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                    
+                    {/* Floating badge s rozmermi */}
+                    <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 shadow-lg">
+                      <Ruler className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-bold text-white tracking-wide">{sauna.dimensions}</span>
+                    </div>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
                   
-                  <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <h3 className="font-display text-xl font-bold text-foreground mb-2">
-                      {sauna.name}
-                    </h3>
-                    
-                    {/* Rozmery - výrazné zobrazenie */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/20 border border-primary/30 mb-3">
-                      <span className="text-lg font-bold text-primary tracking-wide">{sauna.dimensions}</span>
-                    </div>
-                    
-                    {/* Dostupné možnosti */}
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      {sauna.hasHeater && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-muted/50 text-muted-foreground">Ohrievač</span>
-                      )}
-                      {sauna.hasLed && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-muted/50 text-muted-foreground">LED</span>
-                      )}
-                      {sauna.hasBluetooth && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-muted/50 text-muted-foreground">Bluetooth</span>
-                      )}
-                    </div>
+                  {/* Obsah karty */}
+                  <div className="relative p-6 -mt-8">
+                    {/* Glassmorphism panel */}
+                    <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 p-5">
+                      <h3 className="font-display text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
+                        {sauna.name}
+                      </h3>
+                      
+                      {/* Dostupné možnosti - ikony */}
+                      <div className="flex items-center gap-3 mb-5">
+                        {sauna.hasHeater && (
+                          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20" title="Ohrievač">
+                            <Flame className="w-5 h-5 text-primary" />
+                          </div>
+                        )}
+                        {sauna.hasLed && (
+                          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20" title="LED osvetlenie">
+                            <Lightbulb className="w-5 h-5 text-primary" />
+                          </div>
+                        )}
+                        {sauna.hasBluetooth && (
+                          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20" title="Bluetooth">
+                            <Bluetooth className="w-5 h-5 text-primary" />
+                          </div>
+                        )}
+                      </div>
 
-                    <div className="flex items-center justify-between">
-                      <span className="text-xl font-bold text-primary">{sauna.basePrice.toLocaleString()} €</span>
-                      <ChevronRight className="w-5 h-5 text-primary transition-transform group-hover:translate-x-1" />
+                      {/* Cena a CTA */}
+                      <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                        <div>
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Od</p>
+                          <span className="text-2xl font-bold text-gradient-amber">{sauna.basePrice.toLocaleString()} €</span>
+                        </div>
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/30">
+                          <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </button>
