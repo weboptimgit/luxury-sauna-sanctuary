@@ -32,6 +32,8 @@ import ledBenches from "@/assets/LED-lighting-under-the-benches.png";
 import ledBackrest from "@/assets/LED-lighting-in-the-back-supports-1.jpg";
 import electricHeater from "@/assets/Harvia-CILINDRO-9kw.png";
 import woodHeater from "@/assets/Harvia-M3.png";
+import spruceWoodImg from "@/assets/spruce-wood.jpg";
+import thermoWoodImg from "@/assets/thermo-wood.jpg";
 
 type ProductCategory = "sauna" | "hottub";
 
@@ -52,9 +54,9 @@ type SaunaType = {
 };
 
 // Wood type options
-const woodTypeOptions: { id: WoodType; name: string; price: number }[] = [
-  { id: "spruce", name: "Smrekové drevo", price: 0 },
-  { id: "thermo", name: "Thermo wood", price: 500 },
+const woodTypeOptions: { id: WoodType; name: string; price: number; image: string }[] = [
+  { id: "spruce", name: "Smrekové drevo", price: 0, image: spruceWoodImg },
+  { id: "thermo", name: "Thermo wood", price: 500, image: thermoWoodImg },
 ];
 
 // Typy saún - toto sa môže neskôr načítavať z API
@@ -902,13 +904,12 @@ const Configurator = () => {
                                       : "border-border/50 hover:border-primary/50 bg-card/50",
                                   )}
                                 >
-                                  <div
-                                    className={cn(
-                                      "flex items-center justify-center rounded-lg mb-2 w-16 h-16",
-                                      option.id === "thermo" ? "bg-primary/20" : "bg-muted/50",
-                                    )}
-                                  >
-                                    <span className="text-2xl">{option.id === "thermo" ? "🪵" : "🌲"}</span>
+                                  <div className="w-16 h-16 rounded-lg mb-2 overflow-hidden">
+                                    <img
+                                      src={option.image}
+                                      alt={option.name}
+                                      className="w-full h-full object-cover"
+                                    />
                                   </div>
                                   <span className="font-medium text-center text-sm">{option.name}</span>
                                   {option.price > 0 ? (
