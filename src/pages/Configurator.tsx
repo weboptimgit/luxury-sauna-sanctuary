@@ -637,21 +637,25 @@ const Configurator = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
                   
                   <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <h3 className="font-display text-xl font-bold text-foreground mb-1">
+                    <h3 className="font-display text-xl font-bold text-foreground mb-2">
                       {sauna.name}
                     </h3>
-                    <p className="text-sm text-muted-foreground mb-3">{sauna.dimensions}</p>
+                    
+                    {/* Rozmery - výrazné zobrazenie */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/20 border border-primary/30 mb-3">
+                      <span className="text-lg font-bold text-primary tracking-wide">{sauna.dimensions}</span>
+                    </div>
                     
                     {/* Dostupné možnosti */}
                     <div className="flex flex-wrap gap-1.5 mb-3">
                       {sauna.hasHeater && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary">Ohrievač</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-muted/50 text-muted-foreground">Ohrievač</span>
                       )}
                       {sauna.hasLed && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary">LED</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-muted/50 text-muted-foreground">LED</span>
                       )}
                       {sauna.hasBluetooth && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary">Bluetooth</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-muted/50 text-muted-foreground">Bluetooth</span>
                       )}
                     </div>
 
