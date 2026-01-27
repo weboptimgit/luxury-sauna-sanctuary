@@ -35,6 +35,11 @@ import electricHeater from "@/assets/Harvia-CILINDRO-9kw.png";
 import woodHeater from "@/assets/Harvia-M3.png";
 import spruceWoodImg from "@/assets/spruce-wood.jpg";
 import thermoWoodImg from "@/assets/thermo-wood.jpg";
+// Farebné varianty Frame sauny
+import frameSaunaNatural from "@/assets/frame-sauna-natural.jpg";
+import frameSaunaMahagon from "@/assets/frame-sauna-mahagon.jpg";
+import frameSaunaTeak from "@/assets/frame-sauna-teak.jpg";
+import frameSaunaAntracit from "@/assets/frame-sauna-antracit.jpg";
 
 type ProductCategory = "sauna" | "hottub";
 
@@ -71,30 +76,30 @@ const saunaLocalColorOptions: { id: SaunaColorType; name: string; price: number;
   { id: "antracit", name: "Antracit", price: 350, colorHsl: "hsl(0 0% 22%)" },
 ];
 
-// Placeholder images per color per sauna type (will be replaced with real images)
+// Reálne obrázky podľa farby pre každý model sauny
 // Structure: saunaId -> colorId -> imagePath
 const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
   "frame-inspire": {
-    none: saunaCube,
-    mahagon: saunaCube, // placeholder - nahradiť skutočným obrázkom
-    teak: saunaCube,
-    antracit: saunaCube,
+    none: frameSaunaNatural,
+    mahagon: frameSaunaMahagon,
+    teak: frameSaunaTeak,
+    antracit: frameSaunaAntracit,
   },
   "lux-mini": {
     none: saunaInterior,
-    mahagon: saunaInterior,
+    mahagon: saunaInterior, // TODO: pridať reálne obrázky
     teak: saunaInterior,
     antracit: saunaInterior,
   },
   "round-2m": {
     none: saunaBarrel,
-    mahagon: saunaBarrel,
+    mahagon: saunaBarrel, // TODO: pridať reálne obrázky
     teak: saunaBarrel,
     antracit: saunaBarrel,
   },
   "harmony-insulated": {
     none: saunaHarmony,
-    mahagon: saunaHarmony,
+    mahagon: saunaHarmony, // TODO: pridať reálne obrázky
     teak: saunaHarmony,
     antracit: saunaHarmony,
   },
@@ -316,12 +321,7 @@ const Configurator = () => {
     return selectedSaunaType.image;
   }, [selectedSaunaType, saunaConfig.color]);
 
-  // Jemný farebný tint overlay ako placeholder, kým nebudú reálne fotky pre farby
-  const selectedSaunaColorOverlay = useMemo(() => {
-    if (saunaConfig.color === "none") return "transparent";
-    return saunaLocalColorOptions.find((c) => c.id === saunaConfig.color)?.colorHsl ?? "transparent";
-  }, [saunaConfig.color]);
-  
+
   const images = useMemo(() => {
     if (productCategory === "hottub") {
       return [hotTub, saunaInterior, saunaCube];
@@ -850,19 +850,6 @@ const Configurator = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
-                {productCategory === "sauna" &&
-                  selectedSaunaType?.hasColor &&
-                  saunaConfig.color !== "none" &&
-                  currentImageIndex === 0 && (
-                    <div
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        backgroundColor: selectedSaunaColorOverlay,
-                        mixBlendMode: "multiply",
-                        opacity: 0.32,
-                      }}
-                    />
-                  )}
 
                 <button className="absolute bottom-4 left-4 p-3 bg-background/80 backdrop-blur-sm rounded-full hover:bg-background transition-colors">
                   <Expand className="w-5 h-5" />
