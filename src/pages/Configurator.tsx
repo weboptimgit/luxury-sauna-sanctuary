@@ -304,7 +304,7 @@ const Configurator = () => {
   };
 
   // --- Images pre galériu - mení sa podľa vybranej farby ---
-  const getCurrentSaunaImage = () => {
+  const currentSaunaImage = useMemo(() => {
     if (!selectedSaunaType) return saunaBarrel;
     
     // Ak má farbu a existuje mapa farieb pre tento model
@@ -313,13 +313,17 @@ const Configurator = () => {
     }
     
     return selectedSaunaType.image;
-  };
+  }, [selectedSaunaType, saunaConfig.color]);
   
-  const saunaImages = selectedSaunaType
-    ? [getCurrentSaunaImage(), saunaInterior, saunaBarrel]
-    : [saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
-  const hotTubImages = [hotTub, saunaInterior, saunaCube];
-  const images = productCategory === "hottub" ? hotTubImages : saunaImages;
+  const images = useMemo(() => {
+    if (productCategory === "hottub") {
+      return [hotTub, saunaInterior, saunaCube];
+    }
+    if (selectedSaunaType) {
+      return [currentSaunaImage, saunaInterior, saunaBarrel];
+    }
+    return [saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
+  }, [productCategory, selectedSaunaType, currentSaunaImage]);
 
   // --- Mapovanie farieb na lokálne obrázky (len pre UI thumbnails) ---
   const saunaColorThumbs: Record<string, string> = {
