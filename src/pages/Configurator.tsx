@@ -61,6 +61,19 @@ import modulsauna16StudenaSiva from "@/assets/modulsauna-16-studena-siva.jpg";
 import modulsauna17Antracit from "@/assets/modulsauna-17-antracit.jpg";
 import modulsauna18TmavyOrech from "@/assets/modulsauna-18-tmavy-orech.jpg";
 import modulsauna20TmavyMahagon from "@/assets/modulsauna-20-tmavy-mahagon.jpg";
+// Farebné varianty LUX MINI sauny - všetky farby podľa katalógu
+import luxminiNatural from "@/assets/luxmini-natural.jpg";
+import luxmini1Mahagon from "@/assets/luxmini-1-mahagon.jpg";
+import luxmini2Teak from "@/assets/luxmini-2-teak.jpg";
+import luxmini3SvetlyOrech from "@/assets/luxmini-3-svetly-orech.jpg";
+import luxmini4ZlatyDub from "@/assets/luxmini-4-zlaty-dub.jpg";
+import luxmini5OlejovanaBorovica from "@/assets/luxmini-5-olejovana-borovica.jpg";
+import luxmini14SvetlaPopolavosiva from "@/assets/luxmini-14-svetla-popolavosiva.jpg";
+import luxmini15Greige from "@/assets/luxmini-15-greige.jpg";
+import luxmini16StudenaSiva from "@/assets/luxmini-16-studena-siva.jpg";
+import luxmini17Antracit from "@/assets/luxmini-17-antracit.jpg";
+import luxmini18TmavyOrech from "@/assets/luxmini-18-tmavy-orech.jpg";
+import luxmini20TmavyMahagon from "@/assets/luxmini-20-tmavy-mahagon.jpg";
 
 type ProductCategory = "sauna" | "hottub";
 
@@ -137,18 +150,18 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "20-tmavy-mahagon": modulsauna20TmavyMahagon,
   },
   "lux-mini": {
-    "none": saunaInterior,
-    "1-mahagon": saunaInterior,
-    "2-teak": saunaInterior,
-    "3-svetly-orech": saunaInterior,
-    "4-zlaty-dub": saunaInterior,
-    "5-olejovana-borovica": saunaInterior,
-    "14-svetla-popolavosiva": saunaInterior,
-    "15-greige": saunaInterior,
-    "16-studena-siva": saunaInterior,
-    "17-antracit": saunaInterior,
-    "18-tmavy-orech": saunaInterior,
-    "20-tmavy-mahagon": saunaInterior,
+    "none": luxminiNatural,
+    "1-mahagon": luxmini1Mahagon,
+    "2-teak": luxmini2Teak,
+    "3-svetly-orech": luxmini3SvetlyOrech,
+    "4-zlaty-dub": luxmini4ZlatyDub,
+    "5-olejovana-borovica": luxmini5OlejovanaBorovica,
+    "14-svetla-popolavosiva": luxmini14SvetlaPopolavosiva,
+    "15-greige": luxmini15Greige,
+    "16-studena-siva": luxmini16StudenaSiva,
+    "17-antracit": luxmini17Antracit,
+    "18-tmavy-orech": luxmini18TmavyOrech,
+    "20-tmavy-mahagon": luxmini20TmavyMahagon,
   },
   "round-2m": {
     "none": saunaBarrel,
