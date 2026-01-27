@@ -35,17 +35,25 @@ import electricHeater from "@/assets/Harvia-CILINDRO-9kw.png";
 import woodHeater from "@/assets/Harvia-M3.png";
 import spruceWoodImg from "@/assets/spruce-wood.jpg";
 import thermoWoodImg from "@/assets/thermo-wood.jpg";
-// Farebné varianty Frame sauny
+// Farebné varianty Frame sauny - všetky farby podľa katalógu
 import frameSaunaNatural from "@/assets/frame-sauna-natural.jpg";
-import frameSaunaMahagon from "@/assets/frame-sauna-mahagon.jpg";
-import frameSaunaTeak from "@/assets/frame-sauna-teak.jpg";
-import frameSaunaAntracit from "@/assets/frame-sauna-antracit.jpg";
+import frameSauna1Mahagon from "@/assets/frame-sauna-1-mahagon.jpg";
+import frameSauna2Teak from "@/assets/frame-sauna-2-teak.jpg";
+import frameSauna3SvetlyOrech from "@/assets/frame-sauna-3-svetly-orech.jpg";
+import frameSauna4ZlatyDub from "@/assets/frame-sauna-4-zlaty-dub.jpg";
+import frameSauna5OlejovanaBorovica from "@/assets/frame-sauna-5-olejovana-borovica.jpg";
+import frameSauna14SvetlaPopolavosiva from "@/assets/frame-sauna-14-svetla-popolavosiva.jpg";
+import frameSauna15Greige from "@/assets/frame-sauna-15-greige.jpg";
+import frameSauna16StudenaSiva from "@/assets/frame-sauna-16-studena-siva.jpg";
+import frameSaunaAntracit from "@/assets/frame-sauna-antracit.jpg"; // No. 17
+import frameSauna18TmavyOrech from "@/assets/frame-sauna-18-tmavy-orech.jpg";
+import frameSauna20TmavyMahagon from "@/assets/frame-sauna-20-tmavy-mahagon.jpg";
 
 type ProductCategory = "sauna" | "hottub";
 
 type WoodType = "spruce" | "thermo";
 
-type SaunaColorType = "none" | "mahagon" | "teak" | "antracit";
+type SaunaColorType = "none" | "1-mahagon" | "2-teak" | "3-svetly-orech" | "4-zlaty-dub" | "5-olejovana-borovica" | "14-svetla-popolavosiva" | "15-greige" | "16-studena-siva" | "17-antracit" | "18-tmavy-orech" | "20-tmavy-mahagon";
 
 type SaunaType = {
   id: string;
@@ -70,38 +78,78 @@ const woodTypeOptions: { id: WoodType; name: string; price: number; image: strin
 // Color options for saunas (local - not from API)
 // NOTE: Používame HSL (nie HEX), aby to ladilo s dizajnovými pravidlami.
 const saunaLocalColorOptions: { id: SaunaColorType; name: string; price: number; colorHsl: string }[] = [
-  { id: "none", name: "Bez farby", price: 0, colorHsl: "transparent" },
-  { id: "mahagon", name: "Mahagón", price: 350, colorHsl: "hsl(6 29% 33%)" },
-  { id: "teak", name: "Teak / Jantár", price: 350, colorHsl: "hsl(40 78% 45%)" },
-  { id: "antracit", name: "Antracit", price: 350, colorHsl: "hsl(0 0% 22%)" },
+  { id: "none", name: "Bez farby (Natural)", price: 0, colorHsl: "transparent" },
+  { id: "1-mahagon", name: "Mahagón", price: 350, colorHsl: "hsl(6 29% 33%)" },
+  { id: "2-teak", name: "Teak / teplý jantár", price: 350, colorHsl: "hsl(30 60% 45%)" },
+  { id: "3-svetly-orech", name: "Svetlý orech", price: 350, colorHsl: "hsl(35 40% 50%)" },
+  { id: "4-zlaty-dub", name: "Zlatý dub", price: 350, colorHsl: "hsl(45 70% 50%)" },
+  { id: "5-olejovana-borovica", name: "Olejovaná borovica", price: 350, colorHsl: "hsl(43 60% 55%)" },
+  { id: "14-svetla-popolavosiva", name: "Svetlá popolavosivá", price: 350, colorHsl: "hsl(0 0% 45%)" },
+  { id: "15-greige", name: "Greige (sivo-hnedá)", price: 350, colorHsl: "hsl(30 10% 40%)" },
+  { id: "16-studena-siva", name: "Studená sivá", price: 350, colorHsl: "hsl(0 0% 35%)" },
+  { id: "17-antracit", name: "Antracit", price: 350, colorHsl: "hsl(0 0% 22%)" },
+  { id: "18-tmavy-orech", name: "Tmavý orech", price: 350, colorHsl: "hsl(25 30% 35%)" },
+  { id: "20-tmavy-mahagon", name: "Tmavý mahagón", price: 350, colorHsl: "hsl(6 35% 28%)" },
 ];
 
 // Reálne obrázky podľa farby pre každý model sauny
 // Structure: saunaId -> colorId -> imagePath
 const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
   "frame-inspire": {
-    none: frameSaunaNatural,
-    mahagon: frameSaunaMahagon,
-    teak: frameSaunaTeak,
-    antracit: frameSaunaAntracit,
+    "none": frameSaunaNatural,
+    "1-mahagon": frameSauna1Mahagon,
+    "2-teak": frameSauna2Teak,
+    "3-svetly-orech": frameSauna3SvetlyOrech,
+    "4-zlaty-dub": frameSauna4ZlatyDub,
+    "5-olejovana-borovica": frameSauna5OlejovanaBorovica,
+    "14-svetla-popolavosiva": frameSauna14SvetlaPopolavosiva,
+    "15-greige": frameSauna15Greige,
+    "16-studena-siva": frameSauna16StudenaSiva,
+    "17-antracit": frameSaunaAntracit,
+    "18-tmavy-orech": frameSauna18TmavyOrech,
+    "20-tmavy-mahagon": frameSauna20TmavyMahagon,
   },
   "lux-mini": {
-    none: saunaInterior,
-    mahagon: saunaInterior, // TODO: pridať reálne obrázky
-    teak: saunaInterior,
-    antracit: saunaInterior,
+    "none": saunaInterior,
+    "1-mahagon": saunaInterior,
+    "2-teak": saunaInterior,
+    "3-svetly-orech": saunaInterior,
+    "4-zlaty-dub": saunaInterior,
+    "5-olejovana-borovica": saunaInterior,
+    "14-svetla-popolavosiva": saunaInterior,
+    "15-greige": saunaInterior,
+    "16-studena-siva": saunaInterior,
+    "17-antracit": saunaInterior,
+    "18-tmavy-orech": saunaInterior,
+    "20-tmavy-mahagon": saunaInterior,
   },
   "round-2m": {
-    none: saunaBarrel,
-    mahagon: saunaBarrel, // TODO: pridať reálne obrázky
-    teak: saunaBarrel,
-    antracit: saunaBarrel,
+    "none": saunaBarrel,
+    "1-mahagon": saunaBarrel,
+    "2-teak": saunaBarrel,
+    "3-svetly-orech": saunaBarrel,
+    "4-zlaty-dub": saunaBarrel,
+    "5-olejovana-borovica": saunaBarrel,
+    "14-svetla-popolavosiva": saunaBarrel,
+    "15-greige": saunaBarrel,
+    "16-studena-siva": saunaBarrel,
+    "17-antracit": saunaBarrel,
+    "18-tmavy-orech": saunaBarrel,
+    "20-tmavy-mahagon": saunaBarrel,
   },
   "harmony-insulated": {
-    none: saunaHarmony,
-    mahagon: saunaHarmony, // TODO: pridať reálne obrázky
-    teak: saunaHarmony,
-    antracit: saunaHarmony,
+    "none": saunaHarmony,
+    "1-mahagon": saunaHarmony,
+    "2-teak": saunaHarmony,
+    "3-svetly-orech": saunaHarmony,
+    "4-zlaty-dub": saunaHarmony,
+    "5-olejovana-borovica": saunaHarmony,
+    "14-svetla-popolavosiva": saunaHarmony,
+    "15-greige": saunaHarmony,
+    "16-studena-siva": saunaHarmony,
+    "17-antracit": saunaHarmony,
+    "18-tmavy-orech": saunaHarmony,
+    "20-tmavy-mahagon": saunaHarmony,
   },
 };
 
