@@ -63,11 +63,12 @@ const woodTypeOptions: { id: WoodType; name: string; price: number; image: strin
 ];
 
 // Color options for saunas (local - not from API)
-const saunaLocalColorOptions: { id: SaunaColorType; name: string; price: number; colorHex: string }[] = [
-  { id: "none", name: "Bez farby", price: 0, colorHex: "transparent" },
-  { id: "mahagon", name: "Mahagón", price: 350, colorHex: "#6B3A3A" },
-  { id: "teak", name: "Teak / Jantár", price: 350, colorHex: "#C68E17" },
-  { id: "antracit", name: "Antracit", price: 350, colorHex: "#383838" },
+// NOTE: Používame HSL (nie HEX), aby to ladilo s dizajnovými pravidlami.
+const saunaLocalColorOptions: { id: SaunaColorType; name: string; price: number; colorHsl: string }[] = [
+  { id: "none", name: "Bez farby", price: 0, colorHsl: "transparent" },
+  { id: "mahagon", name: "Mahagón", price: 350, colorHsl: "hsl(6 29% 33%)" },
+  { id: "teak", name: "Teak / Jantár", price: 350, colorHsl: "hsl(40 78% 45%)" },
+  { id: "antracit", name: "Antracit", price: 350, colorHsl: "hsl(0 0% 22%)" },
 ];
 
 // Placeholder images per color per sauna type (will be replaced with real images)
@@ -314,6 +315,12 @@ const Configurator = () => {
     
     return selectedSaunaType.image;
   }, [selectedSaunaType, saunaConfig.color]);
+
+  // Jemný farebný tint overlay ako placeholder, kým nebudú reálne fotky pre farby
+  const selectedSaunaColorOverlay = useMemo(() => {
+    if (saunaConfig.color === "none") return "transparent";
+    return saunaLocalColorOptions.find((c) => c.id === saunaConfig.color)?.colorHsl ?? "transparent";
+  }, [saunaConfig.color]);
   
   const images = useMemo(() => {
     if (productCategory === "hottub") {
@@ -843,6 +850,20 @@ const Configurator = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
+                {productCategory === "sauna" &&
+                  selectedSaunaType?.hasColor &&
+                  saunaConfig.color !== "none" &&
+                  currentImageIndex === 0 && (
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        backgroundColor: selectedSaunaColorOverlay,
+                        mixBlendMode: "multiply",
+                        opacity: 0.32,
+                      }}
+                    />
+                  )}
+
                 <button className="absolute bottom-4 left-4 p-3 bg-background/80 backdrop-blur-sm rounded-full hover:bg-background transition-colors">
                   <Expand className="w-5 h-5" />
                 </button>
@@ -1086,7 +1107,10 @@ const Configurator = () => {
                             {saunaLocalColorOptions.map((option) => (
                               <button
                                 key={option.id}
-                                onClick={() => setSaunaConfig((prev) => ({ ...prev, color: option.id }))}
+                                onClick={() => {
+                                  setSaunaConfig((prev) => ({ ...prev, color: option.id }));
+                                  setCurrentImageIndex(0);
+                                }}
                                 className={cn(
                                   "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                                   saunaConfig.color === option.id
@@ -1101,7 +1125,7 @@ const Configurator = () => {
                                 ) : (
                                   <div
                                     className="w-12 h-12 rounded-lg mb-2 border border-border/30"
-                                    style={{ backgroundColor: option.colorHex }}
+                                    style={{ backgroundColor: option.colorHsl }}
                                   />
                                 )}
                                 <span className="font-medium text-center text-xs">{option.name}</span>
