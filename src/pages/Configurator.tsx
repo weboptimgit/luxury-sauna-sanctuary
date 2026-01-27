@@ -40,6 +40,8 @@ type ProductCategory = "sauna" | "hottub";
 
 type WoodType = "spruce" | "thermo";
 
+type SaunaColorType = "none" | "mahagon" | "teak" | "antracit";
+
 type SaunaType = {
   id: string;
   name: string;
@@ -59,6 +61,43 @@ const woodTypeOptions: { id: WoodType; name: string; price: number; image: strin
   { id: "spruce", name: "Smrekové drevo", price: 0, image: spruceWoodImg },
   { id: "thermo", name: "Thermo wood", price: 500, image: thermoWoodImg },
 ];
+
+// Color options for saunas (local - not from API)
+const saunaLocalColorOptions: { id: SaunaColorType; name: string; price: number; colorHex: string }[] = [
+  { id: "none", name: "Bez farby", price: 0, colorHex: "transparent" },
+  { id: "mahagon", name: "Mahagón", price: 350, colorHex: "#6B3A3A" },
+  { id: "teak", name: "Teak / Jantár", price: 350, colorHex: "#C68E17" },
+  { id: "antracit", name: "Antracit", price: 350, colorHex: "#383838" },
+];
+
+// Placeholder images per color per sauna type (will be replaced with real images)
+// Structure: saunaId -> colorId -> imagePath
+const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
+  "frame-inspire": {
+    none: saunaCube,
+    mahagon: saunaCube, // placeholder - nahradiť skutočným obrázkom
+    teak: saunaCube,
+    antracit: saunaCube,
+  },
+  "lux-mini": {
+    none: saunaInterior,
+    mahagon: saunaInterior,
+    teak: saunaInterior,
+    antracit: saunaInterior,
+  },
+  "round-2m": {
+    none: saunaBarrel,
+    mahagon: saunaBarrel,
+    teak: saunaBarrel,
+    antracit: saunaBarrel,
+  },
+  "harmony-insulated": {
+    none: saunaHarmony,
+    mahagon: saunaHarmony,
+    teak: saunaHarmony,
+    antracit: saunaHarmony,
+  },
+};
 
 // Typy saún - toto sa môže neskôr načítavať z API
 const saunaTypes: SaunaType[] = [
@@ -226,7 +265,7 @@ const Configurator = () => {
     led: [] as string[],
     bluetooth: "none",
     accessoryKit: "none",
-    color: "none",
+    color: "none" as SaunaColorType,
     woodType: "spruce" as WoodType,
   });
 
@@ -264,9 +303,20 @@ const Configurator = () => {
     setSaunaConfig((prev) => ({ ...prev, led: [] }));
   };
 
-  // --- Images pre galériu ---
+  // --- Images pre galériu - mení sa podľa vybranej farby ---
+  const getCurrentSaunaImage = () => {
+    if (!selectedSaunaType) return saunaBarrel;
+    
+    // Ak má farbu a existuje mapa farieb pre tento model
+    if (selectedSaunaType.hasColor && saunaColorImages[selectedSaunaType.id]) {
+      return saunaColorImages[selectedSaunaType.id][saunaConfig.color] || selectedSaunaType.image;
+    }
+    
+    return selectedSaunaType.image;
+  };
+  
   const saunaImages = selectedSaunaType
-    ? [selectedSaunaType.image, saunaInterior, saunaBarrel]
+    ? [getCurrentSaunaImage(), saunaInterior, saunaBarrel]
     : [saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
   const hotTubImages = [hotTub, saunaInterior, saunaCube];
   const images = productCategory === "hottub" ? hotTubImages : saunaImages;
@@ -326,7 +376,7 @@ const Configurator = () => {
       }, 0);
       const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
-      const color = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
+      const color = saunaLocalColorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
       const woodPrice = woodTypeOptions.find((w) => w.id === saunaConfig.woodType)?.price ?? 0;
 
       return basePrice + heater + ledSum + bluetooth + kit + color + woodPrice;
@@ -405,7 +455,7 @@ const Configurator = () => {
       led: [],
       bluetooth: "none",
       accessoryKit: "none",
-      color: "none",
+      color: "none" as SaunaColorType,
       woodType: "spruce",
     });
   };
@@ -417,7 +467,7 @@ const Configurator = () => {
       led: [],
       bluetooth: "none",
       accessoryKit: "none",
-      color: "none",
+      color: "none" as SaunaColorType,
       woodType: "spruce",
     });
     setCurrentImageIndex(0);
@@ -1025,16 +1075,38 @@ const Configurator = () => {
                           <h3 className="text-lg font-semibold text-foreground mb-3">
                             Farba <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-5 gap-3">
-                            {saunaColorOptions.map((option) => (
-                              <OptionCard
+                          <p className="text-xs text-muted-foreground mb-3 italic">
+                            *Vyberte si farbu povrchovej úpravy sauny.
+                          </p>
+                          <div className="grid grid-cols-4 gap-3">
+                            {saunaLocalColorOptions.map((option) => (
+                              <button
                                 key={option.id}
-                                option={option}
-                                isSelected={saunaConfig.color === option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, color: option.id }))}
-                                showImage={true}
-                                size="small"
-                              />
+                                className={cn(
+                                  "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                                  saunaConfig.color === option.id
+                                    ? "border-primary bg-primary/5"
+                                    : "border-border/50 hover:border-primary/50 bg-card/50",
+                                )}
+                              >
+                                {option.id === "none" ? (
+                                  <div className="w-12 h-12 rounded-lg bg-muted/50 flex items-center justify-center mb-2">
+                                    <X className="w-6 h-6 text-muted-foreground" />
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="w-12 h-12 rounded-lg mb-2 border border-border/30"
+                                    style={{ backgroundColor: option.colorHex }}
+                                  />
+                                )}
+                                <span className="font-medium text-center text-xs">{option.name}</span>
+                                {option.price > 0 ? (
+                                  <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
+                                ) : (
+                                  <span className="text-xs text-muted-foreground">V cene</span>
+                                )}
+                              </button>
                             ))}
                           </div>
                         </div>
