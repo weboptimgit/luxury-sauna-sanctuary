@@ -48,6 +48,19 @@ import frameSauna16StudenaSiva from "@/assets/frame-sauna-16-studena-siva.jpg";
 import frameSaunaAntracit from "@/assets/frame-sauna-antracit.jpg"; // No. 17
 import frameSauna18TmavyOrech from "@/assets/frame-sauna-18-tmavy-orech.jpg";
 import frameSauna20TmavyMahagon from "@/assets/frame-sauna-20-tmavy-mahagon.jpg";
+// Farebné varianty ModulSauny - všetky farby podľa katalógu
+import modulsaunaNatural from "@/assets/modulsauna-natural.jpg";
+import modulsauna1Mahagon from "@/assets/modulsauna-1-mahagon.jpg";
+import modulsauna2Teak from "@/assets/modulsauna-2-teak.jpg";
+import modulsauna3SvetlyOrech from "@/assets/modulsauna-3-svetly-orech.jpg";
+import modulsauna4ZlatyDub from "@/assets/modulsauna-4-zlaty-dub.jpg";
+import modulsauna5OlejovanaBorovica from "@/assets/modulsauna-5-olejovana-borovica.jpg";
+import modulsauna14SvetlaPopolavosiva from "@/assets/modulsauna-14-svetla-popolavosiva.jpg";
+import modulsauna15Greige from "@/assets/modulsauna-15-greige.jpg";
+import modulsauna16StudenaSiva from "@/assets/modulsauna-16-studena-siva.jpg";
+import modulsauna17Antracit from "@/assets/modulsauna-17-antracit.jpg";
+import modulsauna18TmavyOrech from "@/assets/modulsauna-18-tmavy-orech.jpg";
+import modulsauna20TmavyMahagon from "@/assets/modulsauna-20-tmavy-mahagon.jpg";
 
 type ProductCategory = "sauna" | "hottub";
 
@@ -108,6 +121,20 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "17-antracit": frameSaunaAntracit,
     "18-tmavy-orech": frameSauna18TmavyOrech,
     "20-tmavy-mahagon": frameSauna20TmavyMahagon,
+  },
+  "modul-thermo": {
+    "none": modulsaunaNatural,
+    "1-mahagon": modulsauna1Mahagon,
+    "2-teak": modulsauna2Teak,
+    "3-svetly-orech": modulsauna3SvetlyOrech,
+    "4-zlaty-dub": modulsauna4ZlatyDub,
+    "5-olejovana-borovica": modulsauna5OlejovanaBorovica,
+    "14-svetla-popolavosiva": modulsauna14SvetlaPopolavosiva,
+    "15-greige": modulsauna15Greige,
+    "16-studena-siva": modulsauna16StudenaSiva,
+    "17-antracit": modulsauna17Antracit,
+    "18-tmavy-orech": modulsauna18TmavyOrech,
+    "20-tmavy-mahagon": modulsauna20TmavyMahagon,
   },
   "lux-mini": {
     "none": saunaInterior,
@@ -178,7 +205,7 @@ const saunaTypes: SaunaType[] = [
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
-    hasColor: false,
+    hasColor: true,
     availableWoodTypes: ["thermo"],
   },
   {
