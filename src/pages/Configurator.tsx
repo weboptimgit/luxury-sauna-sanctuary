@@ -418,6 +418,7 @@ const Configurator = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
@@ -984,7 +985,10 @@ const Configurator = () => {
                 />
 
 
-                <button className="absolute bottom-4 left-4 p-3 bg-background/80 backdrop-blur-sm rounded-full hover:bg-background transition-colors">
+                <button 
+                  onClick={() => setIsLightboxOpen(true)}
+                  className="absolute bottom-4 left-4 p-3 bg-background/80 backdrop-blur-sm rounded-full hover:bg-background transition-colors"
+                >
                   <Expand className="w-5 h-5" />
                 </button>
 
@@ -1388,6 +1392,70 @@ const Configurator = () => {
         </div>
       </main>
       <ConfiguratorFooter />
+
+      {/* Lightbox Modal */}
+      {isLightboxOpen && (
+        <div 
+          className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex items-center justify-center"
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          <button 
+            className="absolute top-6 right-6 p-3 bg-card/50 backdrop-blur-sm rounded-full hover:bg-card transition-colors z-10"
+            onClick={() => setIsLightboxOpen(false)}
+          >
+            <X className="w-6 h-6" />
+          </button>
+          
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentImageIndex((i) => (i === 0 ? images.length - 1 : i - 1));
+            }}
+            className="absolute left-6 top-1/2 -translate-y-1/2 p-3 bg-card/50 backdrop-blur-sm rounded-full hover:bg-card transition-colors z-10"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentImageIndex((i) => (i === images.length - 1 ? 0 : i + 1));
+            }}
+            className="absolute right-6 top-1/2 -translate-y-1/2 p-3 bg-card/50 backdrop-blur-sm rounded-full hover:bg-card transition-colors z-10"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+          
+          <div 
+            className="max-w-5xl max-h-[85vh] w-full mx-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={images[currentImageIndex]}
+              alt="Zväčšený obrázok"
+              className="w-full h-full object-contain rounded-lg"
+            />
+            
+            {/* Thumbnail strip */}
+            <div className="flex justify-center gap-2 mt-4 overflow-x-auto pb-2">
+              {images.map((img, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={cn(
+                    "relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden transition-all",
+                    currentImageIndex === index
+                      ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                      : "opacity-60 hover:opacity-100",
+                  )}
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
