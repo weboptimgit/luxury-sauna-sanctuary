@@ -74,6 +74,19 @@ import luxmini16StudenaSiva from "@/assets/luxmini-16-studena-siva.jpg";
 import luxmini17Antracit from "@/assets/luxmini-17-antracit.jpg";
 import luxmini18TmavyOrech from "@/assets/luxmini-18-tmavy-orech.jpg";
 import luxmini20TmavyMahagon from "@/assets/luxmini-20-tmavy-mahagon.jpg";
+// Farebné varianty 2M Round sauny - všetky farby podľa katalógu
+import round2mNatural from "@/assets/2mround-natural.jpg";
+import round2m1Mahagon from "@/assets/2mround-1-mahagon.jpg";
+import round2m2Teak from "@/assets/2mround-2-teak.jpg";
+import round2m3SvetlyOrech from "@/assets/2mround-3-svetly-orech.jpg";
+import round2m4ZlatyDub from "@/assets/2mround-4-zlaty-dub.jpg";
+import round2m5OlejovanaBorovica from "@/assets/2mround-5-olejovana-borovica.jpg";
+import round2m14SvetlaPopolavosiva from "@/assets/2mround-14-svetla-popolavosiva.jpg";
+import round2m15Greige from "@/assets/2mround-15-greige.jpg";
+import round2m16StudenaSiva from "@/assets/2mround-16-studena-siva.jpg";
+import round2m17Antracit from "@/assets/2mround-17-antracit.jpg";
+import round2m18TmavyOrech from "@/assets/2mround-18-tmavy-orech.jpg";
+import round2m20TmavyMahagon from "@/assets/2mround-20-tmavy-mahagon.jpg";
 
 type ProductCategory = "sauna" | "hottub";
 
@@ -164,18 +177,18 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "20-tmavy-mahagon": luxmini20TmavyMahagon,
   },
   "round-2m": {
-    "none": saunaBarrel,
-    "1-mahagon": saunaBarrel,
-    "2-teak": saunaBarrel,
-    "3-svetly-orech": saunaBarrel,
-    "4-zlaty-dub": saunaBarrel,
-    "5-olejovana-borovica": saunaBarrel,
-    "14-svetla-popolavosiva": saunaBarrel,
-    "15-greige": saunaBarrel,
-    "16-studena-siva": saunaBarrel,
-    "17-antracit": saunaBarrel,
-    "18-tmavy-orech": saunaBarrel,
-    "20-tmavy-mahagon": saunaBarrel,
+    "none": round2mNatural,
+    "1-mahagon": round2m1Mahagon,
+    "2-teak": round2m2Teak,
+    "3-svetly-orech": round2m3SvetlyOrech,
+    "4-zlaty-dub": round2m4ZlatyDub,
+    "5-olejovana-borovica": round2m5OlejovanaBorovica,
+    "14-svetla-popolavosiva": round2m14SvetlaPopolavosiva,
+    "15-greige": round2m15Greige,
+    "16-studena-siva": round2m16StudenaSiva,
+    "17-antracit": round2m17Antracit,
+    "18-tmavy-orech": round2m18TmavyOrech,
+    "20-tmavy-mahagon": round2m20TmavyMahagon,
   },
   "harmony-insulated": {
     "none": saunaHarmony,
