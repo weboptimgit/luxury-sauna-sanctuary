@@ -89,6 +89,21 @@ import round2m17Antracit from "@/assets/2mround-17-antracit.jpg";
 import round2m18TmavyOrech from "@/assets/2mround-18-tmavy-orech.jpg";
 import round2m20TmavyMahagon from "@/assets/2mround-20-tmavy-mahagon.jpg";
 
+// Galérijné fotky pre jednotlivé modely (rôzne uhly pohľadu)
+import frameSaunaGallery1 from "@/assets/frame-sauna-gallery-1.jpg";
+import frameSaunaGallery2 from "@/assets/frame-sauna-gallery-2.jpg";
+import frameSaunaGallery3 from "@/assets/frame-sauna-gallery-3.jpg";
+import frameSaunaGallery4 from "@/assets/frame-sauna-gallery-4.jpg";
+import frameSaunaGallery5 from "@/assets/frame-sauna-gallery-5.jpg";
+import modulsaunaGallery1 from "@/assets/modulsauna-gallery-1.jpg";
+import modulsaunaGallery2 from "@/assets/modulsauna-gallery-2.jpg";
+import modulsaunaGallery3 from "@/assets/modulsauna-gallery-3.jpg";
+import modulsaunaGallery4 from "@/assets/modulsauna-gallery-4.jpg";
+import modulsaunaGallery5 from "@/assets/modulsauna-gallery-5.jpg";
+import modulsaunaGallery6 from "@/assets/modulsauna-gallery-6.jpg";
+import modulsaunaGallery7 from "@/assets/modulsauna-gallery-7.jpg";
+import modulsaunaGallery8 from "@/assets/modulsauna-gallery-8.jpg";
+
 type ProductCategory = "sauna" | "hottub";
 
 type WoodType = "spruce" | "thermo";
@@ -205,6 +220,15 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "18-tmavy-orech": saunaHarmony,
     "20-tmavy-mahagon": saunaHarmony,
   },
+};
+
+// Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
+const saunaGalleryImages: Record<string, string[]> = {
+  "frame-inspire": [frameSaunaGallery1, frameSaunaGallery2, frameSaunaGallery3, frameSaunaGallery4, frameSaunaGallery5],
+  "modul-thermo": [modulsaunaGallery1, modulsaunaGallery2, modulsaunaGallery3, modulsaunaGallery4, modulsaunaGallery5, modulsaunaGallery6, modulsaunaGallery7, modulsaunaGallery8],
+  "lux-mini": [], // zatiaľ bez galérie
+  "round-2m": [], // zatiaľ bez galérie
+  "harmony-insulated": [], // zatiaľ bez galérie
 };
 
 // Typy saún - toto sa môže neskôr načítavať z API
@@ -429,7 +453,9 @@ const Configurator = () => {
       return [hotTub, saunaInterior, saunaCube];
     }
     if (selectedSaunaType) {
-      return [currentSaunaImage, saunaInterior, saunaBarrel];
+      // Hlavný obrázok (mení sa podľa farby) + galérijné fotky (statické)
+      const galleryPhotos = saunaGalleryImages[selectedSaunaType.id] || [];
+      return [currentSaunaImage, ...galleryPhotos];
     }
     return [saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
   }, [productCategory, selectedSaunaType, currentSaunaImage]);
