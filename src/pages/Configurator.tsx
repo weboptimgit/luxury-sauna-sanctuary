@@ -115,6 +115,12 @@ import luxminiGallery4 from "@/assets/luxmini-gallery-4.jpg";
 import luxminiGallery5 from "@/assets/luxmini-gallery-5.jpg";
 import luxminiGallery6 from "@/assets/luxmini-gallery-6.jpg";
 import luxminiGallery7 from "@/assets/luxmini-gallery-7.jpg";
+import round2mGallery1 from "@/assets/2mround-gallery-1.jpg";
+import round2mGallery2 from "@/assets/2mround-gallery-2.jpg";
+import round2mGallery3 from "@/assets/2mround-gallery-3.jpg";
+import round2mGallery4 from "@/assets/2mround-gallery-4.jpg";
+import round2mGallery5 from "@/assets/2mround-gallery-5.jpg";
+import round2mGallery6 from "@/assets/2mround-gallery-6.jpg";
 
 type ProductCategory = "sauna" | "hottub";
 
@@ -239,7 +245,7 @@ const saunaGalleryImages: Record<string, string[]> = {
   "frame-inspire": [frameSaunaGallery1, frameSaunaGallery2, frameSaunaGallery3, frameSaunaGallery4, frameSaunaGallery5, frameSaunaGallery6, frameSaunaGallery7, frameSaunaGallery8, frameSaunaGallery9, frameSaunaGallery10],
   "modul-thermo": [modulsaunaGallery1, modulsaunaGallery2, modulsaunaGallery3, modulsaunaGallery4, modulsaunaGallery5, modulsaunaGallery6, modulsaunaGallery7, modulsaunaGallery8],
   "lux-mini": [luxminiGallery1, luxminiGallery2, luxminiGallery3, luxminiGallery4, luxminiGallery5, luxminiGallery6, luxminiGallery7],
-  "round-2m": [], // zatiaľ bez galérie
+  "round-2m": [round2mGallery1, round2mGallery2, round2mGallery3, round2mGallery4, round2mGallery5, round2mGallery6],
   "harmony-insulated": [], // zatiaľ bez galérie
 };
 
