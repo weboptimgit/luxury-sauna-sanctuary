@@ -757,7 +757,7 @@ const Configurator = () => {
                   setProductCategory("sauna");
                   setCurrentImageIndex(0);
                 }}
-                className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50"
+                className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50 shadow-xl"
               >
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
@@ -766,13 +766,14 @@ const Configurator = () => {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
+                {/* Silnejší gradient pre lepšiu čitateľnosť */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h2 className="font-display text-3xl font-bold text-foreground mb-2">Sauna</h2>
-                  <p className="text-muted-foreground mb-4">
+                  <h2 className="font-display text-4xl font-bold text-white mb-3 drop-shadow-lg">Sauna</h2>
+                  <p className="text-white/90 mb-4 text-base leading-relaxed drop-shadow-md">
                     Nakonfigurujte si vlastnú saunu s výberom ohrievača, osvetlenia a príslušenstva.
                   </p>
-                  <div className="flex items-center gap-2 text-primary font-medium">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
                     <span>Od {Math.min(...saunaTypes.map((s) => s.basePrice)).toLocaleString()} €</span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -785,7 +786,7 @@ const Configurator = () => {
                   setProductCategory("hottub");
                   setCurrentImageIndex(0);
                 }}
-                className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50"
+                className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50 shadow-xl"
               >
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
@@ -794,13 +795,14 @@ const Configurator = () => {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent" />
+                {/* Silnejší gradient pre lepšiu čitateľnosť */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h2 className="font-display text-3xl font-bold text-foreground mb-2">Kaďa</h2>
-                  <p className="text-muted-foreground mb-4">
+                  <h2 className="font-display text-4xl font-bold text-white mb-3 drop-shadow-lg">Kaďa</h2>
+                  <p className="text-white/90 mb-4 text-base leading-relaxed drop-shadow-md">
                     Vyberte si veľkosť, trysky, osvetlenie a ďalšie doplnky pre vašu kaďu.
                   </p>
-                  <div className="flex items-center gap-2 text-primary font-medium">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
                     <span>Od {apiConfig.hottub.basePrice.toLocaleString()} €</span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
