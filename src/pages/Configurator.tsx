@@ -95,6 +95,11 @@ import frameSaunaGallery2 from "@/assets/frame-sauna-gallery-2.jpg";
 import frameSaunaGallery3 from "@/assets/frame-sauna-gallery-3.jpg";
 import frameSaunaGallery4 from "@/assets/frame-sauna-gallery-4.jpg";
 import frameSaunaGallery5 from "@/assets/frame-sauna-gallery-5.jpg";
+import frameSaunaGallery6 from "@/assets/frame-sauna-gallery-6.jpg";
+import frameSaunaGallery7 from "@/assets/frame-sauna-gallery-7.jpg";
+import frameSaunaGallery8 from "@/assets/frame-sauna-gallery-8.jpg";
+import frameSaunaGallery9 from "@/assets/frame-sauna-gallery-9.jpg";
+import frameSaunaGallery10 from "@/assets/frame-sauna-gallery-10.jpg";
 import modulsaunaGallery1 from "@/assets/modulsauna-gallery-1.jpg";
 import modulsaunaGallery2 from "@/assets/modulsauna-gallery-2.jpg";
 import modulsaunaGallery3 from "@/assets/modulsauna-gallery-3.jpg";
@@ -224,7 +229,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
 
 // Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
 const saunaGalleryImages: Record<string, string[]> = {
-  "frame-inspire": [frameSaunaGallery1, frameSaunaGallery2, frameSaunaGallery3, frameSaunaGallery4, frameSaunaGallery5],
+  "frame-inspire": [frameSaunaGallery1, frameSaunaGallery2, frameSaunaGallery3, frameSaunaGallery4, frameSaunaGallery5, frameSaunaGallery6, frameSaunaGallery7, frameSaunaGallery8, frameSaunaGallery9, frameSaunaGallery10],
   "modul-thermo": [modulsaunaGallery1, modulsaunaGallery2, modulsaunaGallery3, modulsaunaGallery4, modulsaunaGallery5, modulsaunaGallery6, modulsaunaGallery7, modulsaunaGallery8],
   "lux-mini": [], // zatiaľ bez galérie
   "round-2m": [], // zatiaľ bez galérie
