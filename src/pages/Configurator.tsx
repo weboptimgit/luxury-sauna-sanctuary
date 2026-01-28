@@ -20,6 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import ConfiguratorHeader from "@/components/ConfiguratorHeader";
 import ConfiguratorFooter from "@/components/ConfiguratorFooter";
+import { Notice } from "@/components/ui/notice";
 
 import saunaBarrel from "@/assets/2M-Round-sauna-1-2-700x700.jpg";
 import saunaCube from "@/assets/Frame-sauna-210×210-700x700.jpg";
@@ -1225,6 +1226,9 @@ const Configurator = () => {
                               </button>
                             ))}
                           </div>
+                          <Notice variant="info" className="mt-4">
+                            Zobrazené fotky farieb sú len ilustračné a nemusia presne zodpovedať finálnemu produktu.
+                          </Notice>
                         </div>
                       )}
                     </div>
