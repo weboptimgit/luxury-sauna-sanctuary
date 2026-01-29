@@ -20,10 +20,6 @@
 #root *::before,
 #root *::after {
   box-sizing: border-box;
-  /* Restore Tailwind preflight essentials after `all: initial` */
-  border-width: 0;
-  border-style: solid;
-  border-color: currentColor;
 }
 
 #root a {
@@ -51,12 +47,7 @@
 }
 
 @layer base {
-  /*
-    Define design tokens on both :root (standalone app) and #root (WordPress embed).
-    This prevents WordPress/theme :root variables from overriding our palette.
-  */
-  :root,
-  #root {
+  :root {
     --background: 20 10% 8%;
     --foreground: 40 20% 95%;
 
