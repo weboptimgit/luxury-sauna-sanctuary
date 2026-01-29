@@ -19,7 +19,7 @@ const ConfiguratorHeader = () => {
     { labelKey: 'nav.infraSaunas', href: `${baseUrl}/k/infrasauny/`, external: true },
     { labelKey: 'nav.hotTubs', href: `${baseUrl}/k/kade/`, external: true },
     { labelKey: 'nav.accessories', href: `${baseUrl}/k/doplnky/`, external: true },
-    { labelKey: 'nav.configurator', href: language === 'en' ? '/en/konfigurator' : '/konfigurator', external: false },
+    { labelKey: 'nav.configurator', href: language === 'en' ? '/en/configurator' : '/konfigurator', external: false },
     { labelKey: 'nav.contact', href: `${baseUrl}/kontakt/`, external: true },
   ];
 
