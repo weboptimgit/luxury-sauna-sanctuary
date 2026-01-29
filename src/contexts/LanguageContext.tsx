@@ -185,6 +185,13 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const normalizePath = (path: string): string => {
+    if (!path) return '/';
+    if (path === '/') return '/';
+    // Remove trailing slashes to avoid route mismatches (e.g. /konfigurator/)
+    return path.replace(/\/+$/, '');
+  };
   
   // Detect language from URL path
   const getLanguageFromPath = (): Language => {
@@ -199,7 +206,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   }, [location.pathname]);
   
   const setLanguage = (lang: Language) => {
-    const currentPath = location.pathname;
+    const currentPath = normalizePath(location.pathname);
     let newPath: string;
     
     if (lang === 'en') {
@@ -209,7 +216,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       } else if (currentPath === '/konfigurator') {
         newPath = '/en/configurator';
       } else {
-        newPath = `/en${currentPath}`;
+        newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
       }
     } else {
       // Switch to Slovak
