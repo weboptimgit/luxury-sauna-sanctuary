@@ -3,6 +3,8 @@ import { Menu, X, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import flagUk from '@/assets/flag-uk.png';
+import flagSk from '@/assets/flag-sk.png';
 
 const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -61,42 +63,6 @@ const ConfiguratorHeader = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-4">
-            {/* Language Toggle - Flag button */}
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center justify-center w-8 h-8 rounded-full overflow-hidden border-2 border-border/50 hover:border-primary/50 transition-all"
-              title={language === 'sk' ? 'Switch to English' : 'Prepnúť na slovenčinu'}
-            >
-              {language === 'sk' ? (
-                // UK Flag for switching to English
-                <svg viewBox="0 0 60 30" className="w-full h-full">
-                  <clipPath id="s">
-                    <path d="M0,0 v30 h60 v-30 z"/>
-                  </clipPath>
-                  <clipPath id="t">
-                    <path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/>
-                  </clipPath>
-                  <g clipPath="url(#s)">
-                    <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
-                    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6"/>
-                    <path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#t)" stroke="#C8102E" strokeWidth="4"/>
-                    <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10"/>
-                    <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6"/>
-                  </g>
-                </svg>
-              ) : (
-                // Slovak Flag for switching to Slovak
-                <svg viewBox="0 0 900 600" className="w-full h-full">
-                  <rect width="900" height="600" fill="#ee1c25"/>
-                  <rect width="900" height="400" fill="#0b4ea2"/>
-                  <rect width="900" height="200" fill="#fff"/>
-                  <path d="M 200,140 h200 v260 c0,80 -100,120 -100,120 c0,0 -100,-40 -100,-120 z" fill="#fff"/>
-                  <path d="M 215,155 h170 v230 c0,65 -85,100 -85,100 c0,0 -85,-35 -85,-100 z" fill="#ee1c25"/>
-                  <path d="M 300,220 c-30,0 -55,25 -55,55 v30 h-25 v40 h25 v25 h40 v-25 h25 v-40 h-25 v-30 c0,-8 7,-15 15,-15 c8,0 15,7 15,15 v10 h40 v-10 c0,-30 -25,-55 -55,-55 z" fill="#0b4ea2"/>
-                </svg>
-              )}
-            </button>
-
             <a 
               href={`${baseUrl}/kosik/`}
               className="relative p-2 text-foreground/70 hover:text-primary transition-colors"
@@ -112,6 +78,19 @@ const ConfiguratorHeader = () => {
                 {t('nav.inquiry')}
               </Button>
             </a>
+
+            {/* Language Toggle - Flag button (at the end) */}
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center justify-center w-8 h-6 overflow-hidden hover:opacity-80 transition-opacity"
+              title={language === 'sk' ? 'Switch to English' : 'Prepnúť na slovenčinu'}
+            >
+              <img 
+                src={language === 'sk' ? flagUk : flagSk} 
+                alt={language === 'sk' ? 'English' : 'Slovensky'}
+                className="w-full h-full object-cover"
+              />
+            </button>
 
             {/* Mobile Menu Button */}
             <button
@@ -135,31 +114,11 @@ const ConfiguratorHeader = () => {
                 }}
                 className="flex items-center gap-3 text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300"
               >
-                <span className="w-6 h-4 rounded overflow-hidden">
-                  {language === 'sk' ? (
-                    <svg viewBox="0 0 60 30" className="w-full h-full">
-                      <clipPath id="s2">
-                        <path d="M0,0 v30 h60 v-30 z"/>
-                      </clipPath>
-                      <clipPath id="t2">
-                        <path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/>
-                      </clipPath>
-                      <g clipPath="url(#s2)">
-                        <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
-                        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6"/>
-                        <path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#t2)" stroke="#C8102E" strokeWidth="4"/>
-                        <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10"/>
-                        <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6"/>
-                      </g>
-                    </svg>
-                  ) : (
-                    <svg viewBox="0 0 900 600" className="w-full h-full">
-                      <rect width="900" height="600" fill="#ee1c25"/>
-                      <rect width="900" height="400" fill="#0b4ea2"/>
-                      <rect width="900" height="200" fill="#fff"/>
-                    </svg>
-                  )}
-                </span>
+                <img 
+                  src={language === 'sk' ? flagUk : flagSk} 
+                  alt={language === 'sk' ? 'English' : 'Slovensky'}
+                  className="w-6 h-4 object-cover"
+                />
                 {language === 'sk' ? 'English' : 'Slovensky'}
               </button>
 
