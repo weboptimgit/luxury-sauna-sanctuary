@@ -82,13 +82,13 @@ const ConfiguratorHeader = () => {
             {/* Language Toggle - Flag button (at the end) */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center justify-center w-8 h-6 overflow-hidden hover:opacity-80 transition-opacity"
+              className="flex items-center justify-center pl-4 border-l border-border/50 hover:opacity-80 transition-opacity"
               title={language === 'sk' ? 'Switch to English' : 'Prepnúť na slovenčinu'}
             >
               <img 
                 src={language === 'sk' ? flagUk : flagSk} 
                 alt={language === 'sk' ? 'English' : 'Slovensky'}
-                className="w-full h-full object-cover"
+                className="w-4 h-[11px] object-cover"
               />
             </button>
 
