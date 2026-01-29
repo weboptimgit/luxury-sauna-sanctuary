@@ -202,22 +202,27 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     const currentPath = location.pathname;
     let newPath: string;
     
+    // Normalize path - remove trailing slash for comparison
+    const normalizedPath = currentPath.endsWith('/') && currentPath !== '/' 
+      ? currentPath.slice(0, -1) 
+      : currentPath;
+    
     if (lang === 'en') {
       // Switch to English
-      if (currentPath.startsWith('/en')) {
+      if (normalizedPath.startsWith('/en')) {
         newPath = currentPath; // Already in English
-      } else if (currentPath === '/konfigurator') {
+      } else if (normalizedPath === '/konfigurator' || normalizedPath.startsWith('/konfigurator')) {
         newPath = '/en/configurator';
       } else {
-        newPath = `/en${currentPath}`;
+        newPath = `/en${normalizedPath}`;
       }
     } else {
       // Switch to Slovak
-      if (currentPath === '/en/configurator') {
+      if (normalizedPath === '/en/configurator' || normalizedPath.startsWith('/en/configurator')) {
         newPath = '/konfigurator';
-      } else if (currentPath.startsWith('/en/')) {
-        newPath = currentPath.replace('/en', '');
-      } else if (currentPath === '/en') {
+      } else if (normalizedPath.startsWith('/en/')) {
+        newPath = normalizedPath.replace('/en', '');
+      } else if (normalizedPath === '/en') {
         newPath = '/';
       } else {
         newPath = currentPath;
