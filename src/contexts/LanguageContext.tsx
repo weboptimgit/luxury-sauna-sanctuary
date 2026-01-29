@@ -13,7 +13,7 @@ const translations: Record<Language, Record<string, string>> = {
   sk: {
     // Header
     'nav.home': 'Domov',
-    'nav.finnishSaunas': 'Fínske sauny',
+    'nav.finnishSaunas': 'Prémiové sauny',
     'nav.infraSaunas': 'Infrasauny',
     'nav.hotTubs': 'Kade',
     'nav.accessories': 'Doplnky',
@@ -97,7 +97,7 @@ const translations: Record<Language, Record<string, string>> = {
   en: {
     // Header
     'nav.home': 'Home',
-    'nav.finnishSaunas': 'Finnish Saunas',
+    'nav.finnishSaunas': 'Premium Saunas',
     'nav.infraSaunas': 'Infrared Saunas',
     'nav.hotTubs': 'Hot Tubs',
     'nav.accessories': 'Accessories',
