@@ -4,8 +4,59 @@
 @tailwind components;
 @tailwind utilities;
 
+/* WordPress CSS isolation - reset styles when embedded */
+#root {
+  all: initial;
+  display: block;
+  font-family: var(--font-body);
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root *,
+#root *::before,
+#root *::after {
+  box-sizing: border-box;
+  /* Restore Tailwind preflight essentials after `all: initial` */
+  border-width: 0;
+  border-style: solid;
+  border-color: currentColor;
+}
+
+#root a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#root img,
+#root svg {
+  display: block;
+  max-width: 100%;
+}
+
+#root button {
+  font-family: inherit;
+}
+
+#root h1, #root h2, #root h3, #root h4, #root h5, #root h6 {
+  font-family: var(--font-display);
+  margin: 0;
+}
+
+#root p {
+  margin: 0;
+}
+
 @layer base {
-  :root {
+  /*
+    Define design tokens on both :root (standalone app) and #root (WordPress embed).
+    This prevents WordPress/theme :root variables from overriding our palette.
+  */
+  :root,
+  #root {
     --background: 20 10% 8%;
     --foreground: 40 20% 95%;
 
