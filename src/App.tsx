@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
 import Shop from "./pages/Shop";
@@ -39,7 +39,11 @@ const App = () => (
             <Route path="/wellness" element={<Wellness />} />
             <Route path="/sauny-na-mieru" element={<CustomSaunasPage />} />
             <Route path="/konfigurator" element={<Configurator />} />
+            <Route path="/konfigurator/" element={<Navigate to="/konfigurator" replace />} />
             <Route path="/en/configurator" element={<Configurator />} />
+            <Route path="/en/configurator/" element={<Navigate to="/en/configurator" replace />} />
+            <Route path="/en/konfigurator" element={<Navigate to="/en/configurator" replace />} />
+            <Route path="/en/konfigurator/" element={<Navigate to="/en/configurator" replace />} />
             <Route path="/design-system" element={<DesignSystem />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
