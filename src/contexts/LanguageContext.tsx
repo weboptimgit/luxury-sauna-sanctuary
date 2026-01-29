@@ -213,7 +213,9 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       }
     } else {
       // Switch to Slovak
-      if (currentPath.startsWith('/en/')) {
+      if (currentPath === '/en/configurator') {
+        newPath = '/konfigurator';
+      } else if (currentPath.startsWith('/en/')) {
         newPath = currentPath.replace('/en', '');
       } else if (currentPath === '/en') {
         newPath = '/';
