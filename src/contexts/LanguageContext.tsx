@@ -207,7 +207,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       if (currentPath.startsWith('/en')) {
         newPath = currentPath; // Already in English
       } else if (currentPath === '/konfigurator') {
-        newPath = '/en/konfigurator';
+        newPath = '/en/configurator';
       } else {
         newPath = `/en${currentPath}`;
       }
