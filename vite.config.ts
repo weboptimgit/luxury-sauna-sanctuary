@@ -16,4 +16,13 @@ export default defineConfig(({ mode }) => ({
     },
     dedupe: ["react", "react-dom"],
   },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/index.js',
+        chunkFileNames: 'assets/[name].js',
+        assetFileNames: 'assets/index.[ext]'
+      }
+    }
+  }
 }));
