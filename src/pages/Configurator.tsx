@@ -127,7 +127,19 @@ type ProductCategory = "sauna" | "hottub";
 
 type WoodType = "spruce" | "thermo";
 
-type SaunaColorType = "none" | "1-mahagon" | "2-teak" | "3-svetly-orech" | "4-zlaty-dub" | "5-olejovana-borovica" | "14-svetla-popolavosiva" | "15-greige" | "16-studena-siva" | "17-antracit" | "18-tmavy-orech" | "20-tmavy-mahagon";
+type SaunaColorType =
+  | "none"
+  | "1-mahagon"
+  | "2-teak"
+  | "3-svetly-orech"
+  | "4-zlaty-dub"
+  | "5-olejovana-borovica"
+  | "14-svetla-popolavosiva"
+  | "15-greige"
+  | "16-studena-siva"
+  | "17-antracit"
+  | "18-tmavy-orech"
+  | "20-tmavy-mahagon";
 
 type SaunaType = {
   id: string;
@@ -170,7 +182,7 @@ const saunaLocalColorOptions: { id: SaunaColorType; name: string; price: number;
 // Structure: saunaId -> colorId -> imagePath
 const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
   "frame-inspire": {
-    "none": frameSaunaNatural,
+    none: frameSaunaNatural,
     "1-mahagon": frameSauna1Mahagon,
     "2-teak": frameSauna2Teak,
     "3-svetly-orech": frameSauna3SvetlyOrech,
@@ -184,7 +196,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "20-tmavy-mahagon": frameSauna20TmavyMahagon,
   },
   "modul-thermo": {
-    "none": modulsaunaNatural,
+    none: modulsaunaNatural,
     "1-mahagon": modulsauna1Mahagon,
     "2-teak": modulsauna2Teak,
     "3-svetly-orech": modulsauna3SvetlyOrech,
@@ -198,7 +210,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "20-tmavy-mahagon": modulsauna20TmavyMahagon,
   },
   "lux-mini": {
-    "none": luxminiNatural,
+    none: luxminiNatural,
     "1-mahagon": luxmini1Mahagon,
     "2-teak": luxmini2Teak,
     "3-svetly-orech": luxmini3SvetlyOrech,
@@ -212,7 +224,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "20-tmavy-mahagon": luxmini20TmavyMahagon,
   },
   "round-2m": {
-    "none": round2mNatural,
+    none: round2mNatural,
     "1-mahagon": round2m1Mahagon,
     "2-teak": round2m2Teak,
     "3-svetly-orech": round2m3SvetlyOrech,
@@ -226,7 +238,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "20-tmavy-mahagon": round2m20TmavyMahagon,
   },
   "harmony-insulated": {
-    "none": saunaHarmony,
+    none: saunaHarmony,
     "1-mahagon": saunaHarmony,
     "2-teak": saunaHarmony,
     "3-svetly-orech": saunaHarmony,
@@ -243,9 +255,37 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
 
 // Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
 const saunaGalleryImages: Record<string, string[]> = {
-  "frame-inspire": [frameSaunaGallery1, frameSaunaGallery2, frameSaunaGallery3, frameSaunaGallery4, frameSaunaGallery5, frameSaunaGallery6, frameSaunaGallery7, frameSaunaGallery8, frameSaunaGallery9, frameSaunaGallery10],
-  "modul-thermo": [modulsaunaGallery1, modulsaunaGallery2, modulsaunaGallery3, modulsaunaGallery4, modulsaunaGallery5, modulsaunaGallery6, modulsaunaGallery7, modulsaunaGallery8],
-  "lux-mini": [luxminiGallery1, luxminiGallery2, luxminiGallery3, luxminiGallery4, luxminiGallery5, luxminiGallery6, luxminiGallery7],
+  "frame-inspire": [
+    frameSaunaGallery1,
+    frameSaunaGallery2,
+    frameSaunaGallery3,
+    frameSaunaGallery4,
+    frameSaunaGallery5,
+    frameSaunaGallery6,
+    frameSaunaGallery7,
+    frameSaunaGallery8,
+    frameSaunaGallery9,
+    frameSaunaGallery10,
+  ],
+  "modul-thermo": [
+    modulsaunaGallery1,
+    modulsaunaGallery2,
+    modulsaunaGallery3,
+    modulsaunaGallery4,
+    modulsaunaGallery5,
+    modulsaunaGallery6,
+    modulsaunaGallery7,
+    modulsaunaGallery8,
+  ],
+  "lux-mini": [
+    luxminiGallery1,
+    luxminiGallery2,
+    luxminiGallery3,
+    luxminiGallery4,
+    luxminiGallery5,
+    luxminiGallery6,
+    luxminiGallery7,
+  ],
   "round-2m": [round2mGallery1, round2mGallery2, round2mGallery3, round2mGallery4, round2mGallery5, round2mGallery6],
   "harmony-insulated": [], // zatiaľ bez galérie
 };
@@ -459,15 +499,14 @@ const Configurator = () => {
   // --- Images pre galériu - mení sa podľa vybranej farby ---
   const currentSaunaImage = useMemo(() => {
     if (!selectedSaunaType) return saunaBarrel;
-    
+
     // Ak má farbu a existuje mapa farieb pre tento model
     if (selectedSaunaType.hasColor && saunaColorImages[selectedSaunaType.id]) {
       return saunaColorImages[selectedSaunaType.id][saunaConfig.color] || selectedSaunaType.image;
     }
-    
+
     return selectedSaunaType.image;
   }, [selectedSaunaType, saunaConfig.color]);
-
 
   const images = useMemo(() => {
     if (productCategory === "hottub") {
@@ -715,10 +754,9 @@ const Configurator = () => {
         <main className="pt-24 pb-16">
           <div className="container mx-auto px-4">
             <div className="max-w-xl mx-auto text-center">
-              <h1 className="font-display text-3xl font-bold mb-2">{t('nav.configurator')}</h1>
+              <h1 className="font-display text-3xl font-bold mb-2">{t("nav.configurator")}</h1>
               <p className="text-muted-foreground">
-                {t('error.loadConfig')}{" "}
-                <span className="font-mono">/wp-json/sauna/v1/config</span>.
+                {t("error.loadConfig")} <span className="font-mono">/wp-json/sauna/v1/config</span>.
               </p>
             </div>
           </div>
@@ -733,23 +771,22 @@ const Configurator = () => {
     return (
       <div className="min-h-screen bg-background">
         <ConfiguratorHeader />
-        <main className="pt-24 pb-16">
+        <main className="pt-26 pb-16">
           <div className="container mx-auto px-4">
             <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
               <a href="/" className="hover:text-primary transition-colors">
-                {t('config.breadcrumb.home')}
+                {t("config.breadcrumb.home")}
               </a>
               <span>/</span>
-              <span className="text-foreground">{t('config.breadcrumb.configurator')}</span>
+              <span className="text-foreground">{t("config.breadcrumb.configurator")}</span>
             </nav>
 
             <div className="max-w-4xl mx-auto text-center mb-12">
               <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
-                {t('config.category.title')} <span className="text-gradient-amber">{t('config.category.titleHighlight')}</span>
+                {t("config.category.title")}{" "}
+                <span className="text-gradient-amber">{t("config.category.titleHighlight")}</span>
               </h1>
-              <p className="text-muted-foreground text-lg">
-                {t('config.category.subtitle')}
-              </p>
+              <p className="text-muted-foreground text-lg">{t("config.category.subtitle")}</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -771,12 +808,16 @@ const Configurator = () => {
                 {/* Silnejší gradient pre lepšiu čitateľnosť */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h2 className="font-display text-4xl font-bold text-white mb-3 drop-shadow-lg">{t('config.sauna')}</h2>
+                  <h2 className="font-display text-4xl font-bold text-white mb-3 drop-shadow-lg">
+                    {t("config.sauna")}
+                  </h2>
                   <p className="text-white/90 mb-4 text-base leading-relaxed drop-shadow-md">
-                    {t('config.sauna.description')}
+                    {t("config.sauna.description")}
                   </p>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
-                    <span>{t('config.from')} {Math.min(...saunaTypes.map((s) => s.basePrice)).toLocaleString()} €</span>
+                    <span>
+                      {t("config.from")} {Math.min(...saunaTypes.map((s) => s.basePrice)).toLocaleString()} €
+                    </span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -800,12 +841,16 @@ const Configurator = () => {
                 {/* Silnejší gradient pre lepšiu čitateľnosť */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h2 className="font-display text-4xl font-bold text-white mb-3 drop-shadow-lg">{t('config.hottub')}</h2>
+                  <h2 className="font-display text-4xl font-bold text-white mb-3 drop-shadow-lg">
+                    {t("config.hottub")}
+                  </h2>
                   <p className="text-white/90 mb-4 text-base leading-relaxed drop-shadow-md">
-                    {t('config.hottub.description')}
+                    {t("config.hottub.description")}
                   </p>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
-                    <span>{t('config.from')} {apiConfig.hottub.basePrice.toLocaleString()} €</span>
+                    <span>
+                      {t("config.from")} {apiConfig.hottub.basePrice.toLocaleString()} €
+                    </span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -831,28 +876,27 @@ const Configurator = () => {
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 group"
             >
               <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-              <span>{t('config.back.category')}</span>
+              <span>{t("config.back.category")}</span>
             </button>
 
             <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
               <a href="/" className="hover:text-primary transition-colors">
-                {t('config.breadcrumb.home')}
+                {t("config.breadcrumb.home")}
               </a>
               <span>/</span>
               <button onClick={goBackToCategory} className="hover:text-primary transition-colors">
-                {t('config.breadcrumb.configurator')}
+                {t("config.breadcrumb.configurator")}
               </button>
               <span>/</span>
-              <span className="text-foreground">{t('config.breadcrumb.saunaSelection')}</span>
+              <span className="text-foreground">{t("config.breadcrumb.saunaSelection")}</span>
             </nav>
 
             <div className="max-w-5xl mx-auto text-center mb-12">
               <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
-                {t('config.saunaSelection.title')} <span className="text-gradient-amber">{t('config.saunaSelection.titleHighlight')}</span>
+                {t("config.saunaSelection.title")}{" "}
+                <span className="text-gradient-amber">{t("config.saunaSelection.titleHighlight")}</span>
               </h1>
-              <p className="text-muted-foreground text-lg">
-                {t('config.saunaSelection.subtitle')}
-              </p>
+              <p className="text-muted-foreground text-lg">{t("config.saunaSelection.subtitle")}</p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -960,30 +1004,27 @@ const Configurator = () => {
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 group"
           >
             <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            <span>{productCategory === "sauna" ? t('config.back.sauna') : t('config.back.category')}</span>
+            <span>{productCategory === "sauna" ? t("config.back.sauna") : t("config.back.category")}</span>
           </button>
 
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
             <a href="/" className="hover:text-primary transition-colors">
-              {t('config.breadcrumb.home')}
+              {t("config.breadcrumb.home")}
             </a>
             <span>/</span>
-            <button
-              onClick={goBackToCategory}
-              className="hover:text-primary transition-colors"
-            >
-              {t('config.breadcrumb.configurator')}
+            <button onClick={goBackToCategory} className="hover:text-primary transition-colors">
+              {t("config.breadcrumb.configurator")}
             </button>
             {productCategory === "sauna" && (
               <>
                 <span>/</span>
                 <button onClick={goBackToSaunaTypes} className="hover:text-primary transition-colors">
-                  {t('config.breadcrumb.saunaSelection')}
+                  {t("config.breadcrumb.saunaSelection")}
                 </button>
               </>
             )}
             <span>/</span>
-            <span className="text-foreground">{t('config.breadcrumb.configuration')}</span>
+            <span className="text-foreground">{t("config.breadcrumb.configuration")}</span>
           </nav>
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
@@ -1002,8 +1043,7 @@ const Configurator = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
-
-                <button 
+                <button
                   onClick={() => setIsLightboxOpen(true)}
                   className="absolute bottom-4 left-4 p-3 bg-background/80 backdrop-blur-sm rounded-full hover:bg-background transition-colors"
                 >
@@ -1044,7 +1084,7 @@ const Configurator = () => {
               {/* Cena - desktop */}
               <div className="hidden lg:block border border-border/50 rounded-2xl p-6 bg-card/50">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-lg font-medium">{t('config.total')}</span>
+                  <span className="text-lg font-medium">{t("config.total")}</span>
                   <div className="text-right">
                     <span className="text-muted-foreground line-through text-sm mr-2">
                       {originalPrice.toLocaleString()} €
@@ -1061,11 +1101,13 @@ const Configurator = () => {
                   disabled={isAddingToCart}
                 >
                   {isAddingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShoppingCart className="w-5 h-5" />}
-                  {isAddingToCart ? t('config.addingToCart') : t('config.addToCart')}
+                  {isAddingToCart ? t("config.addingToCart") : t("config.addToCart")}
                 </Button>
 
                 <p className="text-xs text-muted-foreground text-center mt-3">
-                  {language === 'en' ? '* Price does not include delivery and installation' : '* Cena nezahŕňa dopravu a inštaláciu'}
+                  {language === "en"
+                    ? "* Price does not include delivery and installation"
+                    : "* Cena nezahŕňa dopravu a inštaláciu"}
                 </p>
               </div>
             </div>
@@ -1080,7 +1122,9 @@ const Configurator = () => {
                 )}
               >
                 <div className="flex flex-col items-center gap-1 text-muted-foreground animate-bounce">
-                  <span className="text-xs">{language === 'en' ? 'Scroll for more options' : 'Scrolluj pre viac možností'}</span>
+                  <span className="text-xs">
+                    {language === "en" ? "Scroll for more options" : "Scrolluj pre viac možností"}
+                  </span>
                   <ChevronDown className="w-4 h-4" />
                 </div>
               </div>
@@ -1108,7 +1152,7 @@ const Configurator = () => {
                       {selectedSaunaType.availableWoodTypes.length > 0 && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {t('config.woodType')} <span className="text-primary">*</span>
+                            {t("config.woodType")} <span className="text-primary">*</span>
                           </h3>
                           <div className="grid grid-cols-2 gap-3">
                             {woodTypeOptions
@@ -1128,22 +1172,21 @@ const Configurator = () => {
                                     <img src={option.image} alt={option.name} className="w-full h-full object-cover" />
                                   </div>
                                   <span className="font-medium text-center text-sm">
-                                    {option.id === 'spruce' ? t('config.woodType.spruce') : t('config.woodType.thermo')}
+                                    {option.id === "spruce" ? t("config.woodType.spruce") : t("config.woodType.thermo")}
                                   </span>
                                   {option.price > 0 ? (
                                     <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
                                   ) : (
-                                    <span className="text-xs text-muted-foreground">{t('included')}</span>
+                                    <span className="text-xs text-muted-foreground">{t("included")}</span>
                                   )}
                                 </button>
                               ))}
                           </div>
                           {selectedSaunaType.availableWoodTypes.length === 1 && (
                             <p className="text-xs text-muted-foreground mt-2">
-                              {language === 'en' 
+                              {language === "en"
                                 ? `This model is only available in ${selectedSaunaType.availableWoodTypes[0] === "thermo" ? "Thermo wood" : "Spruce wood"}.`
-                                : `Tento model je dostupný iba v prevedení ${selectedSaunaType.availableWoodTypes[0] === "thermo" ? "Thermo wood" : "Smrekové drevo"}.`
-                              }
+                                : `Tento model je dostupný iba v prevedení ${selectedSaunaType.availableWoodTypes[0] === "thermo" ? "Thermo wood" : "Smrekové drevo"}.`}
                             </p>
                           )}
                         </div>
@@ -1153,7 +1196,7 @@ const Configurator = () => {
                       {selectedSaunaType.hasHeater && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {t('config.heater')} <span className="text-primary">*</span>
+                            {t("config.heater")} <span className="text-primary">*</span>
                           </h3>
                           <div className="grid grid-cols-3 gap-3">
                             {saunaHeaterTypes.map((option) => (
@@ -1173,12 +1216,12 @@ const Configurator = () => {
                       {selectedSaunaType.hasLed && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {t('config.led')} <span className="text-primary">*</span>
+                            {t("config.led")} <span className="text-primary">*</span>
                           </h3>
                           <div className="grid grid-cols-3 gap-3">
                             {/* Bez LED = reset */}
                             <OptionCard
-                              option={{ id: "none", name: language === 'en' ? "No LED" : "Bez LED", price: 0 }}
+                              option={{ id: "none", name: language === "en" ? "No LED" : "Bez LED", price: 0 }}
                               isSelected={ledSelected.length === 0}
                               onClick={resetLed}
                             />
@@ -1203,7 +1246,7 @@ const Configurator = () => {
                       {selectedSaunaType.hasBluetooth && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {t('config.bluetooth')} <span className="text-primary">*</span>
+                            {t("config.bluetooth")} <span className="text-primary">*</span>
                           </h3>
                           <div className="grid grid-cols-2 gap-3">
                             {saunaBluetoothOptions.map((option) => (
@@ -1223,12 +1266,12 @@ const Configurator = () => {
                       {selectedSaunaType.hasAccessoryKit && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {t('config.accessories')} <span className="text-primary">*</span>
+                            {t("config.accessories")} <span className="text-primary">*</span>
                           </h3>
                           <p className="text-xs text-muted-foreground mb-2 italic">
-                            {language === 'en' 
-                              ? '*Set includes bucket with ladle, sand timer and thermometer.'
-                              : '*Sada obsahuje vedierko s naberačkou, presýpacie hodiny a teplomer.'}
+                            {language === "en"
+                              ? "*Set includes bucket with ladle, sand timer and thermometer."
+                              : "*Sada obsahuje vedierko s naberačkou, presýpacie hodiny a teplomer."}
                           </p>
                           <div className="grid grid-cols-2 gap-3">
                             {saunaAccessoryKitOptions.map((option) => (
@@ -1248,7 +1291,7 @@ const Configurator = () => {
                       {selectedSaunaType.hasColor && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {t('config.color')} <span className="text-primary">*</span>
+                            {t("config.color")} <span className="text-primary">*</span>
                           </h3>
                           <p className="text-xs text-muted-foreground mb-3 italic">
                             *Vyberte si farbu povrchovej úpravy sauny.
@@ -1278,19 +1321,23 @@ const Configurator = () => {
                                     style={{ backgroundColor: option.colorHsl }}
                                   />
                                 )}
-                                <span className="font-medium text-center text-xs">{t(`color.${option.id}`) !== `color.${option.id}` ? t(`color.${option.id}`) : option.name}</span>
+                                <span className="font-medium text-center text-xs">
+                                  {t(`color.${option.id}`) !== `color.${option.id}`
+                                    ? t(`color.${option.id}`)
+                                    : option.name}
+                                </span>
                                 {option.price > 0 ? (
                                   <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
                                 ) : (
-                                  <span className="text-xs text-muted-foreground">{t('included')}</span>
+                                  <span className="text-xs text-muted-foreground">{t("included")}</span>
                                 )}
                               </button>
                             ))}
                           </div>
                           <Notice variant="info" className="mt-4">
-                            {language === 'en' 
-                              ? 'Displayed color photos are for illustration purposes only and may not exactly match the final product.'
-                              : 'Zobrazené fotky farieb sú len ilustračné a nemusia presne zodpovedať finálnemu produktu.'}
+                            {language === "en"
+                              ? "Displayed color photos are for illustration purposes only and may not exactly match the final product."
+                              : "Zobrazené fotky farieb sú len ilustračné a nemusia presne zodpovedať finálnemu produktu."}
                           </Notice>
                         </div>
                       )}
@@ -1300,7 +1347,7 @@ const Configurator = () => {
                       {/* Veľkosť */}
                       <div>
                         <h3 className="text-lg font-semibold text-foreground mb-3">
-                          {t('config.size')} <span className="text-primary">*</span>
+                          {t("config.size")} <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
                           {hotTubSizeOptions.map((option) => (
@@ -1317,7 +1364,7 @@ const Configurator = () => {
                       {/* Trysky */}
                       <div>
                         <h3 className="text-lg font-semibold text-foreground mb-3">
-                          {t('config.jets')} <span className="text-primary">*</span>
+                          {t("config.jets")} <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
                           {hotTubJetsOptions.map((option) => (
@@ -1334,7 +1381,7 @@ const Configurator = () => {
                       {/* LED osvetlenie */}
                       <div>
                         <h3 className="text-lg font-semibold text-foreground mb-3">
-                          {t('config.led')} <span className="text-primary">*</span>
+                          {t("config.led")} <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
                           {hotTubLedOptions.map((option) => (
@@ -1351,7 +1398,7 @@ const Configurator = () => {
                       {/* Kryt */}
                       <div>
                         <h3 className="text-lg font-semibold text-foreground mb-3">
-                          {t('config.cover')} <span className="text-primary">*</span>
+                          {t("config.cover")} <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
                           {hotTubCoverOptions.map((option) => (
@@ -1368,7 +1415,7 @@ const Configurator = () => {
                       {/* Farba */}
                       <div>
                         <h3 className="text-lg font-semibold text-foreground mb-3">
-                          {t('config.color')} <span className="text-primary">*</span>
+                          {t("config.color")} <span className="text-primary">*</span>
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
                           {hotTubColorOptions.map((option) => (
@@ -1388,7 +1435,7 @@ const Configurator = () => {
                 {/* Mobile price summary */}
                 <div className="lg:hidden border border-border/50 rounded-2xl p-6 bg-card/50">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-lg font-medium">{t('config.total')}</span>
+                    <span className="text-lg font-medium">{t("config.total")}</span>
                     <div className="text-right">
                       <span className="text-muted-foreground line-through text-sm mr-2">
                         {originalPrice.toLocaleString()} €
@@ -1409,11 +1456,13 @@ const Configurator = () => {
                     ) : (
                       <ShoppingCart className="w-5 h-5" />
                     )}
-                    {isAddingToCart ? t('config.addingToCart') : t('config.addToCart')}
+                    {isAddingToCart ? t("config.addingToCart") : t("config.addToCart")}
                   </Button>
 
                   <p className="text-xs text-muted-foreground text-center mt-3">
-                    {language === 'en' ? '* Price does not include delivery and installation' : '* Cena nezahŕňa dopravu a inštaláciu'}
+                    {language === "en"
+                      ? "* Price does not include delivery and installation"
+                      : "* Cena nezahŕňa dopravu a inštaláciu"}
                   </p>
                 </div>
               </ScrollArea>
@@ -1425,17 +1474,17 @@ const Configurator = () => {
 
       {/* Lightbox Modal */}
       {isLightboxOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex items-center justify-center"
           onClick={() => setIsLightboxOpen(false)}
         >
-          <button 
+          <button
             className="absolute top-6 right-6 p-3 bg-card/50 backdrop-blur-sm rounded-full hover:bg-card transition-colors z-10"
             onClick={() => setIsLightboxOpen(false)}
           >
             <X className="w-6 h-6" />
           </button>
-          
+
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -1445,7 +1494,7 @@ const Configurator = () => {
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          
+
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -1455,17 +1504,14 @@ const Configurator = () => {
           >
             <ChevronRight className="w-6 h-6" />
           </button>
-          
-          <div 
-            className="max-w-5xl max-h-[85vh] w-full mx-6"
-            onClick={(e) => e.stopPropagation()}
-          >
+
+          <div className="max-w-5xl max-h-[85vh] w-full mx-6" onClick={(e) => e.stopPropagation()}>
             <img
               src={images[currentImageIndex]}
               alt="Zväčšený obrázok"
               className="w-full h-full object-contain rounded-lg"
             />
-            
+
             {/* Thumbnail strip */}
             <div className="flex justify-center gap-2 mt-4 overflow-x-auto pb-2">
               {images.map((img, index) => (
