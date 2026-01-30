@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import flagUk from '@/assets/flag-uk.png';
 import flagSk from '@/assets/flag-sk.png';
+import brelaxLogo from '@/assets/b-relax-logo.png';
 
 const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,10 +33,12 @@ const ConfiguratorHeader = () => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <a href={`${baseUrl}/`} className="flex items-center gap-2">
-            <span className="text-2xl font-display font-semibold tracking-wider text-primary">
-              LUXE<span className="text-foreground">SAUNA</span>
-            </span>
+          <a href={`${baseUrl}/`} className="flex items-center">
+            <img 
+              src={brelaxLogo} 
+              alt="B-RELAX" 
+              className="w-[190px] h-auto"
+            />
           </a>
 
           {/* Desktop Navigation */}
