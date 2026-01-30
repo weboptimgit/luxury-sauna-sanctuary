@@ -751,7 +751,7 @@ const Configurator = () => {
     return (
       <div className="min-h-screen bg-background">
         <ConfiguratorHeader />
-        <main className="pt-24 pb-16">
+        <main className="pt-26 pb-16">
           <div className="container mx-auto px-4">
             <div className="max-w-xl mx-auto text-center">
               <h1 className="font-display text-3xl font-bold mb-2">{t("nav.configurator")}</h1>
@@ -868,7 +868,7 @@ const Configurator = () => {
     return (
       <div className="min-h-screen bg-background">
         <ConfiguratorHeader />
-        <main className="pt-24 pb-16">
+        <main className="pt-26 pb-16">
           <div className="container mx-auto px-4">
             {/* Tlačidlo späť */}
             <button
@@ -996,7 +996,7 @@ const Configurator = () => {
   return (
     <div className="min-h-screen bg-background">
       <ConfiguratorHeader />
-      <main className="pt-24 pb-16">
+      <main className="pt-26 pb-16">
         <div className="container mx-auto px-4">
           {/* Tlačidlo späť */}
           <button
