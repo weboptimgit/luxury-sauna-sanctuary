@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState } from 'react';
-import { ArrowLeft, Check, Truck, Shield, Phone, Minus, Plus } from 'lucide-react';
+import { ArrowLeft, Check, Truck, Shield, Phone, Minus, Plus, TreeDeciduous, Thermometer, Droplets, Award, Lightbulb, Bluetooth, Wifi, Flame, Music, ThermometerSun } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -400,10 +400,114 @@ const ProductDetail = () => {
             </Tabs>
           </div>
 
+          {/* Technologies & Materials Section */}
+          <div className="mt-16 lg:mt-24">
+            <h2 className="font-display text-3xl lg:text-4xl font-light mb-12 text-center">
+              Technológie a <span className="text-gradient-amber font-semibold">materiály</span>
+            </h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  icon: TreeDeciduous,
+                  title: 'Thermo Wood',
+                  description: 'Tepelne upravené drevo s vysokou odolnosťou voči vlhkosti a hubám. Na rozdiel od lacných čínskych alternátív si zachováva tvar a farbu po celé roky.',
+                },
+                {
+                  icon: Thermometer,
+                  title: 'Fínska borovica',
+                  description: 'Pomaly rastúce drevo zo severného Fínska má hustejšiu štruktúru a lepšie tepelnoizolačné vlastnosti než bežné drevo.',
+                },
+                {
+                  icon: Droplets,
+                  title: 'Vodoodolná konštrukcia',
+                  description: 'Špeciálne ošetrenie dreva a kvalitné tesnenia zabraňujú prenikaniu vlhkosti a predlžujú životnosť sauny na desiatky rokov.',
+                },
+                {
+                  icon: Award,
+                  title: 'Európska kvalita',
+                  description: 'Výroba v EÚ podlieha prísnym normám. Používame len certifikované materiály bez škodlivých látok, ktoré sú bezpečné pre celú rodinu.',
+                },
+              ].map((item, index) => (
+                <div 
+                  key={index} 
+                  className="group bg-card rounded-xl border border-border/30 p-6 hover:border-primary/30 transition-all duration-300"
+                >
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                    <item.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="font-display text-lg font-semibold mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Technical Features Section */}
+          <div className="mt-16 lg:mt-24">
+            <h2 className="font-display text-3xl lg:text-4xl font-light mb-12 text-center">
+              Technické <span className="text-gradient-amber font-semibold">prvky</span>
+            </h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  icon: Lightbulb,
+                  title: 'LED osvetlenie',
+                  description: 'RGB LED pásy s diaľkovým ovládaním pre nastavenie atmosféry. Farebné spektrum a intenzita podľa vašej nálady.',
+                },
+                {
+                  icon: Bluetooth,
+                  title: 'Bluetooth audio',
+                  description: 'Vstavané reproduktory s Bluetooth pripojením. Počúvajte hudbu alebo podcasty priamo zo smartfónu.',
+                },
+                {
+                  icon: Wifi,
+                  title: 'WiFi ovládanie',
+                  description: 'Vzdialené ovládanie sauny cez mobilnú aplikáciu. Zapnite kúrenie ešte pred príchodom domov.',
+                },
+                {
+                  icon: Flame,
+                  title: 'Elektrické kúrenie',
+                  description: 'Prémiové Harvia ohrievače s výkonom 6-12 kW. Rýchle nahriatie a presná regulácia teploty.',
+                },
+                {
+                  icon: ThermometerSun,
+                  title: 'Infra panely',
+                  description: 'Infračervené panely pre hlboké prehrievanie tela. Nižšia prevádzková teplota, rovnaké zdravotné benefity.',
+                },
+                {
+                  icon: Music,
+                  title: 'Audio systém',
+                  description: 'Profesionálne reproduktory odolné voči vlhkosti a vysokým teplotám pre krištáľovo čistý zvuk.',
+                },
+                {
+                  icon: Droplets,
+                  title: 'Aromaterapia',
+                  description: 'Difúzor na éterické oleje integrovaný v kúrení. Levanduľa, eukalyptus alebo borovica pre relaxáciu.',
+                },
+                {
+                  icon: Shield,
+                  title: 'Bezpečnostný systém',
+                  description: 'Automatické vypnutie pri prehriatí, detský zámok a časovač. Bezpečnosť na prvom mieste.',
+                },
+              ].map((item, index) => (
+                <div 
+                  key={index} 
+                  className="group bg-card rounded-xl border border-border/30 p-6 hover:border-primary/30 transition-all duration-300"
+                >
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                    <item.icon className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="font-display text-lg font-semibold mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Related Products */}
           <div className="mt-16 lg:mt-24">
             <h2 className="font-display text-3xl font-light mb-8 text-center">
-              You May Also <span className="text-gradient-amber font-semibold">Like</span>
+              Mohlo by sa vám <span className="text-gradient-amber font-semibold">páčiť</span>
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {products
