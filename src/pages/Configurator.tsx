@@ -405,6 +405,7 @@ type ApiSaunaType = {
   label: string;
   basePrice: number;
   woodTypes: WoodType[];
+  woodTypePrices?: Record<WoodType, number>;
   hasExteriorLed: boolean;
 };
 
@@ -631,16 +632,36 @@ const Configurator = () => {
     }));
   }, [apiConfig]);
 
-  // --- Wood types z API ---
-  const woodTypeOptions = useMemo(() => {
-    if (!apiConfig?.sauna?.woodTypes) return [];
-    return Object.entries(apiConfig.sauna.woodTypes).map(([id, data]) => ({
-      id: id as WoodType,
-      name: data.label,
-      price: data.price,
-      image: id === "spruce" ? spruceWoodImg : thermoWoodImg,
-    }));
+  // --- Wood types z API (globálne, len pre názvy/obrázky) ---
+  const globalWoodTypes = useMemo(() => {
+    if (!apiConfig?.sauna?.woodTypes) return {};
+    return apiConfig.sauna.woodTypes;
   }, [apiConfig]);
+
+  // --- Získaj aktuálny API sauna typ pre woodTypePrices ---
+  const currentApiSaunaType = useMemo(() => {
+    if (!selectedSaunaType || !apiConfig?.saunaTypes) return null;
+    return apiConfig.saunaTypes.find((st) => st.id === selectedSaunaType.id) ?? null;
+  }, [selectedSaunaType, apiConfig]);
+
+  // --- Wood types s cenami špecifickými pre vybraný model ---
+  const woodTypeOptionsForModel = useMemo(() => {
+    if (!selectedSaunaType || !globalWoodTypes) return [];
+    
+    return selectedSaunaType.availableWoodTypes.map((woodId) => {
+      const globalData = globalWoodTypes[woodId];
+      // Cena z model-specific woodTypePrices, alebo globálna fallback
+      const modelPrice = currentApiSaunaType?.woodTypePrices?.[woodId];
+      const price = modelPrice !== undefined ? modelPrice : (globalData?.price ?? 0);
+      
+      return {
+        id: woodId,
+        name: globalData?.label ?? woodId,
+        price,
+        image: woodId === "spruce" ? spruceWoodImg : thermoWoodImg,
+      };
+    });
+  }, [selectedSaunaType, globalWoodTypes, currentApiSaunaType]);
 
   // --- Exterior LED price z API ---
   const exteriorLedPrice = apiConfig?.exteriorLed?.price ?? 0;
@@ -710,7 +731,7 @@ const Configurator = () => {
       const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
       const color = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
-      const woodPrice = woodTypeOptions.find((w) => w.id === saunaConfig.woodType)?.price ?? 0;
+      const woodPrice = woodTypeOptionsForModel.find((w) => w.id === saunaConfig.woodType)?.price ?? 0;
 
       return basePrice + heater + heaterModelPrice + ledSum + extLedPrice + bluetooth + kit + color + woodPrice;
     }
@@ -727,7 +748,7 @@ const Configurator = () => {
     }
 
     return 0;
-  }, [productCategory, selectedSaunaType, apiConfig, saunaConfig, hotTubConfig, electricHeaterModels, woodHeaterModels, woodTypeOptions, exteriorLedPrice]);
+  }, [productCategory, selectedSaunaType, apiConfig, saunaConfig, hotTubConfig, electricHeaterModels, woodHeaterModels, woodTypeOptionsForModel, exteriorLedPrice]);
 
   const originalPrice = useMemo(() => Math.round(totalPrice * 1.15), [totalPrice]);
   const discount = originalPrice > 0 ? Math.round(((originalPrice - totalPrice) / originalPrice) * 100) : 0;
@@ -1314,9 +1335,7 @@ const Configurator = () => {
                             {t("config.woodType")} <span className="text-primary">*</span>
                           </h3>
                           <div className="grid grid-cols-2 gap-3">
-                            {woodTypeOptions
-                              .filter((w) => selectedSaunaType.availableWoodTypes.includes(w.id))
-                              .map((option) => (
+                            {woodTypeOptionsForModel.map((option) => (
                                 <button
                                   key={option.id}
                                   onClick={() => setSaunaConfig((prev) => ({ ...prev, woodType: option.id }))}
