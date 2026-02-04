@@ -699,6 +699,11 @@ const Configurator = () => {
     setIsAddingToCart(true);
 
     try {
+      // Získaj aktuálny obrázok pre košík
+      const cartImage = productCategory === "sauna" 
+        ? currentSaunaImage 
+        : hotTub;
+
       const options =
         productCategory === "sauna"
           ? { productCategory, saunaTypeId: selectedSaunaType?.id, ...saunaConfig }
@@ -714,6 +719,7 @@ const Configurator = () => {
           product_id,
           qty: 1,
           options,
+          image: cartImage, // Obrázok konfigurácie
         }),
       });
 
