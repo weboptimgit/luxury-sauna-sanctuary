@@ -632,13 +632,19 @@ const Configurator = () => {
 
   // --- Wood types z API ---
   const woodTypeOptions = useMemo(() => {
-    if (!apiConfig?.sauna?.woodTypes) return defaultWoodTypeOptions;
-    return Object.entries(apiConfig.sauna.woodTypes).map(([id, data]) => ({
+    console.log("[DEBUG] apiConfig?.sauna?.woodTypes:", apiConfig?.sauna?.woodTypes);
+    if (!apiConfig?.sauna?.woodTypes) {
+      console.log("[DEBUG] Using defaultWoodTypeOptions fallback");
+      return defaultWoodTypeOptions;
+    }
+    const fromApi = Object.entries(apiConfig.sauna.woodTypes).map(([id, data]) => ({
       id: id as WoodType,
       name: data.label,
       price: data.price,
       image: id === "spruce" ? spruceWoodImg : thermoWoodImg,
     }));
+    console.log("[DEBUG] woodTypeOptions from API:", fromApi);
+    return fromApi;
   }, [apiConfig]);
 
   // --- Exterior LED price z API ---
