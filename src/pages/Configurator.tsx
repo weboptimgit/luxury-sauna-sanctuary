@@ -154,7 +154,7 @@ const Configurator = () => {
 
     const options =
       productCategory === "sauna"
-        ? { productCategory, image: currentSaunaImage, saunaTypeId: selectedSaunaType?.id, ...saunaConfig }
+        ? { productCategory, saunaTypeId: selectedSaunaType?.id, ...saunaConfig }
         : { productCategory, ...hotTubConfig };
 
     try {
