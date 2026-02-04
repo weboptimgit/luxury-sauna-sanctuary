@@ -165,20 +165,21 @@ type HeaterModel = {
   price: number;
 };
 
-const electricHeaterModels: HeaterModel[] = [
+// Fallback - ak API neposkytne dáta
+const defaultElectricHeaterModels: HeaterModel[] = [
   { id: "harvia-top-steel-9kw", name: "Harvia Top Steel 9 KW", price: 590 },
   { id: "harvia-cilindro-9kw", name: "Harvia Cilindro 9 KW", price: 790 },
   { id: "harvia-legend-wifi", name: "Harvia Legend WiFi", price: 990 },
 ];
 
-const woodHeaterModels: HeaterModel[] = [
+const defaultWoodHeaterModels: HeaterModel[] = [
   { id: "harvia-m3", name: "Harvia M3", price: 490 },
   { id: "harvia-pro-blmschv", name: "Harvia Pro BlmSchV", price: 690 },
   { id: "harvia-legend-240", name: "Harvia Legend 240", price: 890 },
 ];
 
-// Wood type options
-const woodTypeOptions: { id: WoodType; name: string; price: number; image: string }[] = [
+// Wood type options - fallback
+const defaultWoodTypeOptions: { id: WoodType; name: string; price: number; image: string }[] = [
   { id: "spruce", name: "Smrekové drevo", price: 0, image: spruceWoodImg },
   { id: "thermo", name: "Thermo wood", price: 500, image: thermoWoodImg },
 ];
@@ -403,10 +404,29 @@ type ApiOption = {
   description?: string;
 };
 
+type ApiSaunaType = {
+  id: string;
+  label: string;
+  basePrice: number;
+  woodTypes: WoodType[];
+  hasExteriorLed: boolean;
+};
+
+type ApiHeaterModel = {
+  [key: string]: { label: string; price: number };
+};
+
 type ApiConfig = {
   products: { sauna: number; hottub: number };
+  saunaTypes: ApiSaunaType[];
+  heaterModels: {
+    electric: ApiHeaterModel;
+    wood: ApiHeaterModel;
+  };
+  exteriorLed: { label: string; price: number };
   sauna: {
-    basePrice: number;
+    basePrice?: number;
+    woodTypes?: { [key: string]: { label: string; price: number } };
     heaterTypes: ApiOption[];
     ledOptions: ApiOption[];
     bluetoothOptions: ApiOption[];
@@ -591,6 +611,39 @@ const Configurator = () => {
   const hotTubCoverOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverOptions);
   const hotTubColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.colorOptions);
 
+  // --- Heater models z API ---
+  const electricHeaterModels: HeaterModel[] = useMemo(() => {
+    if (!apiConfig?.heaterModels?.electric) return defaultElectricHeaterModels;
+    return Object.entries(apiConfig.heaterModels.electric).map(([id, data]) => ({
+      id,
+      name: data.label,
+      price: data.price,
+    }));
+  }, [apiConfig]);
+
+  const woodHeaterModels: HeaterModel[] = useMemo(() => {
+    if (!apiConfig?.heaterModels?.wood) return defaultWoodHeaterModels;
+    return Object.entries(apiConfig.heaterModels.wood).map(([id, data]) => ({
+      id,
+      name: data.label,
+      price: data.price,
+    }));
+  }, [apiConfig]);
+
+  // --- Wood types z API ---
+  const woodTypeOptions = useMemo(() => {
+    if (!apiConfig?.sauna?.woodTypes) return defaultWoodTypeOptions;
+    return Object.entries(apiConfig.sauna.woodTypes).map(([id, data]) => ({
+      id: id as WoodType,
+      name: data.label,
+      price: data.price,
+      image: id === "spruce" ? spruceWoodImg : thermoWoodImg,
+    }));
+  }, [apiConfig]);
+
+  // --- Exterior LED price z API ---
+  const exteriorLedPrice = apiConfig?.exteriorLed?.price ?? 290;
+
   // Výpočet ceny
   const totalPrice = useMemo(() => {
     if (!apiConfig) return 0;
@@ -612,15 +665,15 @@ const Configurator = () => {
         return sum + p;
       }, 0);
       
-      // Vonkajšie LED (fixná cena pre ModulSaunu)
-      const exteriorLedPrice = saunaConfig.exteriorLed ? 290 : 0;
+      // Vonkajšie LED (cena z API)
+      const extLedPrice = saunaConfig.exteriorLed ? exteriorLedPrice : 0;
       
       const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
       const color = saunaLocalColorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
       const woodPrice = woodTypeOptions.find((w) => w.id === saunaConfig.woodType)?.price ?? 0;
 
-      return basePrice + heater + heaterModelPrice + ledSum + exteriorLedPrice + bluetooth + kit + color + woodPrice;
+      return basePrice + heater + heaterModelPrice + ledSum + extLedPrice + bluetooth + kit + color + woodPrice;
     }
 
     if (productCategory === "hottub") {
@@ -635,7 +688,7 @@ const Configurator = () => {
     }
 
     return 0;
-  }, [productCategory, selectedSaunaType, apiConfig, saunaConfig, hotTubConfig]);
+  }, [productCategory, selectedSaunaType, apiConfig, saunaConfig, hotTubConfig, electricHeaterModels, woodHeaterModels, woodTypeOptions, exteriorLedPrice]);
 
   const originalPrice = useMemo(() => Math.round(totalPrice * 1.15), [totalPrice]);
   const discount = originalPrice > 0 ? Math.round(((originalPrice - totalPrice) / originalPrice) * 100) : 0;
@@ -1400,7 +1453,7 @@ const Configurator = () => {
                               <span className="font-medium text-center text-sm">
                                 {language === "en" ? "Exterior LED" : "Vonkajšie LED"}
                               </span>
-                              <span className="text-xs text-primary">+290 €</span>
+                              <span className="text-xs text-primary">+{exteriorLedPrice} €</span>
                             </button>
                           </div>
                         </div>
