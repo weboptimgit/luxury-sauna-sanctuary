@@ -165,41 +165,25 @@ type HeaterModel = {
   price: number;
 };
 
-// Fallback - ak API neposkytne dáta
-const defaultElectricHeaterModels: HeaterModel[] = [
-  { id: "harvia-top-steel-9kw", name: "Harvia Top Steel 9 KW", price: 590 },
-  { id: "harvia-cilindro-9kw", name: "Harvia Cilindro 9 KW", price: 790 },
-  { id: "harvia-legend-wifi", name: "Harvia Legend WiFi", price: 990 },
-];
+// Farebné swatche pre UI (bez cien) – ceny a názvy idú vždy z PHP API.
+const saunaColorSwatches: Record<SaunaColorType, { nameFallback: string; colorHsl: string }> = {
+  none: { nameFallback: "Bez farby (Natural)", colorHsl: "transparent" },
+  "1-mahagon": { nameFallback: "Mahagón", colorHsl: "hsl(6 29% 33%)" },
+  "2-teak": { nameFallback: "Teak", colorHsl: "hsl(30 60% 45%)" },
+  "3-svetly-orech": { nameFallback: "Svetlý orech", colorHsl: "hsl(35 40% 50%)" },
+  "4-zlaty-dub": { nameFallback: "Zlatý dub", colorHsl: "hsl(45 70% 50%)" },
+  "5-olejovana-borovica": { nameFallback: "Olejovaná borovica", colorHsl: "hsl(43 60% 55%)" },
+  "14-svetla-popolavosiva": { nameFallback: "Svetlá popolavosivá", colorHsl: "hsl(0 0% 45%)" },
+  "15-greige": { nameFallback: "Greige", colorHsl: "hsl(30 10% 40%)" },
+  "16-studena-siva": { nameFallback: "Studená sivá", colorHsl: "hsl(0 0% 35%)" },
+  "17-antracit": { nameFallback: "Antracit", colorHsl: "hsl(0 0% 22%)" },
+  "18-tmavy-orech": { nameFallback: "Tmavý orech", colorHsl: "hsl(25 30% 35%)" },
+  "20-tmavy-mahagon": { nameFallback: "Tmavý mahagón", colorHsl: "hsl(6 35% 28%)" },
+};
 
-const defaultWoodHeaterModels: HeaterModel[] = [
-  { id: "harvia-m3", name: "Harvia M3", price: 490 },
-  { id: "harvia-pro-blmschv", name: "Harvia Pro BlmSchV", price: 690 },
-  { id: "harvia-legend-240", name: "Harvia Legend 240", price: 890 },
-];
-
-// Wood type options - fallback
-const defaultWoodTypeOptions: { id: WoodType; name: string; price: number; image: string }[] = [
-  { id: "spruce", name: "Smrekové drevo", price: 0, image: spruceWoodImg },
-  { id: "thermo", name: "Thermo wood", price: 500, image: thermoWoodImg },
-];
-
-// Color options for saunas (local - not from API)
-// NOTE: Používame HSL (nie HEX), aby to ladilo s dizajnovými pravidlami.
-const saunaLocalColorOptions: { id: SaunaColorType; name: string; price: number; colorHsl: string }[] = [
-  { id: "none", name: "Bez farby (Natural)", price: 0, colorHsl: "transparent" },
-  { id: "1-mahagon", name: "Mahagón", price: 350, colorHsl: "hsl(6 29% 33%)" },
-  { id: "2-teak", name: "Teak / teplý jantár", price: 350, colorHsl: "hsl(30 60% 45%)" },
-  { id: "3-svetly-orech", name: "Svetlý orech", price: 350, colorHsl: "hsl(35 40% 50%)" },
-  { id: "4-zlaty-dub", name: "Zlatý dub", price: 350, colorHsl: "hsl(45 70% 50%)" },
-  { id: "5-olejovana-borovica", name: "Olejovaná borovica", price: 350, colorHsl: "hsl(43 60% 55%)" },
-  { id: "14-svetla-popolavosiva", name: "Svetlá popolavosivá", price: 350, colorHsl: "hsl(0 0% 45%)" },
-  { id: "15-greige", name: "Greige (sivo-hnedá)", price: 350, colorHsl: "hsl(30 10% 40%)" },
-  { id: "16-studena-siva", name: "Studená sivá", price: 350, colorHsl: "hsl(0 0% 35%)" },
-  { id: "17-antracit", name: "Antracit", price: 350, colorHsl: "hsl(0 0% 22%)" },
-  { id: "18-tmavy-orech", name: "Tmavý orech", price: 350, colorHsl: "hsl(25 30% 35%)" },
-  { id: "20-tmavy-mahagon", name: "Tmavý mahagón", price: 350, colorHsl: "hsl(6 35% 28%)" },
-];
+const isSaunaColorType = (id: string): id is SaunaColorType => {
+  return Object.prototype.hasOwnProperty.call(saunaColorSwatches, id);
+};
 
 // Reálne obrázky podľa farby pre každý model sauny
 // Structure: saunaId -> colorId -> imagePath
@@ -274,6 +258,21 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "18-tmavy-orech": saunaHarmony,
     "20-tmavy-mahagon": saunaHarmony,
   },
+  // alias pre prípad, že v PHP je použitý opačný slug
+  "insulated-harmony": {
+    none: saunaHarmony,
+    "1-mahagon": saunaHarmony,
+    "2-teak": saunaHarmony,
+    "3-svetly-orech": saunaHarmony,
+    "4-zlaty-dub": saunaHarmony,
+    "5-olejovana-borovica": saunaHarmony,
+    "14-svetla-popolavosiva": saunaHarmony,
+    "15-greige": saunaHarmony,
+    "16-studena-siva": saunaHarmony,
+    "17-antracit": saunaHarmony,
+    "18-tmavy-orech": saunaHarmony,
+    "20-tmavy-mahagon": saunaHarmony,
+  },
 };
 
 // Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
@@ -311,81 +310,78 @@ const saunaGalleryImages: Record<string, string[]> = {
   ],
   "round-2m": [round2mGallery1, round2mGallery2, round2mGallery3, round2mGallery4, round2mGallery5, round2mGallery6],
   "harmony-insulated": [], // zatiaľ bez galérie
+  // alias pre prípad, že v PHP je použitý opačný slug
+  "insulated-harmony": [],
 };
 
-// Typy saún - toto sa môže neskôr načítavať z API
-const saunaTypes: SaunaType[] = [
-  {
-    id: "frame-inspire",
-    name: "Frame sauna Inspire",
+// UI meta pre sauna typy (bez cien) – basePrice/woodTypes/label prichádzajú z PHP API.
+type SaunaTypePreset = {
+  dimensions: string;
+  image: string;
+  hasLed: boolean;
+  hasBluetooth: boolean;
+  hasAccessoryKit: boolean;
+  hasHeater: boolean;
+  hasColor: boolean;
+};
+
+const saunaTypePresets: Record<string, SaunaTypePreset> = {
+  "frame-inspire": {
     dimensions: "240×300",
-    basePrice: 8990,
     image: saunaCube,
     hasLed: false,
-    hasExteriorLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
-    availableWoodTypes: ["spruce"],
   },
-  {
-    id: "modul-thermo",
-    name: "ModulSauna",
+  "modul-thermo": {
     dimensions: "240×250",
-    basePrice: 9490,
     image: saunaTraditional,
     hasLed: false,
-    hasExteriorLed: true, // ModulSauna má vonkajšie LED
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
-    availableWoodTypes: ["thermo"],
   },
-  {
-    id: "lux-mini",
-    name: "LUX MINI sauna",
+  "lux-mini": {
     dimensions: "245×300",
-    basePrice: 11990,
     image: saunaInterior,
     hasLed: true,
-    hasExteriorLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
-    availableWoodTypes: ["spruce", "thermo"],
   },
-  {
-    id: "round-2m",
-    name: "2M Round sauna",
+  "round-2m": {
     dimensions: "Ø 200 cm",
-    basePrice: 6990,
     image: saunaBarrel,
     hasLed: true,
-    hasExteriorLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
-    availableWoodTypes: ["spruce", "thermo"],
   },
-  {
-    id: "harmony-insulated",
-    name: "Insulated frame sauna Harmony",
+  "harmony-insulated": {
     dimensions: "280×500",
-    basePrice: 14990,
     image: saunaHarmony,
     hasLed: false,
-    hasExteriorLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
-    availableWoodTypes: ["spruce"],
   },
-];
+  // alias pre prípad, že v PHP je použitý opačný slug
+  "insulated-harmony": {
+    dimensions: "280×500",
+    image: saunaHarmony,
+    hasLed: false,
+    hasBluetooth: true,
+    hasAccessoryKit: true,
+    hasHeater: true,
+    hasColor: true,
+  },
+};
 
 type ConfigOption = {
   id: string;
@@ -605,6 +601,11 @@ const Configurator = () => {
   );
   const saunaColorOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.colorOptions, saunaColorThumbs);
 
+  const saunaColorOptionsTyped = useMemo(
+    () => saunaColorOptions.filter((o): o is ConfigOption & { id: SaunaColorType } => isSaunaColorType(o.id)),
+    [saunaColorOptions],
+  );
+
   const hotTubSizeOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.sizeOptions);
   const hotTubJetsOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.jetsOptions);
   const hotTubLedOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.ledOptions);
@@ -613,7 +614,7 @@ const Configurator = () => {
 
   // --- Heater models z API ---
   const electricHeaterModels: HeaterModel[] = useMemo(() => {
-    if (!apiConfig?.heaterModels?.electric) return defaultElectricHeaterModels;
+    if (!apiConfig?.heaterModels?.electric) return [];
     return Object.entries(apiConfig.heaterModels.electric).map(([id, data]) => ({
       id,
       name: data.label,
@@ -622,7 +623,7 @@ const Configurator = () => {
   }, [apiConfig]);
 
   const woodHeaterModels: HeaterModel[] = useMemo(() => {
-    if (!apiConfig?.heaterModels?.wood) return defaultWoodHeaterModels;
+    if (!apiConfig?.heaterModels?.wood) return [];
     return Object.entries(apiConfig.heaterModels.wood).map(([id, data]) => ({
       id,
       name: data.label,
@@ -632,7 +633,7 @@ const Configurator = () => {
 
   // --- Wood types z API ---
   const woodTypeOptions = useMemo(() => {
-    if (!apiConfig?.sauna?.woodTypes) return defaultWoodTypeOptions;
+    if (!apiConfig?.sauna?.woodTypes) return [];
     return Object.entries(apiConfig.sauna.woodTypes).map(([id, data]) => ({
       id: id as WoodType,
       name: data.label,
@@ -642,7 +643,45 @@ const Configurator = () => {
   }, [apiConfig]);
 
   // --- Exterior LED price z API ---
-  const exteriorLedPrice = apiConfig?.exteriorLed?.price ?? 290;
+  const exteriorLedPrice = apiConfig?.exteriorLed?.price ?? 0;
+
+  // --- Sauna typy z API (ceny len z PHP) + lokálne UI meta (obrázky/dimenzie) ---
+  const saunaTypesUI: SaunaType[] = useMemo(() => {
+    if (!apiConfig?.saunaTypes?.length) return [];
+
+    const defaultPreset: SaunaTypePreset = {
+      dimensions: "",
+      image: saunaBarrel,
+      hasLed: true,
+      hasBluetooth: true,
+      hasAccessoryKit: true,
+      hasHeater: true,
+      hasColor: true,
+    };
+
+    return apiConfig.saunaTypes.map((st) => {
+      const preset = saunaTypePresets[st.id] ?? defaultPreset;
+      return {
+        id: st.id,
+        name: st.label,
+        dimensions: preset.dimensions,
+        basePrice: st.basePrice,
+        image: preset.image,
+        hasLed: preset.hasLed,
+        hasExteriorLed: st.hasExteriorLed,
+        hasBluetooth: preset.hasBluetooth,
+        hasAccessoryKit: preset.hasAccessoryKit,
+        hasHeater: preset.hasHeater,
+        hasColor: preset.hasColor,
+        availableWoodTypes: st.woodTypes,
+      };
+    });
+  }, [apiConfig]);
+
+  const minSaunaBasePrice = useMemo(() => {
+    const prices = apiConfig?.saunaTypes?.map((s) => s.basePrice) ?? [];
+    return prices.length ? Math.min(...prices) : 0;
+  }, [apiConfig]);
 
   // Výpočet ceny
   const totalPrice = useMemo(() => {
@@ -670,7 +709,7 @@ const Configurator = () => {
       
       const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
-      const color = saunaLocalColorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
+      const color = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
       const woodPrice = woodTypeOptions.find((w) => w.id === saunaConfig.woodType)?.price ?? 0;
 
       return basePrice + heater + heaterModelPrice + ledSum + extLedPrice + bluetooth + kit + color + woodPrice;
@@ -936,7 +975,7 @@ const Configurator = () => {
                   </p>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
                     <span>
-                      {t("config.from")} {Math.min(...saunaTypes.map((s) => s.basePrice)).toLocaleString()} €
+                      {t("config.from")} {minSaunaBasePrice.toLocaleString()} €
                     </span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -1020,7 +1059,7 @@ const Configurator = () => {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {saunaTypes.map((sauna) => (
+              {saunaTypesUI.map((sauna) => (
                 <button
                   key={sauna.id}
                   onClick={() => {
@@ -1545,7 +1584,7 @@ const Configurator = () => {
                             *Vyberte si farbu povrchovej úpravy sauny.
                           </p>
                           <div className="grid grid-cols-4 gap-3">
-                            {saunaLocalColorOptions.map((option) => (
+                            {saunaColorOptionsTyped.map((option) => (
                               <button
                                 key={option.id}
                                 onClick={() => {
@@ -1566,13 +1605,13 @@ const Configurator = () => {
                                 ) : (
                                   <div
                                     className="w-12 h-12 rounded-lg mb-2 border border-border/30"
-                                    style={{ backgroundColor: option.colorHsl }}
+                                    style={{ backgroundColor: saunaColorSwatches[option.id].colorHsl }}
                                   />
                                 )}
                                 <span className="font-medium text-center text-xs">
                                   {t(`color.${option.id}`) !== `color.${option.id}`
                                     ? t(`color.${option.id}`)
-                                    : option.name}
+                                    : option.name || saunaColorSwatches[option.id].nameFallback}
                                 </span>
                                 {option.price > 0 ? (
                                   <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
