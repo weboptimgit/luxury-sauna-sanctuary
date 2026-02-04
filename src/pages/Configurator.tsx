@@ -166,15 +166,15 @@ type HeaterModel = {
 };
 
 const electricHeaterModels: HeaterModel[] = [
-  { id: "harvia-top-steel-9kw", name: "Harvia Top Steel 9 KW", price: 0 },
-  { id: "harvia-cilindro-9kw", name: "Harvia Cilindro 9 KW", price: 150 },
-  { id: "harvia-legend-wifi", name: "Harvia Legend WiFi", price: 350 },
+  { id: "harvia-top-steel-9kw", name: "Harvia Top Steel 9 KW", price: 590 },
+  { id: "harvia-cilindro-9kw", name: "Harvia Cilindro 9 KW", price: 790 },
+  { id: "harvia-legend-wifi", name: "Harvia Legend WiFi", price: 990 },
 ];
 
 const woodHeaterModels: HeaterModel[] = [
-  { id: "harvia-m3", name: "Harvia M3", price: 0 },
-  { id: "harvia-pro-blmschv", name: "Harvia Pro BlmSchV", price: 200 },
-  { id: "harvia-legend-240", name: "Harvia Legend 240", price: 300 },
+  { id: "harvia-m3", name: "Harvia M3", price: 490 },
+  { id: "harvia-pro-blmschv", name: "Harvia Pro BlmSchV", price: 690 },
+  { id: "harvia-legend-240", name: "Harvia Legend 240", price: 890 },
 ];
 
 // Wood type options
