@@ -127,6 +127,8 @@ type ProductCategory = "sauna" | "hottub";
 
 type WoodType = "spruce" | "thermo";
 
+type HeaterModelType = "none" | string;
+
 type SaunaColorType =
   | "none"
   | "1-mahagon"
@@ -148,12 +150,32 @@ type SaunaType = {
   basePrice: number;
   image: string;
   hasLed: boolean;
+  hasExteriorLed: boolean; // Vonkajšie LED - iba pre niektoré modely
   hasBluetooth: boolean;
   hasAccessoryKit: boolean;
   hasHeater: boolean;
   hasColor: boolean;
   availableWoodTypes: WoodType[];
 };
+
+// Modely ohrievačov podľa typu
+type HeaterModel = {
+  id: string;
+  name: string;
+  price: number;
+};
+
+const electricHeaterModels: HeaterModel[] = [
+  { id: "harvia-top-steel-9kw", name: "Harvia Top Steel 9 KW", price: 0 },
+  { id: "harvia-cilindro-9kw", name: "Harvia Cilindro 9 KW", price: 150 },
+  { id: "harvia-legend-wifi", name: "Harvia Legend WiFi", price: 350 },
+];
+
+const woodHeaterModels: HeaterModel[] = [
+  { id: "harvia-m3", name: "Harvia M3", price: 0 },
+  { id: "harvia-pro-blmschv", name: "Harvia Pro BlmSchV", price: 200 },
+  { id: "harvia-legend-240", name: "Harvia Legend 240", price: 300 },
+];
 
 // Wood type options
 const woodTypeOptions: { id: WoodType; name: string; price: number; image: string }[] = [
@@ -299,6 +321,7 @@ const saunaTypes: SaunaType[] = [
     basePrice: 8990,
     image: saunaCube,
     hasLed: false,
+    hasExteriorLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
@@ -312,6 +335,7 @@ const saunaTypes: SaunaType[] = [
     basePrice: 9490,
     image: saunaTraditional,
     hasLed: false,
+    hasExteriorLed: true, // ModulSauna má vonkajšie LED
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
@@ -325,11 +349,12 @@ const saunaTypes: SaunaType[] = [
     basePrice: 11990,
     image: saunaInterior,
     hasLed: true,
+    hasExteriorLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
-    availableWoodTypes: ["spruce", "thermo"], // obe možnosti
+    availableWoodTypes: ["spruce", "thermo"],
   },
   {
     id: "round-2m",
@@ -338,11 +363,12 @@ const saunaTypes: SaunaType[] = [
     basePrice: 6990,
     image: saunaBarrel,
     hasLed: true,
+    hasExteriorLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
-    availableWoodTypes: ["spruce", "thermo"], // obe možnosti
+    availableWoodTypes: ["spruce", "thermo"],
   },
   {
     id: "harmony-insulated",
@@ -351,11 +377,12 @@ const saunaTypes: SaunaType[] = [
     basePrice: 14990,
     image: saunaHarmony,
     hasLed: false,
+    hasExteriorLed: false,
     hasBluetooth: true,
     hasAccessoryKit: true,
     hasHeater: true,
     hasColor: true,
-    availableWoodTypes: ["spruce"], // len smrekové
+    availableWoodTypes: ["spruce"],
   },
 ];
 
@@ -454,7 +481,9 @@ const Configurator = () => {
   // Sauna konfigurácia (ids musia sedieť s PHP configom)
   const [saunaConfig, setSaunaConfig] = useState({
     heaterType: "none",
+    heaterModel: "none" as HeaterModelType, // Konkrétny model ohrievača
     led: [] as string[],
+    exteriorLed: false, // Vonkajšie LED - iba pre ModulSaunu
     bluetooth: "none",
     accessoryKit: "none",
     color: "none" as SaunaColorType,
@@ -569,16 +598,29 @@ const Configurator = () => {
     if (productCategory === "sauna" && selectedSaunaType) {
       const basePrice = selectedSaunaType.basePrice;
       const heater = apiConfig.sauna.heaterTypes.find((h) => h.id === saunaConfig.heaterType)?.price ?? 0;
+      
+      // Cena modelu ohrievača
+      let heaterModelPrice = 0;
+      if (saunaConfig.heaterType === "electric" && saunaConfig.heaterModel !== "none") {
+        heaterModelPrice = electricHeaterModels.find((m) => m.id === saunaConfig.heaterModel)?.price ?? 0;
+      } else if (saunaConfig.heaterType === "wood" && saunaConfig.heaterModel !== "none") {
+        heaterModelPrice = woodHeaterModels.find((m) => m.id === saunaConfig.heaterModel)?.price ?? 0;
+      }
+      
       const ledSum = (saunaConfig.led ?? []).reduce((sum, ledId) => {
         const p = apiConfig.sauna.ledOptions.find((l) => l.id === ledId)?.price ?? 0;
         return sum + p;
       }, 0);
+      
+      // Vonkajšie LED (fixná cena pre ModulSaunu)
+      const exteriorLedPrice = saunaConfig.exteriorLed ? 290 : 0;
+      
       const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
       const color = saunaLocalColorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
       const woodPrice = woodTypeOptions.find((w) => w.id === saunaConfig.woodType)?.price ?? 0;
 
-      return basePrice + heater + ledSum + bluetooth + kit + color + woodPrice;
+      return basePrice + heater + heaterModelPrice + ledSum + exteriorLedPrice + bluetooth + kit + color + woodPrice;
     }
 
     if (productCategory === "hottub") {
@@ -651,7 +693,9 @@ const Configurator = () => {
     setSelectedSaunaType(null);
     setSaunaConfig({
       heaterType: "none",
+      heaterModel: "none",
       led: [],
+      exteriorLed: false,
       bluetooth: "none",
       accessoryKit: "none",
       color: "none" as SaunaColorType,
@@ -663,7 +707,9 @@ const Configurator = () => {
     setSelectedSaunaType(null);
     setSaunaConfig({
       heaterType: "none",
+      heaterModel: "none",
       led: [],
+      exteriorLed: false,
       bluetooth: "none",
       accessoryKit: "none",
       color: "none" as SaunaColorType,
@@ -1204,15 +1250,88 @@ const Configurator = () => {
                                 key={option.id}
                                 option={option}
                                 isSelected={saunaConfig.heaterType === option.id}
-                                onClick={() => setSaunaConfig((prev) => ({ ...prev, heaterType: option.id }))}
+                                onClick={() => setSaunaConfig((prev) => ({ 
+                                  ...prev, 
+                                  heaterType: option.id,
+                                  heaterModel: "none" // Reset model pri zmene typu
+                                }))}
                                 showImage={true}
                               />
                             ))}
                           </div>
+                          
+                          {/* Výber konkrétneho modelu ohrievača - zobrazí sa po výbere typu */}
+                          {saunaConfig.heaterType === "electric" && (
+                            <div className="mt-4 p-4 rounded-xl bg-card/50 border border-border/50">
+                              <h4 className="text-sm font-medium text-foreground mb-3">
+                                {language === "en" ? "Select heater model:" : "Vyberte model ohrievača:"}
+                              </h4>
+                              <div className="grid grid-cols-1 gap-2">
+                                {electricHeaterModels.map((model) => (
+                                  <button
+                                    key={model.id}
+                                    onClick={() => setSaunaConfig((prev) => ({ ...prev, heaterModel: model.id }))}
+                                    className={cn(
+                                      "flex items-center justify-between p-3 rounded-lg border-2 transition-all text-left",
+                                      saunaConfig.heaterModel === model.id
+                                        ? "border-primary bg-primary/5"
+                                        : "border-border/50 hover:border-primary/50 bg-card/30"
+                                    )}
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      {saunaConfig.heaterModel === model.id && (
+                                        <Check className="w-4 h-4 text-primary" />
+                                      )}
+                                      <span className="font-medium text-sm">{model.name}</span>
+                                    </div>
+                                    {model.price > 0 ? (
+                                      <span className="text-sm text-primary">+{model.price.toLocaleString()} €</span>
+                                    ) : (
+                                      <span className="text-xs text-muted-foreground">{t("included")}</span>
+                                    )}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {saunaConfig.heaterType === "wood" && (
+                            <div className="mt-4 p-4 rounded-xl bg-card/50 border border-border/50">
+                              <h4 className="text-sm font-medium text-foreground mb-3">
+                                {language === "en" ? "Select heater model:" : "Vyberte model ohrievača:"}
+                              </h4>
+                              <div className="grid grid-cols-1 gap-2">
+                                {woodHeaterModels.map((model) => (
+                                  <button
+                                    key={model.id}
+                                    onClick={() => setSaunaConfig((prev) => ({ ...prev, heaterModel: model.id }))}
+                                    className={cn(
+                                      "flex items-center justify-between p-3 rounded-lg border-2 transition-all text-left",
+                                      saunaConfig.heaterModel === model.id
+                                        ? "border-primary bg-primary/5"
+                                        : "border-border/50 hover:border-primary/50 bg-card/30"
+                                    )}
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      {saunaConfig.heaterModel === model.id && (
+                                        <Check className="w-4 h-4 text-primary" />
+                                      )}
+                                      <span className="font-medium text-sm">{model.name}</span>
+                                    </div>
+                                    {model.price > 0 ? (
+                                      <span className="text-sm text-primary">+{model.price.toLocaleString()} €</span>
+                                    ) : (
+                                      <span className="text-xs text-muted-foreground">{t("included")}</span>
+                                    )}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
 
-                      {/* LED osvetlenie */}
+                      {/* LED osvetlenie (interiér) */}
                       {selectedSaunaType.hasLed && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
@@ -1238,6 +1357,51 @@ const Configurator = () => {
                                   showImage={true}
                                 />
                               ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Vonkajšie LED osvetlenie - iba pre ModulSaunu */}
+                      {selectedSaunaType.hasExteriorLed && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">
+                            {language === "en" ? "Exterior LED lighting" : "Vonkajšie LED osvetlenie"}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-3">
+                            <button
+                              onClick={() => setSaunaConfig((prev) => ({ ...prev, exteriorLed: false }))}
+                              className={cn(
+                                "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                                !saunaConfig.exteriorLed
+                                  ? "border-primary bg-primary/5"
+                                  : "border-border/50 hover:border-primary/50 bg-card/50"
+                              )}
+                            >
+                              <div className="w-16 h-16 flex items-center justify-center rounded-lg bg-muted/50 mb-2">
+                                <X className="w-8 h-8 text-muted-foreground" />
+                              </div>
+                              <span className="font-medium text-center text-sm">
+                                {language === "en" ? "Without" : "Bez"}
+                              </span>
+                              <span className="text-xs text-muted-foreground">{t("included")}</span>
+                            </button>
+                            <button
+                              onClick={() => setSaunaConfig((prev) => ({ ...prev, exteriorLed: true }))}
+                              className={cn(
+                                "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
+                                saunaConfig.exteriorLed
+                                  ? "border-primary bg-primary/5"
+                                  : "border-border/50 hover:border-primary/50 bg-card/50"
+                              )}
+                            >
+                              <div className="w-16 h-16 flex items-center justify-center rounded-lg bg-primary/10 mb-2">
+                                <Lightbulb className="w-8 h-8 text-primary" />
+                              </div>
+                              <span className="font-medium text-center text-sm">
+                                {language === "en" ? "Exterior LED" : "Vonkajšie LED"}
+                              </span>
+                              <span className="text-xs text-primary">+290 €</span>
+                            </button>
                           </div>
                         </div>
                       )}
