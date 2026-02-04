@@ -693,8 +693,23 @@ const Configurator = () => {
   const originalPrice = useMemo(() => Math.round(totalPrice * 1.15), [totalPrice]);
   const discount = originalPrice > 0 ? Math.round(((originalPrice - totalPrice) / originalPrice) * 100) : 0;
 
+  // Validácia - či je vybraný model ohrievača keď je vybraný typ
+  const isHeaterModelRequired = saunaConfig.heaterType !== "none" && saunaConfig.heaterModel === "none";
+  
   const addToCart = async () => {
     if (!productCategory || !apiConfig) return;
+
+    // Validácia pre saunu - musí byť vybraný model ohrievača
+    if (productCategory === "sauna" && isHeaterModelRequired) {
+      toast({
+        title: language === "en" ? "Select heater model" : "Vyberte model ohrievača",
+        description: language === "en" 
+          ? "You must select a specific heater model before adding to cart." 
+          : "Pred pridaním do košíka musíte vybrať konkrétny model ohrievača.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsAddingToCart(true);
 
@@ -1319,12 +1334,17 @@ const Configurator = () => {
                             ))}
                           </div>
                           
-                          {/* Výber konkrétneho modelu ohrievača - zobrazí sa po výbere typu */}
+                          {/* Výber konkrétneho modelu ohrievača - POVINNÉ */}
                           {saunaConfig.heaterType === "electric" && (
-                            <div className="mt-4 p-4 rounded-xl bg-card/50 border border-border/50">
+                            <div className="mt-4 p-4 rounded-xl bg-card/50 border border-primary/30">
                               <h4 className="text-sm font-medium text-foreground mb-3">
-                                {language === "en" ? "Select heater model:" : "Vyberte model ohrievača:"}
+                                {language === "en" ? "Select heater model" : "Vyberte model ohrievača"} <span className="text-primary">*</span>
                               </h4>
+                              {saunaConfig.heaterModel === "none" && (
+                                <p className="text-xs text-amber-500 mb-3">
+                                  {language === "en" ? "⚠ You must select a heater model" : "⚠ Musíte vybrať model ohrievača"}
+                                </p>
+                              )}
                               <div className="grid grid-cols-1 gap-2">
                                 {electricHeaterModels.map((model) => (
                                   <button
@@ -1355,10 +1375,15 @@ const Configurator = () => {
                           )}
                           
                           {saunaConfig.heaterType === "wood" && (
-                            <div className="mt-4 p-4 rounded-xl bg-card/50 border border-border/50">
+                            <div className="mt-4 p-4 rounded-xl bg-card/50 border border-primary/30">
                               <h4 className="text-sm font-medium text-foreground mb-3">
-                                {language === "en" ? "Select heater model:" : "Vyberte model ohrievača:"}
+                                {language === "en" ? "Select heater model" : "Vyberte model ohrievača"} <span className="text-primary">*</span>
                               </h4>
+                              {saunaConfig.heaterModel === "none" && (
+                                <p className="text-xs text-amber-500 mb-3">
+                                  {language === "en" ? "⚠ You must select a heater model" : "⚠ Musíte vybrať model ohrievača"}
+                                </p>
+                              )}
                               <div className="grid grid-cols-1 gap-2">
                                 {woodHeaterModels.map((model) => (
                                   <button
