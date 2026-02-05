@@ -314,72 +314,38 @@ const saunaGalleryImages: Record<string, string[]> = {
   "insulated-harmony": [],
 };
 
-// UI meta pre sauna typy (bez cien) – basePrice/woodTypes/label prichádzajú z PHP API.
+// UI meta pre sauna typy (bez cien) – všetky has* vlastnosti prichádzajú z PHP API.
+// Lokálne sú len obrázky a dimenzie.
 type SaunaTypePreset = {
   dimensions: string;
   image: string;
-  hasLed: boolean;
-  hasBluetooth: boolean;
-  hasAccessoryKit: boolean;
-  hasHeater: boolean;
-  hasColor: boolean;
 };
 
 const saunaTypePresets: Record<string, SaunaTypePreset> = {
   "frame-inspire": {
     dimensions: "240×300",
     image: saunaCube,
-    hasLed: false,
-    hasBluetooth: true,
-    hasAccessoryKit: true,
-    hasHeater: true,
-    hasColor: true,
   },
   "modul-thermo": {
     dimensions: "240×250",
     image: saunaTraditional,
-    hasLed: false,
-    hasBluetooth: true,
-    hasAccessoryKit: true,
-    hasHeater: true,
-    hasColor: true,
   },
   "lux-mini": {
     dimensions: "245×300",
     image: saunaInterior,
-    hasLed: true,
-    hasBluetooth: true,
-    hasAccessoryKit: true,
-    hasHeater: true,
-    hasColor: true,
   },
   "round-2m": {
     dimensions: "Ø 200 cm",
     image: saunaBarrel,
-    hasLed: true,
-    hasBluetooth: true,
-    hasAccessoryKit: true,
-    hasHeater: true,
-    hasColor: true,
   },
   "harmony-insulated": {
     dimensions: "280×500",
     image: saunaHarmony,
-    hasLed: false,
-    hasBluetooth: true,
-    hasAccessoryKit: true,
-    hasHeater: true,
-    hasColor: true,
   },
   // alias pre prípad, že v PHP je použitý opačný slug
   "insulated-harmony": {
     dimensions: "280×500",
     image: saunaHarmony,
-    hasLed: false,
-    hasBluetooth: true,
-    hasAccessoryKit: true,
-    hasHeater: true,
-    hasColor: true,
   },
 };
 
@@ -407,6 +373,11 @@ type ApiSaunaType = {
   woodTypes: WoodType[];
   woodTypePrices?: Record<WoodType, number>;
   hasExteriorLed: boolean;
+  hasLed: boolean;
+  hasBluetooth: boolean;
+  hasAccessoryKit: boolean;
+  hasHeater: boolean;
+  hasColor: boolean;
 };
 
 type ApiHeaterModel = {
@@ -666,18 +637,13 @@ const Configurator = () => {
   // --- Exterior LED price z API ---
   const exteriorLedPrice = apiConfig?.exteriorLed?.price ?? 0;
 
-  // --- Sauna typy z API (ceny len z PHP) + lokálne UI meta (obrázky/dimenzie) ---
+  // --- Sauna typy z API (všetko z PHP) + lokálne UI meta (obrázky/dimenzie) ---
   const saunaTypesUI: SaunaType[] = useMemo(() => {
     if (!apiConfig?.saunaTypes?.length) return [];
 
     const defaultPreset: SaunaTypePreset = {
       dimensions: "",
       image: saunaBarrel,
-      hasLed: true,
-      hasBluetooth: true,
-      hasAccessoryKit: true,
-      hasHeater: true,
-      hasColor: true,
     };
 
     return apiConfig.saunaTypes.map((st) => {
@@ -688,12 +654,13 @@ const Configurator = () => {
         dimensions: preset.dimensions,
         basePrice: st.basePrice,
         image: preset.image,
-        hasLed: preset.hasLed,
-        hasExteriorLed: st.hasExteriorLed,
-        hasBluetooth: preset.hasBluetooth,
-        hasAccessoryKit: preset.hasAccessoryKit,
-        hasHeater: preset.hasHeater,
-        hasColor: preset.hasColor,
+        // Všetky has* vlastnosti z PHP API
+        hasLed: st.hasLed ?? true,
+        hasExteriorLed: st.hasExteriorLed ?? false,
+        hasBluetooth: st.hasBluetooth ?? true,
+        hasAccessoryKit: st.hasAccessoryKit ?? true,
+        hasHeater: st.hasHeater ?? true,
+        hasColor: st.hasColor ?? true,
         availableWoodTypes: st.woodTypes,
       };
     });
