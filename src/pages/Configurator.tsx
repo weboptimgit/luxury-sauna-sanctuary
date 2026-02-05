@@ -314,39 +314,18 @@ const saunaGalleryImages: Record<string, string[]> = {
   "insulated-harmony": [],
 };
 
-// UI meta pre sauna typy (bez cien) – všetky has* vlastnosti prichádzajú z PHP API.
-// Lokálne sú len obrázky a dimenzie.
+// UI meta pre sauna typy – len lokálne obrázky, všetko ostatné z PHP API.
 type SaunaTypePreset = {
-  dimensions: string;
   image: string;
 };
 
 const saunaTypePresets: Record<string, SaunaTypePreset> = {
-  "frame-inspire": {
-    dimensions: "240×300",
-    image: saunaCube,
-  },
-  "modul-thermo": {
-    dimensions: "240×250",
-    image: saunaTraditional,
-  },
-  "lux-mini": {
-    dimensions: "245×300",
-    image: saunaInterior,
-  },
-  "round-2m": {
-    dimensions: "Ø 200 cm",
-    image: saunaBarrel,
-  },
-  "harmony-insulated": {
-    dimensions: "280×500",
-    image: saunaHarmony,
-  },
-  // alias pre prípad, že v PHP je použitý opačný slug
-  "insulated-harmony": {
-    dimensions: "280×500",
-    image: saunaHarmony,
-  },
+  "frame-inspire": { image: saunaCube },
+  "modul-thermo": { image: saunaTraditional },
+  "lux-mini": { image: saunaInterior },
+  "round-2m": { image: saunaBarrel },
+  "harmony-insulated": { image: saunaHarmony },
+  "insulated-harmony": { image: saunaHarmony },
 };
 
 type ConfigOption = {
@@ -370,6 +349,7 @@ type ApiSaunaType = {
   id: string;
   label: string;
   basePrice: number;
+  dimensions: string;
   woodTypes: WoodType[];
   woodTypePrices?: Record<WoodType, number>;
   hasExteriorLed: boolean;
@@ -637,12 +617,11 @@ const Configurator = () => {
   // --- Exterior LED price z API ---
   const exteriorLedPrice = apiConfig?.exteriorLed?.price ?? 0;
 
-  // --- Sauna typy z API (všetko z PHP) + lokálne UI meta (obrázky/dimenzie) ---
+  // --- Sauna typy z API (všetko z PHP) + lokálne UI meta (len obrázky) ---
   const saunaTypesUI: SaunaType[] = useMemo(() => {
     if (!apiConfig?.saunaTypes?.length) return [];
 
     const defaultPreset: SaunaTypePreset = {
-      dimensions: "",
       image: saunaBarrel,
     };
 
@@ -651,7 +630,7 @@ const Configurator = () => {
       return {
         id: st.id,
         name: st.label,
-        dimensions: preset.dimensions,
+        dimensions: st.dimensions ?? "",
         basePrice: st.basePrice,
         image: preset.image,
         // Všetky has* vlastnosti z PHP API
