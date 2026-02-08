@@ -149,6 +149,7 @@ type SaunaType = {
   dimensions: string;
   basePrice: number;
   image: string;
+  hasWoodType: boolean;
   hasLed: boolean;
   hasExteriorLed: boolean; // Vonkajšie LED - iba pre niektoré modely
   hasBluetooth: boolean;
@@ -352,6 +353,7 @@ type ApiSaunaType = {
   dimensions: string;
   woodTypes: WoodType[];
   woodTypePrices?: Record<WoodType, number>;
+  hasWoodType: boolean;
   hasExteriorLed: boolean;
   hasLed: boolean;
   hasBluetooth: boolean;
@@ -633,14 +635,15 @@ const Configurator = () => {
         dimensions: st.dimensions ?? "",
         basePrice: st.basePrice,
         image: preset.image,
-        // Všetky has* vlastnosti z PHP API
-        hasLed: st.hasLed ?? true,
+        // Všetky has* vlastnosti z PHP API – fallback false, PHP musí explicitne zapnúť
+        hasWoodType: st.hasWoodType ?? false,
+        hasLed: st.hasLed ?? false,
         hasExteriorLed: st.hasExteriorLed ?? false,
-        hasBluetooth: st.hasBluetooth ?? true,
-        hasAccessoryKit: st.hasAccessoryKit ?? true,
-        hasHeater: st.hasHeater ?? true,
-        hasColor: st.hasColor ?? true,
-        availableWoodTypes: st.woodTypes,
+        hasBluetooth: st.hasBluetooth ?? false,
+        hasAccessoryKit: st.hasAccessoryKit ?? false,
+        hasHeater: st.hasHeater ?? false,
+        hasColor: st.hasColor ?? false,
+        availableWoodTypes: st.woodTypes ?? [],
       };
     });
   }, [apiConfig]);
@@ -1275,7 +1278,7 @@ const Configurator = () => {
                   {productCategory === "sauna" && selectedSaunaType ? (
                     <div className="space-y-6">
                       {/* Typ dreva */}
-                      {selectedSaunaType.availableWoodTypes.length > 0 && (
+                      {selectedSaunaType.hasWoodType && selectedSaunaType.availableWoodTypes.length > 0 && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
                             {t("config.woodType")} <span className="text-primary">*</span>
