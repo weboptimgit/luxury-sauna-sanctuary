@@ -635,14 +635,17 @@ const Configurator = () => {
         dimensions: st.dimensions ?? "",
         basePrice: st.basePrice,
         image: preset.image,
-        // Všetky has* vlastnosti z PHP API – fallback false, PHP musí explicitne zapnúť
-        hasWoodType: st.hasWoodType ?? false,
-        hasLed: st.hasLed ?? false,
+        // Všetky has* vlastnosti z PHP API.
+        // Fallback true pre bežné vlastnosti (kým PHP nepošle explicitne).
+        // hasWoodType fallback: true ak existujú woodTypes, inak false.
+        // hasExteriorLed fallback: false (iba špecifické modely).
+        hasWoodType: st.hasWoodType ?? ((st.woodTypes?.length ?? 0) > 0),
+        hasLed: st.hasLed ?? true,
         hasExteriorLed: st.hasExteriorLed ?? false,
-        hasBluetooth: st.hasBluetooth ?? false,
-        hasAccessoryKit: st.hasAccessoryKit ?? false,
-        hasHeater: st.hasHeater ?? false,
-        hasColor: st.hasColor ?? false,
+        hasBluetooth: st.hasBluetooth ?? true,
+        hasAccessoryKit: st.hasAccessoryKit ?? true,
+        hasHeater: st.hasHeater ?? true,
+        hasColor: st.hasColor ?? true,
         availableWoodTypes: st.woodTypes ?? [],
       };
     });
