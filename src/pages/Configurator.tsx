@@ -22,6 +22,7 @@ import ConfiguratorHeader from "@/components/ConfiguratorHeader";
 import ConfiguratorFooter from "@/components/ConfiguratorFooter";
 import { Notice } from "@/components/ui/notice";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
 import saunaBarrel from "@/assets/2M-Round-sauna-1-2-700x700.jpg";
 import saunaCube from "@/assets/Frame-sauna-210×210-700x700.jpg";
@@ -428,6 +429,13 @@ const toUIOptions = (api: ApiOption[] | undefined, withImages?: Record<string, s
 const Configurator = () => {
   const { toast } = useToast();
   const { t, language } = useLanguage();
+
+  useDocumentMeta(
+    language === 'en' ? 'B-Relax | Configurator' : 'B-Relax | Konfigurátor',
+    language === 'en'
+      ? 'Configure your dream sauna or hot tub. Choose wood type, heater, lighting and accessories.'
+      : 'Nakonfigurujte si svoju vysnívanú saunu alebo kaďu. Vyberte si typ dreva, ohrievač, osvetlenie a príslušenstvo.'
+  );
 
   // --- API CONFIG ---
   const [apiConfig, setApiConfig] = useState<ApiConfig | null>(null);
