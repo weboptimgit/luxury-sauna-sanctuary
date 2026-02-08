@@ -102,6 +102,13 @@ import harmony17Antracit from "@/assets/harmony-17-antracit.jpg";
 import harmony18TmavyOrech from "@/assets/harmony-18-tmavy-orech.jpg";
 import harmony20TmavyMahagon from "@/assets/harmony-20-tmavy-mahagon.jpg";
 import harmonyNatural from "@/assets/harmony-natural.jpg";
+import harmonyGallery1 from "@/assets/harmony-gallery-1.jpg";
+import harmonyGallery2 from "@/assets/harmony-gallery-2.jpg";
+import harmonyGallery3 from "@/assets/harmony-gallery-3.jpg";
+import harmonyGallery4 from "@/assets/harmony-gallery-4.jpg";
+import harmonyGallery5 from "@/assets/harmony-gallery-5.jpg";
+import harmonyGallery6 from "@/assets/harmony-gallery-6.jpg";
+import harmonyGallery7 from "@/assets/harmony-gallery-7.jpg";
 
 // Galérijné fotky pre jednotlivé modely (rôzne uhly pohľadu)
 import frameSaunaGallery1 from "@/assets/frame-sauna-gallery-1.jpg";
@@ -323,9 +330,9 @@ const saunaGalleryImages: Record<string, string[]> = {
     luxminiGallery7,
   ],
   "round-2m": [round2mGallery1, round2mGallery2, round2mGallery3, round2mGallery4, round2mGallery5, round2mGallery6],
-  "harmony-insulated": [], // zatiaľ bez galérie
+  "harmony-insulated": [harmonyGallery1, harmonyGallery2, harmonyGallery3, harmonyGallery4, harmonyGallery5, harmonyGallery6, harmonyGallery7],
   // alias pre prípad, že v PHP je použitý opačný slug
-  "insulated-harmony": [],
+  "insulated-harmony": [harmonyGallery1, harmonyGallery2, harmonyGallery3, harmonyGallery4, harmonyGallery5, harmonyGallery6, harmonyGallery7],
 };
 
 // UI meta pre sauna typy – len lokálne obrázky, všetko ostatné z PHP API.
