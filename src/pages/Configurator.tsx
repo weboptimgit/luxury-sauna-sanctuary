@@ -99,6 +99,9 @@ import harmony14SvetlaPopolavosiva from "@/assets/harmony-14-svetla-popolavosiva
 import harmony15Greige from "@/assets/harmony-15-greige.jpg";
 import harmony16StudenaSiva from "@/assets/harmony-16-studena-siva.jpg";
 import harmony17Antracit from "@/assets/harmony-17-antracit.jpg";
+import harmony18TmavyOrech from "@/assets/harmony-18-tmavy-orech.jpg";
+import harmony20TmavyMahagon from "@/assets/harmony-20-tmavy-mahagon.jpg";
+import harmonyNatural from "@/assets/harmony-natural.jpg";
 
 // Galérijné fotky pre jednotlivé modely (rôzne uhly pohľadu)
 import frameSaunaGallery1 from "@/assets/frame-sauna-gallery-1.jpg";
@@ -256,7 +259,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "20-tmavy-mahagon": round2m20TmavyMahagon,
   },
   "harmony-insulated": {
-    none: saunaHarmony,
+    none: harmonyNatural,
     "1-mahagon": harmony1Mahagon,
     "2-teak": harmony2Teak,
     "3-svetly-orech": harmony3SvetlyOrech,
@@ -266,12 +269,12 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "15-greige": harmony15Greige,
     "16-studena-siva": harmony16StudenaSiva,
     "17-antracit": harmony17Antracit,
-    "18-tmavy-orech": saunaHarmony,
-    "20-tmavy-mahagon": saunaHarmony,
+    "18-tmavy-orech": harmony18TmavyOrech,
+    "20-tmavy-mahagon": harmony20TmavyMahagon,
   },
   // alias pre prípad, že v PHP je použitý opačný slug
   "insulated-harmony": {
-    none: saunaHarmony,
+    none: harmonyNatural,
     "1-mahagon": harmony1Mahagon,
     "2-teak": harmony2Teak,
     "3-svetly-orech": harmony3SvetlyOrech,
@@ -281,8 +284,8 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "15-greige": harmony15Greige,
     "16-studena-siva": harmony16StudenaSiva,
     "17-antracit": harmony17Antracit,
-    "18-tmavy-orech": saunaHarmony,
-    "20-tmavy-mahagon": saunaHarmony,
+    "18-tmavy-orech": harmony18TmavyOrech,
+    "20-tmavy-mahagon": harmony20TmavyMahagon,
   },
 };
 
