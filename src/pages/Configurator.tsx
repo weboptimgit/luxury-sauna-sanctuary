@@ -89,6 +89,16 @@ import round2m16StudenaSiva from "@/assets/2mround-16-studena-siva.jpg";
 import round2m17Antracit from "@/assets/2mround-17-antracit.jpg";
 import round2m18TmavyOrech from "@/assets/2mround-18-tmavy-orech.jpg";
 import round2m20TmavyMahagon from "@/assets/2mround-20-tmavy-mahagon.jpg";
+// Farebné varianty Insulated Harmony sauny
+import harmony1Mahagon from "@/assets/harmony-1-mahagon.jpg";
+import harmony2Teak from "@/assets/harmony-2-teak.jpg";
+import harmony3SvetlyOrech from "@/assets/harmony-3-svetly-orech.jpg";
+import harmony4ZlatyDub from "@/assets/harmony-4-zlaty-dub.jpg";
+import harmony5OlejovanaBorovica from "@/assets/harmony-5-olejovana-borovica.jpg";
+import harmony14SvetlaPopolavosiva from "@/assets/harmony-14-svetla-popolavosiva.jpg";
+import harmony15Greige from "@/assets/harmony-15-greige.jpg";
+import harmony16StudenaSiva from "@/assets/harmony-16-studena-siva.jpg";
+import harmony17Antracit from "@/assets/harmony-17-antracit.jpg";
 
 // Galérijné fotky pre jednotlivé modely (rôzne uhly pohľadu)
 import frameSaunaGallery1 from "@/assets/frame-sauna-gallery-1.jpg";
@@ -247,30 +257,30 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
   },
   "harmony-insulated": {
     none: saunaHarmony,
-    "1-mahagon": saunaHarmony,
-    "2-teak": saunaHarmony,
-    "3-svetly-orech": saunaHarmony,
-    "4-zlaty-dub": saunaHarmony,
-    "5-olejovana-borovica": saunaHarmony,
-    "14-svetla-popolavosiva": saunaHarmony,
-    "15-greige": saunaHarmony,
-    "16-studena-siva": saunaHarmony,
-    "17-antracit": saunaHarmony,
+    "1-mahagon": harmony1Mahagon,
+    "2-teak": harmony2Teak,
+    "3-svetly-orech": harmony3SvetlyOrech,
+    "4-zlaty-dub": harmony4ZlatyDub,
+    "5-olejovana-borovica": harmony5OlejovanaBorovica,
+    "14-svetla-popolavosiva": harmony14SvetlaPopolavosiva,
+    "15-greige": harmony15Greige,
+    "16-studena-siva": harmony16StudenaSiva,
+    "17-antracit": harmony17Antracit,
     "18-tmavy-orech": saunaHarmony,
     "20-tmavy-mahagon": saunaHarmony,
   },
   // alias pre prípad, že v PHP je použitý opačný slug
   "insulated-harmony": {
     none: saunaHarmony,
-    "1-mahagon": saunaHarmony,
-    "2-teak": saunaHarmony,
-    "3-svetly-orech": saunaHarmony,
-    "4-zlaty-dub": saunaHarmony,
-    "5-olejovana-borovica": saunaHarmony,
-    "14-svetla-popolavosiva": saunaHarmony,
-    "15-greige": saunaHarmony,
-    "16-studena-siva": saunaHarmony,
-    "17-antracit": saunaHarmony,
+    "1-mahagon": harmony1Mahagon,
+    "2-teak": harmony2Teak,
+    "3-svetly-orech": harmony3SvetlyOrech,
+    "4-zlaty-dub": harmony4ZlatyDub,
+    "5-olejovana-borovica": harmony5OlejovanaBorovica,
+    "14-svetla-popolavosiva": harmony14SvetlaPopolavosiva,
+    "15-greige": harmony15Greige,
+    "16-studena-siva": harmony16StudenaSiva,
+    "17-antracit": harmony17Antracit,
     "18-tmavy-orech": saunaHarmony,
     "20-tmavy-mahagon": saunaHarmony,
   },
