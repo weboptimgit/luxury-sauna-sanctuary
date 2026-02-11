@@ -444,7 +444,7 @@ const Configurator = () => {
 
     (async () => {
       try {
-        const res = await fetch("/wp-json/sauna/v1/config", {
+        const res = await fetch(`/wp-json/sauna/v1/config?lang=${language}`, {
           credentials: "include",
         });
         if (!res.ok) throw new Error("Config sa nepodarilo načítať");
@@ -466,7 +466,7 @@ const Configurator = () => {
     return () => {
       mounted = false;
     };
-  }, [toast]);
+  }, [toast, language]);
 
   // Výber kategórie produktu (sauna / kaďa)
   const [productCategory, setProductCategory] = useState<ProductCategory | null>(null);
@@ -828,7 +828,8 @@ const Configurator = () => {
           product_id,
           qty: 1,
           options,
-          image: cartImage, // Obrázok konfigurácie
+          image: cartImage,
+          lang: language,
         }),
       });
 
