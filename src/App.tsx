@@ -43,7 +43,9 @@ const App = () => (
             <Route path="/wellness" element={<Wellness />} />
             <Route path="/sauny-na-mieru" element={<CustomSaunasPage />} />
             <Route path="/konfigurator" element={<Configurator />} />
+            <Route path="/konfigurator/:modelSlug" element={<Configurator />} />
             <Route path="/en/configurator" element={<Configurator />} />
+            <Route path="/en/configurator/:modelSlug" element={<Configurator />} />
             <Route path="/design-system" element={<DesignSystem />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />

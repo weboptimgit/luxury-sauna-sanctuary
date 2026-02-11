@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Check,
@@ -429,13 +430,10 @@ const toUIOptions = (api: ApiOption[] | undefined, withImages?: Record<string, s
 const Configurator = () => {
   const { toast } = useToast();
   const { t, language } = useLanguage();
+  const { modelSlug } = useParams<{ modelSlug?: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  useDocumentMeta(
-    language === 'en' ? 'B-Relax | Configurator' : 'B-Relax | Konfigurátor',
-    language === 'en'
-      ? 'Configure your dream sauna or hot tub. Choose wood type, heater, lighting and accessories.'
-      : 'Nakonfigurujte si svoju vysnívanú saunu alebo kaďu. Vyberte si typ dreva, ohrievač, osvetlenie a príslušenstvo.'
-  );
 
   // --- API CONFIG ---
   const [apiConfig, setApiConfig] = useState<ApiConfig | null>(null);
@@ -475,6 +473,19 @@ const Configurator = () => {
 
   // Výber typu sauny
   const [selectedSaunaType, setSelectedSaunaType] = useState<SaunaType | null>(null);
+
+  const metaTitle = useMemo(() => {
+    const base = language === 'en' ? 'B-Relax | Configurator' : 'B-Relax | Konfigurátor';
+    if (selectedSaunaType) return `${selectedSaunaType.name} | ${base}`;
+    return base;
+  }, [language, selectedSaunaType]);
+
+  useDocumentMeta(
+    metaTitle,
+    language === 'en'
+      ? 'Configure your dream sauna or hot tub. Choose wood type, heater, lighting and accessories.'
+      : 'Nakonfigurujte si svoju vysnívanú saunu alebo kaďu. Vyberte si typ dreva, ohrievač, osvetlenie a príslušenstvo.'
+  );
 
   // Sauna konfigurácia (ids musia sedieť s PHP configom)
   const [saunaConfig, setSaunaConfig] = useState({
@@ -679,6 +690,49 @@ const Configurator = () => {
     });
   }, [apiConfig]);
 
+  // --- URL sync: auto-select model from URL slug ---
+  const hasAppliedSlug = useRef(false);
+  useEffect(() => {
+    if (!modelSlug || !saunaTypesUI.length || hasAppliedSlug.current) return;
+
+    const slugToId: Record<string, string> = {
+      "frame-sauna": "frame-inspire",
+      "frame-inspire": "frame-inspire",
+      "modulsauna": "modul-thermo",
+      "modul-thermo": "modul-thermo",
+      "lux-mini": "lux-mini",
+      "lux-sauna": "lux-mini",
+      "2m-round": "round-2m",
+      "round-2m": "round-2m",
+      "barrel-sauna": "round-2m",
+      "harmony": "harmony-insulated",
+      "harmony-insulated": "harmony-insulated",
+      "insulated-harmony": "harmony-insulated",
+    };
+
+    const resolvedId = slugToId[modelSlug] || modelSlug;
+    const matchedType = saunaTypesUI.find(st => st.id === resolvedId);
+    
+    if (matchedType) {
+      setProductCategory("sauna");
+      setSelectedSaunaType(matchedType);
+      hasAppliedSlug.current = true;
+    }
+  }, [modelSlug, saunaTypesUI]);
+
+  // --- Helper to get base configurator path ---
+  const getConfigBasePath = useCallback(() => {
+    return location.pathname.startsWith('/en/') ? '/en/configurator' : '/konfigurator';
+  }, [location.pathname]);
+
+  // --- Update URL when model is selected ---
+  const selectSaunaTypeWithUrl = useCallback((saunaType: SaunaType) => {
+    setSelectedSaunaType(saunaType);
+    setProductCategory("sauna");
+    const basePath = getConfigBasePath();
+    navigate(`${basePath}/${saunaType.id}`, { replace: true });
+  }, [navigate, getConfigBasePath]);
+
   const minSaunaBasePrice = useMemo(() => {
     const prices = apiConfig?.saunaTypes?.map((s) => s.basePrice) ?? [];
     return prices.length ? Math.min(...prices) : 0;
@@ -815,6 +869,7 @@ const Configurator = () => {
       color: "none" as SaunaColorType,
       woodType: "spruce",
     });
+    navigate(getConfigBasePath(), { replace: true });
   };
 
   const goBackToSaunaTypes = () => {
@@ -830,6 +885,7 @@ const Configurator = () => {
       woodType: "spruce",
     });
     setCurrentImageIndex(0);
+    navigate(getConfigBasePath(), { replace: true });
   };
 
   // Komponenta pre možnosť s X alebo obrázkom
@@ -1064,7 +1120,7 @@ const Configurator = () => {
                 <button
                   key={sauna.id}
                   onClick={() => {
-                    setSelectedSaunaType(sauna);
+                    selectSaunaTypeWithUrl(sauna);
                     // Auto-select wood type if only one option available
                     if (sauna.availableWoodTypes.length === 1) {
                       setSaunaConfig((prev) => ({ ...prev, woodType: sauna.availableWoodTypes[0] }));
