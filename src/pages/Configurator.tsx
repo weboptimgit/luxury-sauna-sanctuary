@@ -211,7 +211,7 @@ const isSaunaColorType = (id: string): id is SaunaColorType => {
 // Reálne obrázky podľa farby pre každý model sauny
 // Structure: saunaId -> colorId -> imagePath
 const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
-  "frame-inspire": {
+  "frame-balance": {
     none: frameSaunaNatural,
     "1-mahagon": frameSauna1Mahagon,
     "2-teak": frameSauna2Teak,
@@ -300,7 +300,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
 
 // Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
 const saunaGalleryImages: Record<string, string[]> = {
-  "frame-inspire": [
+  "frame-balance": [
     frameSaunaGallery1,
     frameSaunaGallery2,
     frameSaunaGallery3,
@@ -343,7 +343,7 @@ type SaunaTypePreset = {
 };
 
 const saunaTypePresets: Record<string, SaunaTypePreset> = {
-  "frame-inspire": { image: saunaCube },
+  "frame-balance": { image: saunaCube },
   "modul-thermo": { image: saunaTraditional },
   "lux-mini": { image: saunaInterior },
   "round-2m": { image: saunaBarrel },
@@ -696,8 +696,9 @@ const Configurator = () => {
     if (!modelSlug || !saunaTypesUI.length || hasAppliedSlug.current) return;
 
     const slugToId: Record<string, string> = {
-      "frame-sauna": "frame-inspire",
-      "frame-inspire": "frame-inspire",
+      "frame-sauna": "frame-balance",
+      "frame-balance": "frame-balance",
+      "frame-inspire": "frame-balance",
       "modulsauna": "modul-thermo",
       "modul-thermo": "modul-thermo",
       "lux-mini": "lux-mini",
