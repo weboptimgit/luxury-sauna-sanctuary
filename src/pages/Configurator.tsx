@@ -454,8 +454,8 @@ const Configurator = () => {
       } catch (e) {
         console.error(e);
         toast({
-          title: "Chyba",
-          description: "Nepodarilo sa načítať konfiguráciu.",
+          title: t("error.generic"),
+          description: t("error.loadConfigShort"),
           variant: "destructive",
         });
       } finally {
@@ -796,7 +796,7 @@ const Configurator = () => {
     // Validácia pre saunu - musí byť vybraný model ohrievača
     if (productCategory === "sauna" && isHeaterModelRequired) {
       toast({
-        title: language === "en" ? "Select heater model" : "Vyberte model ohrievača",
+        title: t("config.selectHeaterModel"),
         description: language === "en" 
           ? "You must select a specific heater model before adding to cart." 
           : "Pred pridaním do košíka musíte vybrať konkrétny model ohrievača.",
@@ -834,20 +834,20 @@ const Configurator = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Nepodarilo sa pridať do košíka");
+        throw new Error(errorData.message || t("error.addToCart"));
       }
 
       toast({
-        title: "Pridané do košíka",
-        description: "Produkt bol úspešne pridaný do košíka.",
+        title: t("success.addedToCart"),
+        description: t("success.addedToCartDesc"),
       });
 
       window.location.href = "/kosik/";
     } catch (error) {
       console.error("Add to cart error:", error);
       toast({
-        title: "Chyba",
-        description: error instanceof Error ? error.message : "Nepodarilo sa pridať do košíka",
+        title: t("error.generic"),
+        description: error instanceof Error ? error.message : t("error.addToCart"),
         variant: "destructive",
       });
     } finally {
@@ -948,7 +948,7 @@ const Configurator = () => {
           <span className="text-xs text-primary">{option.price.toLocaleString()} €</span>
         </div>
       ) : (
-        <span className="text-xs text-muted-foreground">{option.price === 0 ? "0,00 €" : "V cene"}</span>
+        <span className="text-xs text-muted-foreground">{option.price === 0 ? "0,00 €" : t("included")}</span>
       )}
     </button>
   );
@@ -1050,7 +1050,7 @@ const Configurator = () => {
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
                     src={hotTub}
-                    alt="Kaďa"
+                    alt={t("config.hottub")}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
@@ -1161,7 +1161,7 @@ const Configurator = () => {
                         {sauna.hasHeater && (
                           <div
                             className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20"
-                            title="Ohrievač"
+                            title={t("tooltip.heater")}
                           >
                             <Flame className="w-5 h-5 text-primary" />
                           </div>
@@ -1169,7 +1169,7 @@ const Configurator = () => {
                         {sauna.hasLed && (
                           <div
                             className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20"
-                            title="LED osvetlenie"
+                            title={t("tooltip.led")}
                           >
                             <Lightbulb className="w-5 h-5 text-primary" />
                           </div>
@@ -1177,7 +1177,7 @@ const Configurator = () => {
                         {sauna.hasBluetooth && (
                           <div
                             className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20"
-                            title="Bluetooth"
+                            title={t("tooltip.bluetooth")}
                           >
                             <Bluetooth className="w-5 h-5 text-primary" />
                           </div>
@@ -1187,7 +1187,7 @@ const Configurator = () => {
                       {/* Cena a CTA */}
                       <div className="flex items-center justify-between pt-4 border-t border-white/10">
                         <div>
-                          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Od</p>
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("config.from")}</p>
                           <span className="text-2xl font-bold text-gradient-amber">
                             {sauna.basePrice.toLocaleString()} €
                           </span>
@@ -1255,7 +1255,7 @@ const Configurator = () => {
 
                 <img
                   src={images[currentImageIndex]}
-                  alt={productCategory === "sauna" ? selectedSaunaType?.name : "Kaďa"}
+                  alt={productCategory === "sauna" ? selectedSaunaType?.name : t("config.hottub")}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
@@ -1321,9 +1321,7 @@ const Configurator = () => {
                 </Button>
 
                 <p className="text-xs text-muted-foreground text-center mt-3">
-                  {language === "en"
-                    ? "* Price does not include delivery and installation"
-                    : "* Cena nezahŕňa dopravu a inštaláciu"}
+                  {t("config.priceNote")}
                 </p>
               </div>
             </div>
@@ -1339,7 +1337,7 @@ const Configurator = () => {
               >
                 <div className="flex flex-col items-center gap-1 text-muted-foreground animate-bounce">
                   <span className="text-xs">
-                    {language === "en" ? "Scroll for more options" : "Scrolluj pre viac možností"}
+                    {t("config.scrollMore")}
                   </span>
                   <ChevronDown className="w-4 h-4" />
                 </div>
@@ -1349,7 +1347,7 @@ const Configurator = () => {
                 <div className="space-y-8 pr-4 pb-24">
                   <div>
                     <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
-                      {productCategory === "sauna" ? selectedSaunaType?.name : "Konfigurácia kade"}
+                      {productCategory === "sauna" ? selectedSaunaType?.name : t("config.hottub.configTitle")}
                     </h1>
                     {productCategory === "sauna" && selectedSaunaType && (
                       <p className="text-muted-foreground mb-3">{selectedSaunaType.dimensions}</p>
@@ -1398,9 +1396,9 @@ const Configurator = () => {
                           </div>
                           {selectedSaunaType.availableWoodTypes.length === 1 && (
                             <p className="text-xs text-muted-foreground mt-2">
-                              {language === "en"
-                                ? `This model is only available in ${selectedSaunaType.availableWoodTypes[0] === "thermo" ? "Thermo wood" : "Spruce wood"}.`
-                                : `Tento model je dostupný iba v prevedení ${selectedSaunaType.availableWoodTypes[0] === "thermo" ? "Thermo wood" : "Smrekové drevo"}.`}
+                              {t("config.onlyWoodType").replace("{woodType}", 
+                                selectedSaunaType.availableWoodTypes[0] === "thermo" ? t("config.woodType.thermo") : t("config.woodType.spruce")
+                              )}
                             </p>
                           )}
                         </div>
@@ -1432,11 +1430,11 @@ const Configurator = () => {
                           {saunaConfig.heaterType === "electric" && (
                             <div className="mt-4 p-4 rounded-xl bg-card/50 border border-primary/30">
                               <h4 className="text-sm font-medium text-foreground mb-3">
-                                {language === "en" ? "Select heater model" : "Vyberte model ohrievača"} <span className="text-primary">*</span>
+                                {t("config.selectHeaterModel")} <span className="text-primary">*</span>
                               </h4>
                               {saunaConfig.heaterModel === "none" && (
                                 <p className="text-xs text-amber-500 mb-3">
-                                  {language === "en" ? "⚠ You must select a heater model" : "⚠ Musíte vybrať model ohrievača"}
+                                  {t("config.heaterModelRequired")}
                                 </p>
                               )}
                               <div className="grid grid-cols-1 gap-2">
@@ -1471,11 +1469,11 @@ const Configurator = () => {
                           {saunaConfig.heaterType === "wood" && (
                             <div className="mt-4 p-4 rounded-xl bg-card/50 border border-primary/30">
                               <h4 className="text-sm font-medium text-foreground mb-3">
-                                {language === "en" ? "Select heater model" : "Vyberte model ohrievača"} <span className="text-primary">*</span>
+                                {t("config.selectHeaterModel")} <span className="text-primary">*</span>
                               </h4>
                               {saunaConfig.heaterModel === "none" && (
                                 <p className="text-xs text-amber-500 mb-3">
-                                  {language === "en" ? "⚠ You must select a heater model" : "⚠ Musíte vybrať model ohrievača"}
+                                  {t("config.heaterModelRequired")}
                                 </p>
                               )}
                               <div className="grid grid-cols-1 gap-2">
@@ -1518,7 +1516,7 @@ const Configurator = () => {
                           <div className="grid grid-cols-3 gap-3">
                             {/* Bez LED = reset */}
                             <OptionCard
-                              option={{ id: "none", name: language === "en" ? "No LED" : "Bez LED", price: 0 }}
+                              option={{ id: "none", name: t("config.noLed"), price: 0 }}
                               isSelected={ledSelected.length === 0}
                               onClick={resetLed}
                             />
@@ -1543,7 +1541,7 @@ const Configurator = () => {
                       {selectedSaunaType.hasExteriorLed && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {language === "en" ? "Exterior LED lighting" : "Vonkajšie LED osvetlenie"}
+                            {t("config.exteriorLed")}
                           </h3>
                           <div className="grid grid-cols-2 gap-3">
                             <button
@@ -1559,7 +1557,7 @@ const Configurator = () => {
                                 <X className="w-8 h-8 text-muted-foreground" />
                               </div>
                               <span className="font-medium text-center text-sm">
-                                {language === "en" ? "Without" : "Bez"}
+                                {t("config.without")}
                               </span>
                               <span className="text-xs text-muted-foreground">{t("included")}</span>
                             </button>
@@ -1576,7 +1574,7 @@ const Configurator = () => {
                                 <Lightbulb className="w-8 h-8 text-primary" />
                               </div>
                               <span className="font-medium text-center text-sm">
-                                {language === "en" ? "Exterior LED" : "Vonkajšie LED"}
+                                {t("config.exteriorLedShort")}
                               </span>
                               <span className="text-xs text-primary">+{exteriorLedPrice} €</span>
                             </button>
@@ -1611,9 +1609,7 @@ const Configurator = () => {
                             {t("config.accessories")} <span className="text-primary">*</span>
                           </h3>
                           <p className="text-xs text-muted-foreground mb-2 italic">
-                            {language === "en"
-                              ? "*Set includes bucket with ladle, sand timer and thermometer."
-                              : "*Sada obsahuje vedierko s naberačkou, presýpacie hodiny a teplomer."}
+                            {t("config.accessoryKitHint")}
                           </p>
                           <div className="grid grid-cols-2 gap-3">
                             {saunaAccessoryKitOptions.map((option) => (
@@ -1636,7 +1632,7 @@ const Configurator = () => {
                             {t("config.color")} <span className="text-primary">*</span>
                           </h3>
                           <p className="text-xs text-muted-foreground mb-3 italic">
-                            *Vyberte si farbu povrchovej úpravy sauny.
+                            {t("config.colorHint")}
                           </p>
                           <div className="grid grid-cols-4 gap-3">
                             {saunaColorOptionsTyped.map((option) => (
@@ -1677,9 +1673,7 @@ const Configurator = () => {
                             ))}
                           </div>
                           <Notice variant="info" className="mt-4">
-                            {language === "en"
-                              ? "Displayed color photos are for illustration purposes only and may not exactly match the final product."
-                              : "Zobrazené fotky farieb sú len ilustračné a nemusia presne zodpovedať finálnemu produktu."}
+                            {t("config.colorNotice")}
                           </Notice>
                         </div>
                       )}
@@ -1802,9 +1796,7 @@ const Configurator = () => {
                   </Button>
 
                   <p className="text-xs text-muted-foreground text-center mt-3">
-                    {language === "en"
-                      ? "* Price does not include delivery and installation"
-                      : "* Cena nezahŕňa dopravu a inštaláciu"}
+                    {t("config.priceNote")}
                   </p>
                 </div>
               </ScrollArea>
@@ -1850,7 +1842,7 @@ const Configurator = () => {
           <div className="max-w-5xl max-h-[85vh] w-full mx-6" onClick={(e) => e.stopPropagation()}>
             <img
               src={images[currentImageIndex]}
-              alt="Zväčšený obrázok"
+              alt={t("config.lightboxAlt")}
               className="w-full h-full object-contain rounded-lg"
             />
 
