@@ -1,31 +1,31 @@
-import { useState } from 'react';
-import { Menu, X, ShoppingCart } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { useLanguage } from '@/contexts/LanguageContext';
-import flagUk from '@/assets/flag-uk.png';
-import flagSk from '@/assets/flag-sk.png';
-import brelaxLogo from '@/assets/b-relax-logo.png';
+import { useState } from "react";
+import { Menu, X, ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
+import flagUk from "@/assets/flag-uk.png";
+import flagSk from "@/assets/flag-sk.png";
+import brelaxLogo from "@/assets/b-relax-logo.png";
 
 const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
 
   // Base URL changes based on language
-  const baseUrl = language === 'en' 
-    ? 'https://brelax.weboptim.eu/en' 
-    : 'https://brelax.weboptim.eu';
+  const baseUrl = language === "en" ? "https://brelax.weboptim.eu/en" : "https://brelax.weboptim.eu";
+
+  const categoryPrefix = language === "en" ? "/c" : "/k";
 
   const navItems = [
-    { labelKey: 'nav.home', href: `${baseUrl}/`, external: true },
-    { labelKey: 'nav.finnishSaunas', href: `${baseUrl}/k/premiove-sauny/`, external: true },
-    { labelKey: 'nav.hotTubs', href: `${baseUrl}/k/kade/`, external: true },
-    { labelKey: 'nav.configurator', href: language === 'en' ? '/en/configurator' : '/konfigurator', external: false },
-    { labelKey: 'nav.contact', href: `${baseUrl}/kontakt/`, external: true },
+    { labelKey: "nav.home", href: `${baseUrl}/`, external: true },
+    { labelKey: "nav.finnishSaunas", href: `${baseUrl}${categoryPrefix}/sauny/`, external: true },
+    { labelKey: "nav.hotTubs", href: `${baseUrl}${categoryPrefix}/kade/`, external: true },
+    { labelKey: "nav.configurator", href: language === "en" ? "/en/configurator" : "/konfigurator", external: false },
+    { labelKey: "nav.contact", href: `${baseUrl}/kontakt/`, external: true },
   ];
 
   const toggleLanguage = () => {
-    setLanguage(language === 'sk' ? 'en' : 'sk');
+    setLanguage(language === "sk" ? "en" : "sk");
   };
 
   return (
@@ -34,16 +34,12 @@ const ConfiguratorHeader = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <a href={`${baseUrl}/`} className="flex items-center">
-            <img 
-              src={brelaxLogo} 
-              alt="B-RELAX" 
-              className="w-[190px] h-auto"
-            />
+            <img src={brelaxLogo} alt="B-RELAX" className="w-[190px] h-auto" />
           </a>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
-            {navItems.map((item) => 
+            {navItems.map((item) =>
               item.external ? (
                 <a
                   key={item.labelKey}
@@ -60,13 +56,13 @@ const ConfiguratorHeader = () => {
                 >
                   {t(item.labelKey)}
                 </Link>
-              )
+              ),
             )}
           </nav>
 
           {/* Actions */}
           <div className="flex items-center gap-4">
-            <a 
+            <a
               href={`${baseUrl}/kosik/`}
               className="relative p-2 text-foreground/70 hover:text-primary transition-colors"
             >
@@ -75,10 +71,10 @@ const ConfiguratorHeader = () => {
                 0
               </span>
             </a>
-            
+
             <a href={`${baseUrl}/kontakt/`}>
               <Button variant="luxury" size="sm" className="hidden md:inline-flex">
-                {t('nav.inquiry')}
+                {t("nav.inquiry")}
               </Button>
             </a>
 
@@ -86,11 +82,11 @@ const ConfiguratorHeader = () => {
             <button
               onClick={toggleLanguage}
               className="flex items-center justify-center pl-4 border-l border-border/50 hover:opacity-80 transition-opacity"
-              title={language === 'sk' ? 'Switch to English' : 'Prepnúť na slovenčinu'}
+              title={language === "sk" ? "Switch to English" : "Prepnúť na slovenčinu"}
             >
-              <img 
-                src={language === 'sk' ? flagUk : flagSk} 
-                alt={language === 'sk' ? 'English' : 'Slovensky'}
+              <img
+                src={language === "sk" ? flagUk : flagSk}
+                alt={language === "sk" ? "English" : "Slovensky"}
                 className="w-4 h-[11px] object-cover"
               />
             </button>
@@ -117,15 +113,15 @@ const ConfiguratorHeader = () => {
                 }}
                 className="flex items-center gap-3 text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300"
               >
-                <img 
-                  src={language === 'sk' ? flagUk : flagSk} 
-                  alt={language === 'sk' ? 'English' : 'Slovensky'}
+                <img
+                  src={language === "sk" ? flagUk : flagSk}
+                  alt={language === "sk" ? "English" : "Slovensky"}
                   className="w-6 h-4 object-cover"
                 />
-                {language === 'sk' ? 'English' : 'Slovensky'}
+                {language === "sk" ? "English" : "Slovensky"}
               </button>
 
-              {navItems.map((item) => 
+              {navItems.map((item) =>
                 item.external ? (
                   <a
                     key={item.labelKey}
@@ -144,11 +140,11 @@ const ConfiguratorHeader = () => {
                   >
                     {t(item.labelKey)}
                   </Link>
-                )
+                ),
               )}
               <a href={`${baseUrl}/kontakt/`} onClick={() => setIsMenuOpen(false)}>
                 <Button variant="luxury" size="sm" className="mt-2 w-full">
-                  {t('nav.inquiry')}
+                  {t("nav.inquiry")}
                 </Button>
               </a>
             </div>
