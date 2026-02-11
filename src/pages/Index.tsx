@@ -6,6 +6,7 @@ import Products from '@/components/Products';
 import CustomSaunas from '@/components/CustomSaunas';
 import ConfiguratorCTA from '@/components/ConfiguratorCTA';
 import Wellness from '@/components/Wellness';
+import BlogPreview from '@/components/BlogPreview';
 import FAQ from '@/components/FAQ';
 import CTA from '@/components/CTA';
 import Footer from '@/components/Footer';
@@ -22,6 +23,7 @@ const Index = () => {
         <CustomSaunas />
         <ConfiguratorCTA />
         <Wellness />
+        <BlogPreview />
         <FAQ />
         <CTA />
       </main>
