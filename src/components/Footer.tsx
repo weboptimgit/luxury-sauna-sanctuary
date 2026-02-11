@@ -7,6 +7,7 @@ const quickLinks = [
   { name: 'Sauny na mieru', href: '/sauny-na-mieru' },
   { name: 'Zdravie a oddych', href: '/wellness' },
   { name: 'O nás', href: '/about' },
+  { name: 'Blog', href: '/blog' },
   { name: 'FAQ', href: '/faq' },
   { name: 'Kontakt', href: '/contact' },
 ];

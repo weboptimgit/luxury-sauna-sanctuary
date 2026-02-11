@@ -11,6 +11,7 @@ const Header = () => {
     { label: 'Domov', href: '/' },
     { label: 'Obchod', href: '/shop' },
     { label: 'Konfigurátor', href: '/konfigurator' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Slovník', href: '/slovnik' },
     { label: 'O nás', href: '/about' },
     { label: 'FAQ', href: '/faq' },
