@@ -14,12 +14,25 @@ const ConfiguratorHeader = () => {
   // Base URL changes based on language
   const baseUrl = language === "en" ? "https://brelax.weboptim.eu/en" : "https://brelax.weboptim.eu";
 
-  const categoryPrefix = language === "en" ? "/c" : "/k";
+  const categoryMap = {
+    sk: {
+      prefix: "/k",
+      saunas: "sauny",
+      tubs: "kade",
+    },
+    en: {
+      prefix: "/c",
+      saunas: "saunas",
+      tubs: "hottubs",
+    },
+  };
+
+  const { prefix, saunas, tubs } = categoryMap[language] || categoryMap.sk;
 
   const navItems = [
     { labelKey: "nav.home", href: `${baseUrl}/`, external: true },
-    { labelKey: "nav.finnishSaunas", href: `${baseUrl}${categoryPrefix}/sauny/`, external: true },
-    { labelKey: "nav.hotTubs", href: `${baseUrl}${categoryPrefix}/kade/`, external: true },
+    { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
+    { labelKey: "nav.hotTubs", href: `${baseUrl}${prefix}/${tubs}/`, external: true },
     { labelKey: "nav.configurator", href: language === "en" ? "/en/configurator" : "/konfigurator", external: false },
     { labelKey: "nav.contact", href: `${baseUrl}/kontakt/`, external: true },
   ];
