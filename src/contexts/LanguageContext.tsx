@@ -213,15 +213,19 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
       // Switch to English
       if (currentPath.startsWith('/en')) {
         newPath = currentPath; // Already in English
-      } else if (currentPath === '/konfigurator') {
-        newPath = '/en/configurator';
+      } else if (currentPath.startsWith('/konfigurator')) {
+        // Handle /konfigurator and /konfigurator/:modelSlug
+        const subPath = currentPath.replace('/konfigurator', '');
+        newPath = '/en/configurator' + subPath;
       } else {
         newPath = currentPath === '/' ? '/en' : `/en${currentPath}`;
       }
     } else {
       // Switch to Slovak
-      if (currentPath === '/en/configurator') {
-        newPath = '/konfigurator';
+      if (currentPath.startsWith('/en/configurator')) {
+        // Handle /en/configurator and /en/configurator/:modelSlug
+        const subPath = currentPath.replace('/en/configurator', '');
+        newPath = '/konfigurator' + subPath;
       } else if (currentPath.startsWith('/en/')) {
         newPath = currentPath.replace('/en', '');
       } else if (currentPath === '/en') {
