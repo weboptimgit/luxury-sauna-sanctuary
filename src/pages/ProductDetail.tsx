@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getProductById, products } from '@/data/products';
+import { glossaryTerms } from '@/data/glossary';
 import {
   Carousel,
   CarouselContent,
@@ -503,6 +504,34 @@ const ProductDetail = () => {
               ))}
             </div>
           </div>
+
+          {/* Glossary Terms */}
+          {glossaryTerms.length > 0 && (
+            <div className="mt-16 lg:mt-24">
+              <h2 className="font-display text-3xl lg:text-4xl font-light mb-12 text-center">
+                Slovník <span className="text-gradient-amber font-semibold">pojmov</span>
+              </h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {glossaryTerms.map((term) => (
+                  <Link
+                    key={term.id}
+                    to={`/slovnik/${term.id}`}
+                    className="group bg-card rounded-xl border border-border/30 p-6 hover:border-primary/30 transition-all duration-300"
+                  >
+                    <h3 className="font-display text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                      {term.term}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
+                      {term.definition}
+                    </p>
+                    <span className="inline-block mt-3 text-primary text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                      Čítať viac →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Related Products */}
           <div className="mt-16 lg:mt-24">
