@@ -257,32 +257,24 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   const setLanguage = (lang: Language) => {
     const currentPath = normalizePath(location.pathname);
-    let newPath: string;
 
     if (lang === "en") {
-      // Switch to English: /konfigurator -> /configurator
-      if (currentPath.startsWith("/configurator")) {
-        newPath = currentPath; // Already in English
-      } else if (currentPath.startsWith("/konfigurator")) {
+      // Switch to English on .com domain
+      if (currentPath.startsWith("/konfigurator")) {
         const subPath = currentPath.replace("/konfigurator", "");
-        newPath = "/configurator" + subPath;
+        window.location.href = "https://www.luxurelax.com/configurator" + subPath;
       } else {
-        newPath = "/configurator";
+        window.location.href = "https://www.luxurelax.com/configurator";
       }
     } else {
-      // Switch to Slovak: /configurator -> /konfigurator
-      if (currentPath.startsWith("/konfigurator")) {
-        newPath = currentPath; // Already in Slovak
-      } else if (currentPath.startsWith("/configurator")) {
+      // Switch to Slovak on .sk domain
+      if (currentPath.startsWith("/configurator")) {
         const subPath = currentPath.replace("/configurator", "");
-        newPath = "/konfigurator" + subPath;
+        window.location.href = "https://www.luxurelax.sk/konfigurator" + subPath;
       } else {
-        newPath = "/konfigurator";
+        window.location.href = "https://www.luxurelax.sk/konfigurator";
       }
     }
-
-    navigate(newPath);
-    setLanguageState(lang);
   };
 
   const t = (key: string): string => {
