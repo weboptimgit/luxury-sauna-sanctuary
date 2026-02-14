@@ -11,8 +11,8 @@ const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
 
-  // Base URL changes based on language
-  const baseUrl = language === "en" ? "https://www.luxurelax.sk/en" : "https://www.luxurelax.sk";
+  // Base URL changes based on language - .com for EN, .sk for SK
+  const baseUrl = language === "en" ? "https://www.luxurelax.com" : "https://www.luxurelax.sk";
 
   const categoryMap = {
     sk: {
@@ -33,10 +33,10 @@ const ConfiguratorHeader = () => {
     { labelKey: "nav.home", href: `${baseUrl}/`, external: true },
     { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
     { labelKey: "nav.hotTubs", href: `${baseUrl}${prefix}/${tubs}/`, external: true },
-    { labelKey: "nav.configurator", href: language === "en" ? "/en/configurator" : "/konfigurator", external: false },
-    { labelKey: "nav.blog", href: language === "en" ? "/en/blog/" : `${baseUrl}/blog/`, external: true },
-    { labelKey: "nav.about", href: language === "en" ? "/en/about-us/" : `${baseUrl}/o-nas/`, external: true },
-    { labelKey: "nav.contact", href: language === "en" ? "/en/contact/" : `${baseUrl}/kontakt/`, external: true },
+    { labelKey: "nav.configurator", href: language === "en" ? "/configurator" : "/konfigurator", external: false },
+    { labelKey: "nav.blog", href: `${baseUrl}/blog/`, external: true },
+    { labelKey: "nav.about", href: language === "en" ? `${baseUrl}/about-us/` : `${baseUrl}/o-nas/`, external: true },
+    { labelKey: "nav.contact", href: language === "en" ? `${baseUrl}/contact/` : `${baseUrl}/kontakt/`, external: true },
   ];
 
   const toggleLanguage = () => {
@@ -78,7 +78,7 @@ const ConfiguratorHeader = () => {
           {/* Actions */}
           <div className="flex items-center gap-4">
             <a
-              href={language === "en" ? "/en/cart/" : `${baseUrl}/kosik/`}
+              href={language === "en" ? `${baseUrl}/cart/` : `${baseUrl}/kosik/`}
               className="relative p-2 text-foreground/70 hover:text-primary transition-colors"
             >
               <ShoppingCart className="w-5 h-5" />
@@ -87,7 +87,7 @@ const ConfiguratorHeader = () => {
               </span>
             </a>
 
-            <a href={language === "en" ? "/en/contact/" : `${baseUrl}/kontakt/`}>
+            <a href={language === "en" ? `${baseUrl}/contact/` : `${baseUrl}/kontakt/`}>
               <Button variant="luxury" size="sm" className="hidden md:inline-flex">
                 {t("nav.inquiry")}
               </Button>

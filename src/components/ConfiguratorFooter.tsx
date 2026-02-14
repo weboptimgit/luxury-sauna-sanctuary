@@ -5,7 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const ConfiguratorFooter = () => {
   const { language, setLanguage, t } = useLanguage();
   // Base URL changes based on language
-  const baseUrl = language === "en" ? "https://www.luxurelax.sk/en" : "https://www.luxurelax.sk";
+  const baseUrl = language === "en" ? "https://www.luxurelax.com" : "https://www.luxurelax.sk";
 
   return (
     <footer className="bg-secondary/30 pt-16 pb-8">

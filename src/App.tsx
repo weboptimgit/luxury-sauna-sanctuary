@@ -20,8 +20,8 @@ const App = () => (
             <Route path="/" element={<Navigate to="/konfigurator" replace />} />
             <Route path="/konfigurator" element={<Configurator />} />
             <Route path="/konfigurator/:modelSlug" element={<Configurator />} />
-            <Route path="/en/configurator" element={<Configurator />} />
-            <Route path="/en/configurator/:modelSlug" element={<Configurator />} />
+            <Route path="/configurator" element={<Configurator />} />
+            <Route path="/configurator/:modelSlug" element={<Configurator />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </LanguageProvider>
