@@ -23,16 +23,16 @@ jobs:
 
       - name: Build app
         run: npm run build
-        
-      - name: Deploy dist via SFTP
-        uses: appleboy/scp-action@v0.1.7
+
+      - name: Deploy dist via FTP/FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ${{ secrets.SFTP_HOST }}
+          server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASS }}
-          port: 22
-          source: "dist/*"
-          target: ${{ secrets.SFTP_PATH }}
-          strip_components: 1
-          overwrite: true
-          timeout: 120s
+          port: 21
+          protocol: ftps
+          local-dir: dist/
+          server-dir: ${{ secrets.SFTP_PATH }}
+          dangerous-clean-slate: false
+          timeout: 600000
