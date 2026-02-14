@@ -34,3 +34,5 @@ jobs:
           source: "dist/*"
           target: ${{ secrets.SFTP_PATH }}
           strip_components: 1
+          overwrite: true
+          timeout: 120s
