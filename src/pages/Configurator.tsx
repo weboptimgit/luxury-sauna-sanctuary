@@ -871,7 +871,7 @@ const Configurator = () => {
         description: t("success.addedToCartDesc"),
       });
 
-      window.location.href = language === "en" ? "/en/cart/" : "/kosik/";
+      window.location.href = language === "en" ? "/cart/" : "/kosik/";
     } catch (error) {
       console.error("Add to cart error:", error);
       toast({
