@@ -12,7 +12,7 @@ const ConfiguratorHeader = () => {
   const { language, setLanguage, t } = useLanguage();
 
   // Base URL changes based on language
-  const baseUrl = language === "en" ? "https://brelax.weboptim.eu/en" : "https://brelax.weboptim.eu";
+  const baseUrl = language === "en" ? "https://www.luxurelax.sk/en" : "https://www.luxurelax.sk";
 
   const categoryMap = {
     sk: {
