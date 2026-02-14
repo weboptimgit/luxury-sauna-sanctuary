@@ -1,7 +1,9 @@
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import brelaxLogo from "@/assets/LuxuRelax-LOGO-text-gradient.png";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ConfiguratorFooter = () => {
+  const { language, setLanguage, t } = useLanguage();
   // Base URL changes based on language
   const baseUrl = language === "en" ? "https://www.luxurelax.sk/en" : "https://www.luxurelax.sk";
 
