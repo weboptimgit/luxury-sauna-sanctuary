@@ -2,6 +2,9 @@ import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react"
 import brelaxLogo from "@/assets/LuxuRelax-LOGO-text-gradient.png";
 
 const ConfiguratorFooter = () => {
+  // Base URL changes based on language
+  const baseUrl = language === "en" ? "https://www.luxurelax.sk/en" : "https://www.luxurelax.sk";
+
   return (
     <footer className="bg-secondary/30 pt-16 pb-8">
       <div className="container mx-auto px-6">
