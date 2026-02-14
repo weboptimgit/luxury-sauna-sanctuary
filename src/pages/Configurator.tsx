@@ -332,9 +332,25 @@ const saunaGalleryImages: Record<string, string[]> = {
     luxminiGallery7,
   ],
   "round-2m": [round2mGallery1, round2mGallery2, round2mGallery3, round2mGallery4, round2mGallery5, round2mGallery6],
-  "harmony-insulated": [harmonyGallery1, harmonyGallery2, harmonyGallery3, harmonyGallery4, harmonyGallery5, harmonyGallery6, harmonyGallery7],
+  "harmony-insulated": [
+    harmonyGallery1,
+    harmonyGallery2,
+    harmonyGallery3,
+    harmonyGallery4,
+    harmonyGallery5,
+    harmonyGallery6,
+    harmonyGallery7,
+  ],
   // alias pre prípad, že v PHP je použitý opačný slug
-  "insulated-harmony": [harmonyGallery1, harmonyGallery2, harmonyGallery3, harmonyGallery4, harmonyGallery5, harmonyGallery6, harmonyGallery7],
+  "insulated-harmony": [
+    harmonyGallery1,
+    harmonyGallery2,
+    harmonyGallery3,
+    harmonyGallery4,
+    harmonyGallery5,
+    harmonyGallery6,
+    harmonyGallery7,
+  ],
 };
 
 // UI meta pre sauna typy – len lokálne obrázky, všetko ostatné z PHP API.
@@ -434,7 +450,6 @@ const Configurator = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-
   // --- API CONFIG ---
   const [apiConfig, setApiConfig] = useState<ApiConfig | null>(null);
   const [isConfigLoading, setIsConfigLoading] = useState(true);
@@ -475,16 +490,16 @@ const Configurator = () => {
   const [selectedSaunaType, setSelectedSaunaType] = useState<SaunaType | null>(null);
 
   const metaTitle = useMemo(() => {
-    const base = language === 'en' ? 'LuxuRelax | Configurator' : 'LuxuRelax | Konfigurátor';
+    const base = language === "en" ? "LuxuRelax | Configurator" : "LuxuRelax | Konfigurátor";
     if (selectedSaunaType) return `${selectedSaunaType.name} | ${base}`;
     return base;
   }, [language, selectedSaunaType]);
 
   useDocumentMeta(
     metaTitle,
-    language === 'en'
-      ? 'Configure your dream sauna or hot tub. Choose wood type, heater, lighting and accessories.'
-      : 'Nakonfigurujte si svoju vysnívanú saunu alebo kaďu. Vyberte si typ dreva, ohrievač, osvetlenie a príslušenstvo.'
+    language === "en"
+      ? "Configure your dream sauna or hot tub. Choose wood type, heater, lighting and accessories."
+      : "Nakonfigurujte si svoju vysnívanú saunu alebo kaďu. Vyberte si typ dreva, ohrievač, osvetlenie a príslušenstvo.",
   );
 
   // Sauna konfigurácia (ids musia sedieť s PHP configom)
@@ -639,13 +654,13 @@ const Configurator = () => {
   // --- Wood types s cenami špecifickými pre vybraný model ---
   const woodTypeOptionsForModel = useMemo(() => {
     if (!selectedSaunaType || !globalWoodTypes) return [];
-    
+
     return selectedSaunaType.availableWoodTypes.map((woodId) => {
       const globalData = globalWoodTypes[woodId];
       // Cena z model-specific woodTypePrices, alebo globálna fallback
       const modelPrice = currentApiSaunaType?.woodTypePrices?.[woodId];
       const price = modelPrice !== undefined ? modelPrice : (globalData?.price ?? 0);
-      
+
       return {
         id: woodId,
         name: globalData?.label ?? woodId,
@@ -678,7 +693,7 @@ const Configurator = () => {
         // Fallback true pre bežné vlastnosti (kým PHP nepošle explicitne).
         // hasWoodType fallback: true ak existujú woodTypes, inak false.
         // hasExteriorLed fallback: false (iba špecifické modely).
-        hasWoodType: st.hasWoodType ?? ((st.woodTypes?.length ?? 0) > 0),
+        hasWoodType: st.hasWoodType ?? (st.woodTypes?.length ?? 0) > 0,
         hasLed: st.hasLed ?? true,
         hasExteriorLed: st.hasExteriorLed ?? false,
         hasBluetooth: st.hasBluetooth ?? true,
@@ -699,21 +714,21 @@ const Configurator = () => {
       "frame-sauna": "frame-balance",
       "frame-balance": "frame-balance",
       "frame-inspire": "frame-balance",
-      "modulsauna": "modul-thermo",
+      modulsauna: "modul-thermo",
       "modul-thermo": "modul-thermo",
       "lux-mini": "lux-mini",
       "lux-sauna": "lux-mini",
       "2m-round": "round-2m",
       "round-2m": "round-2m",
       "barrel-sauna": "round-2m",
-      "harmony": "harmony-insulated",
+      harmony: "harmony-insulated",
       "harmony-insulated": "harmony-insulated",
       "insulated-harmony": "harmony-insulated",
     };
 
     const resolvedId = slugToId[modelSlug] || modelSlug;
-    const matchedType = saunaTypesUI.find(st => st.id === resolvedId);
-    
+    const matchedType = saunaTypesUI.find((st) => st.id === resolvedId);
+
     if (matchedType) {
       setProductCategory("sauna");
       setSelectedSaunaType(matchedType);
@@ -723,16 +738,19 @@ const Configurator = () => {
 
   // --- Helper to get base configurator path ---
   const getConfigBasePath = useCallback(() => {
-    return location.pathname.startsWith('/en/') ? '/en/configurator' : '/konfigurator';
+    return location.pathname.startsWith("/en/") ? "/en/configurator" : "/konfigurator";
   }, [location.pathname]);
 
   // --- Update URL when model is selected ---
-  const selectSaunaTypeWithUrl = useCallback((saunaType: SaunaType) => {
-    setSelectedSaunaType(saunaType);
-    setProductCategory("sauna");
-    const basePath = getConfigBasePath();
-    navigate(`${basePath}/${saunaType.id}`, { replace: true });
-  }, [navigate, getConfigBasePath]);
+  const selectSaunaTypeWithUrl = useCallback(
+    (saunaType: SaunaType) => {
+      setSelectedSaunaType(saunaType);
+      setProductCategory("sauna");
+      const basePath = getConfigBasePath();
+      navigate(`${basePath}/${saunaType.id}`, { replace: true });
+    },
+    [navigate, getConfigBasePath],
+  );
 
   const minSaunaBasePrice = useMemo(() => {
     const prices = apiConfig?.saunaTypes?.map((s) => s.basePrice) ?? [];
@@ -746,7 +764,7 @@ const Configurator = () => {
     if (productCategory === "sauna" && selectedSaunaType) {
       const basePrice = selectedSaunaType.basePrice;
       const heater = apiConfig.sauna.heaterTypes.find((h) => h.id === saunaConfig.heaterType)?.price ?? 0;
-      
+
       // Cena modelu ohrievača
       let heaterModelPrice = 0;
       if (saunaConfig.heaterType === "electric" && saunaConfig.heaterModel !== "none") {
@@ -754,15 +772,15 @@ const Configurator = () => {
       } else if (saunaConfig.heaterType === "wood" && saunaConfig.heaterModel !== "none") {
         heaterModelPrice = woodHeaterModels.find((m) => m.id === saunaConfig.heaterModel)?.price ?? 0;
       }
-      
+
       const ledSum = (saunaConfig.led ?? []).reduce((sum, ledId) => {
         const p = apiConfig.sauna.ledOptions.find((l) => l.id === ledId)?.price ?? 0;
         return sum + p;
       }, 0);
-      
+
       // Vonkajšie LED (cena z API)
       const extLedPrice = saunaConfig.exteriorLed ? exteriorLedPrice : 0;
-      
+
       const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
       const color = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
@@ -783,14 +801,24 @@ const Configurator = () => {
     }
 
     return 0;
-  }, [productCategory, selectedSaunaType, apiConfig, saunaConfig, hotTubConfig, electricHeaterModels, woodHeaterModels, woodTypeOptionsForModel, exteriorLedPrice]);
+  }, [
+    productCategory,
+    selectedSaunaType,
+    apiConfig,
+    saunaConfig,
+    hotTubConfig,
+    electricHeaterModels,
+    woodHeaterModels,
+    woodTypeOptionsForModel,
+    exteriorLedPrice,
+  ]);
 
   const originalPrice = useMemo(() => Math.round(totalPrice * 1.15), [totalPrice]);
   const discount = originalPrice > 0 ? Math.round(((originalPrice - totalPrice) / originalPrice) * 100) : 0;
 
   // Validácia - či je vybraný model ohrievača keď je vybraný typ
   const isHeaterModelRequired = saunaConfig.heaterType !== "none" && saunaConfig.heaterModel === "none";
-  
+
   const addToCart = async () => {
     if (!productCategory || !apiConfig) return;
 
@@ -798,9 +826,10 @@ const Configurator = () => {
     if (productCategory === "sauna" && isHeaterModelRequired) {
       toast({
         title: t("config.selectHeaterModel"),
-        description: language === "en" 
-          ? "You must select a specific heater model before adding to cart." 
-          : "Pred pridaním do košíka musíte vybrať konkrétny model ohrievača.",
+        description:
+          language === "en"
+            ? "You must select a specific heater model before adding to cart."
+            : "Pred pridaním do košíka musíte vybrať konkrétny model ohrievača.",
         variant: "destructive",
       });
       return;
@@ -810,9 +839,7 @@ const Configurator = () => {
 
     try {
       // Získaj aktuálny obrázok pre košík
-      const cartImage = productCategory === "sauna" 
-        ? currentSaunaImage 
-        : hotTub;
+      const cartImage = productCategory === "sauna" ? currentSaunaImage : hotTub;
 
       const options =
         productCategory === "sauna"
@@ -989,7 +1016,7 @@ const Configurator = () => {
     return (
       <div className="min-h-screen bg-background">
         <ConfiguratorHeader />
-        <main className="pt-26 pb-16">
+        <main className="pt-26 pb-18">
           <div className="container mx-auto px-4">
             <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
               <a href="/" className="hover:text-primary transition-colors">
@@ -1086,7 +1113,7 @@ const Configurator = () => {
     return (
       <div className="min-h-screen bg-background">
         <ConfiguratorHeader />
-        <main className="pt-26 pb-16">
+        <main className="pt-26 pb-18">
           <div className="container mx-auto px-4">
             {/* Tlačidlo späť */}
             <button
@@ -1189,7 +1216,9 @@ const Configurator = () => {
                       {/* Cena a CTA */}
                       <div className="flex items-center justify-between pt-4 border-t border-white/10">
                         <div>
-                          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">{t("config.from")}</p>
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                            {t("config.from")}
+                          </p>
                           <span className="text-2xl font-bold text-gradient-amber">
                             {sauna.basePrice.toLocaleString()} €
                           </span>
@@ -1214,7 +1243,7 @@ const Configurator = () => {
   return (
     <div className="min-h-screen bg-background">
       <ConfiguratorHeader />
-      <main className="pt-26 pb-16">
+      <main className="pt-26 pb-18">
         <div className="container mx-auto px-4">
           {/* Tlačidlo späť */}
           <button
@@ -1322,9 +1351,7 @@ const Configurator = () => {
                   {isAddingToCart ? t("config.addingToCart") : t("config.addToCart")}
                 </Button>
 
-                <p className="text-xs text-muted-foreground text-center mt-3">
-                  {t("config.priceNote")}
-                </p>
+                <p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
               </div>
             </div>
 
@@ -1338,9 +1365,7 @@ const Configurator = () => {
                 )}
               >
                 <div className="flex flex-col items-center gap-1 text-muted-foreground animate-bounce">
-                  <span className="text-xs">
-                    {t("config.scrollMore")}
-                  </span>
+                  <span className="text-xs">{t("config.scrollMore")}</span>
                   <ChevronDown className="w-4 h-4" />
                 </div>
               </div>
@@ -1372,34 +1397,37 @@ const Configurator = () => {
                           </h3>
                           <div className="grid grid-cols-2 gap-3">
                             {woodTypeOptionsForModel.map((option) => (
-                                <button
-                                  key={option.id}
-                                  onClick={() => setSaunaConfig((prev) => ({ ...prev, woodType: option.id }))}
-                                  className={cn(
-                                    "flex flex-col items-center p-4 rounded-xl border-2 transition-all",
-                                    saunaConfig.woodType === option.id
-                                      ? "border-primary bg-primary/5"
-                                      : "border-border/50 hover:border-primary/50 bg-card/50",
-                                  )}
-                                >
-                                  <div className="w-16 h-16 rounded-lg mb-2 overflow-hidden">
-                                    <img src={option.image} alt={option.name} className="w-full h-full object-cover" />
-                                  </div>
-                                  <span className="font-medium text-center text-sm">
-                                    {option.id === "spruce" ? t("config.woodType.spruce") : t("config.woodType.thermo")}
-                                  </span>
-                                  {option.price > 0 ? (
-                                    <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
-                                  ) : (
-                                    <span className="text-xs text-muted-foreground">{t("included")}</span>
-                                  )}
-                                </button>
-                              ))}
+                              <button
+                                key={option.id}
+                                onClick={() => setSaunaConfig((prev) => ({ ...prev, woodType: option.id }))}
+                                className={cn(
+                                  "flex flex-col items-center p-4 rounded-xl border-2 transition-all",
+                                  saunaConfig.woodType === option.id
+                                    ? "border-primary bg-primary/5"
+                                    : "border-border/50 hover:border-primary/50 bg-card/50",
+                                )}
+                              >
+                                <div className="w-16 h-16 rounded-lg mb-2 overflow-hidden">
+                                  <img src={option.image} alt={option.name} className="w-full h-full object-cover" />
+                                </div>
+                                <span className="font-medium text-center text-sm">
+                                  {option.id === "spruce" ? t("config.woodType.spruce") : t("config.woodType.thermo")}
+                                </span>
+                                {option.price > 0 ? (
+                                  <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
+                                ) : (
+                                  <span className="text-xs text-muted-foreground">{t("included")}</span>
+                                )}
+                              </button>
+                            ))}
                           </div>
                           {selectedSaunaType.availableWoodTypes.length === 1 && (
                             <p className="text-xs text-muted-foreground mt-2">
-                              {t("config.onlyWoodType").replace("{woodType}", 
-                                selectedSaunaType.availableWoodTypes[0] === "thermo" ? t("config.woodType.thermo") : t("config.woodType.spruce")
+                              {t("config.onlyWoodType").replace(
+                                "{woodType}",
+                                selectedSaunaType.availableWoodTypes[0] === "thermo"
+                                  ? t("config.woodType.thermo")
+                                  : t("config.woodType.spruce"),
                               )}
                             </p>
                           )}
@@ -1418,16 +1446,18 @@ const Configurator = () => {
                                 key={option.id}
                                 option={option}
                                 isSelected={saunaConfig.heaterType === option.id}
-                                onClick={() => setSaunaConfig((prev) => ({ 
-                                  ...prev, 
-                                  heaterType: option.id,
-                                  heaterModel: "none" // Reset model pri zmene typu
-                                }))}
+                                onClick={() =>
+                                  setSaunaConfig((prev) => ({
+                                    ...prev,
+                                    heaterType: option.id,
+                                    heaterModel: "none", // Reset model pri zmene typu
+                                  }))
+                                }
                                 showImage={true}
                               />
                             ))}
                           </div>
-                          
+
                           {/* Výber konkrétneho modelu ohrievača - POVINNÉ */}
                           {saunaConfig.heaterType === "electric" && (
                             <div className="mt-4 p-4 rounded-xl bg-card/50 border border-primary/30">
@@ -1435,9 +1465,7 @@ const Configurator = () => {
                                 {t("config.selectHeaterModel")} <span className="text-primary">*</span>
                               </h4>
                               {saunaConfig.heaterModel === "none" && (
-                                <p className="text-xs text-amber-500 mb-3">
-                                  {t("config.heaterModelRequired")}
-                                </p>
+                                <p className="text-xs text-amber-500 mb-3">{t("config.heaterModelRequired")}</p>
                               )}
                               <div className="grid grid-cols-1 gap-2">
                                 {electricHeaterModels.map((model) => (
@@ -1448,7 +1476,7 @@ const Configurator = () => {
                                       "flex items-center justify-between p-3 rounded-lg border-2 transition-all text-left",
                                       saunaConfig.heaterModel === model.id
                                         ? "border-primary bg-primary/5"
-                                        : "border-border/50 hover:border-primary/50 bg-card/30"
+                                        : "border-border/50 hover:border-primary/50 bg-card/30",
                                     )}
                                   >
                                     <div className="flex items-center gap-3">
@@ -1467,16 +1495,14 @@ const Configurator = () => {
                               </div>
                             </div>
                           )}
-                          
+
                           {saunaConfig.heaterType === "wood" && (
                             <div className="mt-4 p-4 rounded-xl bg-card/50 border border-primary/30">
                               <h4 className="text-sm font-medium text-foreground mb-3">
                                 {t("config.selectHeaterModel")} <span className="text-primary">*</span>
                               </h4>
                               {saunaConfig.heaterModel === "none" && (
-                                <p className="text-xs text-amber-500 mb-3">
-                                  {t("config.heaterModelRequired")}
-                                </p>
+                                <p className="text-xs text-amber-500 mb-3">{t("config.heaterModelRequired")}</p>
                               )}
                               <div className="grid grid-cols-1 gap-2">
                                 {woodHeaterModels.map((model) => (
@@ -1487,7 +1513,7 @@ const Configurator = () => {
                                       "flex items-center justify-between p-3 rounded-lg border-2 transition-all text-left",
                                       saunaConfig.heaterModel === model.id
                                         ? "border-primary bg-primary/5"
-                                        : "border-border/50 hover:border-primary/50 bg-card/30"
+                                        : "border-border/50 hover:border-primary/50 bg-card/30",
                                     )}
                                   >
                                     <div className="flex items-center gap-3">
@@ -1542,9 +1568,7 @@ const Configurator = () => {
                       {/* Vonkajšie LED osvetlenie - iba pre ModulSaunu */}
                       {selectedSaunaType.hasExteriorLed && (
                         <div>
-                          <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {t("config.exteriorLed")}
-                          </h3>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">{t("config.exteriorLed")}</h3>
                           <div className="grid grid-cols-2 gap-3">
                             <button
                               onClick={() => setSaunaConfig((prev) => ({ ...prev, exteriorLed: false }))}
@@ -1552,15 +1576,13 @@ const Configurator = () => {
                                 "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                                 !saunaConfig.exteriorLed
                                   ? "border-primary bg-primary/5"
-                                  : "border-border/50 hover:border-primary/50 bg-card/50"
+                                  : "border-border/50 hover:border-primary/50 bg-card/50",
                               )}
                             >
                               <div className="w-16 h-16 flex items-center justify-center rounded-lg bg-muted/50 mb-2">
                                 <X className="w-8 h-8 text-muted-foreground" />
                               </div>
-                              <span className="font-medium text-center text-sm">
-                                {t("config.without")}
-                              </span>
+                              <span className="font-medium text-center text-sm">{t("config.without")}</span>
                               <span className="text-xs text-muted-foreground">{t("included")}</span>
                             </button>
                             <button
@@ -1569,15 +1591,13 @@ const Configurator = () => {
                                 "flex flex-col items-center p-3 rounded-xl border-2 transition-all",
                                 saunaConfig.exteriorLed
                                   ? "border-primary bg-primary/5"
-                                  : "border-border/50 hover:border-primary/50 bg-card/50"
+                                  : "border-border/50 hover:border-primary/50 bg-card/50",
                               )}
                             >
                               <div className="w-16 h-16 flex items-center justify-center rounded-lg bg-primary/10 mb-2">
                                 <Lightbulb className="w-8 h-8 text-primary" />
                               </div>
-                              <span className="font-medium text-center text-sm">
-                                {t("config.exteriorLedShort")}
-                              </span>
+                              <span className="font-medium text-center text-sm">{t("config.exteriorLedShort")}</span>
                               <span className="text-xs text-primary">+{exteriorLedPrice} €</span>
                             </button>
                           </div>
@@ -1610,9 +1630,7 @@ const Configurator = () => {
                           <h3 className="text-lg font-semibold text-foreground mb-3">
                             {t("config.accessories")} <span className="text-primary">*</span>
                           </h3>
-                          <p className="text-xs text-muted-foreground mb-2 italic">
-                            {t("config.accessoryKitHint")}
-                          </p>
+                          <p className="text-xs text-muted-foreground mb-2 italic">{t("config.accessoryKitHint")}</p>
                           <div className="grid grid-cols-2 gap-3">
                             {saunaAccessoryKitOptions.map((option) => (
                               <OptionCard
@@ -1633,9 +1651,7 @@ const Configurator = () => {
                           <h3 className="text-lg font-semibold text-foreground mb-3">
                             {t("config.color")} <span className="text-primary">*</span>
                           </h3>
-                          <p className="text-xs text-muted-foreground mb-3 italic">
-                            {t("config.colorHint")}
-                          </p>
+                          <p className="text-xs text-muted-foreground mb-3 italic">{t("config.colorHint")}</p>
                           <div className="grid grid-cols-4 gap-3">
                             {saunaColorOptionsTyped.map((option) => (
                               <button
@@ -1797,9 +1813,7 @@ const Configurator = () => {
                     {isAddingToCart ? t("config.addingToCart") : t("config.addToCart")}
                   </Button>
 
-                  <p className="text-xs text-muted-foreground text-center mt-3">
-                    {t("config.priceNote")}
-                  </p>
+                  <p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
                 </div>
               </ScrollArea>
             </div>
