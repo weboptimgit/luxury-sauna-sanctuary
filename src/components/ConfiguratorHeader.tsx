@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import flagUk from "@/assets/flag-uk.png";
 import flagSk from "@/assets/flag-sk.png";
-import brelaxLogo from "@/assets/b-relax-logo.png";
+import brelaxLogo from "@/assets/LuxuRelax-LOGO-text-gradient.png";
 
 const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
