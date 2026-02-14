@@ -20,6 +20,8 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.configurator": "Konfigurátor",
     "nav.contact": "Kontakt",
     "nav.inquiry": "Dopyt",
+    "nav.blog": "Blog",
+    "nav.about": "O nás",
 
     // Configurator - Category selection
     "config.breadcrumb.home": "Domov",
@@ -127,6 +129,8 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.configurator": "Configurator",
     "nav.contact": "Contact",
     "nav.inquiry": "Inquiry",
+    "nav.blog": "Blog",
+    "nav.about": "About Us",
 
     // Configurator - Category selection
     "config.breadcrumb.home": "Home",
