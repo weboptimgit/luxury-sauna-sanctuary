@@ -4,25 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import Index from "./pages/Index";
-import Shop from "./pages/Shop";
-import Category from "./pages/Category";
-import ProductDetail from "./pages/ProductDetail";
-import Contact from "./pages/Contact";
-import FAQ from "./pages/FAQ";
-import About from "./pages/About";
-import Wellness from "./pages/Wellness";
-import CustomSaunasPage from "./pages/CustomSaunas";
 import Configurator from "./pages/Configurator";
-import DesignSystem from "./pages/DesignSystem";
-import Cart from "./pages/Cart";
-import Checkout from "./pages/Checkout";
-import OrderConfirmation from "./pages/OrderConfirmation";
-import Glossary from "./pages/Glossary";
-import GlossaryTerm from "./pages/GlossaryTerm";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -33,28 +17,11 @@ const App = () => (
       <BrowserRouter>
         <LanguageProvider>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/category/:slug" element={<Category />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/wellness" element={<Wellness />} />
-            <Route path="/sauny-na-mieru" element={<CustomSaunasPage />} />
+            <Route path="/" element={<Navigate to="/konfigurator" replace />} />
             <Route path="/konfigurator" element={<Configurator />} />
             <Route path="/konfigurator/:modelSlug" element={<Configurator />} />
             <Route path="/en/configurator" element={<Configurator />} />
             <Route path="/en/configurator/:modelSlug" element={<Configurator />} />
-            <Route path="/design-system" element={<DesignSystem />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/order-confirmation" element={<OrderConfirmation />} />
-            <Route path="/slovnik" element={<Glossary />} />
-            <Route path="/slovnik/:id" element={<GlossaryTerm />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:id" element={<BlogPost />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </LanguageProvider>
