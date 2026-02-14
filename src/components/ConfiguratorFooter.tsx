@@ -8,7 +8,7 @@ const ConfiguratorFooter = () => {
           {/* Brand */}
           <div>
             <a href="https://brelax.weboptim.eu/" className="text-2xl font-display font-semibold tracking-wider text-primary">
-              LUXE<span className="text-foreground">SAUNA</span>
+              LUXU<span className="text-foreground">RELAX</span>
             </a>
             <p className="text-muted-foreground text-sm mt-4 leading-relaxed">
               Premium Finnish saunas crafted with passion and delivered with excellence. 
@@ -82,7 +82,7 @@ const ConfiguratorFooter = () => {
         <div className="pt-8 border-t border-border/30">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-muted-foreground text-sm">
-              © 2024 LuxeSauna. All rights reserved.
+              © 2024 LuxuRelax. All rights reserved.
             </p>
             <div className="flex gap-6">
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">

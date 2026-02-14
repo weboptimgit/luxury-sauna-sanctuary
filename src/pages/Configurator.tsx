@@ -475,7 +475,7 @@ const Configurator = () => {
   const [selectedSaunaType, setSelectedSaunaType] = useState<SaunaType | null>(null);
 
   const metaTitle = useMemo(() => {
-    const base = language === 'en' ? 'B-Relax | Configurator' : 'B-Relax | Konfigurátor';
+    const base = language === 'en' ? 'LuxuRelax | Configurator' : 'LuxuRelax | Konfigurátor';
     if (selectedSaunaType) return `${selectedSaunaType.name} | ${base}`;
     return base;
   }, [language, selectedSaunaType]);
