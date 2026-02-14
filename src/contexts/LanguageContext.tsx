@@ -243,9 +243,9 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     return path.replace(/\/+$/, "");
   };
 
-  // Detect language from URL path
+  // Detect language from URL path - /configurator = EN, /konfigurator = SK
   const getLanguageFromPath = (): Language => {
-    return location.pathname.startsWith("/en") ? "en" : "sk";
+    return location.pathname.startsWith("/configurator") ? "en" : "sk";
   };
 
   const [language, setLanguageState] = useState<Language>(getLanguageFromPath);
@@ -260,28 +260,24 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     let newPath: string;
 
     if (lang === "en") {
-      // Switch to English
-      if (currentPath.startsWith("/en")) {
+      // Switch to English: /konfigurator -> /configurator
+      if (currentPath.startsWith("/configurator")) {
         newPath = currentPath; // Already in English
       } else if (currentPath.startsWith("/konfigurator")) {
-        // Handle /konfigurator and /konfigurator/:modelSlug
         const subPath = currentPath.replace("/konfigurator", "");
-        newPath = "/en/configurator" + subPath;
+        newPath = "/configurator" + subPath;
       } else {
-        newPath = currentPath === "/" ? "/en" : `/en${currentPath}`;
+        newPath = "/configurator";
       }
     } else {
-      // Switch to Slovak
-      if (currentPath.startsWith("/en/configurator")) {
-        // Handle /en/configurator and /en/configurator/:modelSlug
-        const subPath = currentPath.replace("/en/configurator", "");
+      // Switch to Slovak: /configurator -> /konfigurator
+      if (currentPath.startsWith("/konfigurator")) {
+        newPath = currentPath; // Already in Slovak
+      } else if (currentPath.startsWith("/configurator")) {
+        const subPath = currentPath.replace("/configurator", "");
         newPath = "/konfigurator" + subPath;
-      } else if (currentPath.startsWith("/en/")) {
-        newPath = currentPath.replace("/en", "");
-      } else if (currentPath === "/en") {
-        newPath = "/";
       } else {
-        newPath = currentPath;
+        newPath = "/konfigurator";
       }
     }
 

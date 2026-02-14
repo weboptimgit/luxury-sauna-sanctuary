@@ -738,7 +738,7 @@ const Configurator = () => {
 
   // --- Helper to get base configurator path ---
   const getConfigBasePath = useCallback(() => {
-    return location.pathname.startsWith("/en/") ? "/en/configurator" : "/konfigurator";
+    return location.pathname.startsWith("/configurator") ? "/configurator" : "/konfigurator";
   }, [location.pathname]);
 
   // --- Update URL when model is selected ---
