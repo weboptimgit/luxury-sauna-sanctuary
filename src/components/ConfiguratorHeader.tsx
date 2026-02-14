@@ -34,7 +34,9 @@ const ConfiguratorHeader = () => {
     { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
     { labelKey: "nav.hotTubs", href: `${baseUrl}${prefix}/${tubs}/`, external: true },
     { labelKey: "nav.configurator", href: language === "en" ? "/en/configurator" : "/konfigurator", external: false },
-    { labelKey: "nav.contact", href: `${baseUrl}/kontakt/`, external: true },
+    { labelKey: "nav.blog", href: language === "en" ? "/en/blog/" : `${baseUrl}/blog/`, external: true },
+    { labelKey: "nav.about", href: language === "en" ? "/en/about-us/" : `${baseUrl}/o-nas/`, external: true },
+    { labelKey: "nav.contact", href: language === "en" ? "/en/contact/" : `${baseUrl}/kontakt/`, external: true },
   ];
 
   const toggleLanguage = () => {
