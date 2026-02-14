@@ -996,7 +996,7 @@ const Configurator = () => {
     return (
       <div className="min-h-screen bg-background">
         <ConfiguratorHeader />
-        <main className="pt-30 pb-16">
+        <main className="pt-[8.5rem] pb-16">
           <div className="container mx-auto px-4">
             <div className="max-w-xl mx-auto text-center">
               <h1 className="font-display text-3xl font-bold mb-2">{t("nav.configurator")}</h1>
@@ -1016,7 +1016,7 @@ const Configurator = () => {
     return (
       <div className="min-h-screen bg-background">
         <ConfiguratorHeader />
-        <main className="pt-30 pb-16">
+        <main className="pt-[8.5rem] pb-16">
           <div className="container mx-auto px-4">
             <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
               <a href="/" className="hover:text-primary transition-colors">
@@ -1113,7 +1113,7 @@ const Configurator = () => {
     return (
       <div className="min-h-screen bg-background">
         <ConfiguratorHeader />
-        <main className="pt-30 pb-16">
+        <main className="pt-[8.5rem] pb-16">
           <div className="container mx-auto px-4">
             {/* Tlačidlo späť */}
             <button
@@ -1243,7 +1243,7 @@ const Configurator = () => {
   return (
     <div className="min-h-screen bg-background">
       <ConfiguratorHeader />
-      <main className="pt-30 pb-16">
+      <main className="pt-[8.5rem] pb-16">
         <div className="container mx-auto px-4">
           {/* Tlačidlo späť */}
           <button
