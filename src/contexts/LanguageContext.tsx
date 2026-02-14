@@ -86,13 +86,36 @@ const translations: Record<Language, Record<string, string>> = {
     "color.18-tmavy-orech": "Tmavý orech",
     "color.20-tmavy-mahagon": "Tmavý mahagón",
 
+    // Option labels
+    "config.noLed": "Bez LED",
+    "config.noBluetooth": "Bez Bluetooth",
+    "config.noHeater": "Bez ohrievača",
+    "config.noColor": "Bez farby",
+    "config.noAccessoryKit": "Bez sady",
+    "config.onlyWoodType": "Pre tento model je dostupný iba {woodType}.",
+    "config.accessoryKitHint": "Saunový set obsahuje základné príslušenstvo pre pohodlné saunovanie.",
+    "config.colorHint": "Farba exteriéru je voliteľná. Bez farby zostane prirodzený vzhľad dreva.",
+    "config.colorNotice": "Skutočný odtieň farby sa môže mierne líšiť od zobrazeného na monitore.",
+    "config.selectHeaterModel": "Vyberte model ohrievača",
+    "config.heaterModelRequired": "Pre pokračovanie musíte vybrať konkrétny model ohrievača.",
+    "config.exteriorLed": "Vonkajšie LED osvetlenie",
+    "config.exteriorLedShort": "Vonkajšie LED",
+    "config.without": "Bez",
+    "config.scrollMore": "Posúňte pre ďalšie možnosti",
+    "config.priceNote": "Cena je orientačná vrátane DPH. Presná kalkulácia bude v objednávke.",
+    "config.hottub.configTitle": "Konfigurácia kade",
+    "config.lightboxAlt": "Detail produktu",
+
     // Misc
     included: "V cene",
     selected: "Vybrané",
     notSelected: "Nie je vybrané",
+    "error.generic": "Chyba",
     "error.loadConfig": "Konfiguráciu sa nepodarilo načítať. Skús refresh alebo skontroluj endpoint",
+    "error.loadConfigShort": "Nepodarilo sa načítať konfiguráciu.",
     "error.addToCart": "Nepodarilo sa pridať do košíka. Skúste to znova.",
     "success.addedToCart": "Produkt bol pridaný do košíka",
+    "success.addedToCartDesc": "Pokračujte v nákupe alebo prejdite do košíka.",
   },
   en: {
     // Header
@@ -170,13 +193,36 @@ const translations: Record<Language, Record<string, string>> = {
     "color.18-tmavy-orech": "Dark Walnut",
     "color.20-tmavy-mahagon": "Dark Mahogany",
 
+    // Option labels
+    "config.noLed": "No LED",
+    "config.noBluetooth": "No Bluetooth",
+    "config.noHeater": "No Heater",
+    "config.noColor": "No Color",
+    "config.noAccessoryKit": "No Kit",
+    "config.onlyWoodType": "Only {woodType} is available for this model.",
+    "config.accessoryKitHint": "The sauna kit includes essential accessories for comfortable sauna use.",
+    "config.colorHint": "Exterior color is optional. Without color, the natural wood appearance is preserved.",
+    "config.colorNotice": "The actual shade may slightly differ from the one displayed on the screen.",
+    "config.selectHeaterModel": "Select heater model",
+    "config.heaterModelRequired": "You must select a specific heater model to continue.",
+    "config.exteriorLed": "Exterior LED Lighting",
+    "config.exteriorLedShort": "Exterior LED",
+    "config.without": "Without",
+    "config.scrollMore": "Scroll for more options",
+    "config.priceNote": "Price is indicative incl. VAT. Exact calculation will be in the order.",
+    "config.hottub.configTitle": "Hot Tub Configuration",
+    "config.lightboxAlt": "Product detail",
+
     // Misc
     included: "Included",
     selected: "Selected",
     notSelected: "Not selected",
+    "error.generic": "Error",
     "error.loadConfig": "Failed to load configuration. Try refreshing or check the endpoint",
+    "error.loadConfigShort": "Failed to load configuration.",
     "error.addToCart": "Failed to add to cart. Please try again.",
     "success.addedToCart": "Product added to cart",
+    "success.addedToCartDesc": "Continue shopping or go to cart.",
   },
 };
 
