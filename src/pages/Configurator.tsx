@@ -2243,6 +2243,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.hydroMassage === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, hydroMassage: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
