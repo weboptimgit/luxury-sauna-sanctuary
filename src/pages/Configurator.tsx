@@ -1066,12 +1066,14 @@ const Configurator = () => {
     onClick,
     showImage = false,
     size = "normal",
+    description,
   }: {
     option: ConfigOption;
     isSelected: boolean;
     onClick: () => void;
     showImage?: boolean;
     size?: "normal" | "small";
+    description?: string;
   }) => (
     <button
       onClick={onClick}
@@ -1097,6 +1099,9 @@ const Configurator = () => {
       )}
 
       <span className="font-medium text-center text-xs md:text-sm leading-tight">{option.name}</span>
+      {description && (
+        <span className="text-[9px] md:text-[10px] text-muted-foreground text-center leading-tight mt-0.5">{description}</span>
+      )}
 
       {option.price > 0 ? (
         <div className="flex items-center gap-1">
@@ -2021,6 +2026,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.heater === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, heater: option.id }))}
+                                description={option.id === "external-aisi316" ? (language === "en" ? "with chimney, cap and protection, suitable for water with chemicals" : "s komínom, čiapkou a ochranou, vhodné pre vodu s chémiou") : undefined}
                               />
                             ))}
                           </div>
