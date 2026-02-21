@@ -48,6 +48,12 @@ import wpcPlastImg from "@/assets/wpc-plast.jpg";
 import blueMarbleImg from "@/assets/blue-marble.png";
 import grayAcrylicImg from "@/assets/gray-acrylic.png";
 import whiteAcrylicImg from "@/assets/white-acrylic.png";
+import underwaterLed1pc from "@/assets/underwater-led-1pc.jpg";
+import underwaterLed3pc from "@/assets/underwater-led-3pc.jpg";
+import coverBlackImg from "@/assets/cover-black.jpg";
+import coverGreyImg from "@/assets/cover-grey.jpg";
+import exteriorLedHottubImg from "@/assets/exterior-led-hottub.jpg";
+import thermoCoverImg from "@/assets/thermo-cover.png";
 import blackMarbleImg from "@/assets/black-marble.png";
 // Farebné varianty Frame sauny - všetky farby podľa katalógu
 import frameSaunaNatural from "@/assets/frame-sauna-natural.jpg";
@@ -711,7 +717,13 @@ const Configurator = () => {
     "modra-imitacia-mramoru": blueMarbleImg,
   };
 
-  const hotTubCoverColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverColorOptions);
+  const hotTubCoverColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverColorOptions, {
+    "black": coverBlackImg,
+    "cierna": coverBlackImg,
+    "grey": coverGreyImg,
+    "seda": coverGreyImg,
+    "siva": coverGreyImg,
+  });
   const hotTubAirBubblesOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.airBubblesOptions);
   const hotTubDrainRelayOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.drainRelayOptions);
   const hotTubSandFilterOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.sandFilterOptions);
@@ -830,10 +842,22 @@ const Configurator = () => {
         "electric-3kw": electricHeater3kw,
         "electric-6kw": electricHeater6kw,
       }),
-      underwaterLedOptions: toUIOptions(ht.underwaterLedOptions),
-      exteriorLedOptions: toUIOptions(ht.exteriorLedOptions),
+      underwaterLedOptions: toUIOptions(ht.underwaterLedOptions, {
+        "1pc": underwaterLed1pc,
+        "1ks": underwaterLed1pc,
+        "3pc": underwaterLed3pc,
+        "3ks": underwaterLed3pc,
+      }),
+      exteriorLedOptions: toUIOptions(ht.exteriorLedOptions, {
+        "led-around": exteriorLedHottubImg,
+        "led-okolo": exteriorLedHottubImg,
+      }),
       hydroMassageOptions: toUIOptions(ht.hydroMassageOptions),
-      coverOptions: toUIOptions(ht.coverOptions),
+      coverOptions: toUIOptions(ht.coverOptions, {
+        "200cm": thermoCoverImg,
+        "230cm": thermoCoverImg,
+        "standard": thermoCoverImg,
+      }),
     }));
   }, [apiConfig]);
 
@@ -2119,6 +2143,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.cover === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, cover: option.id, ...(option.id === "none" ? { coverColor: "none" } : {}) }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
@@ -2138,6 +2163,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.coverColor === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, coverColor: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
@@ -2157,6 +2183,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.underwaterLed === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, underwaterLed: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
@@ -2176,6 +2203,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.exteriorLed === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, exteriorLed: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
