@@ -869,10 +869,9 @@ const Configurator = () => {
         "3pc": underwaterLed3pc,
         "3ks": underwaterLed3pc,
       }),
-      exteriorLedOptions: toUIOptions(ht.exteriorLedOptions, {
-        "led-around": exteriorLedHottubImg,
-        "led-okolo": exteriorLedHottubImg,
-      }),
+      exteriorLedOptions: toUIOptions(ht.exteriorLedOptions, Object.fromEntries(
+        (ht.exteriorLedOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, exteriorLedHottubImg])
+      )),
       hydroMassageOptions: toUIOptions(ht.hydroMassageOptions, Object.fromEntries(
         (ht.hydroMassageOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, hydroMassageImg])
       )),
