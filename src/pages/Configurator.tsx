@@ -376,6 +376,20 @@ type ConfigOption = {
   description?: string;
 };
 
+type HotTubType = {
+  id: string;
+  name: string;
+  dimensions: string;
+  basePrice: number;
+  image: string;
+  hasSize: boolean;
+  hasJets: boolean;
+  hasLed: boolean;
+  hasCover: boolean;
+  hasColor: boolean;
+  sizeOptions: ConfigOption[];
+};
+
 type ApiOption = {
   id: string;
   label: string;
@@ -397,6 +411,19 @@ type ApiSaunaType = {
   hasBluetooth: boolean;
   hasAccessoryKit: boolean;
   hasHeater: boolean;
+  hasColor: boolean;
+};
+
+type ApiHotTubType = {
+  id: string;
+  label: string;
+  basePrice: number;
+  dimensions: string;
+  sizeOptions?: ApiOption[];
+  hasSize: boolean;
+  hasJets: boolean;
+  hasLed: boolean;
+  hasCover: boolean;
   hasColor: boolean;
 };
 
@@ -422,8 +449,9 @@ type ApiConfig = {
     colorOptions: ApiOption[];
   };
   hottub: {
-    basePrice: number;
-    sizeOptions: ApiOption[];
+    basePrice?: number;
+    hottubTypes?: ApiHotTubType[];
+    sizeOptions?: ApiOption[];
     jetsOptions: ApiOption[];
     ledOptions: ApiOption[];
     coverOptions: ApiOption[];
@@ -488,12 +516,14 @@ const Configurator = () => {
 
   // Výber typu sauny
   const [selectedSaunaType, setSelectedSaunaType] = useState<SaunaType | null>(null);
+  const [selectedHotTubType, setSelectedHotTubType] = useState<HotTubType | null>(null);
 
   const metaTitle = useMemo(() => {
     const base = language === "en" ? "LuxuRelax | Configurator" : "LuxuRelax | Konfigurátor";
     if (selectedSaunaType) return `${selectedSaunaType.name} | ${base}`;
+    if (selectedHotTubType) return `${selectedHotTubType.name} | ${base}`;
     return base;
-  }, [language, selectedSaunaType]);
+  }, [language, selectedSaunaType, selectedHotTubType]);
 
   useDocumentMeta(
     metaTitle,
@@ -505,9 +535,9 @@ const Configurator = () => {
   // Sauna konfigurácia (ids musia sedieť s PHP configom)
   const [saunaConfig, setSaunaConfig] = useState({
     heaterType: "none",
-    heaterModel: "none" as HeaterModelType, // Konkrétny model ohrievača
+    heaterModel: "none" as HeaterModelType,
     led: [] as string[],
-    exteriorLed: false, // Vonkajšie LED - iba pre ModulSaunu
+    exteriorLed: false,
     bluetooth: "none",
     accessoryKit: "none",
     color: "none" as SaunaColorType,
@@ -516,7 +546,7 @@ const Configurator = () => {
 
   // Kaďa konfigurácia
   const [hotTubConfig, setHotTubConfig] = useState({
-    size: "standard",
+    size: "none",
     jets: "none",
     led: "none",
     cover: "none",
@@ -563,15 +593,15 @@ const Configurator = () => {
 
   const images = useMemo(() => {
     if (productCategory === "hottub") {
-      return [hotTub, saunaInterior, saunaCube];
+      const mainImg = selectedHotTubType?.image ?? hotTub;
+      return [mainImg];
     }
     if (selectedSaunaType) {
-      // Hlavný obrázok (mení sa podľa farby) + galérijné fotky (statické)
       const galleryPhotos = saunaGalleryImages[selectedSaunaType.id] || [];
       return [currentSaunaImage, ...galleryPhotos];
     }
     return [saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
-  }, [productCategory, selectedSaunaType, currentSaunaImage]);
+  }, [productCategory, selectedSaunaType, selectedHotTubType, currentSaunaImage]);
 
   // --- Mapovanie farieb na lokálne obrázky (len pre UI thumbnails) ---
   const saunaColorThumbs: Record<string, string> = {
@@ -705,10 +735,29 @@ const Configurator = () => {
     });
   }, [apiConfig]);
 
+  // --- HotTub typy z API ---
+  const hottubTypesUI: HotTubType[] = useMemo(() => {
+    if (!apiConfig?.hottub?.hottubTypes?.length) return [];
+    return apiConfig.hottub.hottubTypes.map((ht) => ({
+      id: ht.id,
+      name: ht.label,
+      dimensions: ht.dimensions ?? "",
+      basePrice: ht.basePrice,
+      image: hotTub,
+      hasSize: ht.hasSize ?? false,
+      hasJets: ht.hasJets ?? true,
+      hasLed: ht.hasLed ?? true,
+      hasCover: ht.hasCover ?? true,
+      hasColor: ht.hasColor ?? true,
+      sizeOptions: toUIOptions(ht.sizeOptions),
+    }));
+  }, [apiConfig]);
+
   // --- URL sync: auto-select model from URL slug ---
   const hasAppliedSlug = useRef(false);
   useEffect(() => {
-    if (!modelSlug || !saunaTypesUI.length || hasAppliedSlug.current) return;
+    if (!modelSlug || hasAppliedSlug.current) return;
+    if (!saunaTypesUI.length && !hottubTypesUI.length) return;
 
     const slugToId: Record<string, string> = {
       "frame-sauna": "frame-balance",
@@ -727,14 +776,25 @@ const Configurator = () => {
     };
 
     const resolvedId = slugToId[modelSlug] || modelSlug;
-    const matchedType = saunaTypesUI.find((st) => st.id === resolvedId);
 
-    if (matchedType) {
+    const matchedSauna = saunaTypesUI.find((st) => st.id === resolvedId);
+    if (matchedSauna) {
       setProductCategory("sauna");
-      setSelectedSaunaType(matchedType);
+      setSelectedSaunaType(matchedSauna);
+      hasAppliedSlug.current = true;
+      return;
+    }
+
+    const matchedHotTub = hottubTypesUI.find((ht) => ht.id === resolvedId);
+    if (matchedHotTub) {
+      setProductCategory("hottub");
+      setSelectedHotTubType(matchedHotTub);
+      if (matchedHotTub.sizeOptions.length > 0) {
+        setHotTubConfig((prev) => ({ ...prev, size: matchedHotTub.sizeOptions[0].id }));
+      }
       hasAppliedSlug.current = true;
     }
-  }, [modelSlug, saunaTypesUI]);
+  }, [modelSlug, saunaTypesUI, hottubTypesUI]);
 
   // --- Helper to get base configurator path ---
   const getConfigBasePath = useCallback(() => {
@@ -752,9 +812,28 @@ const Configurator = () => {
     [navigate, getConfigBasePath],
   );
 
+  const selectHotTubTypeWithUrl = useCallback(
+    (hotTubType: HotTubType) => {
+      setSelectedHotTubType(hotTubType);
+      setProductCategory("hottub");
+      if (hotTubType.sizeOptions.length > 0) {
+        setHotTubConfig((prev) => ({ ...prev, size: hotTubType.sizeOptions[0].id }));
+      }
+      const basePath = getConfigBasePath();
+      navigate(`${basePath}/${hotTubType.id}`, { replace: true });
+    },
+    [navigate, getConfigBasePath],
+  );
+
   const minSaunaBasePrice = useMemo(() => {
     const prices = apiConfig?.saunaTypes?.map((s) => s.basePrice) ?? [];
     return prices.length ? Math.min(...prices) : 0;
+  }, [apiConfig]);
+
+  const minHotTubBasePrice = useMemo(() => {
+    const prices = apiConfig?.hottub?.hottubTypes?.map((h) => h.basePrice) ?? [];
+    if (prices.length) return Math.min(...prices);
+    return apiConfig?.hottub?.basePrice ?? 0;
   }, [apiConfig]);
 
   // Výpočet ceny
@@ -789,21 +868,22 @@ const Configurator = () => {
       return basePrice + heater + heaterModelPrice + ledSum + extLedPrice + bluetooth + kit + color + woodPrice;
     }
 
-    if (productCategory === "hottub") {
-      const basePrice = apiConfig.hottub.basePrice;
-      const size = apiConfig.hottub.sizeOptions.find((s) => s.id === hotTubConfig.size)?.price ?? 0;
+    if (productCategory === "hottub" && selectedHotTubType) {
+      const basePrice = selectedHotTubType.basePrice;
+      const sizePrice = selectedHotTubType.sizeOptions.find((s) => s.id === hotTubConfig.size)?.price ?? 0;
       const jets = apiConfig.hottub.jetsOptions.find((j) => j.id === hotTubConfig.jets)?.price ?? 0;
       const led = apiConfig.hottub.ledOptions.find((l) => l.id === hotTubConfig.led)?.price ?? 0;
       const cover = apiConfig.hottub.coverOptions.find((c) => c.id === hotTubConfig.cover)?.price ?? 0;
       const color = apiConfig.hottub.colorOptions.find((c) => c.id === hotTubConfig.color)?.price ?? 0;
 
-      return basePrice + size + jets + led + cover + color;
+      return basePrice + sizePrice + jets + led + cover + color;
     }
 
     return 0;
   }, [
     productCategory,
     selectedSaunaType,
+    selectedHotTubType,
     apiConfig,
     saunaConfig,
     hotTubConfig,
@@ -839,12 +919,12 @@ const Configurator = () => {
 
     try {
       // Získaj aktuálny obrázok pre košík
-      const cartImage = productCategory === "sauna" ? currentSaunaImage : hotTub;
+      const cartImage = productCategory === "sauna" ? currentSaunaImage : (selectedHotTubType?.image ?? hotTub);
 
       const options =
         productCategory === "sauna"
           ? { productCategory, saunaTypeId: selectedSaunaType?.id, ...saunaConfig }
-          : { productCategory, ...hotTubConfig };
+          : { productCategory, hottubTypeId: selectedHotTubType?.id, ...hotTubConfig };
 
       const product_id = apiConfig.products[productCategory];
 
@@ -888,6 +968,7 @@ const Configurator = () => {
   const goBackToCategory = () => {
     setProductCategory(null);
     setSelectedSaunaType(null);
+    setSelectedHotTubType(null);
     setSaunaConfig({
       heaterType: "none",
       heaterModel: "none",
@@ -898,6 +979,7 @@ const Configurator = () => {
       color: "none" as SaunaColorType,
       woodType: "spruce",
     });
+    setHotTubConfig({ size: "none", jets: "none", led: "none", cover: "none", color: "none" });
     navigate(getConfigBasePath(), { replace: true });
   };
 
@@ -913,6 +995,13 @@ const Configurator = () => {
       color: "none" as SaunaColorType,
       woodType: "spruce",
     });
+    setCurrentImageIndex(0);
+    navigate(getConfigBasePath(), { replace: true });
+  };
+
+  const goBackToHotTubTypes = () => {
+    setSelectedHotTubType(null);
+    setHotTubConfig({ size: "none", jets: "none", led: "none", cover: "none", color: "none" });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
   };
@@ -1094,7 +1183,7 @@ const Configurator = () => {
                   </p>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
                     <span>
-                      {t("config.from")} {apiConfig.hottub.basePrice.toLocaleString()} €
+                      {t("config.from")} {minHotTubBasePrice.toLocaleString()} €
                     </span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -1239,7 +1328,97 @@ const Configurator = () => {
     );
   }
 
-  // KROK 3: Konfigurácia produktu (sauna s vybraným typom alebo kaďa)
+  // KROK 2b: Pre kaďu - výber typu kade
+  if (productCategory === "hottub" && !selectedHotTubType) {
+    return (
+      <div className="min-h-screen bg-background">
+        <ConfiguratorHeader />
+        <main className="pt-[8.5rem] pb-16">
+          <div className="container mx-auto px-4">
+            <button
+              onClick={goBackToCategory}
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 group"
+            >
+              <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+              <span>{t("config.back.category")}</span>
+            </button>
+
+            <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+              <a href="/" className="hover:text-primary transition-colors">
+                {t("config.breadcrumb.home")}
+              </a>
+              <span>/</span>
+              <button onClick={goBackToCategory} className="hover:text-primary transition-colors">
+                {t("config.breadcrumb.configurator")}
+              </button>
+              <span>/</span>
+              <span className="text-foreground">{t("config.breadcrumb.hottubSelection")}</span>
+            </nav>
+
+            <div className="max-w-5xl mx-auto text-center mb-12">
+              <h1 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
+                {t("config.hottubSelection.title")}{" "}
+                <span className="text-gradient-amber">{t("config.hottubSelection.titleHighlight")}</span>
+              </h1>
+              <p className="text-muted-foreground text-lg">{t("config.hottubSelection.subtitle")}</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {hottubTypesUI.map((ht) => (
+                <button
+                  key={ht.id}
+                  onClick={() => {
+                    selectHotTubTypeWithUrl(ht);
+                    setCurrentImageIndex(0);
+                    setShowScrollIndicator(true);
+                  }}
+                  className="group relative overflow-hidden rounded-3xl border border-white/10 hover:border-primary/50 transition-colors duration-300 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl text-left shadow-2xl hover:shadow-primary/10"
+                >
+                  <div className="aspect-[4/3] overflow-hidden relative">
+                    <img
+                      src={ht.image}
+                      alt={ht.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                    {ht.dimensions && (
+                      <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 shadow-lg">
+                        <Ruler className="w-4 h-4 text-primary" />
+                        <span className="text-sm font-bold text-white tracking-wide">{ht.dimensions}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="relative p-6 -mt-8">
+                    <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 p-5">
+                      <h3 className="font-display text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
+                        {ht.name}
+                      </h3>
+                      <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                        <div>
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                            {t("config.from")}
+                          </p>
+                          <span className="text-2xl font-bold text-gradient-amber">
+                            {ht.basePrice.toLocaleString()} €
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/30">
+                          <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </main>
+        <ConfiguratorFooter />
+      </div>
+    );
+  }
+
+  // KROK 3: Konfigurácia produktu (sauna s vybraným typom alebo kaďa s vybraným typom)
   return (
     <div className="min-h-screen bg-background">
       <ConfiguratorHeader />
@@ -1247,11 +1426,11 @@ const Configurator = () => {
         <div className="container mx-auto px-4">
           {/* Tlačidlo späť */}
           <button
-            onClick={productCategory === "sauna" ? goBackToSaunaTypes : goBackToCategory}
+            onClick={productCategory === "sauna" ? goBackToSaunaTypes : goBackToHotTubTypes}
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 group"
           >
             <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            <span>{productCategory === "sauna" ? t("config.back.sauna") : t("config.back.category")}</span>
+            <span>{productCategory === "sauna" ? t("config.back.sauna") : t("config.back.hottub")}</span>
           </button>
 
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
@@ -1267,6 +1446,14 @@ const Configurator = () => {
                 <span>/</span>
                 <button onClick={goBackToSaunaTypes} className="hover:text-primary transition-colors">
                   {t("config.breadcrumb.saunaSelection")}
+                </button>
+              </>
+            )}
+            {productCategory === "hottub" && (
+              <>
+                <span>/</span>
+                <button onClick={goBackToHotTubTypes} className="hover:text-primary transition-colors">
+                  {t("config.breadcrumb.hottubSelection")}
                 </button>
               </>
             )}
@@ -1374,10 +1561,13 @@ const Configurator = () => {
                 <div className="space-y-8 pr-4 pb-24">
                   <div>
                     <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
-                      {productCategory === "sauna" ? selectedSaunaType?.name : t("config.hottub.configTitle")}
+                      {productCategory === "sauna" ? selectedSaunaType?.name : (selectedHotTubType?.name ?? t("config.hottub.configTitle"))}
                     </h1>
                     {productCategory === "sauna" && selectedSaunaType && (
                       <p className="text-muted-foreground mb-3">{selectedSaunaType.dimensions}</p>
+                    )}
+                    {productCategory === "hottub" && selectedHotTubType && (
+                      <p className="text-muted-foreground mb-3">{selectedHotTubType.dimensions}</p>
                     )}
                     <div className="flex items-baseline gap-3 lg:hidden">
                       <span className="text-muted-foreground line-through text-lg">
@@ -1699,89 +1889,99 @@ const Configurator = () => {
                   ) : (
                     <div className="space-y-6">
                       {/* Veľkosť */}
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground mb-3">
-                          {t("config.size")} <span className="text-primary">*</span>
-                        </h3>
-                        <div className="grid grid-cols-3 gap-3">
-                          {hotTubSizeOptions.map((option) => (
-                            <OptionCard
-                              key={option.id}
-                              option={option}
-                              isSelected={hotTubConfig.size === option.id}
-                              onClick={() => setHotTubConfig((prev) => ({ ...prev, size: option.id }))}
-                            />
-                          ))}
+                      {selectedHotTubType?.hasSize && selectedHotTubType.sizeOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">
+                            {t("config.size")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-2 gap-3">
+                            {selectedHotTubType.sizeOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.size === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, size: option.id }))}
+                              />
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* Trysky */}
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground mb-3">
-                          {t("config.jets")} <span className="text-primary">*</span>
-                        </h3>
-                        <div className="grid grid-cols-3 gap-3">
-                          {hotTubJetsOptions.map((option) => (
-                            <OptionCard
-                              key={option.id}
-                              option={option}
-                              isSelected={hotTubConfig.jets === option.id}
-                              onClick={() => setHotTubConfig((prev) => ({ ...prev, jets: option.id }))}
-                            />
-                          ))}
+                      {selectedHotTubType?.hasJets && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">
+                            {t("config.jets")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-3 gap-3">
+                            {hotTubJetsOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.jets === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, jets: option.id }))}
+                              />
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* LED osvetlenie */}
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground mb-3">
-                          {t("config.led")} <span className="text-primary">*</span>
-                        </h3>
-                        <div className="grid grid-cols-3 gap-3">
-                          {hotTubLedOptions.map((option) => (
-                            <OptionCard
-                              key={option.id}
-                              option={option}
-                              isSelected={hotTubConfig.led === option.id}
-                              onClick={() => setHotTubConfig((prev) => ({ ...prev, led: option.id }))}
-                            />
-                          ))}
+                      {selectedHotTubType?.hasLed && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">
+                            {t("config.led")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-3 gap-3">
+                            {hotTubLedOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.led === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, led: option.id }))}
+                              />
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* Kryt */}
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground mb-3">
-                          {t("config.cover")} <span className="text-primary">*</span>
-                        </h3>
-                        <div className="grid grid-cols-3 gap-3">
-                          {hotTubCoverOptions.map((option) => (
-                            <OptionCard
-                              key={option.id}
-                              option={option}
-                              isSelected={hotTubConfig.cover === option.id}
-                              onClick={() => setHotTubConfig((prev) => ({ ...prev, cover: option.id }))}
-                            />
-                          ))}
+                      {selectedHotTubType?.hasCover && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">
+                            {t("config.cover")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-3 gap-3">
+                            {hotTubCoverOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.cover === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, cover: option.id }))}
+                              />
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       {/* Farba */}
-                      <div>
-                        <h3 className="text-lg font-semibold text-foreground mb-3">
-                          {t("config.color")} <span className="text-primary">*</span>
-                        </h3>
-                        <div className="grid grid-cols-3 gap-3">
-                          {hotTubColorOptions.map((option) => (
-                            <OptionCard
-                              key={option.id}
-                              option={option}
-                              isSelected={hotTubConfig.color === option.id}
-                              onClick={() => setHotTubConfig((prev) => ({ ...prev, color: option.id }))}
-                            />
-                          ))}
+                      {selectedHotTubType?.hasColor && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">
+                            {t("config.color")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-3 gap-3">
+                            {hotTubColorOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.color === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, color: option.id }))}
+                              />
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   )}
                 </div>
