@@ -60,6 +60,7 @@ import digitalControllerImg from "@/assets/digital-controller.jpg";
 import thermometerImg from "@/assets/thermometer.jpg";
 import sandFilterImg from "@/assets/sand-filter.jpeg";
 import drainRelayImg from "@/assets/drain-relay.jpeg";
+import headCushionImg from "@/assets/head-cushion.jpg";
 import blackMarbleImg from "@/assets/black-marble.png";
 // Farebné varianty Frame sauny - všetky farby podľa katalógu
 import frameSaunaNatural from "@/assets/frame-sauna-natural.jpg";
@@ -748,7 +749,9 @@ const Configurator = () => {
   const hotTubBluetoothSpeakerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.bluetoothSpeakerOptions, Object.fromEntries(
     (apiConfig?.hottub.bluetoothSpeakerOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, speaker])
   ));
-  const hotTubHeadCushionOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.headCushionOptions);
+  const hotTubHeadCushionOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.headCushionOptions, Object.fromEntries(
+    (apiConfig?.hottub.headCushionOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, headCushionImg])
+  ));
 
   // --- Heater models z API ---
   const electricHeaterModels: HeaterModel[] = useMemo(() => {
@@ -2383,6 +2386,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.headCushion === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, headCushion: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
