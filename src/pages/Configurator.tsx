@@ -387,6 +387,7 @@ type HotTubType = {
   hasHeater: boolean;
   hasUnderwaterLed: boolean;
   hasExteriorLed: boolean;
+  hasHydroMassage: boolean;
   hasCover: boolean;
   hasCoverColor: boolean;
   sizeOptions: ConfigOption[];
@@ -394,6 +395,7 @@ type HotTubType = {
   heaterOptions: ConfigOption[];
   underwaterLedOptions: ConfigOption[];
   exteriorLedOptions: ConfigOption[];
+  hydroMassageOptions: ConfigOption[];
   coverOptions: ConfigOption[];
 };
 
@@ -431,12 +433,14 @@ type ApiHotTubType = {
   heaterOptions?: ApiOption[];
   underwaterLedOptions?: ApiOption[];
   exteriorLedOptions?: ApiOption[];
+  hydroMassageOptions?: ApiOption[];
   coverOptions?: ApiOption[];
   hasSize: boolean;
   hasExteriorWood: boolean;
   hasHeater: boolean;
   hasUnderwaterLed: boolean;
   hasExteriorLed: boolean;
+  hasHydroMassage: boolean;
   hasCover: boolean;
   hasCoverColor: boolean;
 };
@@ -561,6 +565,7 @@ const Configurator = () => {
     heater: "none",
     underwaterLed: "none",
     exteriorLed: "none",
+    hydroMassage: "none",
     cover: "none",
     coverColor: "none",
   });
@@ -757,6 +762,7 @@ const Configurator = () => {
       hasHeater: ht.hasHeater ?? false,
       hasUnderwaterLed: ht.hasUnderwaterLed ?? true,
       hasExteriorLed: ht.hasExteriorLed ?? true,
+      hasHydroMassage: ht.hasHydroMassage ?? true,
       hasCover: ht.hasCover ?? true,
       hasCoverColor: ht.hasCoverColor ?? true,
       sizeOptions: toUIOptions(ht.sizeOptions),
@@ -764,6 +770,7 @@ const Configurator = () => {
       heaterOptions: toUIOptions(ht.heaterOptions),
       underwaterLedOptions: toUIOptions(ht.underwaterLedOptions),
       exteriorLedOptions: toUIOptions(ht.exteriorLedOptions),
+      hydroMassageOptions: toUIOptions(ht.hydroMassageOptions),
       coverOptions: toUIOptions(ht.coverOptions),
     }));
   }, [apiConfig]);
@@ -890,10 +897,11 @@ const Configurator = () => {
       const heaterPrice = selectedHotTubType.heaterOptions.find((h) => h.id === hotTubConfig.heater)?.price ?? 0;
       const underwaterLedPrice = selectedHotTubType.underwaterLedOptions.find((l) => l.id === hotTubConfig.underwaterLed)?.price ?? 0;
       const exteriorLedPrice2 = selectedHotTubType.exteriorLedOptions.find((l) => l.id === hotTubConfig.exteriorLed)?.price ?? 0;
+      const hydroMassagePrice = selectedHotTubType.hydroMassageOptions.find((h) => h.id === hotTubConfig.hydroMassage)?.price ?? 0;
       const coverPrice = selectedHotTubType.coverOptions.find((c) => c.id === hotTubConfig.cover)?.price ?? 0;
       const coverColorPrice = apiConfig.hottub.coverColorOptions?.find((c) => c.id === hotTubConfig.coverColor)?.price ?? 0;
 
-      return basePrice + sizePrice + exteriorWoodPrice + heaterPrice + underwaterLedPrice + exteriorLedPrice2 + coverPrice + coverColorPrice;
+      return basePrice + sizePrice + exteriorWoodPrice + heaterPrice + underwaterLedPrice + exteriorLedPrice2 + hydroMassagePrice + coverPrice + coverColorPrice;
     }
 
     return 0;
@@ -996,7 +1004,7 @@ const Configurator = () => {
       color: "none" as SaunaColorType,
       woodType: "spruce",
     });
-    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", underwaterLed: "none", exteriorLed: "none", cover: "none", coverColor: "none" });
+    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none" });
     navigate(getConfigBasePath(), { replace: true });
   };
 
@@ -1018,7 +1026,7 @@ const Configurator = () => {
 
   const goBackToHotTubTypes = () => {
     setSelectedHotTubType(null);
-    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", underwaterLed: "none", exteriorLed: "none", cover: "none", coverColor: "none" });
+    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none" });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
   };
@@ -2061,6 +2069,25 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.exteriorLed === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, exteriorLed: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Hydro masáž */}
+                      {selectedHotTubType?.hasHydroMassage && selectedHotTubType.hydroMassageOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.hydroMassage")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.hydroMassageOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {selectedHotTubType.hydroMassageOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.hydroMassage === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, hydroMassage: option.id }))}
                               />
                             ))}
                           </div>
