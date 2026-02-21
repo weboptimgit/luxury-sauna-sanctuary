@@ -54,6 +54,12 @@ import coverBlackImg from "@/assets/cover-black.jpg";
 import coverGreyImg from "@/assets/cover-grey.jpg";
 import exteriorLedHottubImg from "@/assets/exterior-led-hottub.jpg";
 import thermoCoverImg from "@/assets/thermo-cover.png";
+import hydroMassageImg from "@/assets/hydro-massage.png";
+import airBubblesImg from "@/assets/air-bubbles.jpg";
+import digitalControllerImg from "@/assets/digital-controller.jpg";
+import thermometerImg from "@/assets/thermometer.jpg";
+import sandFilterImg from "@/assets/sand-filter.jpeg";
+import drainRelayImg from "@/assets/drain-relay.jpeg";
 import blackMarbleImg from "@/assets/black-marble.png";
 // Farebné varianty Frame sauny - všetky farby podľa katalógu
 import frameSaunaNatural from "@/assets/frame-sauna-natural.jpg";
@@ -724,12 +730,24 @@ const Configurator = () => {
     "seda": coverGreyImg,
     "siva": coverGreyImg,
   });
-  const hotTubAirBubblesOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.airBubblesOptions);
-  const hotTubDrainRelayOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.drainRelayOptions);
-  const hotTubSandFilterOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.sandFilterOptions);
-  const hotTubElectronicControllerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.electronicControllerOptions);
-  const hotTubThermometerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.thermometerOptions);
-  const hotTubBluetoothSpeakerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.bluetoothSpeakerOptions);
+  const hotTubAirBubblesOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.airBubblesOptions, Object.fromEntries(
+    Object.keys(apiConfig?.hottub.airBubblesOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, airBubblesImg])
+  ));
+  const hotTubDrainRelayOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.drainRelayOptions, Object.fromEntries(
+    Object.keys(apiConfig?.hottub.drainRelayOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, drainRelayImg])
+  ));
+  const hotTubSandFilterOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.sandFilterOptions, Object.fromEntries(
+    Object.keys(apiConfig?.hottub.sandFilterOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, sandFilterImg])
+  ));
+  const hotTubElectronicControllerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.electronicControllerOptions, Object.fromEntries(
+    Object.keys(apiConfig?.hottub.electronicControllerOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, digitalControllerImg])
+  ));
+  const hotTubThermometerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.thermometerOptions, Object.fromEntries(
+    Object.keys(apiConfig?.hottub.thermometerOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, thermometerImg])
+  ));
+  const hotTubBluetoothSpeakerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.bluetoothSpeakerOptions, Object.fromEntries(
+    Object.keys(apiConfig?.hottub.bluetoothSpeakerOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, speaker])
+  ));
   const hotTubHeadCushionOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.headCushionOptions);
 
   // --- Heater models z API ---
@@ -852,7 +870,9 @@ const Configurator = () => {
         "led-around": exteriorLedHottubImg,
         "led-okolo": exteriorLedHottubImg,
       }),
-      hydroMassageOptions: toUIOptions(ht.hydroMassageOptions),
+      hydroMassageOptions: toUIOptions(ht.hydroMassageOptions, Object.fromEntries(
+        Object.keys(ht.hydroMassageOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, hydroMassageImg])
+      )),
       coverOptions: toUIOptions(ht.coverOptions, {
         "200cm": thermoCoverImg,
         "230cm": thermoCoverImg,
@@ -2242,6 +2262,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.airBubbles === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, airBubbles: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
@@ -2261,6 +2282,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.drainRelay === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, drainRelay: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
@@ -2280,6 +2302,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.sandFilter === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, sandFilter: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
@@ -2299,6 +2322,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.electronicController === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, electronicController: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
@@ -2318,6 +2342,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.thermometer === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, thermometer: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
@@ -2337,6 +2362,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.bluetoothSpeaker === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, bluetoothSpeaker: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
