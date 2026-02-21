@@ -464,11 +464,11 @@ type ApiConfig = {
     basePrice?: number;
     hottubTypes?: ApiHotTubType[];
     sizeOptions?: ApiOption[];
-    jetsOptions: ApiOption[];
-    ledOptions: ApiOption[];
-    coverOptions: ApiOption[];
+    jetsOptions?: ApiOption[];
+    ledOptions?: ApiOption[];
+    coverOptions?: ApiOption[];
     coverColorOptions?: ApiOption[];
-    colorOptions: ApiOption[];
+    colorOptions?: ApiOption[];
   };
 };
 
