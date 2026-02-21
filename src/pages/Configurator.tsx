@@ -580,6 +580,7 @@ const Configurator = () => {
     size: "none",
     exteriorWood: "none",
     heater: "none",
+    electricHeater: "none",
     underwaterLed: "none",
     exteriorLed: "none",
     hydroMassage: "none",
@@ -947,6 +948,7 @@ const Configurator = () => {
       const sizePrice = selectedHotTubType.sizeOptions.find((s) => s.id === hotTubConfig.size)?.price ?? 0;
       const exteriorWoodPrice = selectedHotTubType.exteriorWoodOptions.find((w) => w.id === hotTubConfig.exteriorWood)?.price ?? 0;
       const heaterPrice = selectedHotTubType.heaterOptions.find((h) => h.id === hotTubConfig.heater)?.price ?? 0;
+      const electricHeaterPrice = selectedHotTubType.heaterOptions.find((h) => h.id === hotTubConfig.electricHeater)?.price ?? 0;
       const underwaterLedPrice = selectedHotTubType.underwaterLedOptions.find((l) => l.id === hotTubConfig.underwaterLed)?.price ?? 0;
       const exteriorLedPrice2 = selectedHotTubType.exteriorLedOptions.find((l) => l.id === hotTubConfig.exteriorLed)?.price ?? 0;
       const hydroMassagePrice = selectedHotTubType.hydroMassageOptions.find((h) => h.id === hotTubConfig.hydroMassage)?.price ?? 0;
@@ -960,7 +962,7 @@ const Configurator = () => {
       const bluetoothSpeakerPrice = apiConfig.hottub.bluetoothSpeakerOptions?.find((o) => o.id === hotTubConfig.bluetoothSpeaker)?.price ?? 0;
       const headCushionPrice = apiConfig.hottub.headCushionOptions?.find((o) => o.id === hotTubConfig.headCushion)?.price ?? 0;
 
-      return basePrice + sizePrice + exteriorWoodPrice + heaterPrice + underwaterLedPrice + exteriorLedPrice2 + hydroMassagePrice + coverPrice + coverColorPrice + airBubblesPrice + drainRelayPrice + sandFilterPrice + electronicControllerPrice + thermometerPrice + bluetoothSpeakerPrice + headCushionPrice;
+      return basePrice + sizePrice + exteriorWoodPrice + heaterPrice + electricHeaterPrice + underwaterLedPrice + exteriorLedPrice2 + hydroMassagePrice + coverPrice + coverColorPrice + airBubblesPrice + drainRelayPrice + sandFilterPrice + electronicControllerPrice + thermometerPrice + bluetoothSpeakerPrice + headCushionPrice;
     }
 
     return 0;
@@ -1063,7 +1065,7 @@ const Configurator = () => {
       color: "none" as SaunaColorType,
       woodType: "spruce",
     });
-    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
+    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", electricHeater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
     navigate(getConfigBasePath(), { replace: true });
   };
 
@@ -1085,7 +1087,7 @@ const Configurator = () => {
 
   const goBackToHotTubTypes = () => {
     setSelectedHotTubType(null);
-    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
+    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", electricHeater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
   };
@@ -2049,16 +2051,39 @@ const Configurator = () => {
                       {selectedHotTubType?.hasHeater && selectedHotTubType.heaterOptions.length > 0 && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.heater")} <span className="text-primary">*</span>
+                            {t("config.hottubHeater")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.heaterOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
-                            {selectedHotTubType.heaterOptions.map((option) => (
+                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.heaterOptions.filter((o) => !o.id.startsWith("electric-")).length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {selectedHotTubType.heaterOptions
+                              .filter((o) => !o.id.startsWith("electric-"))
+                              .map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
                                 isSelected={hotTubConfig.heater === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, heater: option.id }))}
                                 description={option.id === "external-aisi316" ? (language === "en" ? "with chimney, cap and protection, suitable for water with chemicals" : "s komínom, čiapkou a ochranou, vhodné pre vodu s chémiou") : undefined}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Elektrický ohrievač */}
+                      {selectedHotTubType?.hasHeater && selectedHotTubType.heaterOptions.filter((o) => o.id.startsWith("electric-")).length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.hottubElectricHeater")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.heaterOptions.filter((o) => o.id.startsWith("electric-")).length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {selectedHotTubType.heaterOptions
+                              .filter((o) => o.id.startsWith("electric-"))
+                              .map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.electricHeater === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, electricHeater: option.id }))}
                               />
                             ))}
                           </div>
