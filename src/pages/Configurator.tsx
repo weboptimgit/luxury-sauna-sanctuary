@@ -1940,7 +1940,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.size")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-3 gap-2 md:gap-3">
+                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.sizeOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
                             {selectedHotTubType.sizeOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -1959,7 +1959,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.exteriorWood")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-3 gap-2 md:gap-3">
+                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.exteriorWoodOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
                             {selectedHotTubType.exteriorWoodOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -1978,7 +1978,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.heater")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-3 gap-2 md:gap-3">
+                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.heaterOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
                             {selectedHotTubType.heaterOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -1997,7 +1997,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.cover")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-3 gap-2 md:gap-3">
+                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.coverOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
                             {selectedHotTubType.coverOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2016,7 +2016,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.coverColor")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-3 gap-2 md:gap-3">
+                          <div className={cn("grid gap-2 md:gap-3", hotTubCoverColorOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
                             {hotTubCoverColorOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2035,7 +2035,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.underwaterLed")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-3 gap-2 md:gap-3">
+                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.underwaterLedOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
                             {selectedHotTubType.underwaterLedOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2054,7 +2054,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.hottubExteriorLed")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-3 gap-2 md:gap-3">
+                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.exteriorLedOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
                             {selectedHotTubType.exteriorLedOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
