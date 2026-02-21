@@ -63,6 +63,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Hot tub options
     "config.size": "Veľkosť",
+    "config.hottubHeater": "Ohrievač",
     "config.jets": "Masážne trysky",
     "config.cover": "Kryt",
 
@@ -177,6 +178,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Hot tub options
     "config.size": "Size",
+    "config.hottubHeater": "Heater",
     "config.jets": "Jets",
     "config.cover": "Cover",
 
