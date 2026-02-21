@@ -43,9 +43,13 @@ const translations: Record<Language, Record<string, string>> = {
     "config.saunaSelection.title": "Vyberte si",
     "config.saunaSelection.titleHighlight": "typ sauny",
     "config.saunaSelection.subtitle": "Každý model má svoje jedinečné vlastnosti a možnosti konfigurácie.",
+    "config.hottubSelection.title": "Vyberte si",
+    "config.hottubSelection.titleHighlight": "typ kade",
+    "config.hottubSelection.subtitle": "Každý model má svoje jedinečné vlastnosti a možnosti konfigurácie.",
+    "config.breadcrumb.hottubSelection": "Výber kade",
     "config.back.category": "Späť na výber produktu",
     "config.back.sauna": "Späť na výber sauny",
-    "config.back.hottub": "Späť na výber kategórie",
+    "config.back.hottub": "Späť na výber kade",
 
     // Configuration options
     "config.woodType": "Typ dreva",
@@ -152,9 +156,13 @@ const translations: Record<Language, Record<string, string>> = {
     "config.saunaSelection.title": "Choose your",
     "config.saunaSelection.titleHighlight": "sauna type",
     "config.saunaSelection.subtitle": "Each model has its unique features and configuration options.",
+    "config.hottubSelection.title": "Choose your",
+    "config.hottubSelection.titleHighlight": "hot tub type",
+    "config.hottubSelection.subtitle": "Each model has its unique features and configuration options.",
+    "config.breadcrumb.hottubSelection": "Hot Tub Selection",
     "config.back.category": "Back to product selection",
     "config.back.sauna": "Back to sauna selection",
-    "config.back.hottub": "Back to category selection",
+    "config.back.hottub": "Back to hot tub selection",
 
     // Configuration options
     "config.woodType": "Wood Type",
