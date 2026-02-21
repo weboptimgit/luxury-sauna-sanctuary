@@ -31,6 +31,11 @@ import saunaTraditional from "@/assets/ModulSauna-240×250-–-Thermo-wood-33-70
 import saunaInterior from "@/assets/LUX-sauna-245×300-14-700x700.jpg";
 import saunaHarmony from "@/assets/0TV_0205-700x700.jpg";
 import hotTub from "@/assets/hot-tub.jpg";
+import acrylicRoundMain from "@/assets/acrylic-round-main.jpg";
+import acrylicRoundGallery1 from "@/assets/acrylic-round-gallery-1.jpg";
+import acrylicRoundGallery2 from "@/assets/acrylic-round-gallery-2.jpg";
+import acrylicRoundGallery3 from "@/assets/acrylic-round-gallery-3.jpg";
+import acrylicRoundGallery4 from "@/assets/acrylic-round-gallery-4.jpg";
 import saunaKit from "@/assets/Sauna-accessories-kit.jpg";
 import speaker from "@/assets/Bluetooth-speaker-system.png";
 import ledBenches from "@/assets/LED-lighting-under-the-benches.png";
@@ -405,6 +410,7 @@ type HotTubType = {
   dimensions: string;
   basePrice: number;
   image: string;
+  galleryImages: string[];
   hasSize: boolean;
   hasExteriorWood: boolean;
   hasHeater: boolean;
@@ -652,7 +658,8 @@ const Configurator = () => {
   const images = useMemo(() => {
     if (productCategory === "hottub") {
       const mainImg = selectedHotTubType?.image ?? hotTub;
-      return [mainImg];
+      const gallery = selectedHotTubType?.galleryImages ?? [];
+      return [mainImg, ...gallery];
     }
     if (selectedSaunaType) {
       const galleryPhotos = saunaGalleryImages[selectedSaunaType.id] || [];
@@ -838,6 +845,13 @@ const Configurator = () => {
     });
   }, [apiConfig]);
 
+  const hotTubImageMap: Record<string, string> = {
+    "acrylic-round": acrylicRoundMain,
+  };
+  const hotTubGalleryMap: Record<string, string[]> = {
+    "acrylic-round": [acrylicRoundGallery1, acrylicRoundGallery2, acrylicRoundGallery3, acrylicRoundGallery4],
+  };
+
   // --- HotTub typy z API ---
   const hottubTypesUI: HotTubType[] = useMemo(() => {
     if (!apiConfig?.hottub?.hottubTypes?.length) return [];
@@ -846,7 +860,8 @@ const Configurator = () => {
       name: ht.label,
       dimensions: ht.dimensions ?? "",
       basePrice: ht.basePrice,
-      image: hotTub,
+      image: hotTubImageMap[ht.id] ?? hotTub,
+      galleryImages: hotTubGalleryMap[ht.id] ?? [],
       hasSize: ht.hasSize ?? false,
       hasExteriorWood: ht.hasExteriorWood ?? true,
       hasHeater: ht.hasHeater ?? false,
