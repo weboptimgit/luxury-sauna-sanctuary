@@ -388,10 +388,12 @@ type HotTubType = {
   hasJets: boolean;
   hasLed: boolean;
   hasCover: boolean;
+  hasCoverColor: boolean;
   hasColor: boolean;
   sizeOptions: ConfigOption[];
   exteriorWoodOptions: ConfigOption[];
   heaterOptions: ConfigOption[];
+  coverOptions: ConfigOption[];
 };
 
 type ApiOption = {
@@ -426,12 +428,14 @@ type ApiHotTubType = {
   sizeOptions?: ApiOption[];
   exteriorWoodOptions?: ApiOption[];
   heaterOptions?: ApiOption[];
+  coverOptions?: ApiOption[];
   hasSize: boolean;
   hasExteriorWood: boolean;
   hasHeater: boolean;
   hasJets: boolean;
   hasLed: boolean;
   hasCover: boolean;
+  hasCoverColor: boolean;
   hasColor: boolean;
 };
 
@@ -463,6 +467,7 @@ type ApiConfig = {
     jetsOptions: ApiOption[];
     ledOptions: ApiOption[];
     coverOptions: ApiOption[];
+    coverColorOptions?: ApiOption[];
     colorOptions: ApiOption[];
   };
 };
@@ -560,6 +565,7 @@ const Configurator = () => {
     jets: "none",
     led: "none",
     cover: "none",
+    coverColor: "none",
     color: "none",
   });
 
@@ -658,6 +664,7 @@ const Configurator = () => {
   const hotTubJetsOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.jetsOptions);
   const hotTubLedOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.ledOptions);
   const hotTubCoverOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverOptions);
+  const hotTubCoverColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverColorOptions);
   const hotTubColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.colorOptions);
 
   // --- Heater models z API ---
@@ -760,10 +767,12 @@ const Configurator = () => {
       hasJets: ht.hasJets ?? true,
       hasLed: ht.hasLed ?? true,
       hasCover: ht.hasCover ?? true,
+      hasCoverColor: ht.hasCoverColor ?? true,
       hasColor: ht.hasColor ?? true,
       sizeOptions: toUIOptions(ht.sizeOptions),
       exteriorWoodOptions: toUIOptions(ht.exteriorWoodOptions),
       heaterOptions: toUIOptions(ht.heaterOptions),
+      coverOptions: toUIOptions(ht.coverOptions),
     }));
   }, [apiConfig]);
 
@@ -887,12 +896,13 @@ const Configurator = () => {
       const sizePrice = selectedHotTubType.sizeOptions.find((s) => s.id === hotTubConfig.size)?.price ?? 0;
       const exteriorWoodPrice = selectedHotTubType.exteriorWoodOptions.find((w) => w.id === hotTubConfig.exteriorWood)?.price ?? 0;
       const heaterPrice = selectedHotTubType.heaterOptions.find((h) => h.id === hotTubConfig.heater)?.price ?? 0;
+      const coverPrice = selectedHotTubType.coverOptions.find((c) => c.id === hotTubConfig.cover)?.price ?? 0;
+      const coverColorPrice = apiConfig.hottub.coverColorOptions?.find((c) => c.id === hotTubConfig.coverColor)?.price ?? 0;
       const jets = apiConfig.hottub.jetsOptions.find((j) => j.id === hotTubConfig.jets)?.price ?? 0;
       const led = apiConfig.hottub.ledOptions.find((l) => l.id === hotTubConfig.led)?.price ?? 0;
-      const cover = apiConfig.hottub.coverOptions.find((c) => c.id === hotTubConfig.cover)?.price ?? 0;
       const color = apiConfig.hottub.colorOptions.find((c) => c.id === hotTubConfig.color)?.price ?? 0;
 
-      return basePrice + sizePrice + exteriorWoodPrice + heaterPrice + jets + led + cover + color;
+      return basePrice + sizePrice + exteriorWoodPrice + heaterPrice + coverPrice + coverColorPrice + jets + led + color;
     }
 
     return 0;
@@ -995,7 +1005,7 @@ const Configurator = () => {
       color: "none" as SaunaColorType,
       woodType: "spruce",
     });
-    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", jets: "none", led: "none", cover: "none", color: "none" });
+    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", jets: "none", led: "none", cover: "none", coverColor: "none", color: "none" });
     navigate(getConfigBasePath(), { replace: true });
   };
 
@@ -1017,7 +1027,7 @@ const Configurator = () => {
 
   const goBackToHotTubTypes = () => {
     setSelectedHotTubType(null);
-    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", jets: "none", led: "none", cover: "none", color: "none" });
+    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", jets: "none", led: "none", cover: "none", coverColor: "none", color: "none" });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
   };
@@ -1999,19 +2009,38 @@ const Configurator = () => {
                         </div>
                       )}
 
-                      {/* Kryt */}
-                      {selectedHotTubType?.hasCover && (
+                      {/* Kryt - model-specific */}
+                      {selectedHotTubType?.hasCover && selectedHotTubType.coverOptions.length > 0 && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
                             {t("config.cover")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-3 gap-3">
-                            {hotTubCoverOptions.map((option) => (
+                          <div className="grid grid-cols-2 gap-3">
+                            {selectedHotTubType.coverOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
                                 isSelected={hotTubConfig.cover === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, cover: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Farba krytu */}
+                      {selectedHotTubType?.hasCoverColor && hotTubCoverColorOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">
+                            {t("config.coverColor")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-2 gap-3">
+                            {hotTubCoverColorOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.coverColor === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, coverColor: option.id }))}
                               />
                             ))}
                           </div>

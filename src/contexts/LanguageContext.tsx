@@ -66,6 +66,7 @@ const translations: Record<Language, Record<string, string>> = {
     "config.hottubHeater": "Ohrievač",
     "config.jets": "Masážne trysky",
     "config.cover": "Kryt",
+    "config.coverColor": "Farba krytu",
 
     // Summary
     "config.summary": "Zhrnutie konfigurácie",
@@ -181,6 +182,7 @@ const translations: Record<Language, Record<string, string>> = {
     "config.hottubHeater": "Heater",
     "config.jets": "Jets",
     "config.cover": "Cover",
+    "config.coverColor": "Cover Color",
 
     // Summary
     "config.summary": "Configuration Summary",
