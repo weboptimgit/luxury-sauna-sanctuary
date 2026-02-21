@@ -42,6 +42,10 @@ import thermoWoodImg from "@/assets/thermo-wood.jpg";
 import spruceWood2Img from "@/assets/spruce-wood-2.jpg";
 import thermoWood2Img from "@/assets/thermo-wood-2.jpg";
 import wpcPlastImg from "@/assets/wpc-plast.jpg";
+import blueMarbleImg from "@/assets/blue-marble.png";
+import grayAcrylicImg from "@/assets/gray-acrylic.png";
+import whiteAcrylicImg from "@/assets/white-acrylic.png";
+import blackMarbleImg from "@/assets/black-marble.png";
 // Farebné varianty Frame sauny - všetky farby podľa katalógu
 import frameSaunaNatural from "@/assets/frame-sauna-natural.jpg";
 import frameSauna1Mahagon from "@/assets/frame-sauna-1-mahagon.jpg";
@@ -682,6 +686,14 @@ const Configurator = () => {
     spruce: spruceWood2Img,
     thermo: thermoWood2Img,
     wpc: wpcPlastImg,
+    "blue-marble": blueMarbleImg,
+    "gray-acrylic": grayAcrylicImg,
+    gray: grayAcrylicImg,
+    "white-acrylic": whiteAcrylicImg,
+    white: whiteAcrylicImg,
+    "black-marble": blackMarbleImg,
+    black: blackMarbleImg,
+    blue: blueMarbleImg,
   };
 
   const hotTubCoverColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverColorOptions);
