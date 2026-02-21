@@ -489,6 +489,9 @@ type ApiConfig = {
 
 const toUIOptions = (api: ApiOption[] | undefined, withImages?: Record<string, string>): ConfigOption[] => {
   if (!api) return [];
+  if (withImages) {
+    console.log('[toUIOptions] API IDs:', api.map(o => o.id), 'Image keys:', Object.keys(withImages));
+  }
   return api.map((o) => ({
     id: o.id,
     name: o.label,
