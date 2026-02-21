@@ -2119,6 +2119,9 @@ const Configurator = () => {
                               />
                             ))}
                           </div>
+                        </div>
+                      )}
+
                       {/* Vzduchové bubliny */}
                       {hotTubAirBubblesOptions.length > 0 && (
                         <div>
@@ -2252,8 +2255,6 @@ const Configurator = () => {
                         </div>
                       )}
                     </div>
-                  )}
-                </div>
                   )}
                 </div>
 
