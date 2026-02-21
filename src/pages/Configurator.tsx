@@ -1962,44 +1962,6 @@ const Configurator = () => {
                         </div>
                       )}
 
-                      {/* Podvodné LED */}
-                      {selectedHotTubType?.hasUnderwaterLed && selectedHotTubType.underwaterLedOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {t("config.underwaterLed")} <span className="text-primary">*</span>
-                          </h3>
-                          <div className="grid grid-cols-2 gap-3">
-                            {selectedHotTubType.underwaterLedOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.underwaterLed === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, underwaterLed: option.id }))}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* LED okolo kade */}
-                      {selectedHotTubType?.hasExteriorLed && selectedHotTubType.exteriorLedOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-lg font-semibold text-foreground mb-3">
-                            {t("config.hottubExteriorLed")} <span className="text-primary">*</span>
-                          </h3>
-                          <div className="grid grid-cols-2 gap-3">
-                            {selectedHotTubType.exteriorLedOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.exteriorLed === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, exteriorLed: option.id }))}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
                       {/* Kryt - model-specific */}
                       {selectedHotTubType?.hasCover && selectedHotTubType.coverOptions.length > 0 && (
                         <div>
@@ -2032,6 +1994,44 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.coverColor === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, coverColor: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Podvodné LED */}
+                      {selectedHotTubType?.hasUnderwaterLed && selectedHotTubType.underwaterLedOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">
+                            {t("config.underwaterLed")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-2 gap-3">
+                            {selectedHotTubType.underwaterLedOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.underwaterLed === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, underwaterLed: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* LED okolo kade */}
+                      {selectedHotTubType?.hasExteriorLed && selectedHotTubType.exteriorLedOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-foreground mb-3">
+                            {t("config.hottubExteriorLed")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-2 gap-3">
+                            {selectedHotTubType.exteriorLedOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.exteriorLed === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, exteriorLed: option.id }))}
                               />
                             ))}
                           </div>
