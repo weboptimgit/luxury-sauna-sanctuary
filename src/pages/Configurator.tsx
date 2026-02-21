@@ -1958,7 +1958,7 @@ const Configurator = () => {
                                 key={option.id}
                                 option={option}
                                 isSelected={hotTubConfig.cover === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, cover: option.id }))}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, cover: option.id, ...(option.id === "none" ? { coverColor: "none" } : {}) }))}
                               />
                             ))}
                           </div>
@@ -1966,7 +1966,7 @@ const Configurator = () => {
                       )}
 
                       {/* Farba krytu */}
-                      {selectedHotTubType?.hasCoverColor && hotTubCoverColorOptions.length > 0 && (
+                      {selectedHotTubType?.hasCoverColor && hotTubCoverColorOptions.length > 0 && hotTubConfig.cover !== "none" && (
                         <div>
                           <h3 className="text-lg font-semibold text-foreground mb-3">
                             {t("config.coverColor")} <span className="text-primary">*</span>
