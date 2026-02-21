@@ -689,11 +689,18 @@ const Configurator = () => {
     "blue-marble": blueMarbleImg,
     "gray-acrylic": grayAcrylicImg,
     gray: grayAcrylicImg,
+    seda: grayAcrylicImg,
+    grey: grayAcrylicImg,
     "white-acrylic": whiteAcrylicImg,
     white: whiteAcrylicImg,
+    "akryl-biela": whiteAcrylicImg,
     "black-marble": blackMarbleImg,
     black: blackMarbleImg,
+    cierna: blackMarbleImg,
+    "cierna-imitacia-mramoru": blackMarbleImg,
     blue: blueMarbleImg,
+    modra: blueMarbleImg,
+    "modra-imitacia-mramoru": blueMarbleImg,
   };
 
   const hotTubCoverColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverColorOptions);
