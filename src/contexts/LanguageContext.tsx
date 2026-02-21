@@ -64,6 +64,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Hot tub options
     "config.size": "Veľkosť",
     "config.hottubHeater": "Ohrievač",
+    "config.underwaterLed": "Podvodné LED osvetlenie",
+    "config.hottubExteriorLed": "LED osvetlenie okolo kade",
     "config.jets": "Masážne trysky",
     "config.cover": "Kryt",
     "config.coverColor": "Farba krytu",
@@ -180,6 +182,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Hot tub options
     "config.size": "Size",
     "config.hottubHeater": "Heater",
+    "config.underwaterLed": "Underwater LED Lighting",
+    "config.hottubExteriorLed": "LED Lighting Around the Tub",
     "config.jets": "Jets",
     "config.cover": "Cover",
     "config.coverColor": "Cover Color",
