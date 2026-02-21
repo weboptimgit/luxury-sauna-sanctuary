@@ -70,6 +70,13 @@ const translations: Record<Language, Record<string, string>> = {
     "config.jets": "Masážne trysky",
     "config.cover": "Kryt",
     "config.coverColor": "Farba krytu",
+    "config.airBubbles": "Vzduchové bubliny",
+    "config.drainRelay": "Prúdový istič 25A",
+    "config.sandFilter": "Pieskový filter",
+    "config.electronicController": "Elektronický kontrolér",
+    "config.thermometer": "Integrovaný teplomer",
+    "config.bluetoothSpeaker": "Bluetooth reproduktor",
+    "config.headCushion": "Hlavový vankúš 4ks",
 
     // Summary
     "config.summary": "Zhrnutie konfigurácie",
@@ -189,6 +196,13 @@ const translations: Record<Language, Record<string, string>> = {
     "config.jets": "Jets",
     "config.cover": "Cover",
     "config.coverColor": "Cover Color",
+    "config.airBubbles": "Air Bubbles",
+    "config.drainRelay": "Current Drain Relay 25A",
+    "config.sandFilter": "Sand Filter",
+    "config.electronicController": "Electronic Controller",
+    "config.thermometer": "Integrated Thermometer",
+    "config.bluetoothSpeaker": "Bluetooth Speaker System",
+    "config.headCushion": "Head Cushion 4pcs",
 
     // Summary
     "config.summary": "Configuration Summary",
