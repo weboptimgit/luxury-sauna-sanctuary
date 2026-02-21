@@ -1940,7 +1940,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.size")} <span className="text-primary">*</span>
                           </h3>
-                          <ScrollableRow>
+                          <div className="grid grid-cols-3 gap-2 md:gap-3">
                             {selectedHotTubType.sizeOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -1949,7 +1949,7 @@ const Configurator = () => {
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, size: option.id }))}
                               />
                             ))}
-                          </ScrollableRow>
+                          </div>
                         </div>
                       )}
 
@@ -1959,7 +1959,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.exteriorWood")} <span className="text-primary">*</span>
                           </h3>
-                          <ScrollableRow>
+                          <div className="grid grid-cols-3 gap-2 md:gap-3">
                             {selectedHotTubType.exteriorWoodOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -1968,7 +1968,7 @@ const Configurator = () => {
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, exteriorWood: option.id }))}
                               />
                             ))}
-                          </ScrollableRow>
+                          </div>
                         </div>
                       )}
 
@@ -1978,7 +1978,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.heater")} <span className="text-primary">*</span>
                           </h3>
-                          <ScrollableRow>
+                          <div className="grid grid-cols-3 gap-2 md:gap-3">
                             {selectedHotTubType.heaterOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -1987,7 +1987,7 @@ const Configurator = () => {
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, heater: option.id }))}
                               />
                             ))}
-                          </ScrollableRow>
+                          </div>
                         </div>
                       )}
 
@@ -1997,7 +1997,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.cover")} <span className="text-primary">*</span>
                           </h3>
-                          <ScrollableRow>
+                          <div className="grid grid-cols-3 gap-2 md:gap-3">
                             {selectedHotTubType.coverOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2006,7 +2006,7 @@ const Configurator = () => {
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, cover: option.id, ...(option.id === "none" ? { coverColor: "none" } : {}) }))}
                               />
                             ))}
-                          </ScrollableRow>
+                          </div>
                         </div>
                       )}
 
@@ -2016,7 +2016,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.coverColor")} <span className="text-primary">*</span>
                           </h3>
-                          <ScrollableRow>
+                          <div className="grid grid-cols-3 gap-2 md:gap-3">
                             {hotTubCoverColorOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2025,7 +2025,7 @@ const Configurator = () => {
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, coverColor: option.id }))}
                               />
                             ))}
-                          </ScrollableRow>
+                          </div>
                         </div>
                       )}
 
@@ -2035,7 +2035,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.underwaterLed")} <span className="text-primary">*</span>
                           </h3>
-                          <ScrollableRow>
+                          <div className="grid grid-cols-3 gap-2 md:gap-3">
                             {selectedHotTubType.underwaterLedOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2044,7 +2044,7 @@ const Configurator = () => {
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, underwaterLed: option.id }))}
                               />
                             ))}
-                          </ScrollableRow>
+                          </div>
                         </div>
                       )}
 
@@ -2054,7 +2054,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.hottubExteriorLed")} <span className="text-primary">*</span>
                           </h3>
-                          <ScrollableRow>
+                          <div className="grid grid-cols-3 gap-2 md:gap-3">
                             {selectedHotTubType.exteriorLedOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2063,7 +2063,7 @@ const Configurator = () => {
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, exteriorLed: option.id }))}
                               />
                             ))}
-                          </ScrollableRow>
+                          </div>
                         </div>
                       )}
                     </div>
