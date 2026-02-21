@@ -2075,7 +2075,12 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.hottubElectricHeater")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.heaterOptions.filter((o) => o.id.startsWith("electric-")).length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <div className={cn("grid gap-2 md:gap-3", "grid-cols-3")}>
+                            <OptionCard
+                              option={{ id: "none", name: t("config.noHeater"), price: 0 }}
+                              isSelected={hotTubConfig.electricHeater === "none"}
+                              onClick={() => setHotTubConfig((prev) => ({ ...prev, electricHeater: "none" }))}
+                            />
                             {selectedHotTubType.heaterOptions
                               .filter((o) => o.id.startsWith("electric-"))
                               .map((option) => (
