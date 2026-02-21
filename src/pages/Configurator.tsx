@@ -470,6 +470,13 @@ type ApiConfig = {
     basePrice?: number;
     hottubTypes?: ApiHotTubType[];
     coverColorOptions?: ApiOption[];
+    airBubblesOptions?: ApiOption[];
+    drainRelayOptions?: ApiOption[];
+    sandFilterOptions?: ApiOption[];
+    electronicControllerOptions?: ApiOption[];
+    thermometerOptions?: ApiOption[];
+    bluetoothSpeakerOptions?: ApiOption[];
+    headCushionOptions?: ApiOption[];
   };
 };
 
@@ -568,6 +575,13 @@ const Configurator = () => {
     hydroMassage: "none",
     cover: "none",
     coverColor: "none",
+    airBubbles: "none",
+    drainRelay: "none",
+    sandFilter: "none",
+    electronicController: "none",
+    thermometer: "none",
+    bluetoothSpeaker: "none",
+    headCushion: "none",
   });
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -662,6 +676,13 @@ const Configurator = () => {
   );
 
   const hotTubCoverColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverColorOptions);
+  const hotTubAirBubblesOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.airBubblesOptions);
+  const hotTubDrainRelayOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.drainRelayOptions);
+  const hotTubSandFilterOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.sandFilterOptions);
+  const hotTubElectronicControllerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.electronicControllerOptions);
+  const hotTubThermometerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.thermometerOptions);
+  const hotTubBluetoothSpeakerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.bluetoothSpeakerOptions);
+  const hotTubHeadCushionOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.headCushionOptions);
 
   // --- Heater models z API ---
   const electricHeaterModels: HeaterModel[] = useMemo(() => {
@@ -900,8 +921,15 @@ const Configurator = () => {
       const hydroMassagePrice = selectedHotTubType.hydroMassageOptions.find((h) => h.id === hotTubConfig.hydroMassage)?.price ?? 0;
       const coverPrice = selectedHotTubType.coverOptions.find((c) => c.id === hotTubConfig.cover)?.price ?? 0;
       const coverColorPrice = apiConfig.hottub.coverColorOptions?.find((c) => c.id === hotTubConfig.coverColor)?.price ?? 0;
+      const airBubblesPrice = apiConfig.hottub.airBubblesOptions?.find((o) => o.id === hotTubConfig.airBubbles)?.price ?? 0;
+      const drainRelayPrice = apiConfig.hottub.drainRelayOptions?.find((o) => o.id === hotTubConfig.drainRelay)?.price ?? 0;
+      const sandFilterPrice = apiConfig.hottub.sandFilterOptions?.find((o) => o.id === hotTubConfig.sandFilter)?.price ?? 0;
+      const electronicControllerPrice = apiConfig.hottub.electronicControllerOptions?.find((o) => o.id === hotTubConfig.electronicController)?.price ?? 0;
+      const thermometerPrice = apiConfig.hottub.thermometerOptions?.find((o) => o.id === hotTubConfig.thermometer)?.price ?? 0;
+      const bluetoothSpeakerPrice = apiConfig.hottub.bluetoothSpeakerOptions?.find((o) => o.id === hotTubConfig.bluetoothSpeaker)?.price ?? 0;
+      const headCushionPrice = apiConfig.hottub.headCushionOptions?.find((o) => o.id === hotTubConfig.headCushion)?.price ?? 0;
 
-      return basePrice + sizePrice + exteriorWoodPrice + heaterPrice + underwaterLedPrice + exteriorLedPrice2 + hydroMassagePrice + coverPrice + coverColorPrice;
+      return basePrice + sizePrice + exteriorWoodPrice + heaterPrice + underwaterLedPrice + exteriorLedPrice2 + hydroMassagePrice + coverPrice + coverColorPrice + airBubblesPrice + drainRelayPrice + sandFilterPrice + electronicControllerPrice + thermometerPrice + bluetoothSpeakerPrice + headCushionPrice;
     }
 
     return 0;
@@ -1004,7 +1032,7 @@ const Configurator = () => {
       color: "none" as SaunaColorType,
       woodType: "spruce",
     });
-    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none" });
+    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
     navigate(getConfigBasePath(), { replace: true });
   };
 
@@ -1026,7 +1054,7 @@ const Configurator = () => {
 
   const goBackToHotTubTypes = () => {
     setSelectedHotTubType(null);
-    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none" });
+    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
   };
@@ -2091,9 +2119,141 @@ const Configurator = () => {
                               />
                             ))}
                           </div>
+                      {/* Vzduchové bubliny */}
+                      {hotTubAirBubblesOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.airBubbles")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className={cn("grid gap-2 md:gap-3", hotTubAirBubblesOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {hotTubAirBubblesOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.airBubbles === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, airBubbles: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Prúdový istič */}
+                      {hotTubDrainRelayOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.drainRelay")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className={cn("grid gap-2 md:gap-3", hotTubDrainRelayOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {hotTubDrainRelayOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.drainRelay === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, drainRelay: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Pieskový filter */}
+                      {hotTubSandFilterOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.sandFilter")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className={cn("grid gap-2 md:gap-3", hotTubSandFilterOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {hotTubSandFilterOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.sandFilter === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, sandFilter: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Elektronický kontrolér */}
+                      {hotTubElectronicControllerOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.electronicController")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className={cn("grid gap-2 md:gap-3", hotTubElectronicControllerOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {hotTubElectronicControllerOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.electronicController === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, electronicController: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Teplomer */}
+                      {hotTubThermometerOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.thermometer")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className={cn("grid gap-2 md:gap-3", hotTubThermometerOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {hotTubThermometerOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.thermometer === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, thermometer: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Bluetooth reproduktor */}
+                      {hotTubBluetoothSpeakerOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.bluetoothSpeaker")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className={cn("grid gap-2 md:gap-3", hotTubBluetoothSpeakerOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {hotTubBluetoothSpeakerOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.bluetoothSpeaker === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, bluetoothSpeaker: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Hlavový vankúš */}
+                      {hotTubHeadCushionOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.headCushion")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className={cn("grid gap-2 md:gap-3", hotTubHeadCushionOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {hotTubHeadCushionOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.headCushion === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, headCushion: option.id }))}
+                              />
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>
+                  )}
+                </div>
                   )}
                 </div>
 
