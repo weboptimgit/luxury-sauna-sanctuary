@@ -731,22 +731,22 @@ const Configurator = () => {
     "siva": coverGreyImg,
   });
   const hotTubAirBubblesOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.airBubblesOptions, Object.fromEntries(
-    Object.keys(apiConfig?.hottub.airBubblesOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, airBubblesImg])
+    (apiConfig?.hottub.airBubblesOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, airBubblesImg])
   ));
   const hotTubDrainRelayOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.drainRelayOptions, Object.fromEntries(
-    Object.keys(apiConfig?.hottub.drainRelayOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, drainRelayImg])
+    (apiConfig?.hottub.drainRelayOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, drainRelayImg])
   ));
   const hotTubSandFilterOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.sandFilterOptions, Object.fromEntries(
-    Object.keys(apiConfig?.hottub.sandFilterOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, sandFilterImg])
+    (apiConfig?.hottub.sandFilterOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, sandFilterImg])
   ));
   const hotTubElectronicControllerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.electronicControllerOptions, Object.fromEntries(
-    Object.keys(apiConfig?.hottub.electronicControllerOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, digitalControllerImg])
+    (apiConfig?.hottub.electronicControllerOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, digitalControllerImg])
   ));
   const hotTubThermometerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.thermometerOptions, Object.fromEntries(
-    Object.keys(apiConfig?.hottub.thermometerOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, thermometerImg])
+    (apiConfig?.hottub.thermometerOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, thermometerImg])
   ));
   const hotTubBluetoothSpeakerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.bluetoothSpeakerOptions, Object.fromEntries(
-    Object.keys(apiConfig?.hottub.bluetoothSpeakerOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, speaker])
+    (apiConfig?.hottub.bluetoothSpeakerOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, speaker])
   ));
   const hotTubHeadCushionOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.headCushionOptions);
 
@@ -871,7 +871,7 @@ const Configurator = () => {
         "led-okolo": exteriorLedHottubImg,
       }),
       hydroMassageOptions: toUIOptions(ht.hydroMassageOptions, Object.fromEntries(
-        Object.keys(ht.hydroMassageOptions || {}).filter(k => k !== "none" && k !== "bez").map(k => [k, hydroMassageImg])
+        (ht.hydroMassageOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, hydroMassageImg])
       )),
       coverOptions: toUIOptions(ht.coverOptions, {
         "200cm": thermoCoverImg,
