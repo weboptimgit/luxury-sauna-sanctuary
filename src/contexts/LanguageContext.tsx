@@ -109,6 +109,7 @@ const translations: Record<Language, Record<string, string>> = {
     "config.without": "Bez",
     "config.scrollMore": "Posúňte pre ďalšie možnosti",
     "config.priceNote": "Cena je orientačná vrátane DPH. Presná kalkulácia bude v objednávke.",
+    "config.exteriorWood": "Vonkajšie drevo",
     "config.hottub.configTitle": "Konfigurácia kade",
     "config.lightboxAlt": "Detail produktu",
 
@@ -222,6 +223,7 @@ const translations: Record<Language, Record<string, string>> = {
     "config.without": "Without",
     "config.scrollMore": "Scroll for more options",
     "config.priceNote": "Price is indicative incl. VAT. Exact calculation will be in the order.",
+    "config.exteriorWood": "Exterior Wood",
     "config.hottub.configTitle": "Hot Tub Configuration",
     "config.lightboxAlt": "Product detail",
 
