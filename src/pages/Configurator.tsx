@@ -2071,6 +2071,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.heater === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, heater: option.id }))}
+                                showImage={!!option.image}
                                 description={option.id === "external-aisi316" ? (language === "en" ? "with chimney, cap and protection, suitable for water with chemicals" : "s komínom, čiapkou a ochranou, vhodné pre vodu s chémiou") : undefined}
                               />
                             ))}
@@ -2098,6 +2099,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.electricHeater === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, electricHeater: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
