@@ -37,6 +37,9 @@ import ledBenches from "@/assets/LED-lighting-under-the-benches.png";
 import ledBackrest from "@/assets/LED-lighting-in-the-back-supports-1.jpg";
 import electricHeater from "@/assets/Harvia-CILINDRO-9kw.png";
 import woodHeater from "@/assets/Harvia-M3.png";
+import integratedHottubHeater from "@/assets/integrated-hottub-heater.jpg";
+import electricHeater3kw from "@/assets/electric-heater-3kw.jpeg";
+import electricHeater6kw from "@/assets/electric-heater-6kw.jpeg";
 import spruceWoodImg from "@/assets/spruce-wood.jpg";
 import thermoWoodImg from "@/assets/thermo-wood.jpg";
 import spruceWood2Img from "@/assets/spruce-wood-2.jpg";
@@ -697,6 +700,7 @@ const Configurator = () => {
     grey: grayAcrylicImg,
     "white-acrylic": whiteAcrylicImg,
     white: whiteAcrylicImg,
+    "acryl-white": whiteAcrylicImg,
     "akryl-biela": whiteAcrylicImg,
     "black-marble": blackMarbleImg,
     black: blackMarbleImg,
@@ -820,7 +824,12 @@ const Configurator = () => {
       hasCoverColor: ht.hasCoverColor ?? true,
       sizeOptions: toUIOptions(ht.sizeOptions),
       exteriorWoodOptions: toUIOptions(ht.exteriorWoodOptions, exteriorWoodImages),
-      heaterOptions: toUIOptions(ht.heaterOptions),
+      heaterOptions: toUIOptions(ht.heaterOptions, {
+        "external-aisi304": integratedHottubHeater,
+        "external-aisi316": integratedHottubHeater,
+        "electric-3kw": electricHeater3kw,
+        "electric-6kw": electricHeater6kw,
+      }),
       underwaterLedOptions: toUIOptions(ht.underwaterLedOptions),
       exteriorLedOptions: toUIOptions(ht.exteriorLedOptions),
       hydroMassageOptions: toUIOptions(ht.hydroMassageOptions),
