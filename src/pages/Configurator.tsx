@@ -39,6 +39,9 @@ import electricHeater from "@/assets/Harvia-CILINDRO-9kw.png";
 import woodHeater from "@/assets/Harvia-M3.png";
 import spruceWoodImg from "@/assets/spruce-wood.jpg";
 import thermoWoodImg from "@/assets/thermo-wood.jpg";
+import spruceWood2Img from "@/assets/spruce-wood-2.jpg";
+import thermoWood2Img from "@/assets/thermo-wood-2.jpg";
+import wpcPlastImg from "@/assets/wpc-plast.jpg";
 // Farebné varianty Frame sauny - všetky farby podľa katalógu
 import frameSaunaNatural from "@/assets/frame-sauna-natural.jpg";
 import frameSauna1Mahagon from "@/assets/frame-sauna-1-mahagon.jpg";
@@ -675,6 +678,12 @@ const Configurator = () => {
     [saunaColorOptions],
   );
 
+  const exteriorWoodImages: Record<string, string> = {
+    spruce: spruceWood2Img,
+    thermo: thermoWood2Img,
+    wpc: wpcPlastImg,
+  };
+
   const hotTubCoverColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverColorOptions);
   const hotTubAirBubblesOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.airBubblesOptions);
   const hotTubDrainRelayOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.drainRelayOptions);
@@ -787,7 +796,7 @@ const Configurator = () => {
       hasCover: ht.hasCover ?? true,
       hasCoverColor: ht.hasCoverColor ?? true,
       sizeOptions: toUIOptions(ht.sizeOptions),
-      exteriorWoodOptions: toUIOptions(ht.exteriorWoodOptions),
+      exteriorWoodOptions: toUIOptions(ht.exteriorWoodOptions, exteriorWoodImages),
       heaterOptions: toUIOptions(ht.heaterOptions),
       underwaterLedOptions: toUIOptions(ht.underwaterLedOptions),
       exteriorLedOptions: toUIOptions(ht.exteriorLedOptions),
@@ -2007,6 +2016,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={hotTubConfig.exteriorWood === option.id}
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, exteriorWood: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
