@@ -1040,39 +1040,39 @@ const Configurator = () => {
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center p-2 rounded-lg border-2 transition-all min-w-0",
+        "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all min-w-0",
         isSelected ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/50 bg-card/50",
       )}
     >
       {option.id === "none" ? (
-        <div className="w-10 h-10 flex items-center justify-center rounded-md bg-muted/50 mb-1">
-          <X className="w-5 h-5 text-muted-foreground" />
+        <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-muted/50 mb-1 md:mb-2">
+          <X className="w-5 h-5 md:w-7 md:h-7 text-muted-foreground" />
         </div>
       ) : showImage && option.image ? (
         <img
           src={option.image}
           alt={option.name}
-          className="w-10 h-10 rounded-md object-cover mb-1"
+          className="w-10 h-10 md:w-14 md:h-14 rounded-md object-cover mb-1 md:mb-2"
         />
       ) : (
-        <div className="w-10 h-10 flex items-center justify-center rounded-md bg-primary/10 mb-1">
-          <Check className="w-4 h-4 text-primary" />
+        <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-primary/10 mb-1 md:mb-2">
+          <Check className="w-4 h-4 md:w-5 md:h-5 text-primary" />
         </div>
       )}
 
-      <span className="font-medium text-center text-xs leading-tight">{option.name}</span>
+      <span className="font-medium text-center text-xs md:text-sm leading-tight">{option.name}</span>
 
       {option.price > 0 ? (
         <div className="flex items-center gap-1">
           {option.originalPrice && (
-            <span className="text-[10px] text-muted-foreground line-through">
+            <span className="text-[10px] md:text-xs text-muted-foreground line-through">
               {option.originalPrice.toLocaleString()} €
             </span>
           )}
-          <span className="text-[10px] text-primary">{option.price.toLocaleString()} €</span>
+          <span className="text-[10px] md:text-xs text-primary">{option.price.toLocaleString()} €</span>
         </div>
       ) : (
-        <span className="text-[10px] text-muted-foreground">{option.price === 0 ? "0,00 €" : t("included")}</span>
+        <span className="text-[10px] md:text-xs text-muted-foreground">{option.price === 0 ? "0,00 €" : t("included")}</span>
       )}
     </button>
   );
@@ -1099,7 +1099,7 @@ const Configurator = () => {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex gap-2 overflow-x-auto md:grid md:grid-cols-3 md:overflow-x-visible pb-1"
+          className="flex gap-2 md:gap-3 overflow-x-auto md:grid md:grid-cols-3 md:overflow-x-visible pb-1"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {React.Children.map(children, (child) => (
@@ -1628,31 +1628,31 @@ const Configurator = () => {
                       {/* Typ dreva */}
                       {selectedSaunaType.hasWoodType && selectedSaunaType.availableWoodTypes.length > 0 && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.woodType")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
                             {woodTypeOptionsForModel.map((option) => (
                               <button
                                 key={option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, woodType: option.id }))}
                                 className={cn(
-                                  "flex flex-col items-center p-2 rounded-lg border-2 transition-all",
+                                  "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all",
                                   saunaConfig.woodType === option.id
                                     ? "border-primary bg-primary/5"
                                     : "border-border/50 hover:border-primary/50 bg-card/50",
                                 )}
                               >
-                                <div className="w-10 h-10 rounded-md mb-1 overflow-hidden">
+                                <div className="w-10 h-10 md:w-14 md:h-14 rounded-md mb-1 md:mb-2 overflow-hidden">
                                   <img src={option.image} alt={option.name} className="w-full h-full object-cover" />
                                 </div>
-                                <span className="font-medium text-center text-xs">
+                                <span className="font-medium text-center text-xs md:text-sm">
                                   {option.id === "spruce" ? t("config.woodType.spruce") : t("config.woodType.thermo")}
                                 </span>
                                 {option.price > 0 ? (
-                                  <span className="text-[10px] text-primary">+{option.price.toLocaleString()} €</span>
+                                  <span className="text-[10px] md:text-xs text-primary">+{option.price.toLocaleString()} €</span>
                                 ) : (
-                                  <span className="text-[10px] text-muted-foreground">{t("included")}</span>
+                                  <span className="text-[10px] md:text-xs text-muted-foreground">{t("included")}</span>
                                 )}
                               </button>
                             ))}
@@ -1673,10 +1673,10 @@ const Configurator = () => {
                       {/* Typ ohrievača */}
                       {selectedSaunaType.hasHeater && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.heater")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-3 gap-2">
+                          <div className="grid grid-cols-3 gap-2 md:gap-3">
                             {saunaHeaterTypes.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -1774,10 +1774,10 @@ const Configurator = () => {
                       {/* LED osvetlenie (interiér) */}
                       {selectedSaunaType.hasLed && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.led")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-3 gap-2">
+                          <div className="grid grid-cols-3 gap-2 md:gap-3">
                             {/* Bez LED = reset */}
                             <OptionCard
                               option={{ id: "none", name: t("config.noLed"), price: 0 }}
@@ -1804,37 +1804,37 @@ const Configurator = () => {
                       {/* Vonkajšie LED osvetlenie - iba pre ModulSaunu */}
                       {selectedSaunaType.hasExteriorLed && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">{t("config.exteriorLed")}</h3>
-                          <div className="grid grid-cols-2 gap-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">{t("config.exteriorLed")}</h3>
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
                             <button
                               onClick={() => setSaunaConfig((prev) => ({ ...prev, exteriorLed: false }))}
                               className={cn(
-                                "flex flex-col items-center p-2 rounded-lg border-2 transition-all",
+                                "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all",
                                 !saunaConfig.exteriorLed
                                   ? "border-primary bg-primary/5"
                                   : "border-border/50 hover:border-primary/50 bg-card/50",
                               )}
                             >
-                              <div className="w-10 h-10 flex items-center justify-center rounded-md bg-muted/50 mb-1">
-                                <X className="w-5 h-5 text-muted-foreground" />
+                              <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-muted/50 mb-1 md:mb-2">
+                                <X className="w-5 h-5 md:w-7 md:h-7 text-muted-foreground" />
                               </div>
-                              <span className="font-medium text-center text-xs">{t("config.without")}</span>
-                              <span className="text-[10px] text-muted-foreground">{t("included")}</span>
+                              <span className="font-medium text-center text-xs md:text-sm">{t("config.without")}</span>
+                              <span className="text-[10px] md:text-xs text-muted-foreground">{t("included")}</span>
                             </button>
                             <button
                               onClick={() => setSaunaConfig((prev) => ({ ...prev, exteriorLed: true }))}
                               className={cn(
-                                "flex flex-col items-center p-2 rounded-lg border-2 transition-all",
+                                "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all",
                                 saunaConfig.exteriorLed
                                   ? "border-primary bg-primary/5"
                                   : "border-border/50 hover:border-primary/50 bg-card/50",
                               )}
                             >
-                              <div className="w-10 h-10 flex items-center justify-center rounded-md bg-primary/10 mb-1">
-                                <Lightbulb className="w-5 h-5 text-primary" />
+                              <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-primary/10 mb-1 md:mb-2">
+                                <Lightbulb className="w-5 h-5 md:w-7 md:h-7 text-primary" />
                               </div>
-                              <span className="font-medium text-center text-xs">{t("config.exteriorLedShort")}</span>
-                              <span className="text-[10px] text-primary">+{exteriorLedPrice} €</span>
+                              <span className="font-medium text-center text-xs md:text-sm">{t("config.exteriorLedShort")}</span>
+                              <span className="text-[10px] md:text-xs text-primary">+{exteriorLedPrice} €</span>
                             </button>
                           </div>
                         </div>
@@ -1843,10 +1843,10 @@ const Configurator = () => {
                       {/* Bluetooth reproduktor */}
                       {selectedSaunaType.hasBluetooth && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.bluetooth")} <span className="text-primary">*</span>
                           </h3>
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
                             {saunaBluetoothOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -1863,11 +1863,11 @@ const Configurator = () => {
                       {/* Saunová sada */}
                       {selectedSaunaType.hasAccessoryKit && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.accessories")} <span className="text-primary">*</span>
                           </h3>
                           <p className="text-xs text-muted-foreground mb-2 italic">{t("config.accessoryKitHint")}</p>
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
                             {saunaAccessoryKitOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -1884,11 +1884,11 @@ const Configurator = () => {
                       {/* Farba */}
                       {selectedSaunaType.hasColor && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.color")} <span className="text-primary">*</span>
                           </h3>
                           <p className="text-xs text-muted-foreground mb-3 italic">{t("config.colorHint")}</p>
-                          <div className="grid grid-cols-4 gap-2">
+                          <div className="grid grid-cols-4 gap-2 md:gap-3">
                             {saunaColorOptionsTyped.map((option) => (
                               <button
                                 key={option.id}
@@ -1897,19 +1897,19 @@ const Configurator = () => {
                                   setCurrentImageIndex(0);
                                 }}
                                 className={cn(
-                                  "flex flex-col items-center p-2 rounded-lg border-2 transition-all",
+                                  "flex flex-col items-center p-1.5 md:p-2 rounded-lg border-2 transition-all",
                                   saunaConfig.color === option.id
                                     ? "border-primary bg-primary/5"
                                     : "border-border/50 hover:border-primary/50 bg-card/50",
                                 )}
                               >
                                 {option.id === "none" ? (
-                                  <div className="w-8 h-8 rounded-md bg-muted/50 flex items-center justify-center mb-1">
-                                    <X className="w-4 h-4 text-muted-foreground" />
+                                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-md bg-muted/50 flex items-center justify-center mb-1">
+                                    <X className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
                                   </div>
                                 ) : (
                                   <div
-                                    className="w-8 h-8 rounded-md mb-1 border border-border/30"
+                                    className="w-8 h-8 md:w-10 md:h-10 rounded-md mb-1 border border-border/30"
                                     style={{ backgroundColor: saunaColorSwatches[option.id].colorHsl }}
                                   />
                                 )}
@@ -1937,7 +1937,7 @@ const Configurator = () => {
                       {/* Veľkosť */}
                       {selectedHotTubType?.hasSize && selectedHotTubType.sizeOptions.length > 0 && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.size")} <span className="text-primary">*</span>
                           </h3>
                           <ScrollableRow>
@@ -1956,7 +1956,7 @@ const Configurator = () => {
                       {/* Vonkajšie drevo */}
                       {selectedHotTubType?.hasExteriorWood && selectedHotTubType.exteriorWoodOptions.length > 0 && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.exteriorWood")} <span className="text-primary">*</span>
                           </h3>
                           <ScrollableRow>
@@ -1975,7 +1975,7 @@ const Configurator = () => {
                       {/* Ohrievač */}
                       {selectedHotTubType?.hasHeater && selectedHotTubType.heaterOptions.length > 0 && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.heater")} <span className="text-primary">*</span>
                           </h3>
                           <ScrollableRow>
@@ -1994,7 +1994,7 @@ const Configurator = () => {
                       {/* Kryt - model-specific */}
                       {selectedHotTubType?.hasCover && selectedHotTubType.coverOptions.length > 0 && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.cover")} <span className="text-primary">*</span>
                           </h3>
                           <ScrollableRow>
@@ -2013,7 +2013,7 @@ const Configurator = () => {
                       {/* Farba krytu */}
                       {selectedHotTubType?.hasCoverColor && hotTubCoverColorOptions.length > 0 && hotTubConfig.cover !== "none" && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.coverColor")} <span className="text-primary">*</span>
                           </h3>
                           <ScrollableRow>
@@ -2032,7 +2032,7 @@ const Configurator = () => {
                       {/* Podvodné LED */}
                       {selectedHotTubType?.hasUnderwaterLed && selectedHotTubType.underwaterLedOptions.length > 0 && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.underwaterLed")} <span className="text-primary">*</span>
                           </h3>
                           <ScrollableRow>
@@ -2051,7 +2051,7 @@ const Configurator = () => {
                       {/* LED okolo kade */}
                       {selectedHotTubType?.hasExteriorLed && selectedHotTubType.exteriorLedOptions.length > 0 && (
                         <div>
-                          <h3 className="text-sm font-semibold text-foreground mb-2">
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.hottubExteriorLed")} <span className="text-primary">*</span>
                           </h3>
                           <ScrollableRow>
