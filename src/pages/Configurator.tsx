@@ -963,9 +963,12 @@ const Configurator = () => {
     if (matchedHotTub) {
       setProductCategory("hottub");
       setSelectedHotTubType(matchedHotTub);
-      if (matchedHotTub.sizeOptions.length > 0) {
-        setHotTubConfig((prev) => ({ ...prev, size: matchedHotTub.sizeOptions[0].id }));
-      }
+      setHotTubConfig((prev) => ({
+        ...prev,
+        size: matchedHotTub.sizeOptions.length > 0 ? matchedHotTub.sizeOptions[0].id : "none",
+        exteriorWood: matchedHotTub.exteriorWoodOptions.length > 0 ? matchedHotTub.exteriorWoodOptions[0].id : "none",
+        acrylicLiner: matchedHotTub.acrylicLinerOptions.length > 0 ? matchedHotTub.acrylicLinerOptions[0].id : "none",
+      }));
       hasAppliedSlug.current = true;
     }
   }, [modelSlug, saunaTypesUI, hottubTypesUI]);
@@ -990,9 +993,12 @@ const Configurator = () => {
     (hotTubType: HotTubType) => {
       setSelectedHotTubType(hotTubType);
       setProductCategory("hottub");
-      if (hotTubType.sizeOptions.length > 0) {
-        setHotTubConfig((prev) => ({ ...prev, size: hotTubType.sizeOptions[0].id }));
-      }
+      setHotTubConfig((prev) => ({
+        ...prev,
+        size: hotTubType.sizeOptions.length > 0 ? hotTubType.sizeOptions[0].id : "none",
+        exteriorWood: hotTubType.exteriorWoodOptions.length > 0 ? hotTubType.exteriorWoodOptions[0].id : "none",
+        acrylicLiner: hotTubType.acrylicLinerOptions.length > 0 ? hotTubType.acrylicLinerOptions[0].id : "none",
+      }));
       const basePath = getConfigBasePath();
       navigate(`${basePath}/${hotTubType.id}`, { replace: true });
     },
