@@ -1279,51 +1279,12 @@ const Configurator = () => {
   };
 
   const ScrollableRow = ({ children, cols = 3 }: { children: React.ReactNode; cols?: 2 | 3 }) => {
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const [canScrollRight, setCanScrollRight] = useState(false);
-    const [canScrollLeft, setCanScrollLeft] = useState(false);
-
-    useEffect(() => {
-      const el = scrollRef.current;
-      if (!el) return;
-      const check = () => {
-        setCanScrollRight(el.scrollWidth > el.clientWidth + el.scrollLeft + 4);
-        setCanScrollLeft(el.scrollLeft > 4);
-      };
-      check();
-      el.addEventListener("scroll", check);
-      window.addEventListener("resize", check);
-      return () => {
-        el.removeEventListener("scroll", check);
-        window.removeEventListener("resize", check);
-      };
-    }, [children]);
-
     const childCount = React.Children.count(children);
-    const gridCols = cols === 2 || childCount <= 2 ? "md:grid-cols-2" : "md:grid-cols-3";
+    const gridCols = cols === 2 || childCount <= 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3";
 
     return (
-      <div className="relative">
-        <div
-          ref={scrollRef}
-          className={cn("flex gap-2 md:gap-3 overflow-x-auto md:grid md:overflow-x-visible pb-1 snap-x snap-mandatory", gridCols)}
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {React.Children.map(children, (child) => (
-            <div className="min-w-[110px] max-w-[140px] flex-shrink-0 md:min-w-0 md:max-w-none md:flex-shrink snap-start">
-              {child}
-            </div>
-          ))}
-        </div>
-        {/* Scroll indicators */}
-        {canScrollLeft && (
-          <div className="absolute left-0 top-0 bottom-1 w-6 bg-gradient-to-r from-background to-transparent pointer-events-none md:hidden" />
-        )}
-        {canScrollRight && (
-          <div className="absolute right-0 top-0 bottom-1 w-10 bg-gradient-to-l from-background via-background/80 to-transparent pointer-events-none md:hidden flex items-center justify-end">
-            <ChevronRight className="w-5 h-5 text-primary animate-pulse mr-0.5" />
-          </div>
-        )}
+      <div className={cn("grid gap-2 md:gap-3", gridCols)}>
+        {children}
       </div>
     );
   };
