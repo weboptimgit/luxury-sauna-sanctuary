@@ -1698,10 +1698,10 @@ const Configurator = () => {
             <span className="text-foreground">{t("config.breadcrumb.configuration")}</span>
           </nav>
 
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 min-w-0 overflow-hidden">
             {/* Ľavá strana - obrázky */}
-            <div className="lg:sticky lg:top-28 lg:h-fit space-y-4">
-              <div className="relative aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-card group">
+            <div className="lg:sticky lg:top-28 lg:h-fit space-y-4 min-w-0">
+              <div className="relative aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-card group w-full max-w-full">
                 {discount > 0 && (
                   <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-destructive text-destructive-foreground text-sm font-bold rounded-full">
                     -{discount}%
@@ -1735,13 +1735,13 @@ const Configurator = () => {
                 </button>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                 {images.map((img, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
                     className={cn(
-                      "relative w-20 h-20 rounded-lg overflow-hidden transition-all",
+                      "relative w-14 h-14 sm:w-20 sm:h-20 rounded-lg overflow-hidden transition-all flex-shrink-0",
                       currentImageIndex === index
                         ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
                         : "opacity-60 hover:opacity-100",
