@@ -1589,7 +1589,7 @@ const Configurator = () => {
               <p className="text-muted-foreground text-lg">{t("config.hottubSelection.subtitle")}</p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 max-w-6xl mx-auto">
               {hottubTypesUI.map((ht) => (
                 <button
                   key={ht.id}
@@ -1598,9 +1598,9 @@ const Configurator = () => {
                     setCurrentImageIndex(0);
                     setShowScrollIndicator(true);
                   }}
-                  className="group relative overflow-hidden rounded-3xl border border-white/10 hover:border-primary/50 transition-colors duration-300 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl text-left shadow-2xl hover:shadow-primary/10"
+                  className="group relative overflow-hidden rounded-2xl md:rounded-3xl border border-white/10 hover:border-primary/50 transition-colors duration-300 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl text-left shadow-2xl hover:shadow-primary/10"
                 >
-                  <div className="aspect-[3/4] sm:aspect-[4/3] overflow-hidden relative">
+                  <div className="aspect-square sm:aspect-[4/3] overflow-hidden relative">
                     <img
                       src={ht.image}
                       alt={ht.name}
@@ -1614,22 +1614,22 @@ const Configurator = () => {
                       </div>
                     )}
                   </div>
-                  <div className="relative p-6 -mt-8">
-                    <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 p-5">
-                      <h3 className="font-display text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
+                  <div className="relative p-3 md:p-6 -mt-6 md:-mt-8">
+                    <div className="bg-white/5 backdrop-blur-lg rounded-xl md:rounded-2xl border border-white/10 p-3 md:p-5">
+                      <h3 className="font-display text-base md:text-2xl font-bold text-foreground mb-2 md:mb-4 group-hover:text-primary transition-colors">
                         {ht.name}
                       </h3>
-                      <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                      <div className="flex items-center justify-between pt-2 md:pt-4 border-t border-white/10">
                         <div>
-                          <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+                          <p className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider mb-0.5 md:mb-1">
                             {t("config.from")}
                           </p>
-                          <span className="text-2xl font-bold text-gradient-amber">
+                          <span className="text-lg md:text-2xl font-bold text-gradient-amber">
                             {ht.basePrice.toLocaleString()} €
                           </span>
                         </div>
-                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/30">
-                          <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
+                        <div className="flex items-center justify-center w-8 h-8 md:w-12 md:h-12 rounded-full bg-primary text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/30">
+                          <ArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-0.5" />
                         </div>
                       </div>
                     </div>
@@ -2120,7 +2120,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.size")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.sizeOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {selectedHotTubType.sizeOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2129,7 +2129,7 @@ const Configurator = () => {
                                 onClick={() => setHotTubConfig((prev) => ({ ...prev, size: option.id }))}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2139,7 +2139,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.exteriorWood")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.exteriorWoodOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {selectedHotTubType.exteriorWoodOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2149,7 +2149,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2159,7 +2159,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.acrylicLiner")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.acrylicLinerOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {selectedHotTubType.acrylicLinerOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2169,7 +2169,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2178,7 +2178,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.hottubHeater")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.heaterOptions.filter((o) => !o.id.startsWith("electric-")).length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {selectedHotTubType.heaterOptions
                               .filter((o) => !o.id.startsWith("electric-"))
                               .map((option) => (
@@ -2191,7 +2191,7 @@ const Configurator = () => {
                                 description={option.id === "external-aisi316" ? (language === "en" ? "with chimney, cap and protection, suitable for water with chemicals" : "s komínom, čiapkou a ochranou, vhodné pre vodu s chémiou") : undefined}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2201,7 +2201,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.hottubElectricHeater")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", "grid-cols-3")}>
+                          <ScrollableRow>
                             <OptionCard
                               option={{ id: "none", name: t("config.noHeater"), price: 0 }}
                               isSelected={hotTubConfig.electricHeater === "none"}
@@ -2218,7 +2218,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2228,7 +2228,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.cover")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.coverOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {selectedHotTubType.coverOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2238,7 +2238,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2248,7 +2248,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.coverColor")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", hotTubCoverColorOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {hotTubCoverColorOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2258,7 +2258,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2268,7 +2268,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.underwaterLed")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.underwaterLedOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {selectedHotTubType.underwaterLedOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2278,7 +2278,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2288,7 +2288,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.hottubExteriorLed")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.exteriorLedOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {selectedHotTubType.exteriorLedOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2298,7 +2298,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2308,7 +2308,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.hydroMassage")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.hydroMassageOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {selectedHotTubType.hydroMassageOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2318,7 +2318,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2328,7 +2328,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.airBubbles")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", hotTubAirBubblesOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {hotTubAirBubblesOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2338,7 +2338,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2348,7 +2348,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.drainRelay")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", hotTubDrainRelayOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {hotTubDrainRelayOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2358,7 +2358,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2368,7 +2368,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.sandFilter")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", hotTubSandFilterOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {hotTubSandFilterOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2378,7 +2378,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2388,7 +2388,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.electronicController")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", hotTubElectronicControllerOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {hotTubElectronicControllerOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2398,7 +2398,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2408,7 +2408,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.thermometer")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", hotTubThermometerOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {hotTubThermometerOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2418,7 +2418,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2428,7 +2428,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.bluetoothSpeaker")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", hotTubBluetoothSpeakerOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {hotTubBluetoothSpeakerOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2438,7 +2438,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
 
@@ -2448,7 +2448,7 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.headCushion")} <span className="text-primary">*</span>
                           </h3>
-                          <div className={cn("grid gap-2 md:gap-3", hotTubHeadCushionOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                          <ScrollableRow>
                             {hotTubHeadCushionOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
@@ -2458,7 +2458,7 @@ const Configurator = () => {
                                 showImage={!!option.image}
                               />
                             ))}
-                          </div>
+                          </ScrollableRow>
                         </div>
                       )}
                     </div>
