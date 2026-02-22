@@ -1700,7 +1700,7 @@ const Configurator = () => {
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 min-w-0">
             {/* Ľavá strana - obrázky */}
-            <div className="lg:sticky lg:top-28 lg:h-fit space-y-4 min-w-0 w-full">
+            <div className="lg:sticky lg:top-28 lg:h-fit space-y-4 min-w-0 overflow-hidden">
               <div className="relative aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-card group w-full">
                 {discount > 0 && (
                   <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-destructive text-destructive-foreground text-sm font-bold rounded-full">
@@ -1780,7 +1780,7 @@ const Configurator = () => {
             </div>
 
             {/* Pravá strana - konfigurácia */}
-            <div className="relative">
+            <div className="relative min-w-0 overflow-hidden">
               {/* Scroll indicator */}
               <div
                 className={cn(
