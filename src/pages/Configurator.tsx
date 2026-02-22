@@ -733,6 +733,7 @@ const Configurator = () => {
     wpc: wpcPlastImg,
   };
 
+  const WOOD_NONE_IDS = new Set(["none", "bez", "bez-vonkajsieho-dreva"]);
   const WOOD_IDS = new Set(["spruce", "thermo", "wpc", "smrek", "smrekovec", "borovica", "none", "bez", "bez-vonkajsieho-dreva"]);
 
   const acrylicLinerImages: Record<string, string> = {
@@ -898,7 +899,7 @@ const Configurator = () => {
       hasCover: ht.hasCover ?? true,
       hasCoverColor: ht.hasCoverColor ?? true,
       sizeOptions: toUIOptions(ht.sizeOptions),
-      exteriorWoodOptions: toUIOptions((ht.exteriorWoodOptions || []).filter(o => WOOD_IDS.has(o.id)), exteriorWoodImages),
+      exteriorWoodOptions: toUIOptions((ht.exteriorWoodOptions || []).filter(o => WOOD_IDS.has(o.id) && !WOOD_NONE_IDS.has(o.id)), exteriorWoodImages),
       acrylicLinerOptions: toUIOptions((ht.exteriorWoodOptions || []).filter(o => !WOOD_IDS.has(o.id)), acrylicLinerImages),
       heaterOptions: toUIOptions(ht.heaterOptions, {
         "external-aisi304": integratedHottubHeater,
