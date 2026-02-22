@@ -717,7 +717,7 @@ const Configurator = () => {
     wpc: wpcPlastImg,
   };
 
-  const WOOD_IDS = new Set(["spruce", "thermo", "wpc", "smrek", "smrekovec", "borovica"]);
+  const WOOD_IDS = new Set(["spruce", "thermo", "wpc", "smrek", "smrekovec", "borovica", "none", "bez", "bez-vonkajsieho-dreva"]);
 
   const acrylicLinerImages: Record<string, string> = {
     "blue-marble": blueMarbleImg,
