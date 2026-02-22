@@ -1217,33 +1217,33 @@ const Configurator = () => {
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all min-w-0",
+        "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all min-w-0 w-full h-full",
         isSelected ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/50 bg-card/50",
       )}
     >
       {option.id === "none" ? (
-        <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-muted/50 mb-1 md:mb-2">
+        <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-muted/50 mb-1 md:mb-2 flex-shrink-0">
           <X className="w-5 h-5 md:w-7 md:h-7 text-muted-foreground" />
         </div>
       ) : showImage && option.image ? (
         <img
           src={option.image}
           alt={option.name}
-          className="w-10 h-10 md:w-14 md:h-14 rounded-md object-cover mb-1 md:mb-2"
+          className="w-10 h-10 md:w-14 md:h-14 rounded-md object-cover mb-1 md:mb-2 flex-shrink-0"
         />
       ) : (
-        <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-primary/10 mb-1 md:mb-2">
+        <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-primary/10 mb-1 md:mb-2 flex-shrink-0">
           <Check className="w-4 h-4 md:w-5 md:h-5 text-primary" />
         </div>
       )}
 
-      <span className="font-medium text-center text-xs md:text-sm leading-tight">{option.name}</span>
+      <span className="font-medium text-center text-[11px] md:text-sm leading-tight line-clamp-2">{option.name}</span>
       {description && (
-        <span className="text-[9px] md:text-[10px] text-muted-foreground text-center leading-tight mt-0.5">{description}</span>
+        <span className="text-[9px] md:text-[10px] text-muted-foreground text-center leading-tight mt-0.5 line-clamp-2">{description}</span>
       )}
 
       {option.price > 0 ? (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 mt-auto pt-1">
           {option.originalPrice && (
             <span className="text-[10px] md:text-xs text-muted-foreground line-through">
               {option.originalPrice.toLocaleString()} €
@@ -1252,20 +1252,24 @@ const Configurator = () => {
           <span className="text-[10px] md:text-xs text-primary">{option.price.toLocaleString()} €</span>
         </div>
       ) : (
-        <span className="text-[10px] md:text-xs text-muted-foreground">{option.price === 0 ? "0,00 €" : t("included")}</span>
+        <span className="text-[10px] md:text-xs text-muted-foreground mt-auto pt-1">{option.price === 0 ? "0,00 €" : t("included")}</span>
       )}
     </button>
   );
 
   // Scrollable row: grid 3 cols on desktop, horizontal scroll on mobile with fade indicator
-  const ScrollableRow = ({ children }: { children: React.ReactNode }) => {
+  const ScrollableRow = ({ children, cols = 3 }: { children: React.ReactNode; cols?: 2 | 3 }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [canScrollRight, setCanScrollRight] = useState(false);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
 
     useEffect(() => {
       const el = scrollRef.current;
       if (!el) return;
-      const check = () => setCanScrollRight(el.scrollWidth > el.clientWidth + el.scrollLeft + 4);
+      const check = () => {
+        setCanScrollRight(el.scrollWidth > el.clientWidth + el.scrollLeft + 4);
+        setCanScrollLeft(el.scrollLeft > 4);
+      };
       check();
       el.addEventListener("scroll", check);
       window.addEventListener("resize", check);
@@ -1275,22 +1279,29 @@ const Configurator = () => {
       };
     }, [children]);
 
+    const childCount = React.Children.count(children);
+    const gridCols = cols === 2 || childCount <= 2 ? "md:grid-cols-2" : "md:grid-cols-3";
+
     return (
       <div className="relative">
         <div
           ref={scrollRef}
-          className="flex gap-2 md:gap-3 overflow-x-auto md:grid md:grid-cols-3 md:overflow-x-visible pb-1"
+          className={cn("flex gap-2 md:gap-3 overflow-x-auto md:grid md:overflow-x-visible pb-1 snap-x snap-mandatory", gridCols)}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {React.Children.map(children, (child) => (
-            <div className="min-w-[100px] flex-shrink-0 md:min-w-0 md:flex-shrink">
+            <div className="min-w-[110px] max-w-[140px] flex-shrink-0 md:min-w-0 md:max-w-none md:flex-shrink snap-start">
               {child}
             </div>
           ))}
         </div>
+        {/* Scroll indicators */}
+        {canScrollLeft && (
+          <div className="absolute left-0 top-0 bottom-1 w-6 bg-gradient-to-r from-background to-transparent pointer-events-none md:hidden" />
+        )}
         {canScrollRight && (
-          <div className="absolute right-0 top-0 bottom-1 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none md:hidden flex items-center justify-end">
-            <ChevronRight className="w-4 h-4 text-muted-foreground animate-pulse mr-0.5" />
+          <div className="absolute right-0 top-0 bottom-1 w-10 bg-gradient-to-l from-background via-background/80 to-transparent pointer-events-none md:hidden flex items-center justify-end">
+            <ChevronRight className="w-5 h-5 text-primary animate-pulse mr-0.5" />
           </div>
         )}
       </div>
