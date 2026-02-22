@@ -639,7 +639,16 @@ const Configurator = () => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 1024px)");
+    const onChange = () => setIsDesktop(mql.matches);
+    mql.addEventListener("change", onChange);
+    setIsDesktop(mql.matches);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
@@ -1781,7 +1790,7 @@ const Configurator = () => {
 
             {/* Pravá strana - konfigurácia */}
             <div className="relative min-w-0">
-              {/* Scroll indicator */}
+              {/* Scroll indicator - desktop only */}
               <div
                 className={cn(
                   "absolute bottom-0 left-0 right-4 h-20 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10 items-end justify-center pb-2 hidden lg:flex transition-opacity duration-300",
@@ -1794,8 +1803,8 @@ const Configurator = () => {
                 </div>
               </div>
 
-              <ScrollArea className="lg:h-[calc(100vh-8rem)]" onScrollCapture={handleScroll}>
-                <div className="space-y-8 pr-4 pb-24">
+              <ScrollArea className={cn("lg:h-[calc(100vh-8rem)]", !isDesktop && "!overflow-visible [&>div[data-radix-scroll-area-viewport]]:!overflow-visible [&>div[data-radix-scroll-area-viewport]]:!h-auto")} onScrollCapture={handleScroll}>
+                <div className="space-y-8 lg:pr-4 pb-8 lg:pb-24">
                   <div>
                     <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
                       {productCategory === "sauna" ? selectedSaunaType?.name : (selectedHotTubType?.name ?? t("config.hottub.configTitle"))}
