@@ -1597,9 +1597,9 @@ const Configurator = () => {
                     <img
                       src={ht.image}
                       alt={ht.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
                     {ht.dimensions && (
                       <div className="absolute top-4 right-4 flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 shadow-lg">
                         <Ruler className="w-4 h-4 text-primary" />
@@ -1683,7 +1683,7 @@ const Configurator = () => {
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Ľavá strana - obrázky */}
             <div className="lg:sticky lg:top-28 lg:h-fit space-y-4">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-card group">
+              <div className="relative aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-card group">
                 {discount > 0 && (
                   <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-destructive text-destructive-foreground text-sm font-bold rounded-full">
                     -{discount}%
@@ -1693,7 +1693,7 @@ const Configurator = () => {
                 <img
                   src={images[currentImageIndex]}
                   alt={productCategory === "sauna" ? selectedSaunaType?.name : t("config.hottub")}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                 />
 
                 <button
