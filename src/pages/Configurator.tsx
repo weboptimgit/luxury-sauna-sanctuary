@@ -1593,7 +1593,7 @@ const Configurator = () => {
                   }}
                   className="group relative overflow-hidden rounded-3xl border border-white/10 hover:border-primary/50 transition-colors duration-300 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl text-left shadow-2xl hover:shadow-primary/10"
                 >
-                  <div className="aspect-[4/3] overflow-hidden relative">
+                  <div className="aspect-[3/4] sm:aspect-[4/3] overflow-hidden relative">
                     <img
                       src={ht.image}
                       alt={ht.name}
