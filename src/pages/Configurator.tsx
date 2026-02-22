@@ -421,6 +421,7 @@ type HotTubType = {
   hasCoverColor: boolean;
   sizeOptions: ConfigOption[];
   exteriorWoodOptions: ConfigOption[];
+  acrylicLinerOptions: ConfigOption[];
   heaterOptions: ConfigOption[];
   underwaterLedOptions: ConfigOption[];
   exteriorLedOptions: ConfigOption[];
@@ -601,6 +602,7 @@ const Configurator = () => {
   const [hotTubConfig, setHotTubConfig] = useState({
     size: "none",
     exteriorWood: "none",
+    acrylicLiner: "none",
     heater: "none",
     electricHeater: "none",
     underwaterLed: "none",
@@ -713,6 +715,11 @@ const Configurator = () => {
     spruce: spruceWood2Img,
     thermo: thermoWood2Img,
     wpc: wpcPlastImg,
+  };
+
+  const WOOD_IDS = new Set(["spruce", "thermo", "wpc", "smrek", "smrekovec", "borovica"]);
+
+  const acrylicLinerImages: Record<string, string> = {
     "blue-marble": blueMarbleImg,
     "gray-acrylic": grayAcrylicImg,
     gray: grayAcrylicImg,
@@ -871,7 +878,8 @@ const Configurator = () => {
       hasCover: ht.hasCover ?? true,
       hasCoverColor: ht.hasCoverColor ?? true,
       sizeOptions: toUIOptions(ht.sizeOptions),
-      exteriorWoodOptions: toUIOptions(ht.exteriorWoodOptions, exteriorWoodImages),
+      exteriorWoodOptions: toUIOptions((ht.exteriorWoodOptions || []).filter(o => WOOD_IDS.has(o.id)), exteriorWoodImages),
+      acrylicLinerOptions: toUIOptions((ht.exteriorWoodOptions || []).filter(o => !WOOD_IDS.has(o.id)), acrylicLinerImages),
       heaterOptions: toUIOptions(ht.heaterOptions, {
         "external-aisi304": integratedHottubHeater,
         "external-aisi316": integratedHottubHeater,
@@ -1017,6 +1025,7 @@ const Configurator = () => {
       const basePrice = selectedHotTubType.basePrice;
       const sizePrice = selectedHotTubType.sizeOptions.find((s) => s.id === hotTubConfig.size)?.price ?? 0;
       const exteriorWoodPrice = selectedHotTubType.exteriorWoodOptions.find((w) => w.id === hotTubConfig.exteriorWood)?.price ?? 0;
+      const acrylicLinerPrice = selectedHotTubType.acrylicLinerOptions.find((a) => a.id === hotTubConfig.acrylicLiner)?.price ?? 0;
       const heaterPrice = selectedHotTubType.heaterOptions.find((h) => h.id === hotTubConfig.heater)?.price ?? 0;
       const electricHeaterPrice = selectedHotTubType.heaterOptions.find((h) => h.id === hotTubConfig.electricHeater)?.price ?? 0;
       const underwaterLedPrice = selectedHotTubType.underwaterLedOptions.find((l) => l.id === hotTubConfig.underwaterLed)?.price ?? 0;
@@ -1032,7 +1041,7 @@ const Configurator = () => {
       const bluetoothSpeakerPrice = apiConfig.hottub.bluetoothSpeakerOptions?.find((o) => o.id === hotTubConfig.bluetoothSpeaker)?.price ?? 0;
       const headCushionPrice = apiConfig.hottub.headCushionOptions?.find((o) => o.id === hotTubConfig.headCushion)?.price ?? 0;
 
-      return basePrice + sizePrice + exteriorWoodPrice + heaterPrice + electricHeaterPrice + underwaterLedPrice + exteriorLedPrice2 + hydroMassagePrice + coverPrice + coverColorPrice + airBubblesPrice + drainRelayPrice + sandFilterPrice + electronicControllerPrice + thermometerPrice + bluetoothSpeakerPrice + headCushionPrice;
+      return basePrice + sizePrice + exteriorWoodPrice + acrylicLinerPrice + heaterPrice + electricHeaterPrice + underwaterLedPrice + exteriorLedPrice2 + hydroMassagePrice + coverPrice + coverColorPrice + airBubblesPrice + drainRelayPrice + sandFilterPrice + electronicControllerPrice + thermometerPrice + bluetoothSpeakerPrice + headCushionPrice;
     }
 
     return 0;
@@ -1135,7 +1144,7 @@ const Configurator = () => {
       color: "none" as SaunaColorType,
       woodType: "spruce",
     });
-    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", electricHeater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
+    setHotTubConfig({ size: "none", exteriorWood: "none", acrylicLiner: "none", heater: "none", electricHeater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
     navigate(getConfigBasePath(), { replace: true });
   };
 
@@ -1157,7 +1166,7 @@ const Configurator = () => {
 
   const goBackToHotTubTypes = () => {
     setSelectedHotTubType(null);
-    setHotTubConfig({ size: "none", exteriorWood: "none", heater: "none", electricHeater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
+    setHotTubConfig({ size: "none", exteriorWood: "none", acrylicLiner: "none", heater: "none", electricHeater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
   };
@@ -2117,7 +2126,26 @@ const Configurator = () => {
                         </div>
                       )}
 
-                      {/* Ohrievač */}
+                      {/* Acrylic Liner Color */}
+                      {selectedHotTubType?.acrylicLinerOptions && selectedHotTubType.acrylicLinerOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.acrylicLiner")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className={cn("grid gap-2 md:gap-3", selectedHotTubType.acrylicLinerOptions.length <= 2 ? "grid-cols-2" : "grid-cols-3")}>
+                            {selectedHotTubType.acrylicLinerOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.acrylicLiner === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, acrylicLiner: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
                       {selectedHotTubType?.hasHeater && selectedHotTubType.heaterOptions.length > 0 && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
