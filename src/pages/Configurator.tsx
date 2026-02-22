@@ -1780,7 +1780,7 @@ const Configurator = () => {
             </div>
 
             {/* Pravá strana - konfigurácia */}
-            <div className="relative min-w-0 overflow-hidden">
+            <div className="relative min-w-0">
               {/* Scroll indicator */}
               <div
                 className={cn(
