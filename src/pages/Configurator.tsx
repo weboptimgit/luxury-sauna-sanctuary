@@ -1267,6 +1267,17 @@ const Configurator = () => {
   );
 
   // Scrollable row: grid 3 cols on desktop, horizontal scroll on mobile with fade indicator
+  const ConfigScrollWrapper = ({ isDesktop, onScroll, children }: { isDesktop: boolean; onScroll: React.UIEventHandler<HTMLDivElement>; children: React.ReactNode }) => {
+    if (isDesktop) {
+      return (
+        <ScrollArea className="h-[calc(100vh-8rem)]" onScrollCapture={onScroll}>
+          {children}
+        </ScrollArea>
+      );
+    }
+    return <div>{children}</div>;
+  };
+
   const ScrollableRow = ({ children, cols = 3 }: { children: React.ReactNode; cols?: 2 | 3 }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [canScrollRight, setCanScrollRight] = useState(false);
@@ -1791,20 +1802,23 @@ const Configurator = () => {
             {/* Pravá strana - konfigurácia */}
             <div className="relative min-w-0">
               {/* Scroll indicator - desktop only */}
-              <div
-                className={cn(
-                  "absolute bottom-0 left-0 right-4 h-20 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10 items-end justify-center pb-2 hidden lg:flex transition-opacity duration-300",
-                  showScrollIndicator ? "opacity-100" : "opacity-0",
-                )}
-              >
-                <div className="flex flex-col items-center gap-1 text-muted-foreground animate-bounce">
-                  <span className="text-xs">{t("config.scrollMore")}</span>
-                  <ChevronDown className="w-4 h-4" />
+              {isDesktop && (
+                <div
+                  className={cn(
+                    "absolute bottom-0 left-0 right-4 h-20 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10 flex items-end justify-center pb-2 transition-opacity duration-300",
+                    showScrollIndicator ? "opacity-100" : "opacity-0",
+                  )}
+                >
+                  <div className="flex flex-col items-center gap-1 text-muted-foreground animate-bounce">
+                    <span className="text-xs">{t("config.scrollMore")}</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <ScrollArea className={cn("lg:h-[calc(100vh-8rem)]", !isDesktop && "!overflow-visible [&>div[data-radix-scroll-area-viewport]]:!overflow-visible [&>div[data-radix-scroll-area-viewport]]:!h-auto")} onScrollCapture={handleScroll}>
-                <div className="space-y-8 lg:pr-4 pb-8 lg:pb-24">
+              {/* ConfigScrollWrapper: ScrollArea on desktop, plain div on mobile */}
+              <ConfigScrollWrapper isDesktop={isDesktop} onScroll={handleScroll}>
+                <div className={cn("space-y-8", isDesktop ? "pr-4 pb-24" : "pb-8")}>
                   <div>
                     <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
                       {productCategory === "sauna" ? selectedSaunaType?.name : (selectedHotTubType?.name ?? t("config.hottub.configTitle"))}
@@ -2514,7 +2528,7 @@ const Configurator = () => {
 
                   <p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
                 </div>
-              </ScrollArea>
+              </ConfigScrollWrapper>
             </div>
           </div>
         </div>
