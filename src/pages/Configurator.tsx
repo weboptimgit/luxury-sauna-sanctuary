@@ -44,6 +44,14 @@ import squareExtGallery4 from "@/assets/square-ext-gallery-4.jpg";
 import squareExtGallery5 from "@/assets/square-ext-gallery-5.jpg";
 import squareExtGallery6 from "@/assets/square-ext-gallery-6.jpg";
 import squareExtGallery7 from "@/assets/square-ext-gallery-7.jpg";
+import squareIntMain from "@/assets/square-int-main.jpg";
+import squareIntGallery1 from "@/assets/square-int-gallery-1.jpg";
+import squareIntGallery2 from "@/assets/square-int-gallery-2.jpg";
+import squareIntGallery3 from "@/assets/square-int-gallery-3.jpg";
+import squareIntGallery4 from "@/assets/square-int-gallery-4.jpg";
+import squareIntGallery5 from "@/assets/square-int-gallery-5.jpg";
+import squareIntGallery6 from "@/assets/square-int-gallery-6.jpg";
+import squareIntGallery7 from "@/assets/square-int-gallery-7.jpg";
 import saunaKit from "@/assets/Sauna-accessories-kit.jpg";
 import speaker from "@/assets/Bluetooth-speaker-system.png";
 import ledBenches from "@/assets/LED-lighting-under-the-benches.png";
@@ -863,10 +871,12 @@ const Configurator = () => {
   const hotTubImageMap: Record<string, string> = {
     "acrylic-round": acrylicRoundMain,
     "acrylic-square-external": squareExtMain,
+    "acrylic-square-integrated": squareIntMain,
   };
   const hotTubGalleryMap: Record<string, string[]> = {
     "acrylic-round": [acrylicRoundGallery1, acrylicRoundGallery2, acrylicRoundGallery3, acrylicRoundGallery4],
     "acrylic-square-external": [squareExtGallery1, squareExtGallery2, squareExtGallery3, squareExtGallery4, squareExtGallery5, squareExtGallery6, squareExtGallery7],
+    "acrylic-square-integrated": [squareIntGallery1, squareIntGallery2, squareIntGallery3, squareIntGallery4, squareIntGallery5, squareIntGallery6, squareIntGallery7],
   };
 
   // --- HotTub typy z API ---
