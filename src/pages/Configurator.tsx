@@ -1020,48 +1020,95 @@ const Configurator = () => {
     }));
   }, [apiConfig]);
 
-  // --- Combo typy z API ---
+  // --- Combo typy z API (s fallback hardcoded dátami) ---
   const comboTypesUI: ComboType[] = useMemo(() => {
-    if (!apiConfig?.combo?.comboTypes?.length) return [];
-    return apiConfig.combo.comboTypes.map((ct) => ({
-      id: ct.id,
-      name: ct.label,
-      dimensions: ct.dimensions ?? "",
-      basePrice: ct.basePrice,
-      image: saunaBarrel, // placeholder - pridajte vlastné obrázky
-      galleryImages: [],
-      hasWoodType: ct.hasWoodType ?? (ct.woodTypes?.length ?? 0) > 0,
-      availableWoodTypes: ct.woodTypes ?? [],
-      windowOptions: toUIOptions(ct.windowOptions),
-      hasHeater: ct.hasHeater ?? false,
-      heaterOptions: toUIOptions(ct.heaterOptions, {
-        "external-aisi304": integratedHottubHeater,
-        "external-aisi316": integratedHottubHeater,
-        "electric-3kw": electricHeater3kw,
-        "electric-6kw": electricHeater6kw,
-      }),
-      hasCover: ct.hasCover ?? false,
-      coverOptions: toUIOptions(ct.coverOptions, {
-        "200cm": thermoCoverImg,
-        "230cm": thermoCoverImg,
-        "standard": thermoCoverImg,
-      }),
-      hasCoverColor: ct.hasCoverColor ?? false,
-      hasUnderwaterLed: ct.hasUnderwaterLed ?? false,
-      underwaterLedOptions: toUIOptions(ct.underwaterLedOptions, {
-        "1pc": underwaterLed1pc,
-        "3pc": underwaterLed3pc,
-      }),
-      hasExteriorLed: ct.hasExteriorLed ?? false,
-      exteriorLedOptions: toUIOptions(ct.exteriorLedOptions, Object.fromEntries(
-        (ct.exteriorLedOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, exteriorLedHottubImg])
-      )),
-      hasHydroMassage: ct.hasHydroMassage ?? false,
-      hydroMassageOptions: toUIOptions(ct.hydroMassageOptions, Object.fromEntries(
-        (ct.hydroMassageOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, hydroMassageImg])
-      )),
-    }));
-  }, [apiConfig]);
+    if (apiConfig?.combo?.comboTypes?.length) {
+      return apiConfig.combo.comboTypes.map((ct) => ({
+        id: ct.id,
+        name: ct.label,
+        dimensions: ct.dimensions ?? "",
+        basePrice: ct.basePrice,
+        image: saunaBarrel,
+        galleryImages: [],
+        hasWoodType: ct.hasWoodType ?? (ct.woodTypes?.length ?? 0) > 0,
+        availableWoodTypes: ct.woodTypes ?? [],
+        windowOptions: toUIOptions(ct.windowOptions),
+        hasHeater: ct.hasHeater ?? false,
+        heaterOptions: toUIOptions(ct.heaterOptions, {
+          "external-aisi304": integratedHottubHeater,
+          "external-aisi316": integratedHottubHeater,
+          "electric-3kw": electricHeater3kw,
+          "electric-6kw": electricHeater6kw,
+        }),
+        hasCover: ct.hasCover ?? false,
+        coverOptions: toUIOptions(ct.coverOptions, {
+          "200cm": thermoCoverImg,
+          "230cm": thermoCoverImg,
+          "standard": thermoCoverImg,
+        }),
+        hasCoverColor: ct.hasCoverColor ?? false,
+        hasUnderwaterLed: ct.hasUnderwaterLed ?? false,
+        underwaterLedOptions: toUIOptions(ct.underwaterLedOptions, {
+          "1pc": underwaterLed1pc,
+          "3pc": underwaterLed3pc,
+        }),
+        hasExteriorLed: ct.hasExteriorLed ?? false,
+        exteriorLedOptions: toUIOptions(ct.exteriorLedOptions, Object.fromEntries(
+          (ct.exteriorLedOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, exteriorLedHottubImg])
+        )),
+        hasHydroMassage: ct.hasHydroMassage ?? false,
+        hydroMassageOptions: toUIOptions(ct.hydroMassageOptions, Object.fromEntries(
+          (ct.hydroMassageOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, hydroMassageImg])
+        )),
+      }));
+    }
+
+    // Fallback hardcoded combo typy (kým PHP API nie je aktualizované)
+    return [
+      {
+        id: "iglu-2in1",
+        name: "2in1 IGLU sauna + hot tub",
+        dimensions: "Ø 200 cm",
+        basePrice: 11500,
+        image: saunaBarrel,
+        galleryImages: [],
+        hasWoodType: true,
+        availableWoodTypes: ["spruce", "thermo"] as WoodType[],
+        windowOptions: [
+          { id: "none", name: t("config.noWindow"), price: 0 },
+          { id: "1", name: "1 okno", price: 350 },
+        ],
+        hasHeater: true,
+        heaterOptions: [
+          { id: "none", name: t("config.noHeater"), price: 0 },
+          { id: "external-aisi304", name: "Externý AISI 304", price: 0, image: integratedHottubHeater },
+          { id: "electric-3kw", name: "Elektrický 3kW", price: 850, image: electricHeater3kw },
+        ],
+        hasCover: true,
+        coverOptions: [
+          { id: "none", name: t("config.without"), price: 0 },
+          { id: "standard", name: "Thermo kryt", price: 390, image: thermoCoverImg },
+        ],
+        hasCoverColor: false,
+        hasUnderwaterLed: true,
+        underwaterLedOptions: [
+          { id: "none", name: t("config.noLed"), price: 0 },
+          { id: "1pc", name: "1 ks", price: 90, image: underwaterLed1pc },
+          { id: "3pc", name: "3 ks", price: 190, image: underwaterLed3pc },
+        ],
+        hasExteriorLed: true,
+        exteriorLedOptions: [
+          { id: "none", name: t("config.noLed"), price: 0 },
+          { id: "rgb-strip", name: "RGB LED pás", price: 150, image: exteriorLedHottubImg },
+        ],
+        hasHydroMassage: true,
+        hydroMassageOptions: [
+          { id: "none", name: t("config.without"), price: 0 },
+          { id: "6-jets", name: "6 trysiek", price: 490, image: hydroMassageImg },
+        ],
+      },
+    ];
+  }, [apiConfig, t]);
 
   // --- URL sync: auto-select model from URL slug ---
   const hasAppliedSlug = useRef(false);
@@ -1179,9 +1226,9 @@ const Configurator = () => {
   }, [apiConfig]);
 
   const minComboBasePrice = useMemo(() => {
-    const prices = apiConfig?.combo?.comboTypes?.map((c) => c.basePrice) ?? [];
-    return prices.length ? Math.min(...prices) : 0;
-  }, [apiConfig]);
+    if (comboTypesUI.length) return Math.min(...comboTypesUI.map((c) => c.basePrice));
+    return 0;
+  }, [comboTypesUI]);
 
   // Výpočet ceny
   const totalPrice = useMemo(() => {
