@@ -1058,7 +1058,7 @@ const Configurator = () => {
       {
         id: "iglu-2in1",
         name: "2in1 IGLU sauna + hot tub",
-        dimensions: "Ø 200 cm",
+        dimensions: "400×250cm",
         basePrice: 11500,
         image: saunaBarrel,
         galleryImages: [],
@@ -1066,13 +1066,14 @@ const Configurator = () => {
         availableWoodTypes: ["spruce", "thermo"] as WoodType[],
         windowOptions: [
           { id: "none", name: t("config.noWindow"), price: 0 },
-          { id: "1", name: "1 okno", price: 350 },
+          { id: "145x57", name: t("config.window.145x57"), price: 240 },
+          { id: "panoramic50", name: t("config.window.panoramic50"), price: 380 },
         ],
         hasHeater: true,
         heaterOptions: [
           { id: "none", name: t("config.noHeater"), price: 0 },
-          { id: "external-aisi304", name: "Externý AISI 304", price: 0, image: integratedHottubHeater },
-          { id: "electric-3kw", name: "Elektrický 3kW", price: 850, image: electricHeater3kw },
+          { id: "external-aisi304", name: "Externý AISI 304", price: 560, image: integratedHottubHeater },
+          { id: "integrated-aisi316", name: "Integrovaný AISI 316", price: 850, image: integratedHottubHeater },
         ],
         hasCover: true,
         coverOptions: [
@@ -1083,18 +1084,102 @@ const Configurator = () => {
         hasUnderwaterLed: true,
         underwaterLedOptions: [
           { id: "none", name: t("config.noLed"), price: 0 },
-          { id: "1pc", name: "1 ks", price: 90, image: underwaterLed1pc },
-          { id: "3pc", name: "3 ks", price: 190, image: underwaterLed3pc },
+          { id: "1pc", name: "1 ks", price: 55, image: underwaterLed1pc },
+          { id: "3pc", name: "3 ks", price: 162, image: underwaterLed3pc },
         ],
         hasExteriorLed: true,
         exteriorLedOptions: [
           { id: "none", name: t("config.noLed"), price: 0 },
-          { id: "rgb-strip", name: "RGB LED pás", price: 150, image: exteriorLedHottubImg },
+          { id: "yes", name: "LED osvetlenie", price: 200, image: exteriorLedHottubImg },
         ],
         hasHydroMassage: true,
         hydroMassageOptions: [
           { id: "none", name: t("config.without"), price: 0 },
-          { id: "6-jets", name: "6 trysiek", price: 490, image: hydroMassageImg },
+          { id: "1.1kw-8", name: "1.1kW – 8 trysiek", price: 390, image: hydroMassageImg },
+        ],
+      },
+      {
+        id: "oasis-2in1",
+        name: "2in1 Oasis sauna + hot tub",
+        dimensions: "450×250cm",
+        basePrice: 12000,
+        image: saunaBarrel,
+        galleryImages: [],
+        hasWoodType: true,
+        availableWoodTypes: ["spruce", "thermo"] as WoodType[],
+        windowOptions: [
+          { id: "none", name: t("config.noWindow"), price: 0 },
+          { id: "round", name: t("config.window.round"), price: 160 },
+          { id: "back", name: t("config.window.back"), price: 160 },
+        ],
+        hasHeater: true,
+        heaterOptions: [
+          { id: "none", name: t("config.noHeater"), price: 0 },
+          { id: "external-aisi304", name: "Externý AISI 304", price: 560, image: integratedHottubHeater },
+          { id: "integrated-aisi316", name: "Integrovaný AISI 316", price: 850, image: integratedHottubHeater },
+        ],
+        hasCover: true,
+        coverOptions: [
+          { id: "none", name: t("config.without"), price: 0 },
+          { id: "standard", name: "Thermo kryt", price: 390, image: thermoCoverImg },
+        ],
+        hasCoverColor: false,
+        hasUnderwaterLed: true,
+        underwaterLedOptions: [
+          { id: "none", name: t("config.noLed"), price: 0 },
+          { id: "1pc", name: "1 ks", price: 55, image: underwaterLed1pc },
+          { id: "3pc", name: "3 ks", price: 162, image: underwaterLed3pc },
+        ],
+        hasExteriorLed: true,
+        exteriorLedOptions: [
+          { id: "none", name: t("config.noLed"), price: 0 },
+          { id: "yes", name: "LED osvetlenie", price: 200, image: exteriorLedHottubImg },
+        ],
+        hasHydroMassage: true,
+        hydroMassageOptions: [
+          { id: "none", name: t("config.without"), price: 0 },
+          { id: "1.1kw-8", name: "1.1kW – 8 trysiek", price: 390, image: hydroMassageImg },
+        ],
+      },
+      {
+        id: "modulspa-2in1",
+        name: "2in1 ModulSpa – Thermo wood",
+        dimensions: "500×300cm",
+        basePrice: 14000,
+        image: saunaBarrel,
+        galleryImages: [],
+        hasWoodType: false,
+        availableWoodTypes: ["thermo"] as WoodType[],
+        windowOptions: [
+          { id: "none", name: t("config.noWindow"), price: 0 },
+        ],
+        hasHeater: true,
+        heaterOptions: [
+          { id: "none", name: t("config.noHeater"), price: 0 },
+          { id: "external-aisi304", name: "Externý AISI 304", price: 560, image: integratedHottubHeater },
+          { id: "integrated-aisi316", name: "Integrovaný AISI 316", price: 850, image: integratedHottubHeater },
+        ],
+        hasCover: true,
+        coverOptions: [
+          { id: "none", name: t("config.without"), price: 0 },
+          { id: "standard", name: "Thermo kryt", price: 390, image: thermoCoverImg },
+        ],
+        hasCoverColor: false,
+        hasUnderwaterLed: true,
+        underwaterLedOptions: [
+          { id: "none", name: t("config.noLed"), price: 0 },
+          { id: "1pc", name: "1 ks", price: 55, image: underwaterLed1pc },
+          { id: "3pc", name: "3 ks", price: 162, image: underwaterLed3pc },
+        ],
+        hasExteriorLed: true,
+        exteriorLedOptions: [
+          { id: "none", name: t("config.noLed"), price: 0 },
+          { id: "yes", name: "LED osvetlenie", price: 200, image: exteriorLedHottubImg },
+        ],
+        hasHydroMassage: true,
+        hydroMassageOptions: [
+          { id: "none", name: t("config.without"), price: 0 },
+          { id: "1.1kw-8", name: "1.1kW – 8 trysiek", price: 390, image: hydroMassageImg },
         ],
       },
     ];
@@ -1120,6 +1205,9 @@ const Configurator = () => {
       harmony: "harmony-insulated",
       "harmony-insulated": "harmony-insulated",
       "insulated-harmony": "harmony-insulated",
+      "iglu-2in1": "iglu-2in1",
+      "oasis-2in1": "oasis-2in1",
+      "modulspa-2in1": "modulspa-2in1",
     };
 
     const resolvedId = slugToId[modelSlug] || modelSlug;
