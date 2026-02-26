@@ -50,6 +50,10 @@ const translations: Record<Language, Record<string, string>> = {
     "config.combo.configTitle": "Konfigurácia kombinácie",
     "config.window": "Okná",
     "config.noWindow": "Bez okna",
+    "config.window.round": "Guľaté okno",
+    "config.window.back": "Okno vzadu",
+    "config.window.145x57": "Okno 145×57cm",
+    "config.window.panoramic50": "50% panoramatické okno",
 
     // Sauna selection
     "config.saunaSelection.title": "Vyberte si",
@@ -190,6 +194,10 @@ const translations: Record<Language, Record<string, string>> = {
     "config.combo.configTitle": "Combo Configuration",
     "config.window": "Windows",
     "config.noWindow": "No window",
+    "config.window.round": "Round window",
+    "config.window.back": "Window at the back",
+    "config.window.145x57": "Window 145×57cm",
+    "config.window.panoramic50": "50% panoramic window",
 
     // Sauna selection
     "config.saunaSelection.title": "Choose your",
