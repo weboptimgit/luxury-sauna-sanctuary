@@ -570,17 +570,7 @@ type ApiConfig = {
     bluetoothSpeakerOptions?: ApiOption[];
     headCushionOptions?: ApiOption[];
   };
-  combo?: {
-    comboTypes?: ApiComboType[];
-    coverColorOptions?: ApiOption[];
-    airBubblesOptions?: ApiOption[];
-    drainRelayOptions?: ApiOption[];
-    sandFilterOptions?: ApiOption[];
-    electronicControllerOptions?: ApiOption[];
-    thermometerOptions?: ApiOption[];
-    bluetoothSpeakerOptions?: ApiOption[];
-    headCushionOptions?: ApiOption[];
-  };
+  comboTypes?: ApiComboType[];
 };
 
 const toUIOptions = (api: ApiOption[] | undefined, withImages?: Record<string, string>): ConfigOption[] => {
@@ -1022,8 +1012,8 @@ const Configurator = () => {
 
   // --- Combo typy z API (s fallback hardcoded dátami) ---
   const comboTypesUI: ComboType[] = useMemo(() => {
-    if (apiConfig?.combo?.comboTypes?.length) {
-      return apiConfig.combo.comboTypes.map((ct) => ({
+    if (apiConfig?.comboTypes?.length) {
+      return apiConfig.comboTypes.map((ct) => ({
         id: ct.id,
         name: ct.label,
         dimensions: ct.dimensions ?? "",
@@ -1288,7 +1278,7 @@ const Configurator = () => {
     if (productCategory === "combo" && selectedComboType) {
       let total = selectedComboType.basePrice;
       // Wood type price
-      const currentComboApi = apiConfig?.combo?.comboTypes?.find((ct) => ct.id === selectedComboType.id);
+      const currentComboApi = apiConfig?.comboTypes?.find((ct) => ct.id === selectedComboType.id);
       const woodPrice = currentComboApi?.woodTypePrices?.[comboConfig.woodType] ?? 0;
       total += woodPrice;
       // Window
@@ -1308,21 +1298,21 @@ const Configurator = () => {
       total += hydroMassagePrice;
       const coverPrice = selectedComboType.coverOptions.find((c) => c.id === comboConfig.cover)?.price ?? 0;
       total += coverPrice;
-      const coverColorPrice = apiConfig?.combo?.coverColorOptions?.find((c) => c.id === comboConfig.coverColor)?.price ?? 0;
+      const coverColorPrice = apiConfig?.hottub?.coverColorOptions?.find((c) => c.id === comboConfig.coverColor)?.price ?? 0;
       total += coverColorPrice;
-      const airBubblesPrice = apiConfig?.combo?.airBubblesOptions?.find((o) => o.id === comboConfig.airBubbles)?.price ?? 0;
+      const airBubblesPrice = apiConfig?.hottub?.airBubblesOptions?.find((o) => o.id === comboConfig.airBubbles)?.price ?? 0;
       total += airBubblesPrice;
-      const drainRelayPrice = apiConfig?.combo?.drainRelayOptions?.find((o) => o.id === comboConfig.drainRelay)?.price ?? 0;
+      const drainRelayPrice = apiConfig?.hottub?.drainRelayOptions?.find((o) => o.id === comboConfig.drainRelay)?.price ?? 0;
       total += drainRelayPrice;
-      const sandFilterPrice = apiConfig?.combo?.sandFilterOptions?.find((o) => o.id === comboConfig.sandFilter)?.price ?? 0;
+      const sandFilterPrice = apiConfig?.hottub?.sandFilterOptions?.find((o) => o.id === comboConfig.sandFilter)?.price ?? 0;
       total += sandFilterPrice;
-      const electronicControllerPrice = apiConfig?.combo?.electronicControllerOptions?.find((o) => o.id === comboConfig.electronicController)?.price ?? 0;
+      const electronicControllerPrice = apiConfig?.hottub?.electronicControllerOptions?.find((o) => o.id === comboConfig.electronicController)?.price ?? 0;
       total += electronicControllerPrice;
-      const thermometerPrice = apiConfig?.combo?.thermometerOptions?.find((o) => o.id === comboConfig.thermometer)?.price ?? 0;
+      const thermometerPrice = apiConfig?.hottub?.thermometerOptions?.find((o) => o.id === comboConfig.thermometer)?.price ?? 0;
       total += thermometerPrice;
-      const bluetoothSpeakerPrice = apiConfig?.combo?.bluetoothSpeakerOptions?.find((o) => o.id === comboConfig.bluetoothSpeaker)?.price ?? 0;
+      const bluetoothSpeakerPrice = apiConfig?.hottub?.bluetoothSpeakerOptions?.find((o) => o.id === comboConfig.bluetoothSpeaker)?.price ?? 0;
       total += bluetoothSpeakerPrice;
-      const headCushionPrice = apiConfig?.combo?.headCushionOptions?.find((o) => o.id === comboConfig.headCushion)?.price ?? 0;
+      const headCushionPrice = apiConfig?.hottub?.headCushionOptions?.find((o) => o.id === comboConfig.headCushion)?.price ?? 0;
       total += headCushionPrice;
       return total;
     }
@@ -2209,7 +2199,7 @@ const Configurator = () => {
                           </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
                             {selectedComboType.availableWoodTypes.map((woodId) => {
-                              const currentComboApi = apiConfig?.combo?.comboTypes?.find((ct) => ct.id === selectedComboType.id);
+                              const currentComboApi = apiConfig?.comboTypes?.find((ct) => ct.id === selectedComboType.id);
                               const price = currentComboApi?.woodTypePrices?.[woodId] ?? 0;
                               return (
                                 <button
