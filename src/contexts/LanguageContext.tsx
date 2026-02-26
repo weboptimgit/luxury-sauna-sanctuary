@@ -37,7 +37,19 @@ const translations: Record<Language, Record<string, string>> = {
     "config.sauna.description": "Nakonfigurujte si vlastnú saunu s výberom ohrievača, osvetlenia a príslušenstva.",
     "config.hottub": "Kaďa",
     "config.hottub.description": "Vyberte si veľkosť, trysky, osvetlenie a ďalšie doplnky pre vašu kaďu.",
+    "config.combo": "Kombinácia sauna + kaďa",
+    "config.combo.description": "2in1 produkty – sauna a kaďa v jednom. Vyberte si model a prispôsobte si ho.",
     "config.from": "Od",
+
+    // Combo selection
+    "config.comboSelection.title": "Vyberte si",
+    "config.comboSelection.titleHighlight": "2in1 kombináciu",
+    "config.comboSelection.subtitle": "Sauna a kaďa v jednom produkte s možnosťou konfigurácie.",
+    "config.breadcrumb.comboSelection": "Výber kombinácie",
+    "config.back.combo": "Späť na výber kombinácie",
+    "config.combo.configTitle": "Konfigurácia kombinácie",
+    "config.window": "Okná",
+    "config.noWindow": "Bez okna",
 
     // Sauna selection
     "config.saunaSelection.title": "Vyberte si",
@@ -165,7 +177,19 @@ const translations: Record<Language, Record<string, string>> = {
     "config.sauna.description": "Configure your own sauna with a choice of heater, lighting and accessories.",
     "config.hottub": "Hot Tub",
     "config.hottub.description": "Choose the size, jets, lighting and other accessories for your hot tub.",
+    "config.combo": "Sauna + Hot Tub Combo",
+    "config.combo.description": "2in1 products – sauna and hot tub in one. Choose a model and customize it.",
     "config.from": "From",
+
+    // Combo selection
+    "config.comboSelection.title": "Choose your",
+    "config.comboSelection.titleHighlight": "2in1 combo",
+    "config.comboSelection.subtitle": "Sauna and hot tub in one product with configuration options.",
+    "config.breadcrumb.comboSelection": "Combo Selection",
+    "config.back.combo": "Back to combo selection",
+    "config.combo.configTitle": "Combo Configuration",
+    "config.window": "Windows",
+    "config.noWindow": "No window",
 
     // Sauna selection
     "config.saunaSelection.title": "Choose your",
