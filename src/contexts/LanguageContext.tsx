@@ -2,10 +2,13 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { useLocation, useNavigate } from "react-router-dom";
 
 type Language = "sk" | "en";
+type Currency = "EUR" | "CZK" | "HUF";
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
+  currency: Currency;
+  setCurrency: (currency: Currency) => void;
   t: (key: string) => string;
 }
 
@@ -319,6 +322,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const [language, setLanguageState] = useState<Language>(getLanguageFromPath);
+  const [currency, setCurrency] = useState<Currency>("EUR");
 
   // Update language when path changes
   useEffect(() => {
@@ -351,7 +355,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     return translations[language][key] || key;
   };
 
-  return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>;
+  return <LanguageContext.Provider value={{ language, setLanguage, currency, setCurrency, t }}>{children}</LanguageContext.Provider>;
 };
 
 export const useLanguage = () => {
