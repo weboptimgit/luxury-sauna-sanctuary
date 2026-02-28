@@ -7,9 +7,11 @@ import flagUk from "@/assets/flag-uk.png";
 import flagSk from "@/assets/flag-sk.png";
 import brelaxLogo from "@/assets/LuxuRelax-LOGO-text-gradient.png";
 
+const currencies = ["EUR", "CZK", "HUF"] as const;
+
 const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, currency, setCurrency, t } = useLanguage();
 
   // Base URL changes based on language - .com for EN, .sk for SK
   const baseUrl = language === "en" ? "https://www.luxurelax.com" : "https://www.luxurelax.sk";
@@ -93,6 +95,23 @@ const ConfiguratorHeader = () => {
               </Button>
             </a>
 
+            {/* Currency Toggle */}
+            <div className="flex items-center gap-1 pl-4 border-l border-border/50">
+              {currencies.map((cur) => (
+                <button
+                  key={cur}
+                  onClick={() => setCurrency(cur)}
+                  className={`text-xs font-medium px-1.5 py-0.5 rounded transition-colors ${
+                    currency === cur
+                      ? "text-primary bg-primary/10"
+                      : "text-foreground/50 hover:text-foreground/80"
+                  }`}
+                >
+                  {cur}
+                </button>
+              ))}
+            </div>
+
             {/* Language Toggle - Flag button (at the end) */}
             <button
               onClick={toggleLanguage}
@@ -120,6 +139,24 @@ const ConfiguratorHeader = () => {
         {isMenuOpen && (
           <nav className="lg:hidden mt-4 pb-4 border-t border-border/30 pt-4">
             <div className="flex flex-col gap-4">
+              {/* Currency Toggle for Mobile */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-foreground/50">{t("nav.home") === "Domov" ? "Mena:" : "Currency:"}</span>
+                {currencies.map((cur) => (
+                  <button
+                    key={cur}
+                    onClick={() => setCurrency(cur)}
+                    className={`text-sm font-medium px-2 py-1 rounded transition-colors ${
+                      currency === cur
+                        ? "text-primary bg-primary/10"
+                        : "text-foreground/50 hover:text-foreground/80"
+                    }`}
+                  >
+                    {cur}
+                  </button>
+                ))}
+              </div>
+
               {/* Language Toggle for Mobile */}
               <button
                 onClick={() => {
