@@ -1557,7 +1557,7 @@ const Configurator = () => {
               <p className="text-muted-foreground text-lg">{t("config.category.subtitle")}</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {/* Sauna */}
               <button
                 onClick={() => {
