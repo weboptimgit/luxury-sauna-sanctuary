@@ -32,13 +32,16 @@ const ConfiguratorHeader = () => {
   const { prefix, saunas, tubs } = categoryMap[language] || categoryMap.sk;
 
   const navItems = [
-    { labelKey: "nav.home", href: `${baseUrl}/`, external: true },
     { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
     { labelKey: "nav.hotTubs", href: `${baseUrl}${prefix}/${tubs}/`, external: true },
     { labelKey: "nav.configurator", href: language === "en" ? "/configurator" : "/konfigurator", external: false },
     { labelKey: "nav.blog", href: `${baseUrl}/blog/`, external: true },
     { labelKey: "nav.about", href: language === "en" ? `${baseUrl}/about-us/` : `${baseUrl}/o-nas/`, external: true },
-    { labelKey: "nav.contact", href: language === "en" ? `${baseUrl}/contact/` : `${baseUrl}/kontakt/`, external: true },
+    {
+      labelKey: "nav.contact",
+      href: language === "en" ? `${baseUrl}/contact/` : `${baseUrl}/kontakt/`,
+      external: true,
+    },
   ];
 
   const toggleLanguage = () => {
@@ -86,9 +89,7 @@ const ConfiguratorHeader = () => {
                   key={cur}
                   onClick={() => setCurrency(cur)}
                   className={`text-xs font-medium px-1.5 py-0.5 rounded transition-colors ${
-                    currency === cur
-                      ? "text-primary bg-primary/10"
-                      : "text-foreground/50 hover:text-foreground/80"
+                    currency === cur ? "text-primary bg-primary/10" : "text-foreground/50 hover:text-foreground/80"
                   }`}
                 >
                   {cur}
@@ -142,9 +143,7 @@ const ConfiguratorHeader = () => {
                     key={cur}
                     onClick={() => setCurrency(cur)}
                     className={`text-sm font-medium px-2 py-1 rounded transition-colors ${
-                      currency === cur
-                        ? "text-primary bg-primary/10"
-                        : "text-foreground/50 hover:text-foreground/80"
+                      currency === cur ? "text-primary bg-primary/10" : "text-foreground/50 hover:text-foreground/80"
                     }`}
                   >
                     {cur}
