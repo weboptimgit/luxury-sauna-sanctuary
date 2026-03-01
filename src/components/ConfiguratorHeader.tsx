@@ -79,24 +79,8 @@ const ConfiguratorHeader = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-4">
-            <a
-              href={language === "en" ? `${baseUrl}/cart/` : `${baseUrl}/kosik/`}
-              className="relative p-2 text-foreground/70 hover:text-primary transition-colors"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
-                0
-              </span>
-            </a>
-
-            <a href={language === "en" ? `${baseUrl}/contact/` : `${baseUrl}/kontakt/`}>
-              <Button variant="luxury" size="sm" className="hidden md:inline-flex">
-                {t("nav.inquiry")}
-              </Button>
-            </a>
-
             {/* Currency Toggle */}
-            <div className="flex items-center gap-1 pl-4 border-l border-border/50">
+            <div className="flex items-center gap-1">
               {currencies.map((cur) => (
                 <button
                   key={cur}
@@ -112,7 +96,7 @@ const ConfiguratorHeader = () => {
               ))}
             </div>
 
-            {/* Language Toggle - Flag button (at the end) */}
+            {/* Language Toggle */}
             <button
               onClick={toggleLanguage}
               className="flex items-center justify-center pl-4 border-l border-border/50 hover:opacity-80 transition-opacity"
@@ -124,6 +108,17 @@ const ConfiguratorHeader = () => {
                 className="w-4 h-[11px] object-cover"
               />
             </button>
+
+            {/* Cart - last item */}
+            <a
+              href={language === "en" ? `${baseUrl}/cart/` : `${baseUrl}/kosik/`}
+              className="relative p-2 pl-4 border-l border-border/50 text-foreground/70 hover:text-primary transition-colors"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              <span className="absolute -top-1 right-0 w-4 h-4 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
+                0
+              </span>
+            </a>
 
             {/* Mobile Menu Button */}
             <button
