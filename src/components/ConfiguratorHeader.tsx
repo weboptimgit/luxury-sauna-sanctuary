@@ -48,14 +48,14 @@ const ConfiguratorHeader = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-dark">
       <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between relative">
           {/* Logo */}
           <a href={`${baseUrl}/`} className="flex items-center">
             <img src={brelaxLogo} alt="LuxuRelax" className="w-[100px] h-auto" />
           </a>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
+          {/* Desktop Navigation - centered absolutely */}
+          <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
             {navItems.map((item) =>
               item.external ? (
                 <a
