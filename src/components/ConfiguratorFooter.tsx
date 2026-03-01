@@ -6,49 +6,42 @@ const ConfiguratorFooter = () => {
   const { language, t } = useLanguage();
   const baseUrl = language === "en" ? "https://www.luxurelax.com" : "https://www.luxurelax.sk";
 
-  const quickLinks = language === "en"
-    ? [
-        { label: t("footer.home"), href: `${baseUrl}/` },
-        { label: t("footer.shop"), href: `${baseUrl}/shop/` },
-        { label: t("footer.aboutUs"), href: `${baseUrl}/about-us/` },
-        { label: t("footer.faq"), href: `${baseUrl}/faq/` },
-        { label: t("footer.contact"), href: `${baseUrl}/contact/` },
-      ]
-    : [
-        { label: t("footer.home"), href: `${baseUrl}/` },
-        { label: t("footer.shop"), href: `${baseUrl}/obchod/` },
-        { label: t("footer.aboutUs"), href: `${baseUrl}/o-nas/` },
-        { label: t("footer.faq"), href: `${baseUrl}/faq/` },
-        { label: t("footer.contact"), href: `${baseUrl}/kontakt/` },
-      ];
+  const quickLinks =
+    language === "en"
+      ? [
+          { label: t("footer.sauny"), href: `${baseUrl}/c/saunas/` },
+          { label: t("footer.kade"), href: `${baseUrl}/c/hot-tubs/` },
+          { label: t("footer.slovnik"), href: `${baseUrl}/glossary/` },
+          { label: t("footer.faq"), href: `${baseUrl}/faq/` },
+          { label: t("footer.konfigurator"), href: `${baseUrl}/configurator/` },
+          { label: t("footer.contact"), href: `${baseUrl}/contact/` },
+        ]
+      : [
+          { label: t("footer.sauny"), href: `${baseUrl}/k/sauny/` },
+          { label: t("footer.kade"), href: `${baseUrl}/k/kade/` },
+          { label: t("footer.slovnik"), href: `${baseUrl}/slovnik-pojmov/` },
+          { label: t("footer.faq"), href: `${baseUrl}/faq/` },
+          { label: t("footer.konfigurator"), href: `${baseUrl}/konfigurator/` },
+          { label: t("footer.contact"), href: `${baseUrl}/kontakt/` },
+        ];
 
-  const productLinks = language === "en"
-    ? [
-        { label: t("footer.barrelSaunas"), href: `${baseUrl}/c/saunas/` },
-        { label: t("footer.cubeSaunas"), href: `${baseUrl}/c/saunas/` },
-        { label: t("footer.traditionalSaunas"), href: `${baseUrl}/c/saunas/` },
-        { label: t("footer.hotTubs"), href: `${baseUrl}/c/hottubs/` },
-        { label: t("footer.accessories"), href: `${baseUrl}/shop/` },
-      ]
-    : [
-        { label: t("footer.barrelSaunas"), href: `${baseUrl}/k/sauny/` },
-        { label: t("footer.cubeSaunas"), href: `${baseUrl}/k/sauny/` },
-        { label: t("footer.traditionalSaunas"), href: `${baseUrl}/k/sauny/` },
-        { label: t("footer.hotTubs"), href: `${baseUrl}/k/kade/` },
-        { label: t("footer.accessories"), href: `${baseUrl}/obchod/` },
-      ];
+  const productLinks =
+    language === "en"
+      ? [
+          { label: t("footer.vop"), href: `${baseUrl}/general-terms-and-conditions/` },
+          { label: t("footer.gdpr"), href: `${baseUrl}/privacy-policy/` },
+          { label: t("footer.cookies"), href: `${baseUrl}/cookies/` },
+        ]
+      : [
+          { label: t("footer.vop"), href: `${baseUrl}/vseobecne-obchodne-podmienky/` },
+          { label: t("footer.gdpr"), href: `${baseUrl}/ochrana-osobnych-udajov/` },
+          { label: t("footer.cookies"), href: `${baseUrl}/cookies/` },
+        ];
 
-  const bottomLinks = language === "en"
-    ? [
-        { label: t("footer.privacy"), href: `${baseUrl}/privacy-policy/` },
-        { label: t("footer.terms"), href: `${baseUrl}/terms-and-conditions/` },
-        { label: t("footer.cookies"), href: `${baseUrl}/cookies/` },
-      ]
-    : [
-        { label: t("footer.privacy"), href: `${baseUrl}/zasady-ochrany-sukromia/` },
-        { label: t("footer.terms"), href: `${baseUrl}/obchodne-podmienky/` },
-        { label: t("footer.cookies"), href: `${baseUrl}/cookies/` },
-      ];
+  const bottomLinks =
+    language === "en"
+      ? [{ label: t("footer.privacy"), href: `${baseUrl}/privacy-policy/` }]
+      : [{ label: t("footer.privacy"), href: `${baseUrl}/zasady-ochrany-sukromia/` }];
 
   return (
     <footer className="bg-secondary/30 pt-16 pb-8">
@@ -59,9 +52,7 @@ const ConfiguratorFooter = () => {
             <a href={`${baseUrl}/`} className="flex items-center">
               <img src={brelaxLogo} alt="LuxuRelax" className="w-[100px] h-auto" />
             </a>
-            <p className="text-muted-foreground text-sm mt-4 leading-relaxed">
-              {t("footer.brand.description")}
-            </p>
+            <p className="text-muted-foreground text-sm mt-4 leading-relaxed">{t("footer.brand.description")}</p>
             <div className="flex gap-4 mt-6">
               <a
                 href="https://www.facebook.com/luxurelax"
@@ -96,10 +87,7 @@ const ConfiguratorFooter = () => {
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                  >
+                  <a href={link.href} className="text-muted-foreground hover:text-primary transition-colors text-sm">
                     {link.label}
                   </a>
                 </li>
@@ -113,10 +101,7 @@ const ConfiguratorFooter = () => {
             <ul className="space-y-3">
               {productLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                  >
+                  <a href={link.href} className="text-muted-foreground hover:text-primary transition-colors text-sm">
                     {link.label}
                   </a>
                 </li>

@@ -158,21 +158,29 @@ const translations: Record<Language, Record<string, string>> = {
     "success.addedToCartDesc": "Pokračujte v nákupe alebo prejdite do košíka.",
 
     // Footer
-    "footer.brand.description": "Prémiové fínske sauny a kade vyrobené s vášňou a dodané s excelentnosťou. Vaša cesta za wellness začína tu.",
+    "footer.brand.description":
+      "Prémiové sauny a wellness riešenia vytvorené s vášňou a dodané s dôrazom na dokonalosť. Vaša cesta k relaxu začína tu.",
     "footer.quickLinks": "Rýchle odkazy",
     "footer.home": "Domov",
     "footer.shop": "Obchod",
     "footer.aboutUs": "O nás",
-    "footer.faq": "FAQ",
+    "footer.faq": "Často kladené otázky",
+    "footer.sauny": "Fínske sauny na mieru",
+    "footer.kade": "Kúpacie kade s vírivkou",
+    "footer.slovnik": "Slovník pojmov",
+    "footer.konfigurator": "Konfigurátor",
     "footer.contact": "Kontakt",
-    "footer.products": "Produkty",
+    "footer.products": "Informácie",
+    "footer.vop": "Všeobecné obchodné podmienky",
+    "footer.cookies": "Cookies",
+    "footer.gdpr": "Ochrana osobných údajov",
     "footer.barrelSaunas": "Sudové sauny",
     "footer.cubeSaunas": "Cube sauny",
     "footer.traditionalSaunas": "Tradičné kabíny",
-    "footer.hotTubs": "Vírivky",
+    "footer.hotTubs": "Kade",
     "footer.accessories": "Príslušenstvo",
     "footer.contactTitle": "Kontakt",
-    "footer.copyright": "© 2025 LuxuRelax. Všetky práva vyhradené.",
+    "footer.copyright": "© 2026 LuxuRelax. Všetky práva vyhradené.",
     "footer.privacy": "Zásady ochrany súkromia",
     "footer.terms": "Obchodné podmienky",
     "footer.cookies": "Cookies",
@@ -322,14 +330,22 @@ const translations: Record<Language, Record<string, string>> = {
     "success.addedToCartDesc": "Continue shopping or go to cart.",
 
     // Footer
-    "footer.brand.description": "Premium Finnish saunas and hot tubs crafted with passion and delivered with excellence. Your wellness journey starts here.",
+    "footer.brand.description":
+      " Premium saunas and wellness solutions created with passion and delivered with an emphasis on perfection. Your journey to relaxation starts here.",
     "footer.quickLinks": "Quick Links",
     "footer.home": "Home",
     "footer.shop": "Shop",
     "footer.aboutUs": "About Us",
-    "footer.faq": "FAQ",
+    "footer.faq": "Frequently Asked Questions",
+    "footer.sauny": "Custom-made Finnish saunas",
+    "footer.kade": "Hot Tubs",
+    "footer.slovnik": "Glossary",
+    "footer.konfigurator": "configurator",
     "footer.contact": "Contact",
-    "footer.products": "Products",
+    "footer.products": "Information",
+    "footer.vop": "Terms and Conditions",
+    "footer.cookies": "Cookies",
+    "footer.gdpr": "Privacy Policy",
     "footer.barrelSaunas": "Barrel Saunas",
     "footer.cubeSaunas": "Cube Saunas",
     "footer.traditionalSaunas": "Traditional Cabins",
@@ -395,7 +411,11 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     return translations[language][key] || key;
   };
 
-  return <LanguageContext.Provider value={{ language, setLanguage, currency, setCurrency, t }}>{children}</LanguageContext.Provider>;
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage, currency, setCurrency, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
 };
 
 export const useLanguage = () => {
