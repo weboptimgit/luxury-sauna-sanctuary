@@ -40,8 +40,8 @@ const ConfiguratorFooter = () => {
 
   const bottomLinks =
     language === "en"
-      ? [{ label: t("footer.privacy"), href: `${baseUrl}/privacy-policy/` }]
-      : [{ label: t("footer.privacy"), href: `${baseUrl}/zasady-ochrany-sukromia/` }];
+      ? [{ label: t("footer.weboptim"), href: `https://www.weboptim.eu/services/ecommerce-website/` }]
+      : [{ label: t("footer.weboptim"), href: `https://www.weboptim.sk/sluzby/tvorba-eshopu` }];
 
   return (
     <footer className="bg-secondary/30 pt-16 pb-8">

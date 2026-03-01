@@ -181,9 +181,7 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.accessories": "Príslušenstvo",
     "footer.contactTitle": "Kontakt",
     "footer.copyright": "© 2026 LuxuRelax. Všetky práva vyhradené.",
-    "footer.privacy": "Zásady ochrany súkromia",
-    "footer.terms": "Obchodné podmienky",
-    "footer.cookies": "Cookies",
+    "footer.weboptim": "E-Shop od weboptim",
   },
   en: {
     // Header
@@ -352,10 +350,8 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.hotTubs": "Hot Tubs",
     "footer.accessories": "Accessories",
     "footer.contactTitle": "Contact",
-    "footer.copyright": "© 2025 LuxuRelax. All rights reserved.",
-    "footer.privacy": "Privacy Policy",
-    "footer.terms": "Terms & Conditions",
-    "footer.cookies": "Cookies",
+    "footer.copyright": "© 2026 LuxuRelax. All rights reserved.",
+    "footer.weboptim": "E-Shop by weboptim",
   },
 };
 
