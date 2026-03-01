@@ -338,7 +338,7 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.sauny": "Custom-made Finnish saunas",
     "footer.kade": "Hot Tubs",
     "footer.slovnik": "Glossary",
-    "footer.konfigurator": "configurator",
+    "footer.konfigurator": "Configurator",
     "footer.contact": "Contact",
     "footer.products": "Information",
     "footer.vop": "Terms and Conditions",
@@ -355,15 +355,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
 };
 
-const defaultContext: LanguageContextType = {
-  language: "sk",
-  setLanguage: () => {},
-  currency: "EUR",
-  setCurrency: () => {},
-  t: (key: string) => translations.sk[key] || key,
-};
-
-const LanguageContext = createContext<LanguageContextType>(defaultContext);
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
@@ -423,5 +415,9 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useLanguage = () => {
-  return useContext(LanguageContext);
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error("useLanguage must be used within a LanguageProvider");
+  }
+  return context;
 };
