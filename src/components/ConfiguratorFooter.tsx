@@ -63,20 +63,12 @@ const ConfiguratorFooter = () => {
                 <Facebook className="w-4 h-4" />
               </a>
               <a
-                href="https://www.instagram.com/luxurelax"
+                href="https://www.instagram.com/luxurelax.sk"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-card border border-border/30 hover:border-primary/50 hover:text-primary transition-all"
               >
                 <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="https://www.youtube.com/@luxurelax"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-card border border-border/30 hover:border-primary/50 hover:text-primary transition-all"
-              >
-                <Youtube className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -116,18 +108,20 @@ const ConfiguratorFooter = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-primary mt-1 shrink-0" />
                 <span className="text-muted-foreground text-sm">
-                  Liptovský Mikuláš
+                  B - Relax s.r.o. 
                   <br />
-                  Slovensko
+                  Tomášikova 1973/32
+                  <br />
+                  831 04 Bratislava - Staré Mesto
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-primary shrink-0" />
                 <a
-                  href="tel:+421000000000"
+                  href="tel:+421940916815"
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  +421 000 000 000
+                  +421 940 916 815
                 </a>
               </li>
               <li className="flex items-center gap-3">
