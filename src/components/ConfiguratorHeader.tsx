@@ -25,20 +25,23 @@ const ConfiguratorHeader = () => {
     en: {
       prefix: "/c",
       saunas: "saunas",
-      tubs: "hottubs",
+      tubs: "hot-tubs",
     },
   };
 
   const { prefix, saunas, tubs } = categoryMap[language] || categoryMap.sk;
 
   const navItems = [
-    { labelKey: "nav.home", href: `${baseUrl}/`, external: true },
     { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
     { labelKey: "nav.hotTubs", href: `${baseUrl}${prefix}/${tubs}/`, external: true },
     { labelKey: "nav.configurator", href: language === "en" ? "/configurator" : "/konfigurator", external: false },
     { labelKey: "nav.blog", href: `${baseUrl}/blog/`, external: true },
     { labelKey: "nav.about", href: language === "en" ? `${baseUrl}/about-us/` : `${baseUrl}/o-nas/`, external: true },
-    { labelKey: "nav.contact", href: language === "en" ? `${baseUrl}/contact/` : `${baseUrl}/kontakt/`, external: true },
+    {
+      labelKey: "nav.contact",
+      href: language === "en" ? `${baseUrl}/contact/` : `${baseUrl}/kontakt/`,
+      external: true,
+    },
   ];
 
   const toggleLanguage = () => {
@@ -48,14 +51,14 @@ const ConfiguratorHeader = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-dark">
       <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between relative">
+        <div className="flex items-center justify-between">
           {/* Logo */}
           <a href={`${baseUrl}/`} className="flex items-center">
             <img src={brelaxLogo} alt="LuxuRelax" className="w-[100px] h-auto" />
           </a>
 
-          {/* Desktop Navigation - centered absolutely */}
-          <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-8">
             {navItems.map((item) =>
               item.external ? (
                 <a
@@ -79,16 +82,30 @@ const ConfiguratorHeader = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-4">
+            <a
+              href={language === "en" ? `${baseUrl}/cart/` : `${baseUrl}/kosik/`}
+              className="relative p-2 text-foreground/70 hover:text-primary transition-colors"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
+                0
+              </span>
+            </a>
+
+            <a href={language === "en" ? `${baseUrl}/contact/` : `${baseUrl}/kontakt/`}>
+              <Button variant="luxury" size="sm" className="hidden md:inline-flex">
+                {t("nav.inquiry")}
+              </Button>
+            </a>
+
             {/* Currency Toggle */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 pl-4 border-l border-border/50">
               {currencies.map((cur) => (
                 <button
                   key={cur}
                   onClick={() => setCurrency(cur)}
                   className={`text-xs font-medium px-1.5 py-0.5 rounded transition-colors ${
-                    currency === cur
-                      ? "text-primary bg-primary/10"
-                      : "text-foreground/50 hover:text-foreground/80"
+                    currency === cur ? "text-primary bg-primary/10" : "text-foreground/50 hover:text-foreground/80"
                   }`}
                 >
                   {cur}
@@ -96,7 +113,7 @@ const ConfiguratorHeader = () => {
               ))}
             </div>
 
-            {/* Language Toggle */}
+            {/* Language Toggle - Flag button (at the end) */}
             <button
               onClick={toggleLanguage}
               className="flex items-center justify-center pl-4 border-l border-border/50 hover:opacity-80 transition-opacity"
@@ -108,17 +125,6 @@ const ConfiguratorHeader = () => {
                 className="w-4 h-[11px] object-cover"
               />
             </button>
-
-            {/* Cart - last item */}
-            <a
-              href={language === "en" ? `${baseUrl}/cart/` : `${baseUrl}/kosik/`}
-              className="relative p-2 pl-4 border-l border-border/50 text-foreground/70 hover:text-primary transition-colors"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 right-0 w-4 h-4 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
-                0
-              </span>
-            </a>
 
             {/* Mobile Menu Button */}
             <button
@@ -142,9 +148,7 @@ const ConfiguratorHeader = () => {
                     key={cur}
                     onClick={() => setCurrency(cur)}
                     className={`text-sm font-medium px-2 py-1 rounded transition-colors ${
-                      currency === cur
-                        ? "text-primary bg-primary/10"
-                        : "text-foreground/50 hover:text-foreground/80"
+                      currency === cur ? "text-primary bg-primary/10" : "text-foreground/50 hover:text-foreground/80"
                     }`}
                   >
                     {cur}
