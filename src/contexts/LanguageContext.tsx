@@ -156,6 +156,26 @@ const translations: Record<Language, Record<string, string>> = {
     "error.addToCart": "Nepodarilo sa pridať do košíka. Skúste to znova.",
     "success.addedToCart": "Produkt bol pridaný do košíka",
     "success.addedToCartDesc": "Pokračujte v nákupe alebo prejdite do košíka.",
+
+    // Footer
+    "footer.brand.description": "Prémiové fínske sauny a kade vyrobené s vášňou a dodané s excelentnosťou. Vaša cesta za wellness začína tu.",
+    "footer.quickLinks": "Rýchle odkazy",
+    "footer.home": "Domov",
+    "footer.shop": "Obchod",
+    "footer.aboutUs": "O nás",
+    "footer.faq": "FAQ",
+    "footer.contact": "Kontakt",
+    "footer.products": "Produkty",
+    "footer.barrelSaunas": "Sudové sauny",
+    "footer.cubeSaunas": "Cube sauny",
+    "footer.traditionalSaunas": "Tradičné kabíny",
+    "footer.hotTubs": "Vírivky",
+    "footer.accessories": "Príslušenstvo",
+    "footer.contactTitle": "Kontakt",
+    "footer.copyright": "© 2025 LuxuRelax. Všetky práva vyhradené.",
+    "footer.privacy": "Zásady ochrany súkromia",
+    "footer.terms": "Obchodné podmienky",
+    "footer.cookies": "Cookies",
   },
   en: {
     // Header
@@ -300,6 +320,26 @@ const translations: Record<Language, Record<string, string>> = {
     "error.addToCart": "Failed to add to cart. Please try again.",
     "success.addedToCart": "Product added to cart",
     "success.addedToCartDesc": "Continue shopping or go to cart.",
+
+    // Footer
+    "footer.brand.description": "Premium Finnish saunas and hot tubs crafted with passion and delivered with excellence. Your wellness journey starts here.",
+    "footer.quickLinks": "Quick Links",
+    "footer.home": "Home",
+    "footer.shop": "Shop",
+    "footer.aboutUs": "About Us",
+    "footer.faq": "FAQ",
+    "footer.contact": "Contact",
+    "footer.products": "Products",
+    "footer.barrelSaunas": "Barrel Saunas",
+    "footer.cubeSaunas": "Cube Saunas",
+    "footer.traditionalSaunas": "Traditional Cabins",
+    "footer.hotTubs": "Hot Tubs",
+    "footer.accessories": "Accessories",
+    "footer.contactTitle": "Contact",
+    "footer.copyright": "© 2025 LuxuRelax. All rights reserved.",
+    "footer.privacy": "Privacy Policy",
+    "footer.terms": "Terms & Conditions",
+    "footer.cookies": "Cookies",
   },
 };
 
