@@ -326,7 +326,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "20-tmavy-mahagon": harmony20TmavyMahagon,
   },
   // alias pre prípad, že v PHP je použitý opačný slug
-  "insulated-harmony": {
+  "nordic-harmony": {
     none: harmonyNatural,
     "1-mahagon": harmony1Mahagon,
     "2-teak": harmony2Teak,
@@ -393,7 +393,7 @@ const saunaGalleryImages: Record<string, string[]> = {
     harmonyGallery7,
   ],
   // alias pre prípad, že v PHP je použitý opačný slug
-  "insulated-harmony": [
+  "nordic-harmony": [
     harmonyGallery1,
     harmonyGallery2,
     harmonyGallery3,
@@ -415,7 +415,7 @@ const saunaTypePresets: Record<string, SaunaTypePreset> = {
   "arctic-shell": { image: saunaInterior },
   "forest-barrel": { image: saunaBarrel },
   "harmony-insulated": { image: saunaHarmony },
-  "insulated-harmony": { image: saunaHarmony },
+  "nordic-harmony": { image: saunaHarmony },
 };
 
 type ConfigOption = {
@@ -1175,7 +1175,7 @@ const Configurator = () => {
       "barrel-sauna": "forest-barrel",
       harmony: "harmony-insulated",
       "harmony-insulated": "harmony-insulated",
-      "insulated-harmony": "harmony-insulated",
+      "nordic-harmony": "harmony-insulated",
       "iglu-2in1": "iglu-2in1",
       "oasis-2in1": "oasis-2in1",
       "modulspa-2in1": "modulspa-2in1",
