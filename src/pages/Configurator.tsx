@@ -985,12 +985,12 @@ const Configurator = () => {
 
   const hotTubImageMap: Record<string, string> = {
     "arctic-ritual": acrylicRoundMain,
-    "acrylic-square-external": squareExtMain,
-    "acrylic-square-integrated": squareIntMain,
+    "nordic-forge": squareExtMain,
+    "arctic-ember": squareIntMain,
   };
   const hotTubGalleryMap: Record<string, string[]> = {
     "arctic-ritual": [acrylicRoundGallery1, acrylicRoundGallery2, acrylicRoundGallery3, acrylicRoundGallery4],
-    "acrylic-square-external": [
+    "nordic-forge": [
       squareExtGallery1,
       squareExtGallery2,
       squareExtGallery3,
@@ -999,7 +999,7 @@ const Configurator = () => {
       squareExtGallery6,
       squareExtGallery7,
     ],
-    "acrylic-square-integrated": [
+    "arctic-ember": [
       squareIntGallery1,
       squareIntGallery2,
       squareIntGallery3,
