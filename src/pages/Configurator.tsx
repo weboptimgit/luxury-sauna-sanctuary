@@ -984,12 +984,12 @@ const Configurator = () => {
   }, [apiConfig]);
 
   const hotTubImageMap: Record<string, string> = {
-    "acrylic-round": acrylicRoundMain,
+    "arctic-ritual": acrylicRoundMain,
     "acrylic-square-external": squareExtMain,
     "acrylic-square-integrated": squareIntMain,
   };
   const hotTubGalleryMap: Record<string, string[]> = {
-    "acrylic-round": [acrylicRoundGallery1, acrylicRoundGallery2, acrylicRoundGallery3, acrylicRoundGallery4],
+    "arctic-ritual": [acrylicRoundGallery1, acrylicRoundGallery2, acrylicRoundGallery3, acrylicRoundGallery4],
     "acrylic-square-external": [
       squareExtGallery1,
       squareExtGallery2,
