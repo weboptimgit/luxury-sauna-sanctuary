@@ -255,7 +255,7 @@ const isSaunaColorType = (id: string): id is SaunaColorType => {
 // Reálne obrázky podľa farby pre každý model sauny
 // Structure: saunaId -> colorId -> imagePath
 const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
-  "frame-balance": {
+  "nordic-frame": {
     none: frameSaunaNatural,
     "1-mahagon": frameSauna1Mahagon,
     "2-teak": frameSauna2Teak,
@@ -344,7 +344,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
 
 // Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
 const saunaGalleryImages: Record<string, string[]> = {
-  "frame-balance": [
+  "nordic-frame": [
     frameSaunaGallery1,
     frameSaunaGallery2,
     frameSaunaGallery3,
@@ -410,7 +410,7 @@ type SaunaTypePreset = {
 };
 
 const saunaTypePresets: Record<string, SaunaTypePreset> = {
-  "frame-balance": { image: saunaCube },
+  "nordic-frame": { image: saunaCube },
   "aurora-cube": { image: saunaTraditional },
   "arctic-shell": { image: saunaInterior },
   "forest-barrel": { image: saunaBarrel },
@@ -1163,9 +1163,9 @@ const Configurator = () => {
     if (!saunaTypesUI.length && !hottubTypesUI.length && !comboTypesUI.length) return;
 
     const slugToId: Record<string, string> = {
-      "frame-sauna": "frame-balance",
-      "frame-balance": "frame-balance",
-      "frame-inspire": "frame-balance",
+      "frame-sauna": "nordic-frame",
+      "nordic-frame": "nordic-frame",
+      "frame-inspire": "nordic-frame",
       modulsauna: "aurora-cube",
       "aurora-cube": "aurora-cube",
       "arctic-shell": "arctic-shell",
