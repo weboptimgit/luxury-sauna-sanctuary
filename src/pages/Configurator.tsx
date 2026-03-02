@@ -383,7 +383,7 @@ const saunaGalleryImages: Record<string, string[]> = {
     round2mGallery5,
     round2mGallery6,
   ],
-  "harmony-insulated": [
+  "nordic-harmony": [
     harmonyGallery1,
     harmonyGallery2,
     harmonyGallery3,
@@ -414,7 +414,7 @@ const saunaTypePresets: Record<string, SaunaTypePreset> = {
   "aurora-cube": { image: saunaTraditional },
   "arctic-shell": { image: saunaInterior },
   "forest-barrel": { image: saunaBarrel },
-  "harmony-insulated": { image: saunaHarmony },
+  "nordic-harmony": { image: saunaHarmony },
   "nordic-harmony": { image: saunaHarmony },
 };
 
@@ -1173,9 +1173,9 @@ const Configurator = () => {
       "2m-round": "forest-barrel",
       "forest-barrel": "forest-barrel",
       "barrel-sauna": "forest-barrel",
-      harmony: "harmony-insulated",
-      "harmony-insulated": "harmony-insulated",
-      "nordic-harmony": "harmony-insulated",
+      harmony: "nordic-harmony",
+      "nordic-harmony": "nordic-harmony",
+      "nordic-harmony": "nordic-harmony",
       "iglu-2in1": "iglu-2in1",
       "oasis-2in1": "oasis-2in1",
       "modulspa-2in1": "modulspa-2in1",
