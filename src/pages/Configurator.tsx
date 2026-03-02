@@ -269,7 +269,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "18-tmavy-orech": frameSauna18TmavyOrech,
     "20-tmavy-mahagon": frameSauna20TmavyMahagon,
   },
-  "modul-thermo": {
+  "aurora-cube": {
     none: modulsaunaNatural,
     "1-mahagon": modulsauna1Mahagon,
     "2-teak": modulsauna2Teak,
@@ -283,7 +283,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "18-tmavy-orech": modulsauna18TmavyOrech,
     "20-tmavy-mahagon": modulsauna20TmavyMahagon,
   },
-  "lux-mini": {
+  "arctic-shell": {
     none: luxminiNatural,
     "1-mahagon": luxmini1Mahagon,
     "2-teak": luxmini2Teak,
@@ -297,7 +297,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "18-tmavy-orech": luxmini18TmavyOrech,
     "20-tmavy-mahagon": luxmini20TmavyMahagon,
   },
-  "round-2m": {
+  "forest-barrel": {
     none: round2mNatural,
     "1-mahagon": round2m1Mahagon,
     "2-teak": round2m2Teak,
@@ -311,7 +311,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "18-tmavy-orech": round2m18TmavyOrech,
     "20-tmavy-mahagon": round2m20TmavyMahagon,
   },
-  "harmony-insulated": {
+  "nordic-harmony": {
     none: harmonyNatural,
     "1-mahagon": harmony1Mahagon,
     "2-teak": harmony2Teak,
@@ -356,7 +356,7 @@ const saunaGalleryImages: Record<string, string[]> = {
     frameSaunaGallery9,
     frameSaunaGallery10,
   ],
-  "modul-thermo": [
+  "aurora-cube": [
     modulsaunaGallery1,
     modulsaunaGallery2,
     modulsaunaGallery3,
@@ -366,7 +366,7 @@ const saunaGalleryImages: Record<string, string[]> = {
     modulsaunaGallery7,
     modulsaunaGallery8,
   ],
-  "lux-mini": [
+  "arctic-shell": [
     luxminiGallery1,
     luxminiGallery2,
     luxminiGallery3,
@@ -375,7 +375,14 @@ const saunaGalleryImages: Record<string, string[]> = {
     luxminiGallery6,
     luxminiGallery7,
   ],
-  "round-2m": [round2mGallery1, round2mGallery2, round2mGallery3, round2mGallery4, round2mGallery5, round2mGallery6],
+  "forest-barrel": [
+    round2mGallery1,
+    round2mGallery2,
+    round2mGallery3,
+    round2mGallery4,
+    round2mGallery5,
+    round2mGallery6,
+  ],
   "harmony-insulated": [
     harmonyGallery1,
     harmonyGallery2,
@@ -404,9 +411,9 @@ type SaunaTypePreset = {
 
 const saunaTypePresets: Record<string, SaunaTypePreset> = {
   "frame-balance": { image: saunaCube },
-  "modul-thermo": { image: saunaTraditional },
-  "lux-mini": { image: saunaInterior },
-  "round-2m": { image: saunaBarrel },
+  "aurora-cube": { image: saunaTraditional },
+  "arctic-shell": { image: saunaInterior },
+  "forest-barrel": { image: saunaBarrel },
   "harmony-insulated": { image: saunaHarmony },
   "insulated-harmony": { image: saunaHarmony },
 };
@@ -576,7 +583,12 @@ type ApiConfig = {
 const toUIOptions = (api: ApiOption[] | undefined, withImages?: Record<string, string>): ConfigOption[] => {
   if (!api) return [];
   if (withImages) {
-    console.log('[toUIOptions] API IDs:', api.map(o => o.id), 'Image keys:', Object.keys(withImages));
+    console.log(
+      "[toUIOptions] API IDs:",
+      api.map((o) => o.id),
+      "Image keys:",
+      Object.keys(withImages),
+    );
   }
   return api.map((o) => ({
     id: o.id,
@@ -817,7 +829,17 @@ const Configurator = () => {
   };
 
   const WOOD_NONE_IDS = new Set(["none", "bez", "bez-vonkajsieho-dreva"]);
-  const WOOD_IDS = new Set(["spruce", "thermo", "wpc", "smrek", "smrekovec", "borovica", "none", "bez", "bez-vonkajsieho-dreva"]);
+  const WOOD_IDS = new Set([
+    "spruce",
+    "thermo",
+    "wpc",
+    "smrek",
+    "smrekovec",
+    "borovica",
+    "none",
+    "bez",
+    "bez-vonkajsieho-dreva",
+  ]);
 
   const acrylicLinerImages: Record<string, string> = {
     "blue-marble": blueMarbleImg,
@@ -839,33 +861,68 @@ const Configurator = () => {
   };
 
   const hotTubCoverColorOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.coverColorOptions, {
-    "black": coverBlackImg,
-    "cierna": coverBlackImg,
-    "grey": coverGreyImg,
-    "seda": coverGreyImg,
-    "siva": coverGreyImg,
+    black: coverBlackImg,
+    cierna: coverBlackImg,
+    grey: coverGreyImg,
+    seda: coverGreyImg,
+    siva: coverGreyImg,
   });
-  const hotTubAirBubblesOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.airBubblesOptions, Object.fromEntries(
-    (apiConfig?.hottub.airBubblesOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, airBubblesImg])
-  ));
-  const hotTubDrainRelayOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.drainRelayOptions, Object.fromEntries(
-    (apiConfig?.hottub.drainRelayOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, drainRelayImg])
-  ));
-  const hotTubSandFilterOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.sandFilterOptions, Object.fromEntries(
-    (apiConfig?.hottub.sandFilterOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, sandFilterImg])
-  ));
-  const hotTubElectronicControllerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.electronicControllerOptions, Object.fromEntries(
-    (apiConfig?.hottub.electronicControllerOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, digitalControllerImg])
-  ));
-  const hotTubThermometerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.thermometerOptions, Object.fromEntries(
-    (apiConfig?.hottub.thermometerOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, thermometerImg])
-  ));
-  const hotTubBluetoothSpeakerOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.bluetoothSpeakerOptions, Object.fromEntries(
-    (apiConfig?.hottub.bluetoothSpeakerOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, speaker])
-  ));
-  const hotTubHeadCushionOptions: ConfigOption[] = toUIOptions(apiConfig?.hottub.headCushionOptions, Object.fromEntries(
-    (apiConfig?.hottub.headCushionOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, headCushionImg])
-  ));
+  const hotTubAirBubblesOptions: ConfigOption[] = toUIOptions(
+    apiConfig?.hottub.airBubblesOptions,
+    Object.fromEntries(
+      (apiConfig?.hottub.airBubblesOptions || [])
+        .filter((o) => o.id !== "none" && o.id !== "bez")
+        .map((o) => [o.id, airBubblesImg]),
+    ),
+  );
+  const hotTubDrainRelayOptions: ConfigOption[] = toUIOptions(
+    apiConfig?.hottub.drainRelayOptions,
+    Object.fromEntries(
+      (apiConfig?.hottub.drainRelayOptions || [])
+        .filter((o) => o.id !== "none" && o.id !== "bez")
+        .map((o) => [o.id, drainRelayImg]),
+    ),
+  );
+  const hotTubSandFilterOptions: ConfigOption[] = toUIOptions(
+    apiConfig?.hottub.sandFilterOptions,
+    Object.fromEntries(
+      (apiConfig?.hottub.sandFilterOptions || [])
+        .filter((o) => o.id !== "none" && o.id !== "bez")
+        .map((o) => [o.id, sandFilterImg]),
+    ),
+  );
+  const hotTubElectronicControllerOptions: ConfigOption[] = toUIOptions(
+    apiConfig?.hottub.electronicControllerOptions,
+    Object.fromEntries(
+      (apiConfig?.hottub.electronicControllerOptions || [])
+        .filter((o) => o.id !== "none" && o.id !== "bez")
+        .map((o) => [o.id, digitalControllerImg]),
+    ),
+  );
+  const hotTubThermometerOptions: ConfigOption[] = toUIOptions(
+    apiConfig?.hottub.thermometerOptions,
+    Object.fromEntries(
+      (apiConfig?.hottub.thermometerOptions || [])
+        .filter((o) => o.id !== "none" && o.id !== "bez")
+        .map((o) => [o.id, thermometerImg]),
+    ),
+  );
+  const hotTubBluetoothSpeakerOptions: ConfigOption[] = toUIOptions(
+    apiConfig?.hottub.bluetoothSpeakerOptions,
+    Object.fromEntries(
+      (apiConfig?.hottub.bluetoothSpeakerOptions || [])
+        .filter((o) => o.id !== "none" && o.id !== "bez")
+        .map((o) => [o.id, speaker]),
+    ),
+  );
+  const hotTubHeadCushionOptions: ConfigOption[] = toUIOptions(
+    apiConfig?.hottub.headCushionOptions,
+    Object.fromEntries(
+      (apiConfig?.hottub.headCushionOptions || [])
+        .filter((o) => o.id !== "none" && o.id !== "bez")
+        .map((o) => [o.id, headCushionImg]),
+    ),
+  );
 
   // --- Heater models z API ---
   const electricHeaterModels: HeaterModel[] = useMemo(() => {
@@ -959,8 +1016,24 @@ const Configurator = () => {
   };
   const hotTubGalleryMap: Record<string, string[]> = {
     "acrylic-round": [acrylicRoundGallery1, acrylicRoundGallery2, acrylicRoundGallery3, acrylicRoundGallery4],
-    "acrylic-square-external": [squareExtGallery1, squareExtGallery2, squareExtGallery3, squareExtGallery4, squareExtGallery5, squareExtGallery6, squareExtGallery7],
-    "acrylic-square-integrated": [squareIntGallery1, squareIntGallery2, squareIntGallery3, squareIntGallery4, squareIntGallery5, squareIntGallery6, squareIntGallery7],
+    "acrylic-square-external": [
+      squareExtGallery1,
+      squareExtGallery2,
+      squareExtGallery3,
+      squareExtGallery4,
+      squareExtGallery5,
+      squareExtGallery6,
+      squareExtGallery7,
+    ],
+    "acrylic-square-integrated": [
+      squareIntGallery1,
+      squareIntGallery2,
+      squareIntGallery3,
+      squareIntGallery4,
+      squareIntGallery5,
+      squareIntGallery6,
+      squareIntGallery7,
+    ],
   };
 
   // --- HotTub typy z API ---
@@ -982,8 +1055,14 @@ const Configurator = () => {
       hasCover: ht.hasCover ?? true,
       hasCoverColor: ht.hasCoverColor ?? true,
       sizeOptions: toUIOptions(ht.sizeOptions),
-      exteriorWoodOptions: toUIOptions((ht.exteriorWoodOptions || []).filter(o => WOOD_IDS.has(o.id) && !WOOD_NONE_IDS.has(o.id)), exteriorWoodImages),
-      acrylicLinerOptions: toUIOptions((ht.exteriorWoodOptions || []).filter(o => !WOOD_IDS.has(o.id)), acrylicLinerImages),
+      exteriorWoodOptions: toUIOptions(
+        (ht.exteriorWoodOptions || []).filter((o) => WOOD_IDS.has(o.id) && !WOOD_NONE_IDS.has(o.id)),
+        exteriorWoodImages,
+      ),
+      acrylicLinerOptions: toUIOptions(
+        (ht.exteriorWoodOptions || []).filter((o) => !WOOD_IDS.has(o.id)),
+        acrylicLinerImages,
+      ),
       heaterOptions: toUIOptions(ht.heaterOptions, {
         "external-aisi304": integratedHottubHeater,
         "external-aisi316": integratedHottubHeater,
@@ -996,16 +1075,26 @@ const Configurator = () => {
         "3pc": underwaterLed3pc,
         "3ks": underwaterLed3pc,
       }),
-      exteriorLedOptions: toUIOptions(ht.exteriorLedOptions, Object.fromEntries(
-        (ht.exteriorLedOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, exteriorLedHottubImg])
-      )),
-      hydroMassageOptions: toUIOptions(ht.hydroMassageOptions, Object.fromEntries(
-        (ht.hydroMassageOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, hydroMassageImg])
-      )),
+      exteriorLedOptions: toUIOptions(
+        ht.exteriorLedOptions,
+        Object.fromEntries(
+          (ht.exteriorLedOptions || [])
+            .filter((o) => o.id !== "none" && o.id !== "bez")
+            .map((o) => [o.id, exteriorLedHottubImg]),
+        ),
+      ),
+      hydroMassageOptions: toUIOptions(
+        ht.hydroMassageOptions,
+        Object.fromEntries(
+          (ht.hydroMassageOptions || [])
+            .filter((o) => o.id !== "none" && o.id !== "bez")
+            .map((o) => [o.id, hydroMassageImg]),
+        ),
+      ),
       coverOptions: toUIOptions(ht.coverOptions, {
         "200cm": thermoCoverImg,
         "230cm": thermoCoverImg,
-        "standard": thermoCoverImg,
+        standard: thermoCoverImg,
       }),
     }));
   }, [apiConfig]);
@@ -1034,7 +1123,7 @@ const Configurator = () => {
         coverOptions: toUIOptions(ct.coverOptions, {
           "200cm": thermoCoverImg,
           "230cm": thermoCoverImg,
-          "standard": thermoCoverImg,
+          standard: thermoCoverImg,
         }),
         hasCoverColor: ct.hasCoverColor ?? false,
         hasUnderwaterLed: ct.hasUnderwaterLed ?? false,
@@ -1043,13 +1132,23 @@ const Configurator = () => {
           "3pc": underwaterLed3pc,
         }),
         hasExteriorLed: ct.hasExteriorLed ?? false,
-        exteriorLedOptions: toUIOptions(ct.exteriorLedOptions, Object.fromEntries(
-          (ct.exteriorLedOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, exteriorLedHottubImg])
-        )),
+        exteriorLedOptions: toUIOptions(
+          ct.exteriorLedOptions,
+          Object.fromEntries(
+            (ct.exteriorLedOptions || [])
+              .filter((o) => o.id !== "none" && o.id !== "bez")
+              .map((o) => [o.id, exteriorLedHottubImg]),
+          ),
+        ),
         hasHydroMassage: ct.hasHydroMassage ?? false,
-        hydroMassageOptions: toUIOptions(ct.hydroMassageOptions, Object.fromEntries(
-          (ct.hydroMassageOptions || []).filter(o => o.id !== "none" && o.id !== "bez").map(o => [o.id, hydroMassageImg])
-        )),
+        hydroMassageOptions: toUIOptions(
+          ct.hydroMassageOptions,
+          Object.fromEntries(
+            (ct.hydroMassageOptions || [])
+              .filter((o) => o.id !== "none" && o.id !== "bez")
+              .map((o) => [o.id, hydroMassageImg]),
+          ),
+        ),
       }));
     }
 
@@ -1067,13 +1166,13 @@ const Configurator = () => {
       "frame-sauna": "frame-balance",
       "frame-balance": "frame-balance",
       "frame-inspire": "frame-balance",
-      modulsauna: "modul-thermo",
-      "modul-thermo": "modul-thermo",
-      "lux-mini": "lux-mini",
-      "lux-sauna": "lux-mini",
-      "2m-round": "round-2m",
-      "round-2m": "round-2m",
-      "barrel-sauna": "round-2m",
+      modulsauna: "aurora-cube",
+      "aurora-cube": "aurora-cube",
+      "arctic-shell": "arctic-shell",
+      "lux-sauna": "arctic-shell",
+      "2m-round": "forest-barrel",
+      "forest-barrel": "forest-barrel",
+      "barrel-sauna": "forest-barrel",
       harmony: "harmony-insulated",
       "harmony-insulated": "harmony-insulated",
       "insulated-harmony": "harmony-insulated",
@@ -1215,24 +1314,58 @@ const Configurator = () => {
     if (productCategory === "hottub" && selectedHotTubType) {
       const basePrice = selectedHotTubType.basePrice;
       const sizePrice = selectedHotTubType.sizeOptions.find((s) => s.id === hotTubConfig.size)?.price ?? 0;
-      const exteriorWoodPrice = selectedHotTubType.exteriorWoodOptions.find((w) => w.id === hotTubConfig.exteriorWood)?.price ?? 0;
-      const acrylicLinerPrice = selectedHotTubType.acrylicLinerOptions.find((a) => a.id === hotTubConfig.acrylicLiner)?.price ?? 0;
+      const exteriorWoodPrice =
+        selectedHotTubType.exteriorWoodOptions.find((w) => w.id === hotTubConfig.exteriorWood)?.price ?? 0;
+      const acrylicLinerPrice =
+        selectedHotTubType.acrylicLinerOptions.find((a) => a.id === hotTubConfig.acrylicLiner)?.price ?? 0;
       const heaterPrice = selectedHotTubType.heaterOptions.find((h) => h.id === hotTubConfig.heater)?.price ?? 0;
-      const electricHeaterPrice = selectedHotTubType.heaterOptions.find((h) => h.id === hotTubConfig.electricHeater)?.price ?? 0;
-      const underwaterLedPrice = selectedHotTubType.underwaterLedOptions.find((l) => l.id === hotTubConfig.underwaterLed)?.price ?? 0;
-      const exteriorLedPrice2 = selectedHotTubType.exteriorLedOptions.find((l) => l.id === hotTubConfig.exteriorLed)?.price ?? 0;
-      const hydroMassagePrice = selectedHotTubType.hydroMassageOptions.find((h) => h.id === hotTubConfig.hydroMassage)?.price ?? 0;
+      const electricHeaterPrice =
+        selectedHotTubType.heaterOptions.find((h) => h.id === hotTubConfig.electricHeater)?.price ?? 0;
+      const underwaterLedPrice =
+        selectedHotTubType.underwaterLedOptions.find((l) => l.id === hotTubConfig.underwaterLed)?.price ?? 0;
+      const exteriorLedPrice2 =
+        selectedHotTubType.exteriorLedOptions.find((l) => l.id === hotTubConfig.exteriorLed)?.price ?? 0;
+      const hydroMassagePrice =
+        selectedHotTubType.hydroMassageOptions.find((h) => h.id === hotTubConfig.hydroMassage)?.price ?? 0;
       const coverPrice = selectedHotTubType.coverOptions.find((c) => c.id === hotTubConfig.cover)?.price ?? 0;
-      const coverColorPrice = apiConfig.hottub.coverColorOptions?.find((c) => c.id === hotTubConfig.coverColor)?.price ?? 0;
-      const airBubblesPrice = apiConfig.hottub.airBubblesOptions?.find((o) => o.id === hotTubConfig.airBubbles)?.price ?? 0;
-      const drainRelayPrice = apiConfig.hottub.drainRelayOptions?.find((o) => o.id === hotTubConfig.drainRelay)?.price ?? 0;
-      const sandFilterPrice = apiConfig.hottub.sandFilterOptions?.find((o) => o.id === hotTubConfig.sandFilter)?.price ?? 0;
-      const electronicControllerPrice = apiConfig.hottub.electronicControllerOptions?.find((o) => o.id === hotTubConfig.electronicController)?.price ?? 0;
-      const thermometerPrice = apiConfig.hottub.thermometerOptions?.find((o) => o.id === hotTubConfig.thermometer)?.price ?? 0;
-      const bluetoothSpeakerPrice = apiConfig.hottub.bluetoothSpeakerOptions?.find((o) => o.id === hotTubConfig.bluetoothSpeaker)?.price ?? 0;
-      const headCushionPrice = apiConfig.hottub.headCushionOptions?.find((o) => o.id === hotTubConfig.headCushion)?.price ?? 0;
+      const coverColorPrice =
+        apiConfig.hottub.coverColorOptions?.find((c) => c.id === hotTubConfig.coverColor)?.price ?? 0;
+      const airBubblesPrice =
+        apiConfig.hottub.airBubblesOptions?.find((o) => o.id === hotTubConfig.airBubbles)?.price ?? 0;
+      const drainRelayPrice =
+        apiConfig.hottub.drainRelayOptions?.find((o) => o.id === hotTubConfig.drainRelay)?.price ?? 0;
+      const sandFilterPrice =
+        apiConfig.hottub.sandFilterOptions?.find((o) => o.id === hotTubConfig.sandFilter)?.price ?? 0;
+      const electronicControllerPrice =
+        apiConfig.hottub.electronicControllerOptions?.find((o) => o.id === hotTubConfig.electronicController)?.price ??
+        0;
+      const thermometerPrice =
+        apiConfig.hottub.thermometerOptions?.find((o) => o.id === hotTubConfig.thermometer)?.price ?? 0;
+      const bluetoothSpeakerPrice =
+        apiConfig.hottub.bluetoothSpeakerOptions?.find((o) => o.id === hotTubConfig.bluetoothSpeaker)?.price ?? 0;
+      const headCushionPrice =
+        apiConfig.hottub.headCushionOptions?.find((o) => o.id === hotTubConfig.headCushion)?.price ?? 0;
 
-      return basePrice + sizePrice + exteriorWoodPrice + acrylicLinerPrice + heaterPrice + electricHeaterPrice + underwaterLedPrice + exteriorLedPrice2 + hydroMassagePrice + coverPrice + coverColorPrice + airBubblesPrice + drainRelayPrice + sandFilterPrice + electronicControllerPrice + thermometerPrice + bluetoothSpeakerPrice + headCushionPrice;
+      return (
+        basePrice +
+        sizePrice +
+        exteriorWoodPrice +
+        acrylicLinerPrice +
+        heaterPrice +
+        electricHeaterPrice +
+        underwaterLedPrice +
+        exteriorLedPrice2 +
+        hydroMassagePrice +
+        coverPrice +
+        coverColorPrice +
+        airBubblesPrice +
+        drainRelayPrice +
+        sandFilterPrice +
+        electronicControllerPrice +
+        thermometerPrice +
+        bluetoothSpeakerPrice +
+        headCushionPrice
+      );
     }
 
     if (productCategory === "combo" && selectedComboType) {
@@ -1247,32 +1380,45 @@ const Configurator = () => {
       // Heater
       const heaterPrice = selectedComboType.heaterOptions.find((h) => h.id === comboConfig.heater)?.price ?? 0;
       total += heaterPrice;
-      const electricHeaterPrice = selectedComboType.heaterOptions.find((h) => h.id === comboConfig.electricHeater)?.price ?? 0;
+      const electricHeaterPrice =
+        selectedComboType.heaterOptions.find((h) => h.id === comboConfig.electricHeater)?.price ?? 0;
       total += electricHeaterPrice;
       // Other options from combo shared
-      const underwaterLedPrice = selectedComboType.underwaterLedOptions.find((l) => l.id === comboConfig.underwaterLed)?.price ?? 0;
+      const underwaterLedPrice =
+        selectedComboType.underwaterLedOptions.find((l) => l.id === comboConfig.underwaterLed)?.price ?? 0;
       total += underwaterLedPrice;
-      const exteriorLedPrice2 = selectedComboType.exteriorLedOptions.find((l) => l.id === comboConfig.exteriorLed)?.price ?? 0;
+      const exteriorLedPrice2 =
+        selectedComboType.exteriorLedOptions.find((l) => l.id === comboConfig.exteriorLed)?.price ?? 0;
       total += exteriorLedPrice2;
-      const hydroMassagePrice = selectedComboType.hydroMassageOptions.find((h) => h.id === comboConfig.hydroMassage)?.price ?? 0;
+      const hydroMassagePrice =
+        selectedComboType.hydroMassageOptions.find((h) => h.id === comboConfig.hydroMassage)?.price ?? 0;
       total += hydroMassagePrice;
       const coverPrice = selectedComboType.coverOptions.find((c) => c.id === comboConfig.cover)?.price ?? 0;
       total += coverPrice;
-      const coverColorPrice = apiConfig?.hottub?.coverColorOptions?.find((c) => c.id === comboConfig.coverColor)?.price ?? 0;
+      const coverColorPrice =
+        apiConfig?.hottub?.coverColorOptions?.find((c) => c.id === comboConfig.coverColor)?.price ?? 0;
       total += coverColorPrice;
-      const airBubblesPrice = apiConfig?.hottub?.airBubblesOptions?.find((o) => o.id === comboConfig.airBubbles)?.price ?? 0;
+      const airBubblesPrice =
+        apiConfig?.hottub?.airBubblesOptions?.find((o) => o.id === comboConfig.airBubbles)?.price ?? 0;
       total += airBubblesPrice;
-      const drainRelayPrice = apiConfig?.hottub?.drainRelayOptions?.find((o) => o.id === comboConfig.drainRelay)?.price ?? 0;
+      const drainRelayPrice =
+        apiConfig?.hottub?.drainRelayOptions?.find((o) => o.id === comboConfig.drainRelay)?.price ?? 0;
       total += drainRelayPrice;
-      const sandFilterPrice = apiConfig?.hottub?.sandFilterOptions?.find((o) => o.id === comboConfig.sandFilter)?.price ?? 0;
+      const sandFilterPrice =
+        apiConfig?.hottub?.sandFilterOptions?.find((o) => o.id === comboConfig.sandFilter)?.price ?? 0;
       total += sandFilterPrice;
-      const electronicControllerPrice = apiConfig?.hottub?.electronicControllerOptions?.find((o) => o.id === comboConfig.electronicController)?.price ?? 0;
+      const electronicControllerPrice =
+        apiConfig?.hottub?.electronicControllerOptions?.find((o) => o.id === comboConfig.electronicController)?.price ??
+        0;
       total += electronicControllerPrice;
-      const thermometerPrice = apiConfig?.hottub?.thermometerOptions?.find((o) => o.id === comboConfig.thermometer)?.price ?? 0;
+      const thermometerPrice =
+        apiConfig?.hottub?.thermometerOptions?.find((o) => o.id === comboConfig.thermometer)?.price ?? 0;
       total += thermometerPrice;
-      const bluetoothSpeakerPrice = apiConfig?.hottub?.bluetoothSpeakerOptions?.find((o) => o.id === comboConfig.bluetoothSpeaker)?.price ?? 0;
+      const bluetoothSpeakerPrice =
+        apiConfig?.hottub?.bluetoothSpeakerOptions?.find((o) => o.id === comboConfig.bluetoothSpeaker)?.price ?? 0;
       total += bluetoothSpeakerPrice;
-      const headCushionPrice = apiConfig?.hottub?.headCushionOptions?.find((o) => o.id === comboConfig.headCushion)?.price ?? 0;
+      const headCushionPrice =
+        apiConfig?.hottub?.headCushionOptions?.find((o) => o.id === comboConfig.headCushion)?.price ?? 0;
       total += headCushionPrice;
       return total;
     }
@@ -1319,11 +1465,12 @@ const Configurator = () => {
 
     try {
       // Získaj aktuálny obrázok pre košík
-      const cartImage = productCategory === "sauna"
-        ? currentSaunaImage
-        : productCategory === "combo"
-        ? (selectedComboType?.image ?? saunaBarrel)
-        : (selectedHotTubType?.image ?? hotTub);
+      const cartImage =
+        productCategory === "sauna"
+          ? currentSaunaImage
+          : productCategory === "combo"
+            ? (selectedComboType?.image ?? saunaBarrel)
+            : (selectedHotTubType?.image ?? hotTub);
 
       let options: Record<string, unknown>;
       if (productCategory === "sauna") {
@@ -1388,8 +1535,43 @@ const Configurator = () => {
       color: "none" as SaunaColorType,
       woodType: "spruce",
     });
-    setHotTubConfig({ size: "none", exteriorWood: "none", acrylicLiner: "none", heater: "none", electricHeater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
-    setComboConfig({ woodType: "spruce", window: "none", heater: "none", electricHeater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
+    setHotTubConfig({
+      size: "none",
+      exteriorWood: "none",
+      acrylicLiner: "none",
+      heater: "none",
+      electricHeater: "none",
+      underwaterLed: "none",
+      exteriorLed: "none",
+      hydroMassage: "none",
+      cover: "none",
+      coverColor: "none",
+      airBubbles: "none",
+      drainRelay: "none",
+      sandFilter: "none",
+      electronicController: "none",
+      thermometer: "none",
+      bluetoothSpeaker: "none",
+      headCushion: "none",
+    });
+    setComboConfig({
+      woodType: "spruce",
+      window: "none",
+      heater: "none",
+      electricHeater: "none",
+      underwaterLed: "none",
+      exteriorLed: "none",
+      hydroMassage: "none",
+      cover: "none",
+      coverColor: "none",
+      airBubbles: "none",
+      drainRelay: "none",
+      sandFilter: "none",
+      electronicController: "none",
+      thermometer: "none",
+      bluetoothSpeaker: "none",
+      headCushion: "none",
+    });
     navigate(getConfigBasePath(), { replace: true });
   };
 
@@ -1411,14 +1593,49 @@ const Configurator = () => {
 
   const goBackToHotTubTypes = () => {
     setSelectedHotTubType(null);
-    setHotTubConfig({ size: "none", exteriorWood: "none", acrylicLiner: "none", heater: "none", electricHeater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
+    setHotTubConfig({
+      size: "none",
+      exteriorWood: "none",
+      acrylicLiner: "none",
+      heater: "none",
+      electricHeater: "none",
+      underwaterLed: "none",
+      exteriorLed: "none",
+      hydroMassage: "none",
+      cover: "none",
+      coverColor: "none",
+      airBubbles: "none",
+      drainRelay: "none",
+      sandFilter: "none",
+      electronicController: "none",
+      thermometer: "none",
+      bluetoothSpeaker: "none",
+      headCushion: "none",
+    });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
   };
 
   const goBackToComboTypes = () => {
     setSelectedComboType(null);
-    setComboConfig({ woodType: "spruce", window: "none", heater: "none", electricHeater: "none", underwaterLed: "none", exteriorLed: "none", hydroMassage: "none", cover: "none", coverColor: "none", airBubbles: "none", drainRelay: "none", sandFilter: "none", electronicController: "none", thermometer: "none", bluetoothSpeaker: "none", headCushion: "none" });
+    setComboConfig({
+      woodType: "spruce",
+      window: "none",
+      heater: "none",
+      electricHeater: "none",
+      underwaterLed: "none",
+      exteriorLed: "none",
+      hydroMassage: "none",
+      cover: "none",
+      coverColor: "none",
+      airBubbles: "none",
+      drainRelay: "none",
+      sandFilter: "none",
+      electronicController: "none",
+      thermometer: "none",
+      bluetoothSpeaker: "none",
+      headCushion: "none",
+    });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
   };
@@ -1464,7 +1681,9 @@ const Configurator = () => {
 
       <span className="font-medium text-center text-[11px] md:text-sm leading-tight line-clamp-2">{option.name}</span>
       {description && (
-        <span className="text-[9px] md:text-[10px] text-muted-foreground text-center leading-tight mt-0.5 line-clamp-2">{description}</span>
+        <span className="text-[9px] md:text-[10px] text-muted-foreground text-center leading-tight mt-0.5 line-clamp-2">
+          {description}
+        </span>
       )}
 
       {option.price > 0 ? (
@@ -1477,13 +1696,23 @@ const Configurator = () => {
           <span className="text-[10px] md:text-xs text-primary">{option.price.toLocaleString()} €</span>
         </div>
       ) : (
-        <span className="text-[10px] md:text-xs text-muted-foreground mt-auto pt-1">{option.price === 0 ? "0,00 €" : t("included")}</span>
+        <span className="text-[10px] md:text-xs text-muted-foreground mt-auto pt-1">
+          {option.price === 0 ? "0,00 €" : t("included")}
+        </span>
       )}
     </button>
   );
 
   // Scrollable row: grid 3 cols on desktop, horizontal scroll on mobile with fade indicator
-  const ConfigScrollWrapper = ({ isDesktop, onScroll, children }: { isDesktop: boolean; onScroll: React.UIEventHandler<HTMLDivElement>; children: React.ReactNode }) => {
+  const ConfigScrollWrapper = ({
+    isDesktop,
+    onScroll,
+    children,
+  }: {
+    isDesktop: boolean;
+    onScroll: React.UIEventHandler<HTMLDivElement>;
+    children: React.ReactNode;
+  }) => {
     if (isDesktop) {
       return (
         <ScrollArea className="h-[calc(100vh-8rem)]" onScrollCapture={onScroll}>
@@ -1498,11 +1727,7 @@ const Configurator = () => {
     const childCount = React.Children.count(children);
     const gridCols = cols === 2 || childCount <= 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3";
 
-    return (
-      <div className={cn("grid gap-2 md:gap-3", gridCols)}>
-        {children}
-      </div>
-    );
+    return <div className={cn("grid gap-2 md:gap-3", gridCols)}>{children}</div>;
   };
 
   // Loading state
@@ -1984,11 +2209,23 @@ const Configurator = () => {
         <div className="container mx-auto px-4">
           {/* Tlačidlo späť */}
           <button
-            onClick={productCategory === "sauna" ? goBackToSaunaTypes : productCategory === "combo" ? goBackToComboTypes : goBackToHotTubTypes}
+            onClick={
+              productCategory === "sauna"
+                ? goBackToSaunaTypes
+                : productCategory === "combo"
+                  ? goBackToComboTypes
+                  : goBackToHotTubTypes
+            }
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 group"
           >
             <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            <span>{productCategory === "sauna" ? t("config.back.sauna") : productCategory === "combo" ? t("config.back.combo") : t("config.back.hottub")}</span>
+            <span>
+              {productCategory === "sauna"
+                ? t("config.back.sauna")
+                : productCategory === "combo"
+                  ? t("config.back.combo")
+                  : t("config.back.hottub")}
+            </span>
           </button>
 
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
@@ -2039,7 +2276,13 @@ const Configurator = () => {
 
                 <img
                   src={images[currentImageIndex]}
-                  alt={productCategory === "sauna" ? selectedSaunaType?.name : productCategory === "combo" ? selectedComboType?.name : t("config.hottub")}
+                  alt={
+                    productCategory === "sauna"
+                      ? selectedSaunaType?.name
+                      : productCategory === "combo"
+                        ? selectedComboType?.name
+                        : t("config.hottub")
+                  }
                   className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                 />
 
@@ -2064,7 +2307,10 @@ const Configurator = () => {
                 </button>
               </div>
 
-              <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+              <div
+                className="flex gap-2 sm:gap-3 overflow-x-auto pb-2"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
                 {images.map((img, index) => (
                   <button
                     key={index}
@@ -2130,7 +2376,11 @@ const Configurator = () => {
                 <div className={cn("space-y-8", isDesktop ? "pr-4 pb-24" : "pb-8")}>
                   <div>
                     <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
-                      {productCategory === "sauna" ? selectedSaunaType?.name : productCategory === "combo" ? (selectedComboType?.name ?? t("config.combo.configTitle")) : (selectedHotTubType?.name ?? t("config.hottub.configTitle"))}
+                      {productCategory === "sauna"
+                        ? selectedSaunaType?.name
+                        : productCategory === "combo"
+                          ? (selectedComboType?.name ?? t("config.combo.configTitle"))
+                          : (selectedHotTubType?.name ?? t("config.hottub.configTitle"))}
                     </h1>
                     {productCategory === "sauna" && selectedSaunaType && (
                       <p className="text-muted-foreground mb-3">{selectedSaunaType.dimensions}</p>
@@ -2159,7 +2409,9 @@ const Configurator = () => {
                           </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
                             {selectedComboType.availableWoodTypes.map((woodId) => {
-                              const currentComboApi = apiConfig?.comboTypes?.find((ct) => ct.id === selectedComboType.id);
+                              const currentComboApi = apiConfig?.comboTypes?.find(
+                                (ct) => ct.id === selectedComboType.id,
+                              );
                               const price = currentComboApi?.woodTypePrices?.[woodId] ?? 0;
                               return (
                                 <button
@@ -2173,15 +2425,23 @@ const Configurator = () => {
                                   )}
                                 >
                                   <div className="w-10 h-10 md:w-14 md:h-14 rounded-md mb-1 md:mb-2 overflow-hidden">
-                                    <img src={woodId === "spruce" ? spruceWoodImg : thermoWoodImg} alt={woodId} className="w-full h-full object-cover" />
+                                    <img
+                                      src={woodId === "spruce" ? spruceWoodImg : thermoWoodImg}
+                                      alt={woodId}
+                                      className="w-full h-full object-cover"
+                                    />
                                   </div>
                                   <span className="font-medium text-center text-xs md:text-sm">
                                     {woodId === "spruce" ? t("config.woodType.spruce") : t("config.woodType.thermo")}
                                   </span>
                                   {price > 0 ? (
-                                    <span className="text-[10px] md:text-xs text-primary">+{price.toLocaleString()} €</span>
+                                    <span className="text-[10px] md:text-xs text-primary">
+                                      +{price.toLocaleString()} €
+                                    </span>
                                   ) : (
-                                    <span className="text-[10px] md:text-xs text-muted-foreground">{t("included")}</span>
+                                    <span className="text-[10px] md:text-xs text-muted-foreground">
+                                      {t("included")}
+                                    </span>
                                   )}
                                 </button>
                               );
@@ -2202,14 +2462,16 @@ const Configurator = () => {
                               isSelected={comboConfig.window === "none"}
                               onClick={() => setComboConfig((prev) => ({ ...prev, window: "none" }))}
                             />
-                            {selectedComboType.windowOptions.filter(o => o.id !== "none").map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={comboConfig.window === option.id}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, window: option.id }))}
-                              />
-                            ))}
+                            {selectedComboType.windowOptions
+                              .filter((o) => o.id !== "none")
+                              .map((option) => (
+                                <OptionCard
+                                  key={option.id}
+                                  option={option}
+                                  isSelected={comboConfig.window === option.id}
+                                  onClick={() => setComboConfig((prev) => ({ ...prev, window: option.id }))}
+                                />
+                              ))}
                           </ScrollableRow>
                         </div>
                       )}
@@ -2224,44 +2486,45 @@ const Configurator = () => {
                             {selectedComboType.heaterOptions
                               .filter((o) => !o.id.startsWith("electric-"))
                               .map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={comboConfig.heater === option.id}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, heater: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
+                                <OptionCard
+                                  key={option.id}
+                                  option={option}
+                                  isSelected={comboConfig.heater === option.id}
+                                  onClick={() => setComboConfig((prev) => ({ ...prev, heater: option.id }))}
+                                  showImage={!!option.image}
+                                />
+                              ))}
                           </ScrollableRow>
                         </div>
                       )}
 
                       {/* Elektrický ohrievač */}
-                      {selectedComboType.hasHeater && selectedComboType.heaterOptions.filter((o) => o.id.startsWith("electric-")).length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.hottubElectricHeater")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            <OptionCard
-                              option={{ id: "none", name: t("config.noHeater"), price: 0 }}
-                              isSelected={comboConfig.electricHeater === "none"}
-                              onClick={() => setComboConfig((prev) => ({ ...prev, electricHeater: "none" }))}
-                            />
-                            {selectedComboType.heaterOptions
-                              .filter((o) => o.id.startsWith("electric-"))
-                              .map((option) => (
+                      {selectedComboType.hasHeater &&
+                        selectedComboType.heaterOptions.filter((o) => o.id.startsWith("electric-")).length > 0 && (
+                          <div>
+                            <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                              {t("config.hottubElectricHeater")} <span className="text-primary">*</span>
+                            </h3>
+                            <ScrollableRow>
                               <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={comboConfig.electricHeater === option.id}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, electricHeater: option.id }))}
-                                showImage={!!option.image}
+                                option={{ id: "none", name: t("config.noHeater"), price: 0 }}
+                                isSelected={comboConfig.electricHeater === "none"}
+                                onClick={() => setComboConfig((prev) => ({ ...prev, electricHeater: "none" }))}
                               />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
+                              {selectedComboType.heaterOptions
+                                .filter((o) => o.id.startsWith("electric-"))
+                                .map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.electricHeater === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, electricHeater: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                            </ScrollableRow>
+                          </div>
+                        )}
 
                       {/* Kryt */}
                       {selectedComboType.hasCover && selectedComboType.coverOptions.length > 0 && (
@@ -2275,7 +2538,13 @@ const Configurator = () => {
                                 key={option.id}
                                 option={option}
                                 isSelected={comboConfig.cover === option.id}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, cover: option.id, ...(option.id === "none" ? { coverColor: "none" } : {}) }))}
+                                onClick={() =>
+                                  setComboConfig((prev) => ({
+                                    ...prev,
+                                    cover: option.id,
+                                    ...(option.id === "none" ? { coverColor: "none" } : {}),
+                                  }))
+                                }
                                 showImage={!!option.image}
                               />
                             ))}
@@ -2370,7 +2639,9 @@ const Configurator = () => {
                                   {option.id === "spruce" ? t("config.woodType.spruce") : t("config.woodType.thermo")}
                                 </span>
                                 {option.price > 0 ? (
-                                  <span className="text-[10px] md:text-xs text-primary">+{option.price.toLocaleString()} €</span>
+                                  <span className="text-[10px] md:text-xs text-primary">
+                                    +{option.price.toLocaleString()} €
+                                  </span>
                                 ) : (
                                   <span className="text-[10px] md:text-xs text-muted-foreground">{t("included")}</span>
                                 )}
@@ -2524,7 +2795,9 @@ const Configurator = () => {
                       {/* Vonkajšie LED osvetlenie - iba pre ModulSaunu */}
                       {selectedSaunaType.hasExteriorLed && (
                         <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">{t("config.exteriorLed")}</h3>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.exteriorLed")}
+                          </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
                             <button
                               onClick={() => setSaunaConfig((prev) => ({ ...prev, exteriorLed: false }))}
@@ -2553,7 +2826,9 @@ const Configurator = () => {
                               <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-primary/10 mb-1 md:mb-2">
                                 <Lightbulb className="w-5 h-5 md:w-7 md:h-7 text-primary" />
                               </div>
-                              <span className="font-medium text-center text-xs md:text-sm">{t("config.exteriorLedShort")}</span>
+                              <span className="font-medium text-center text-xs md:text-sm">
+                                {t("config.exteriorLedShort")}
+                              </span>
                               <span className="text-[10px] md:text-xs text-primary">+{exteriorLedPrice} €</span>
                             </button>
                           </div>
@@ -2722,45 +2997,52 @@ const Configurator = () => {
                             {selectedHotTubType.heaterOptions
                               .filter((o) => !o.id.startsWith("electric-"))
                               .map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.heater === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, heater: option.id }))}
-                                showImage={!!option.image}
-                                description={option.id === "external-aisi316" ? (language === "en" ? "with chimney, cap and protection, suitable for water with chemicals" : "s komínom, čiapkou a ochranou, vhodné pre vodu s chémiou") : undefined}
-                              />
-                            ))}
+                                <OptionCard
+                                  key={option.id}
+                                  option={option}
+                                  isSelected={hotTubConfig.heater === option.id}
+                                  onClick={() => setHotTubConfig((prev) => ({ ...prev, heater: option.id }))}
+                                  showImage={!!option.image}
+                                  description={
+                                    option.id === "external-aisi316"
+                                      ? language === "en"
+                                        ? "with chimney, cap and protection, suitable for water with chemicals"
+                                        : "s komínom, čiapkou a ochranou, vhodné pre vodu s chémiou"
+                                      : undefined
+                                  }
+                                />
+                              ))}
                           </ScrollableRow>
                         </div>
                       )}
 
                       {/* Elektrický ohrievač */}
-                      {selectedHotTubType?.hasHeater && selectedHotTubType.heaterOptions.filter((o) => o.id.startsWith("electric-")).length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.hottubElectricHeater")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            <OptionCard
-                              option={{ id: "none", name: t("config.noHeater"), price: 0 }}
-                              isSelected={hotTubConfig.electricHeater === "none"}
-                              onClick={() => setHotTubConfig((prev) => ({ ...prev, electricHeater: "none" }))}
-                            />
-                            {selectedHotTubType.heaterOptions
-                              .filter((o) => o.id.startsWith("electric-"))
-                              .map((option) => (
+                      {selectedHotTubType?.hasHeater &&
+                        selectedHotTubType.heaterOptions.filter((o) => o.id.startsWith("electric-")).length > 0 && (
+                          <div>
+                            <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                              {t("config.hottubElectricHeater")} <span className="text-primary">*</span>
+                            </h3>
+                            <ScrollableRow>
                               <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.electricHeater === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, electricHeater: option.id }))}
-                                showImage={!!option.image}
+                                option={{ id: "none", name: t("config.noHeater"), price: 0 }}
+                                isSelected={hotTubConfig.electricHeater === "none"}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, electricHeater: "none" }))}
                               />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
+                              {selectedHotTubType.heaterOptions
+                                .filter((o) => o.id.startsWith("electric-"))
+                                .map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={hotTubConfig.electricHeater === option.id}
+                                    onClick={() => setHotTubConfig((prev) => ({ ...prev, electricHeater: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                            </ScrollableRow>
+                          </div>
+                        )}
 
                       {/* Kryt - model-specific */}
                       {selectedHotTubType?.hasCover && selectedHotTubType.coverOptions.length > 0 && (
@@ -2774,7 +3056,13 @@ const Configurator = () => {
                                 key={option.id}
                                 option={option}
                                 isSelected={hotTubConfig.cover === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, cover: option.id, ...(option.id === "none" ? { coverColor: "none" } : {}) }))}
+                                onClick={() =>
+                                  setHotTubConfig((prev) => ({
+                                    ...prev,
+                                    cover: option.id,
+                                    ...(option.id === "none" ? { coverColor: "none" } : {}),
+                                  }))
+                                }
                                 showImage={!!option.image}
                               />
                             ))}
@@ -2783,24 +3071,26 @@ const Configurator = () => {
                       )}
 
                       {/* Farba krytu */}
-                      {selectedHotTubType?.hasCoverColor && hotTubCoverColorOptions.length > 0 && hotTubConfig.cover !== "none" && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.coverColor")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {hotTubCoverColorOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.coverColor === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, coverColor: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
+                      {selectedHotTubType?.hasCoverColor &&
+                        hotTubCoverColorOptions.length > 0 &&
+                        hotTubConfig.cover !== "none" && (
+                          <div>
+                            <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                              {t("config.coverColor")} <span className="text-primary">*</span>
+                            </h3>
+                            <ScrollableRow>
+                              {hotTubCoverColorOptions.map((option) => (
+                                <OptionCard
+                                  key={option.id}
+                                  option={option}
+                                  isSelected={hotTubConfig.coverColor === option.id}
+                                  onClick={() => setHotTubConfig((prev) => ({ ...prev, coverColor: option.id }))}
+                                  showImage={!!option.image}
+                                />
+                              ))}
+                            </ScrollableRow>
+                          </div>
+                        )}
 
                       {/* Podvodné LED */}
                       {selectedHotTubType?.hasUnderwaterLed && selectedHotTubType.underwaterLedOptions.length > 0 && (
@@ -2934,7 +3224,9 @@ const Configurator = () => {
                                 key={option.id}
                                 option={option}
                                 isSelected={hotTubConfig.electronicController === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, electronicController: option.id }))}
+                                onClick={() =>
+                                  setHotTubConfig((prev) => ({ ...prev, electronicController: option.id }))
+                                }
                                 showImage={!!option.image}
                               />
                             ))}
