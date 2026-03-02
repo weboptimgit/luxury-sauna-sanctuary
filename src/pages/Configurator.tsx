@@ -325,21 +325,6 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
     "18-tmavy-orech": harmony18TmavyOrech,
     "20-tmavy-mahagon": harmony20TmavyMahagon,
   },
-  // alias pre prípad, že v PHP je použitý opačný slug
-  "nordic-harmony": {
-    none: harmonyNatural,
-    "1-mahagon": harmony1Mahagon,
-    "2-teak": harmony2Teak,
-    "3-svetly-orech": harmony3SvetlyOrech,
-    "4-zlaty-dub": harmony4ZlatyDub,
-    "5-olejovana-borovica": harmony5OlejovanaBorovica,
-    "14-svetla-popolavosiva": harmony14SvetlaPopolavosiva,
-    "15-greige": harmony15Greige,
-    "16-studena-siva": harmony16StudenaSiva,
-    "17-antracit": harmony17Antracit,
-    "18-tmavy-orech": harmony18TmavyOrech,
-    "20-tmavy-mahagon": harmony20TmavyMahagon,
-  },
 };
 
 // Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
@@ -392,16 +377,6 @@ const saunaGalleryImages: Record<string, string[]> = {
     harmonyGallery6,
     harmonyGallery7,
   ],
-  // alias pre prípad, že v PHP je použitý opačný slug
-  "nordic-harmony": [
-    harmonyGallery1,
-    harmonyGallery2,
-    harmonyGallery3,
-    harmonyGallery4,
-    harmonyGallery5,
-    harmonyGallery6,
-    harmonyGallery7,
-  ],
 };
 
 // UI meta pre sauna typy – len lokálne obrázky, všetko ostatné z PHP API.
@@ -414,7 +389,6 @@ const saunaTypePresets: Record<string, SaunaTypePreset> = {
   "aurora-cube": { image: saunaTraditional },
   "arctic-shell": { image: saunaInterior },
   "forest-barrel": { image: saunaBarrel },
-  "nordic-harmony": { image: saunaHarmony },
   "nordic-harmony": { image: saunaHarmony },
 };
 
@@ -1174,7 +1148,6 @@ const Configurator = () => {
       "forest-barrel": "forest-barrel",
       "barrel-sauna": "forest-barrel",
       harmony: "nordic-harmony",
-      "nordic-harmony": "nordic-harmony",
       "nordic-harmony": "nordic-harmony",
       "iglu-2in1": "iglu-2in1",
       "oasis-2in1": "oasis-2in1",
