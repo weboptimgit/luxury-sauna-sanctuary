@@ -140,7 +140,7 @@ const translations: Record<Language, Record<string, string>> = {
     "config.exteriorLedShort": "Vonkajšie LED",
     "config.without": "Bez",
     "config.scrollMore": "Posúňte pre ďalšie možnosti",
-    "config.priceNote": "Cena je orientačná vrátane DPH. Presná kalkulácia bude v objednávke.",
+    "config.priceNote": "Cena je orientačná. Presná kalkulácia bude v objednávke.",
     "config.exteriorWood": "Vonkajšie obloženie",
     "config.acrylicLiner": "Farba akrylového vnútra",
     "config.hottub.configTitle": "Konfigurácia kade",
