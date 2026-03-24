@@ -2892,7 +2892,7 @@ const Configurator = () => {
                             {t("config.metalBands")}
                           </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {saunaMetalOptions.map((option) => (
+                            {selectedSaunaType.metalBandsOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
