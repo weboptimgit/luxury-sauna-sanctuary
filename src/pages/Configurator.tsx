@@ -228,6 +228,10 @@ type SaunaType = {
   hasBenchOptions: boolean;
   availableWoodTypes: WoodType[];
   allowedLedOptions?: string[];
+  windowOptions: ConfigOption[];
+  mirrorFilmOptions: ConfigOption[];
+  metalBandsOptions: ConfigOption[];
+  benchOptions: ConfigOption[];
 };
 
 // Modely ohrievačov podľa typu
@@ -523,7 +527,15 @@ type ApiSaunaType = {
   hasAccessoryKit: boolean;
   hasHeater: boolean;
   hasColor: boolean;
+  hasWindow: boolean;
+  hasMirrorFilm: boolean;
+  hasMetalBands: boolean;
+  hasBenchOptions: boolean;
   allowedLedOptions?: string[];
+  windowOptions?: ApiOption[];
+  mirrorFilmOptions?: ApiOption[];
+  metalBandsOptions?: ApiOption[];
+  benchOptions?: ApiOption[];
 };
 
 type ApiHotTubType = {
@@ -568,10 +580,6 @@ type ApiConfig = {
     bluetoothOptions: ApiOption[];
     accessoryKitOptions: ApiOption[];
     colorOptions: ApiOption[];
-    windowOptions?: ApiOption[];
-    mirrorFilmOptions?: ApiOption[];
-    metalBandsOptions?: ApiOption[];
-    benchOptions?: ApiOption[];
   };
   hottub: {
     basePrice?: number;
@@ -820,10 +828,7 @@ const Configurator = () => {
   };
 
   // --- UI Options z API configu ---
-  const saunaWindowOptions = toUIOptions(apiConfig?.sauna.windowOptions);
-  const saunaMirrorOptions = toUIOptions(apiConfig?.sauna.mirrorFilmOptions);
-  const saunaMetalOptions = toUIOptions(apiConfig?.sauna.metalBandsOptions);
-  const saunaBenchOptions = toUIOptions(apiConfig?.sauna.benchOptions);
+  // Model-specific options – čítané z selectedSaunaType nižšie v renderingu
   const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes, heaterImages);
   const saunaLedOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.ledOptions, ledImages);
   const filteredLedOptions = useMemo(() => {
@@ -1040,6 +1045,10 @@ const Configurator = () => {
         hasMirrorFilm: st.hasMirrorFilm ?? false,
         hasMetalBands: st.hasMetalBands ?? false,
         hasBenchOptions: st.hasBenchOptions ?? false,
+        windowOptions: toUIOptions(st.windowOptions),
+        mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions),
+        metalBandsOptions: toUIOptions(st.metalBandsOptions),
+        benchOptions: toUIOptions(st.benchOptions),
       };
     });
   }, [apiConfig]);
@@ -1341,8 +1350,12 @@ const Configurator = () => {
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
       const color = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
       const woodPrice = woodTypeOptionsForModel.find((w) => w.id === saunaConfig.woodType)?.price ?? 0;
+      const windowPrice = selectedSaunaType.windowOptions.find((w) => w.id === saunaConfig.window)?.price ?? 0;
+      const mirrorPrice = selectedSaunaType.mirrorFilmOptions.find((m) => m.id === saunaConfig.mirror)?.price ?? 0;
+      const metalPrice = selectedSaunaType.metalBandsOptions.find((m) => m.id === saunaConfig.metal)?.price ?? 0;
+      const benchPrice = selectedSaunaType.benchOptions.find((b) => b.id === saunaConfig.bench)?.price ?? 0;
 
-      return basePrice + heater + heaterModelPrice + ledSum + extLedPrice + bluetooth + kit + color + woodPrice;
+      return basePrice + heater + heaterModelPrice + ledSum + extLedPrice + bluetooth + kit + color + woodPrice + windowPrice + mirrorPrice + metalPrice + benchPrice;
     }
 
     if (productCategory === "hottub" && selectedHotTubType) {
@@ -2841,7 +2854,7 @@ const Configurator = () => {
                             {t("config.window")}
                           </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {saunaWindowOptions.map((option) => (
+                            {selectedSaunaType.windowOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
@@ -2860,7 +2873,7 @@ const Configurator = () => {
                             {t("config.mirrorFilm")}
                           </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {saunaMirrorOptions.map((option) => (
+                            {selectedSaunaType.mirrorFilmOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
@@ -2879,7 +2892,7 @@ const Configurator = () => {
                             {t("config.metalBands")}
                           </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {saunaMetalOptions.map((option) => (
+                            {selectedSaunaType.metalBandsOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
@@ -2898,7 +2911,7 @@ const Configurator = () => {
                             {t("config.benches")}
                           </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {saunaBenchOptions.map((option) => (
+                            {selectedSaunaType.benchOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
