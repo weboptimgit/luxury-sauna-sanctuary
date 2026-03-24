@@ -1052,6 +1052,10 @@ const Configurator = () => {
         hasMirrorFilm: st.hasMirrorFilm ?? false,
         hasMetalBands: st.hasMetalBands ?? false,
         hasBenchOptions: st.hasBenchOptions ?? false,
+        windowOptions: toUIOptions(st.windowOptions),
+        mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions),
+        metalBandsOptions: toUIOptions(st.metalBandsOptions),
+        benchOptions: toUIOptions(st.benchOptions),
       };
     });
   }, [apiConfig]);
