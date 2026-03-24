@@ -222,6 +222,10 @@ type SaunaType = {
   hasAccessoryKit: boolean;
   hasHeater: boolean;
   hasColor: boolean;
+  hasWindow: boolean;
+  hasMirrorFilm: boolean;
+  hasMetalBands: boolean;
+  hasBenchOptions: boolean;
   availableWoodTypes: WoodType[];
   allowedLedOptions?: string[];
 };
@@ -673,6 +677,10 @@ const Configurator = () => {
     accessoryKit: "none",
     color: "none" as SaunaColorType,
     woodType: "spruce" as WoodType,
+    window: "none",
+    mirror: "none",
+    metal: "none",
+    bench: "standard",
   });
 
   // Kaďa konfigurácia
@@ -808,6 +816,10 @@ const Configurator = () => {
   };
 
   // --- UI Options z API configu ---
+  const saunaWindowOptions = toUIOptions(apiConfig?.sauna.windowOptions);
+  const saunaMirrorOptions = toUIOptions(apiConfig?.sauna.mirrorFilmOptions);
+  const saunaMetalOptions = toUIOptions(apiConfig?.sauna.metalBandsOptions);
+  const saunaBenchOptions = toUIOptions(apiConfig?.sauna.benchOptions);
   const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes, heaterImages);
   const saunaLedOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.ledOptions, ledImages);
   const filteredLedOptions = useMemo(() => {
@@ -1020,6 +1032,10 @@ const Configurator = () => {
         hasColor: st.hasColor ?? true,
         availableWoodTypes: st.woodTypes ?? [],
         allowedLedOptions: st.allowedLedOptions,
+        hasWindow: st.hasWindow ?? false,
+        hasMirrorFilm: st.hasMirrorFilm ?? false,
+        hasMetalBands: st.hasMetalBands ?? false,
+        hasBenchOptions: st.hasBenchOptions ?? false,
       };
     });
   }, [apiConfig]);
@@ -2802,6 +2818,82 @@ const Configurator = () => {
                                   showImage={true}
                                 />
                               ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* OKNO */}
+                      {selectedSaunaType?.hasWindow && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.window")}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
+                            {saunaWindowOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={saunaConfig.window === option.id}
+                                onClick={() => setSaunaConfig((prev) => ({ ...prev, window: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* ZRKADLOVÁ FÓLIA */}
+                      {selectedSaunaType?.hasMirrorFilm && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.mirrorFilm")}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
+                            {saunaMirrorOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={saunaConfig.mirror === option.id}
+                                onClick={() => setSaunaConfig((prev) => ({ ...prev, mirror: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* KOVOVÉ PÁSY */}
+                      {selectedSaunaType?.hasMetalBands && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.metalBands")}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
+                            {saunaMetalOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={saunaConfig.metal === option.id}
+                                onClick={() => setSaunaConfig((prev) => ({ ...prev, metal: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* LAVICE */}
+                      {selectedSaunaType?.hasBenchOptions && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.benches")}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
+                            {saunaBenchOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={saunaConfig.bench === option.id}
+                                onClick={() => setSaunaConfig((prev) => ({ ...prev, bench: option.id }))}
+                              />
+                            ))}
                           </div>
                         </div>
                       )}
