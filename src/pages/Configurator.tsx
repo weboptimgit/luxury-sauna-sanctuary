@@ -2911,7 +2911,7 @@ const Configurator = () => {
                             {t("config.benches")}
                           </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {saunaBenchOptions.map((option) => (
+                            {selectedSaunaType.benchOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
