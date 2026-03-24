@@ -2873,7 +2873,7 @@ const Configurator = () => {
                             {t("config.mirrorFilm")}
                           </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {saunaMirrorOptions.map((option) => (
+                            {selectedSaunaType.mirrorFilmOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
