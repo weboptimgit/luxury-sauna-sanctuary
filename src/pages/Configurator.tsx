@@ -1568,6 +1568,10 @@ const Configurator = () => {
       accessoryKit: "none",
       color: "none" as SaunaColorType,
       woodType: "spruce",
+      window: "none",
+      mirror: "none",
+      metal: "none",
+      bench: "none",
     });
     setHotTubConfig({
       size: "none",
