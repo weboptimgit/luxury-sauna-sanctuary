@@ -832,10 +832,7 @@ const Configurator = () => {
   };
 
   // --- UI Options z API configu ---
-  const saunaWindowOptions = toUIOptions(apiConfig?.sauna.windowOptions);
-  const saunaMirrorOptions = toUIOptions(apiConfig?.sauna.mirrorFilmOptions);
-  const saunaMetalOptions = toUIOptions(apiConfig?.sauna.metalBandsOptions);
-  const saunaBenchOptions = toUIOptions(apiConfig?.sauna.benchOptions);
+  // Model-specific options – čítané z selectedSaunaType nižšie v renderingu
   const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes, heaterImages);
   const saunaLedOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.ledOptions, ledImages);
   const filteredLedOptions = useMemo(() => {
