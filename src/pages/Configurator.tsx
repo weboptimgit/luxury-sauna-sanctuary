@@ -580,10 +580,6 @@ type ApiConfig = {
     bluetoothOptions: ApiOption[];
     accessoryKitOptions: ApiOption[];
     colorOptions: ApiOption[];
-    windowOptions?: ApiOption[];
-    mirrorFilmOptions?: ApiOption[];
-    metalBandsOptions?: ApiOption[];
-    benchOptions?: ApiOption[];
   };
   hottub: {
     basePrice?: number;
