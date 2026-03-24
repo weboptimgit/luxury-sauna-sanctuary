@@ -988,24 +988,29 @@ const Configurator = () => {
 
   // --- Sauna typy z API (všetko z PHP) + lokálne UI meta (len obrázky) ---
   const saunaTypesUI: SaunaType[] = useMemo(() => {
-    if (!apiConfig?.saunaTypes?.length) return [];
+    if (!apiConfig?.saunaTypes) return [];
+
+    const saunaTypesArray = Array.isArray(apiConfig.saunaTypes)
+      ? apiConfig.saunaTypes
+      : Object.entries(apiConfig.saunaTypes).map(([id, st]: any) => ({
+          id,
+          ...st,
+        }));
 
     const defaultPreset: SaunaTypePreset = {
       image: saunaBarrel,
     };
 
-    return apiConfig.saunaTypes.map((st) => {
+    return saunaTypesArray.map((st) => {
       const preset = saunaTypePresets[st.id] ?? defaultPreset;
+
       return {
         id: st.id,
         name: st.label,
         dimensions: st.dimensions ?? "",
         basePrice: st.basePrice,
         image: preset.image,
-        // Všetky has* vlastnosti z PHP API.
-        // Fallback true pre bežné vlastnosti (kým PHP nepošle explicitne).
-        // hasWoodType fallback: true ak existujú woodTypes, inak false.
-        // hasExteriorLed fallback: false (iba špecifické modely).
+
         hasWoodType: st.hasWoodType ?? (st.woodTypes?.length ?? 0) > 0,
         hasLed: st.hasLed ?? true,
         hasExteriorLed: st.hasExteriorLed ?? false,
