@@ -329,6 +329,18 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
 
 // Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
 const saunaGalleryImages: Record<string, string[]> = {
+  "nordic-barrel": [
+    frameSaunaGallery1,
+    frameSaunaGallery2,
+    frameSaunaGallery3,
+    frameSaunaGallery4,
+    frameSaunaGallery5,
+    frameSaunaGallery6,
+    frameSaunaGallery7,
+    frameSaunaGallery8,
+    frameSaunaGallery9,
+    frameSaunaGallery10,
+  ],
   "nordic-frame": [
     frameSaunaGallery1,
     frameSaunaGallery2,
