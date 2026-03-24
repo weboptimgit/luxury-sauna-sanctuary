@@ -2854,7 +2854,7 @@ const Configurator = () => {
                             {t("config.window")}
                           </h3>
                           <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {saunaWindowOptions.map((option) => (
+                            {selectedSaunaType.windowOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
