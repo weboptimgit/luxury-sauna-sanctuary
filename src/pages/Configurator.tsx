@@ -568,6 +568,10 @@ type ApiConfig = {
     bluetoothOptions: ApiOption[];
     accessoryKitOptions: ApiOption[];
     colorOptions: ApiOption[];
+    windowOptions?: ApiOption[];
+    mirrorFilmOptions?: ApiOption[];
+    metalBandsOptions?: ApiOption[];
+    benchOptions?: ApiOption[];
   };
   hottub: {
     basePrice?: number;
@@ -1564,6 +1568,10 @@ const Configurator = () => {
       accessoryKit: "none",
       color: "none" as SaunaColorType,
       woodType: "spruce",
+      window: "none",
+      mirror: "none",
+      metal: "none",
+      bench: "none",
     });
     setHotTubConfig({
       size: "none",
@@ -1616,6 +1624,10 @@ const Configurator = () => {
       accessoryKit: "none",
       color: "none" as SaunaColorType,
       woodType: "spruce",
+      window: "none",
+      mirror: "none",
+      metal: "none",
+      bench: "none",
     });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
