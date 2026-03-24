@@ -217,12 +217,13 @@ type SaunaType = {
   image: string;
   hasWoodType: boolean;
   hasLed: boolean;
-  hasExteriorLed: boolean; // Vonkajšie LED - iba pre niektoré modely
+  hasExteriorLed: boolean;
   hasBluetooth: boolean;
   hasAccessoryKit: boolean;
   hasHeater: boolean;
   hasColor: boolean;
   availableWoodTypes: WoodType[];
+  allowedLedOptions?: string[];
 };
 
 // Modely ohrievačov podľa typu
@@ -1013,7 +1014,7 @@ const Configurator = () => {
         hasHeater: st.hasHeater ?? true,
         hasColor: st.hasColor ?? true,
         availableWoodTypes: st.woodTypes ?? [],
-        allowedLedOptions: (st as any).allowedLedOptions,
+        allowedLedOptions: st.allowedLedOptions,
       };
     });
   }, [apiConfig]);
