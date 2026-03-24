@@ -79,6 +79,9 @@ const translations: Record<Language, Record<string, string>> = {
     "config.led": "LED osvetlenie",
     "config.bluetooth": "Bluetooth audio",
     "config.accessories": "Saunový set",
+    "config.mirrorFilm": "Zrkadlová fólia",
+    "config.metalBands": "Kovové pásy",
+    "config.benches": "Lavice",
 
     // Hot tub options
     "config.size": "Veľkosť",
@@ -249,6 +252,9 @@ const translations: Record<Language, Record<string, string>> = {
     "config.led": "LED Lighting",
     "config.bluetooth": "Bluetooth Audio",
     "config.accessories": "Sauna Kit",
+    "config.mirrorFilm": "Mirror Film",
+    "config.metalBands": "Metal Bands",
+    "config.benches": "Benches",
 
     // Hot tub options
     "config.size": "Size",

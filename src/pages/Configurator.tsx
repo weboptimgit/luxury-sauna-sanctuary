@@ -513,6 +513,15 @@ type ApiOption = {
   description?: string;
 };
 
+type ApiOptionMapValue = {
+  label: string;
+  price: number;
+  originalPrice?: number;
+  description?: string;
+};
+
+type ApiOptionSource = ApiOption[] | Record<string, ApiOptionMapValue>;
+
 type ApiSaunaType = {
   id: string;
   label: string;
@@ -532,10 +541,10 @@ type ApiSaunaType = {
   hasMetalBands: boolean;
   hasBenchOptions: boolean;
   allowedLedOptions?: string[];
-  windowOptions?: ApiOption[];
-  mirrorFilmOptions?: ApiOption[];
-  metalBandsOptions?: ApiOption[];
-  benchOptions?: ApiOption[];
+  windowOptions?: ApiOptionSource;
+  mirrorFilmOptions?: ApiOptionSource;
+  metalBandsOptions?: ApiOptionSource;
+  benchOptions?: ApiOptionSource;
 };
 
 type ApiHotTubType = {
@@ -580,6 +589,10 @@ type ApiConfig = {
     bluetoothOptions: ApiOption[];
     accessoryKitOptions: ApiOption[];
     colorOptions: ApiOption[];
+    windowOptions?: ApiOptionSource;
+    mirrorFilmOptions?: ApiOptionSource;
+    metalBandsOptions?: ApiOptionSource;
+    benchOptions?: ApiOptionSource;
   };
   hottub: {
     basePrice?: number;
@@ -596,17 +609,26 @@ type ApiConfig = {
   comboTypes?: ApiComboType[];
 };
 
-const toUIOptions = (api: ApiOption[] | undefined, withImages?: Record<string, string>): ConfigOption[] => {
+const toUIOptions = (api: ApiOptionSource | undefined, withImages?: Record<string, string>): ConfigOption[] => {
   if (!api) return [];
+  const normalized = Array.isArray(api)
+    ? api
+    : Object.entries(api).map(([id, option]) => ({
+        id,
+        label: option.label,
+        price: option.price,
+        originalPrice: option.originalPrice,
+        description: option.description,
+      }));
   if (withImages) {
     console.log(
       "[toUIOptions] API IDs:",
-      api.map((o) => o.id),
+      normalized.map((o) => o.id),
       "Image keys:",
       Object.keys(withImages),
     );
   }
-  return api.map((o) => ({
+  return normalized.map((o) => ({
     id: o.id,
     name: o.label,
     price: Number(o.price || 0),
@@ -1045,10 +1067,10 @@ const Configurator = () => {
         hasMirrorFilm: st.hasMirrorFilm ?? false,
         hasMetalBands: st.hasMetalBands ?? false,
         hasBenchOptions: st.hasBenchOptions ?? false,
-        windowOptions: toUIOptions(st.windowOptions),
-        mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions),
-        metalBandsOptions: toUIOptions(st.metalBandsOptions),
-        benchOptions: toUIOptions(st.benchOptions),
+        windowOptions: toUIOptions(st.windowOptions ?? apiConfig.sauna.windowOptions),
+        mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions ?? apiConfig.sauna.mirrorFilmOptions),
+        metalBandsOptions: toUIOptions(st.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions),
+        benchOptions: toUIOptions(st.benchOptions ?? apiConfig.sauna.benchOptions),
       };
     });
   }, [apiConfig]);
@@ -2848,7 +2870,7 @@ const Configurator = () => {
                       )}
 
                       {/* OKNO */}
-                      {selectedSaunaType?.hasWindow && (
+                      {selectedSaunaType?.hasWindow && selectedSaunaType.windowOptions.length > 0 && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.window")}
@@ -2867,7 +2889,7 @@ const Configurator = () => {
                       )}
 
                       {/* ZRKADLOVÁ FÓLIA */}
-                      {selectedSaunaType?.hasMirrorFilm && (
+                      {selectedSaunaType?.hasMirrorFilm && selectedSaunaType.mirrorFilmOptions.length > 0 && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.mirrorFilm")}
@@ -2886,7 +2908,7 @@ const Configurator = () => {
                       )}
 
                       {/* KOVOVÉ PÁSY */}
-                      {selectedSaunaType?.hasMetalBands && (
+                      {selectedSaunaType?.hasMetalBands && selectedSaunaType.metalBandsOptions.length > 0 && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.metalBands")}
@@ -2905,7 +2927,7 @@ const Configurator = () => {
                       )}
 
                       {/* LAVICE */}
-                      {selectedSaunaType?.hasBenchOptions && (
+                      {selectedSaunaType?.hasBenchOptions && selectedSaunaType.benchOptions.length > 0 && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.benches")}
