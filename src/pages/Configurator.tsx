@@ -228,6 +228,10 @@ type SaunaType = {
   hasBenchOptions: boolean;
   availableWoodTypes: WoodType[];
   allowedLedOptions?: string[];
+  windowOptions: ConfigOption[];
+  mirrorFilmOptions: ConfigOption[];
+  metalBandsOptions: ConfigOption[];
+  benchOptions: ConfigOption[];
 };
 
 // Modely ohrievačov podľa typu
