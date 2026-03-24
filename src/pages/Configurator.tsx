@@ -523,7 +523,15 @@ type ApiSaunaType = {
   hasAccessoryKit: boolean;
   hasHeater: boolean;
   hasColor: boolean;
+  hasWindow: boolean;
+  hasMirrorFilm: boolean;
+  hasMetalBands: boolean;
+  hasBenchOptions: boolean;
   allowedLedOptions?: string[];
+  windowOptions?: ApiOption[];
+  mirrorFilmOptions?: ApiOption[];
+  metalBandsOptions?: ApiOption[];
+  benchOptions?: ApiOption[];
 };
 
 type ApiHotTubType = {
