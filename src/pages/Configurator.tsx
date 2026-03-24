@@ -518,6 +518,7 @@ type ApiSaunaType = {
   hasAccessoryKit: boolean;
   hasHeater: boolean;
   hasColor: boolean;
+  allowedLedOptions?: string[];
 };
 
 type ApiHotTubType = {
@@ -1012,6 +1013,7 @@ const Configurator = () => {
         hasHeater: st.hasHeater ?? true,
         hasColor: st.hasColor ?? true,
         availableWoodTypes: st.woodTypes ?? [],
+        allowedLedOptions: (st as any).allowedLedOptions,
       };
     });
   }, [apiConfig]);
