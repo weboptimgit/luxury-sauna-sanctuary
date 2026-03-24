@@ -808,6 +808,15 @@ const Configurator = () => {
   // --- UI Options z API configu ---
   const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes, heaterImages);
   const saunaLedOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.ledOptions, ledImages);
+  const filteredLedOptions = useMemo(() => {
+    if (!selectedSaunaType) return saunaLedOptions;
+
+    const allowed = (selectedSaunaType as any).allowedLedOptions;
+    if (!allowed) return saunaLedOptions;
+
+    return saunaLedOptions.filter((o) => allowed.includes(o.id));
+  }, [saunaLedOptions, selectedSaunaType]);
+
   const saunaBluetoothOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.bluetoothOptions, saunaSpeakerImage);
   const saunaAccessoryKitOptions: ConfigOption[] = toUIOptions(
     apiConfig?.sauna.accessoryKitOptions,
@@ -2774,7 +2783,7 @@ const Configurator = () => {
                             />
 
                             {/* Multi možnosti */}
-                            {saunaLedOptions
+                            {filteredLedOptions
                               .filter((o) => o.id !== "none")
                               .map((option) => (
                                 <OptionCard
