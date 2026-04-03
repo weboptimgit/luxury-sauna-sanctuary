@@ -1780,32 +1780,7 @@ const Configurator = () => {
     </button>
   );
 
-  // Scrollable row: grid 3 cols on desktop, horizontal scroll on mobile with fade indicator
-  const ConfigScrollWrapper = ({
-    isDesktop,
-    onScroll,
-    children,
-  }: {
-    isDesktop: boolean;
-    onScroll: React.UIEventHandler<HTMLDivElement>;
-    children: React.ReactNode;
-  }) => {
-    if (isDesktop) {
-      return (
-        <ScrollArea className="h-[calc(100vh-8rem)]" onScrollCapture={onScroll}>
-          {children}
-        </ScrollArea>
-      );
-    }
-    return <div>{children}</div>;
-  };
-
-  const ScrollableRow = ({ children, cols = 3 }: { children: React.ReactNode; cols?: 2 | 3 }) => {
-    const childCount = React.Children.count(children);
-    const gridCols = cols === 2 || childCount <= 2 ? "grid-cols-2" : "grid-cols-2 md:grid-cols-3";
-
-    return <div className={cn("grid gap-2 md:gap-3", gridCols)}>{children}</div>;
-  };
+  // ConfigScrollWrapper and ScrollableRow are defined outside the component to prevent remount on state change
 
   // Loading state
   if (isConfigLoading) {
