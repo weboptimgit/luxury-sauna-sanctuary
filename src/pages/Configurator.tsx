@@ -189,7 +189,7 @@ import round2mGallery4 from "@/assets/2mround-gallery-4.jpg";
 import round2mGallery5 from "@/assets/2mround-gallery-5.jpg";
 import round2mGallery6 from "@/assets/2mround-gallery-6.jpg";
 
-
+import nordicBarrelThumbnail from "@/assets/nordic-barrel-thumbnail.jpg";
 import nordicBarrelGallery2 from "@/assets/nordic-barrel-gallery-2.jpg";
 import nordicBarrelGallery3 from "@/assets/nordic-barrel-gallery-3.jpg";
 import nordicBarrelGallery4 from "@/assets/nordic-barrel-gallery-4.jpg";
