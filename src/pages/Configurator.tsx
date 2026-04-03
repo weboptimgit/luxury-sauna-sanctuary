@@ -432,6 +432,7 @@ const saunaGalleryImages: Record<string, string[]> = {
     harmonyGallery7,
   ],
   "arctic-cabin": [
+    arcticCabinGallery0,
     arcticCabinGallery1,
     arcticCabinGallery2,
     arcticCabinGallery3,
