@@ -1098,6 +1098,7 @@ const Configurator = () => {
         hasMirrorFilm: st.hasMirrorFilm ?? false,
         hasMetalBands: st.hasMetalBands ?? false,
         hasBenchOptions: st.hasBenchOptions ?? false,
+        hasThermoCladding: st.hasThermoCladding ?? false,
         windowOptions: toUIOptions(st.windowOptions ?? apiConfig.sauna.windowOptions),
         mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions ?? apiConfig.sauna.mirrorFilmOptions),
         metalBandsOptions: toUIOptions(st.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions),
