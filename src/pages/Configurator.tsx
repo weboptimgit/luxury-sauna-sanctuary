@@ -789,7 +789,7 @@ const Configurator = () => {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  
 
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 1024px)");
