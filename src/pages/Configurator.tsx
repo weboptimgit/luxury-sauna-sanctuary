@@ -189,6 +189,15 @@ import round2mGallery4 from "@/assets/2mround-gallery-4.jpg";
 import round2mGallery5 from "@/assets/2mround-gallery-5.jpg";
 import round2mGallery6 from "@/assets/2mround-gallery-6.jpg";
 
+import nordicBarrelGallery1 from "@/assets/nordic-barrel-gallery-1.jpg";
+import nordicBarrelGallery2 from "@/assets/nordic-barrel-gallery-2.jpg";
+import nordicBarrelGallery3 from "@/assets/nordic-barrel-gallery-3.jpg";
+import nordicBarrelGallery4 from "@/assets/nordic-barrel-gallery-4.jpg";
+import nordicBarrelGallery5 from "@/assets/nordic-barrel-gallery-5.jpg";
+import nordicBarrelGallery6 from "@/assets/nordic-barrel-gallery-6.jpg";
+import nordicBarrelGallery7 from "@/assets/nordic-barrel-gallery-7.jpg";
+import nordicBarrelGallery8 from "@/assets/nordic-barrel-gallery-8.jpg";
+
 type ProductCategory = "sauna" | "hottub" | "combo";
 
 type WoodType = "spruce" | "thermo";
