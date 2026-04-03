@@ -225,7 +225,6 @@ type SaunaType = {
   hasWindow: boolean;
   hasMirrorFilm: boolean;
   hasMetalBands: boolean;
-  hasBenchOptions: boolean;
   hasThermoCladding: boolean;
   availableWoodTypes: WoodType[];
   allowedLedOptions?: string[];
