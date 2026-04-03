@@ -205,6 +205,15 @@ import arcticShellGlassGallery4 from "@/assets/arctic-shell-gallery-4.jpg";
 import arcticShellGlassGallery5 from "@/assets/arctic-shell-gallery-5.jpg";
 import arcticShellGlassGallery6 from "@/assets/arctic-shell-gallery-6.jpg";
 
+import arcticCabinGallery1 from "@/assets/arctic-cabin-gallery-1.jpg";
+import arcticCabinGallery2 from "@/assets/arctic-cabin-gallery-2.jpg";
+import arcticCabinGallery3 from "@/assets/arctic-cabin-gallery-3.jpg";
+import arcticCabinGallery4 from "@/assets/arctic-cabin-gallery-4.jpg";
+import arcticCabinGallery5 from "@/assets/arctic-cabin-gallery-5.jpg";
+import arcticCabinGallery6 from "@/assets/arctic-cabin-gallery-6.jpg";
+import arcticCabinGallery7 from "@/assets/arctic-cabin-gallery-7.jpg";
+import arcticCabinGallery8 from "@/assets/arctic-cabin-gallery-8.jpg";
+
 type ProductCategory = "sauna" | "hottub" | "combo";
 
 type WoodType = "spruce" | "thermo";
@@ -418,6 +427,16 @@ const saunaGalleryImages: Record<string, string[]> = {
     harmonyGallery5,
     harmonyGallery6,
     harmonyGallery7,
+  ],
+  "arctic-cabin": [
+    arcticCabinGallery1,
+    arcticCabinGallery2,
+    arcticCabinGallery3,
+    arcticCabinGallery4,
+    arcticCabinGallery5,
+    arcticCabinGallery6,
+    arcticCabinGallery7,
+    arcticCabinGallery8,
   ],
 };
 
