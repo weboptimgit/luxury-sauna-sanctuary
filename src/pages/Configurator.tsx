@@ -453,6 +453,8 @@ const saunaTypePresets: Record<string, SaunaTypePreset> = {
   "nordic-frame": { image: saunaCube },
   "aurora-cube": { image: saunaTraditional },
   "arctic-shell": { image: saunaInterior },
+  "arctic-shell-glass": { image: arcticShellGlassGallery0 },
+  "arctic-cabin": { image: arcticCabinGallery0 },
   "forest-barrel": { image: saunaBarrel },
   "nordic-harmony": { image: saunaHarmony },
 };
