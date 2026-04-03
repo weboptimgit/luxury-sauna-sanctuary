@@ -592,7 +592,6 @@ type ApiConfig = {
     windowOptions?: ApiOptionSource;
     mirrorFilmOptions?: ApiOptionSource;
     metalBandsOptions?: ApiOptionSource;
-    benchOptions?: ApiOptionSource;
     thermoCladdingOptions?: ApiOptionSource;
   };
   hottub: {
