@@ -745,6 +745,7 @@ const Configurator = () => {
     mirror: "none",
     metal: "none",
     bench: "standard",
+    thermoCladding: "none",
   });
 
   // Kaďa konfigurácia
