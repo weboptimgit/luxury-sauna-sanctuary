@@ -1688,7 +1688,6 @@ const Configurator = () => {
       window: "none",
       mirror: "none",
       metal: "none",
-      bench: "none",
       thermoCladding: "none",
     });
     setCurrentImageIndex(0);
