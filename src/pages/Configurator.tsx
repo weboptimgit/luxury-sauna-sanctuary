@@ -1697,6 +1697,7 @@ const Configurator = () => {
       mirror: "none",
       metal: "none",
       bench: "none",
+      thermoCladding: "none",
     });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
