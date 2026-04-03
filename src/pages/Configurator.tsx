@@ -1806,7 +1806,7 @@ const Configurator = () => {
     </button>
   );
 
-  // ConfigScrollWrapper and ScrollableRow are defined outside the component to prevent remount on state change
+  
 
   // Loading state
   if (isConfigLoading) {
