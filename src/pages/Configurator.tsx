@@ -740,7 +740,6 @@ const Configurator = () => {
     window: "none",
     mirror: "none",
     metal: "none",
-    bench: "standard",
     thermoCladding: "none",
   });
 
