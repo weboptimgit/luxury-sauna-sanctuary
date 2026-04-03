@@ -539,7 +539,6 @@ type ApiSaunaType = {
   hasWindow: boolean;
   hasMirrorFilm: boolean;
   hasMetalBands: boolean;
-  hasBenchOptions: boolean;
   hasThermoCladding: boolean;
   allowedLedOptions?: string[];
   windowOptions?: ApiOptionSource;
