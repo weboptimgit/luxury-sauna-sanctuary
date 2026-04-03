@@ -1103,6 +1103,7 @@ const Configurator = () => {
         mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions ?? apiConfig.sauna.mirrorFilmOptions),
         metalBandsOptions: toUIOptions(st.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions),
         benchOptions: toUIOptions(st.benchOptions ?? apiConfig.sauna.benchOptions),
+        thermoCladdingOptions: toUIOptions(st.thermoCladdingOptions ?? apiConfig.sauna.thermoCladdingOptions),
       };
     });
   }, [apiConfig]);
