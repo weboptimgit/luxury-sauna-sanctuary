@@ -835,14 +835,6 @@ const Configurator = () => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
-import arcticPodGallery0 from "@/assets/arctic-pod-gallery-0.jpg";
-import arcticPodGallery1 from "@/assets/arctic-pod-gallery-1.jpg";
-import arcticPodGallery2 from "@/assets/arctic-pod-gallery-2.jpg";
-import arcticPodGallery3 from "@/assets/arctic-pod-gallery-3.jpg";
-import arcticPodGallery4 from "@/assets/arctic-pod-gallery-4.jpg";
-import arcticPodGallery5 from "@/assets/arctic-pod-gallery-5.jpg";
-import arcticPodGallery6 from "@/assets/arctic-pod-gallery-6.jpg";
-
 
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 1024px)");
