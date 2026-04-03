@@ -198,6 +198,13 @@ import nordicBarrelGallery6 from "@/assets/nordic-barrel-gallery-6.jpg";
 import nordicBarrelGallery7 from "@/assets/nordic-barrel-gallery-7.jpg";
 import nordicBarrelGallery8 from "@/assets/nordic-barrel-gallery-8.jpg";
 
+import arcticShellGlassGallery1 from "@/assets/arctic-shell-gallery-1.jpg";
+import arcticShellGlassGallery2 from "@/assets/arctic-shell-gallery-2.jpg";
+import arcticShellGlassGallery3 from "@/assets/arctic-shell-gallery-3.jpg";
+import arcticShellGlassGallery4 from "@/assets/arctic-shell-gallery-4.jpg";
+import arcticShellGlassGallery5 from "@/assets/arctic-shell-gallery-5.jpg";
+import arcticShellGlassGallery6 from "@/assets/arctic-shell-gallery-6.jpg";
+
 type ProductCategory = "sauna" | "hottub" | "combo";
 
 type WoodType = "spruce" | "thermo";
@@ -348,16 +355,12 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
 // Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
 const saunaGalleryImages: Record<string, string[]> = {
   "arctic-shell-glass": [
-    frameSaunaGallery1,
-    frameSaunaGallery2,
-    frameSaunaGallery3,
-    frameSaunaGallery4,
-    frameSaunaGallery5,
-    frameSaunaGallery6,
-    frameSaunaGallery7,
-    frameSaunaGallery8,
-    frameSaunaGallery9,
-    frameSaunaGallery10,
+    arcticShellGlassGallery1,
+    arcticShellGlassGallery2,
+    arcticShellGlassGallery3,
+    arcticShellGlassGallery4,
+    arcticShellGlassGallery5,
+    arcticShellGlassGallery6,
   ],
   "nordic-barrel": [
     nordicBarrelGallery2,
