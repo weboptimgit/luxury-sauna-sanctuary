@@ -231,7 +231,6 @@ type SaunaType = {
   windowOptions: ConfigOption[];
   mirrorFilmOptions: ConfigOption[];
   metalBandsOptions: ConfigOption[];
-  benchOptions: ConfigOption[];
   thermoCladdingOptions: ConfigOption[];
 };
 
