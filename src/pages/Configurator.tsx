@@ -2958,6 +2958,25 @@ const Configurator = () => {
                         </div>
                       )}
 
+                      {/* THERMO WOOD CLADDING */}
+                      {selectedSaunaType?.hasThermoCladding && selectedSaunaType.thermoCladdingOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.thermoCladding")}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
+                            {selectedSaunaType.thermoCladdingOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={saunaConfig.thermoCladding === option.id}
+                                onClick={() => setSaunaConfig((prev) => ({ ...prev, thermoCladding: option.id }))}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
                       {/* Vonkajšie LED osvetlenie - iba pre ModulSaunu */}
                       {selectedSaunaType.hasExteriorLed && (
                         <div>
