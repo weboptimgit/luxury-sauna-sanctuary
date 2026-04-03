@@ -366,6 +366,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
 // Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
 const saunaGalleryImages: Record<string, string[]> = {
   "arctic-shell-glass": [
+    arcticShellGlassGallery0,
     arcticShellGlassGallery1,
     arcticShellGlassGallery2,
     arcticShellGlassGallery3,
