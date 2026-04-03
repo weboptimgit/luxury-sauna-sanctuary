@@ -82,6 +82,7 @@ const translations: Record<Language, Record<string, string>> = {
     "config.mirrorFilm": "Zrkadlová fólia",
     "config.metalBands": "Kovové pásy",
     "config.benches": "Lavice",
+    "config.thermoCladding": "Obklad thermo drevom",
 
     // Hot tub options
     "config.size": "Veľkosť",
