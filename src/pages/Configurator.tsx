@@ -215,6 +215,13 @@ import arcticCabinGallery5 from "@/assets/arctic-cabin-gallery-5.jpg";
 import arcticCabinGallery6 from "@/assets/arctic-cabin-gallery-6.jpg";
 import arcticCabinGallery7 from "@/assets/arctic-cabin-gallery-7.jpg";
 import arcticCabinGallery8 from "@/assets/arctic-cabin-gallery-8.jpg";
+import arcticPodGallery0 from "@/assets/arctic-pod-gallery-0.jpg";
+import arcticPodGallery1 from "@/assets/arctic-pod-gallery-1.jpg";
+import arcticPodGallery2 from "@/assets/arctic-pod-gallery-2.jpg";
+import arcticPodGallery3 from "@/assets/arctic-pod-gallery-3.jpg";
+import arcticPodGallery4 from "@/assets/arctic-pod-gallery-4.jpg";
+import arcticPodGallery5 from "@/assets/arctic-pod-gallery-5.jpg";
+import arcticPodGallery6 from "@/assets/arctic-pod-gallery-6.jpg";
 
 type ProductCategory = "sauna" | "hottub" | "combo";
 
@@ -442,6 +449,15 @@ const saunaGalleryImages: Record<string, string[]> = {
     arcticCabinGallery7,
     arcticCabinGallery8,
   ],
+  "arctic-pod": [
+    arcticPodGallery0,
+    arcticPodGallery1,
+    arcticPodGallery2,
+    arcticPodGallery3,
+    arcticPodGallery4,
+    arcticPodGallery5,
+    arcticPodGallery6,
+  ],
 };
 
 // UI meta pre sauna typy – len lokálne obrázky, všetko ostatné z PHP API.
@@ -458,6 +474,7 @@ const saunaTypePresets: Record<string, SaunaTypePreset> = {
   "nordic-barrel": { image: nordicBarrelThumbnail },
   "forest-barrel": { image: saunaBarrel },
   "nordic-harmony": { image: saunaHarmony },
+  "arctic-pod": { image: arcticPodGallery0 },
 };
 
 type ConfigOption = {
@@ -824,7 +841,7 @@ const Configurator = () => {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
-  
+
 
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 1024px)");
