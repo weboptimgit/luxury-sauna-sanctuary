@@ -198,6 +198,7 @@ import nordicBarrelGallery6 from "@/assets/nordic-barrel-gallery-6.jpg";
 import nordicBarrelGallery7 from "@/assets/nordic-barrel-gallery-7.jpg";
 import nordicBarrelGallery8 from "@/assets/nordic-barrel-gallery-8.jpg";
 
+import arcticShellGlassGallery0 from "@/assets/arctic-shell-gallery-0.jpg";
 import arcticShellGlassGallery1 from "@/assets/arctic-shell-gallery-1.jpg";
 import arcticShellGlassGallery2 from "@/assets/arctic-shell-gallery-2.jpg";
 import arcticShellGlassGallery3 from "@/assets/arctic-shell-gallery-3.jpg";
@@ -205,6 +206,7 @@ import arcticShellGlassGallery4 from "@/assets/arctic-shell-gallery-4.jpg";
 import arcticShellGlassGallery5 from "@/assets/arctic-shell-gallery-5.jpg";
 import arcticShellGlassGallery6 from "@/assets/arctic-shell-gallery-6.jpg";
 
+import arcticCabinGallery0 from "@/assets/arctic-cabin-gallery-0.jpg";
 import arcticCabinGallery1 from "@/assets/arctic-cabin-gallery-1.jpg";
 import arcticCabinGallery2 from "@/assets/arctic-cabin-gallery-2.jpg";
 import arcticCabinGallery3 from "@/assets/arctic-cabin-gallery-3.jpg";
@@ -364,6 +366,7 @@ const saunaColorImages: Record<string, Record<SaunaColorType, string>> = {
 // Galérijné fotky pre každý model (rôzne uhly pohľadu - nemenia sa podľa farby)
 const saunaGalleryImages: Record<string, string[]> = {
   "arctic-shell-glass": [
+    arcticShellGlassGallery0,
     arcticShellGlassGallery1,
     arcticShellGlassGallery2,
     arcticShellGlassGallery3,
@@ -429,6 +432,7 @@ const saunaGalleryImages: Record<string, string[]> = {
     harmonyGallery7,
   ],
   "arctic-cabin": [
+    arcticCabinGallery0,
     arcticCabinGallery1,
     arcticCabinGallery2,
     arcticCabinGallery3,
