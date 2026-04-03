@@ -442,6 +442,15 @@ const saunaGalleryImages: Record<string, string[]> = {
     arcticCabinGallery7,
     arcticCabinGallery8,
   ],
+  "arctic-pod": [
+    arcticPodGallery0,
+    arcticPodGallery1,
+    arcticPodGallery2,
+    arcticPodGallery3,
+    arcticPodGallery4,
+    arcticPodGallery5,
+    arcticPodGallery6,
+  ],
 };
 
 // UI meta pre sauna typy – len lokálne obrázky, všetko ostatné z PHP API.
