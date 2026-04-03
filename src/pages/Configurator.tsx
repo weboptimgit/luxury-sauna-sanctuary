@@ -360,7 +360,6 @@ const saunaGalleryImages: Record<string, string[]> = {
     frameSaunaGallery10,
   ],
   "nordic-barrel": [
-    nordicBarrelGallery1,
     nordicBarrelGallery2,
     nordicBarrelGallery3,
     nordicBarrelGallery4,
