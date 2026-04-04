@@ -62,6 +62,7 @@ import metalBandsImage from "@/assets/metal-tightening-bands.jpg";
 import thermoCladdingImage from "@/assets/thermo-wood-cladding.jpg";
 import oneStoryBenches from "@/assets/one-story-benches.jpg";
 import twoStoryBenches from "@/assets/two-story-l-shaped-benches.jpg";
+import panoramicRoofWindow from "@/assets/panoramic-roof-window.png";
 import integratedHottubHeater from "@/assets/integrated-hottub-heater.jpg";
 import electricHeater3kw from "@/assets/electric-heater-3kw.jpeg";
 import electricHeater6kw from "@/assets/electric-heater-6kw.jpeg";
