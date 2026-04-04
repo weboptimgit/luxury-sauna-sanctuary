@@ -15,6 +15,7 @@ import {
   Lightbulb,
   Bluetooth,
   ArrowRight,
+  ZoomIn,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -1841,6 +1842,8 @@ const Configurator = () => {
   };
 
   // Komponenta pre možnosť s X alebo obrázkom
+  const [zoomImage, setZoomImage] = useState<{ src: string; alt: string } | null>(null);
+
   const OptionCard = ({
     option,
     isSelected,
@@ -1868,11 +1871,22 @@ const Configurator = () => {
           <X className="w-5 h-5 md:w-7 md:h-7 text-muted-foreground" />
         </div>
       ) : showImage && option.image ? (
-        <img
-          src={option.image}
-          alt={option.name}
-          className="w-10 h-10 md:w-14 md:h-14 rounded-md object-cover mb-1 md:mb-2 flex-shrink-0"
-        />
+        <div className="relative w-10 h-10 md:w-14 md:h-14 mb-1 md:mb-2 flex-shrink-0 group/zoom">
+          <img
+            src={option.image}
+            alt={option.name}
+            className="w-full h-full rounded-md object-cover"
+          />
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              setZoomImage({ src: option.image!, alt: option.name });
+            }}
+            className="absolute top-0.5 right-0.5 w-5 h-5 md:w-6 md:h-6 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover/zoom:opacity-100 transition-opacity cursor-pointer border border-border/50 hover:bg-primary/20"
+          >
+            <ZoomIn className="w-3 h-3 md:w-3.5 md:h-3.5 text-foreground" />
+          </div>
+        </div>
       ) : (
         <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-primary/10 mb-1 md:mb-2 flex-shrink-0">
           <Check className="w-4 h-4 md:w-5 md:h-5 text-primary" />
@@ -3665,6 +3679,29 @@ const Configurator = () => {
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Option Image Zoom Modal */}
+      {zoomImage && (
+        <div
+          className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex items-center justify-center"
+          onClick={() => setZoomImage(null)}
+        >
+          <button
+            className="absolute top-6 right-6 p-3 bg-card/50 backdrop-blur-sm rounded-full hover:bg-card transition-colors z-10"
+            onClick={() => setZoomImage(null)}
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="max-w-2xl max-h-[80vh] w-full mx-6" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={zoomImage.src}
+              alt={zoomImage.alt}
+              className="w-full h-full object-contain rounded-lg"
+            />
+            <p className="text-center text-sm text-muted-foreground mt-3">{zoomImage.alt}</p>
           </div>
         </div>
       )}
