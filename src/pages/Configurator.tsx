@@ -1859,39 +1859,29 @@ const Configurator = () => {
     size?: "normal" | "small";
     description?: string;
   }) => (
-    <button
-      onClick={onClick}
-      className={cn(
-        "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all min-w-0 w-full h-full",
-        isSelected ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/50 bg-card/50",
-      )}
-    >
-      {option.id === "none" ? (
-        <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-muted/50 mb-1 md:mb-2 flex-shrink-0">
-          <X className="w-5 h-5 md:w-7 md:h-7 text-muted-foreground" />
-        </div>
-      ) : showImage && option.image ? (
-        <div className="relative w-10 h-10 md:w-14 md:h-14 mb-1 md:mb-2 flex-shrink-0 group/zoom">
+    <div className="relative w-full h-full">
+      <button
+        onClick={onClick}
+        className={cn(
+          "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all min-w-0 w-full h-full",
+          isSelected ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/50 bg-card/50",
+        )}
+      >
+        {option.id === "none" ? (
+          <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-muted/50 mb-1 md:mb-2 flex-shrink-0">
+            <X className="w-5 h-5 md:w-7 md:h-7 text-muted-foreground" />
+          </div>
+        ) : showImage && option.image ? (
           <img
             src={option.image}
             alt={option.name}
-            className="w-full h-full rounded-md object-cover"
+            className="w-10 h-10 md:w-14 md:h-14 rounded-md object-cover mb-1 md:mb-2 flex-shrink-0"
           />
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              setZoomImage({ src: option.image!, alt: option.name });
-            }}
-            className="absolute top-0.5 right-0.5 w-5 h-5 md:w-6 md:h-6 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover/zoom:opacity-100 transition-opacity cursor-pointer border border-border/50 hover:bg-primary/20"
-          >
-            <ZoomIn className="w-3 h-3 md:w-3.5 md:h-3.5 text-foreground" />
+        ) : (
+          <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-primary/10 mb-1 md:mb-2 flex-shrink-0">
+            <Check className="w-4 h-4 md:w-5 md:h-5 text-primary" />
           </div>
-        </div>
-      ) : (
-        <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-primary/10 mb-1 md:mb-2 flex-shrink-0">
-          <Check className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-        </div>
-      )}
+        )}
 
       <span className="font-medium text-center text-[11px] md:text-sm leading-tight line-clamp-2">{option.name}</span>
       {description && (
