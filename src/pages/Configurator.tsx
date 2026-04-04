@@ -264,12 +264,14 @@ type SaunaType = {
   hasMirrorFilm: boolean;
   hasMetalBands: boolean;
   hasThermoCladding: boolean;
+  hasBenchOptions: boolean;
   availableWoodTypes: WoodType[];
   allowedLedOptions?: string[];
   windowOptions: ConfigOption[];
   mirrorFilmOptions: ConfigOption[];
   metalBandsOptions: ConfigOption[];
   thermoCladdingOptions: ConfigOption[];
+  benchOptions: ConfigOption[];
 };
 
 // Modely ohrievačov podľa typu
@@ -596,11 +598,13 @@ type ApiSaunaType = {
   hasMirrorFilm: boolean;
   hasMetalBands: boolean;
   hasThermoCladding: boolean;
+  hasBenchOptions: boolean;
   allowedLedOptions?: string[];
   windowOptions?: ApiOptionSource;
   mirrorFilmOptions?: ApiOptionSource;
   metalBandsOptions?: ApiOptionSource;
   thermoCladdingOptions?: ApiOptionSource;
+  benchOptions?: ApiOptionSource;
 };
 
 type ApiHotTubType = {
@@ -649,6 +653,7 @@ type ApiConfig = {
     mirrorFilmOptions?: ApiOptionSource;
     metalBandsOptions?: ApiOptionSource;
     thermoCladdingOptions?: ApiOptionSource;
+    benchOptions?: ApiOptionSource;
   };
   hottub: {
     basePrice?: number;
@@ -797,6 +802,7 @@ const Configurator = () => {
     mirror: "none",
     metal: "none",
     thermoCladding: "none",
+    bench: "none",
   });
 
   // Kaďa konfigurácia
@@ -1166,10 +1172,12 @@ const Configurator = () => {
         hasMirrorFilm: st.hasMirrorFilm ?? false,
         hasMetalBands: st.hasMetalBands ?? false,
         hasThermoCladding: st.hasThermoCladding ?? false,
+        hasBenchOptions: st.hasBenchOptions ?? false,
         windowOptions: toUIOptions(st.windowOptions ?? apiConfig.sauna.windowOptions),
         mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions ?? apiConfig.sauna.mirrorFilmOptions),
         metalBandsOptions: toUIOptions(st.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions, metalBandsImages),
         thermoCladdingOptions: toUIOptions(st.thermoCladdingOptions ?? apiConfig.sauna.thermoCladdingOptions, thermoCladdingImages),
+        benchOptions: toUIOptions(st.benchOptions ?? apiConfig.sauna.benchOptions, benchImages),
       };
     });
   }, [apiConfig]);
@@ -1475,8 +1483,9 @@ const Configurator = () => {
       const mirrorPrice = selectedSaunaType.mirrorFilmOptions.find((m) => m.id === saunaConfig.mirror)?.price ?? 0;
       const metalPrice = selectedSaunaType.metalBandsOptions.find((m) => m.id === saunaConfig.metal)?.price ?? 0;
       const thermoCladdingPrice = selectedSaunaType.thermoCladdingOptions.find((tc) => tc.id === saunaConfig.thermoCladding)?.price ?? 0;
+      const benchPrice = selectedSaunaType.benchOptions.find((b) => b.id === saunaConfig.bench)?.price ?? 0;
 
-      return basePrice + heater + heaterModelPrice + ledSum + extLedPrice + bluetooth + kit + color + woodPrice + windowPrice + mirrorPrice + metalPrice + thermoCladdingPrice;
+      return basePrice + heater + heaterModelPrice + ledSum + extLedPrice + bluetooth + kit + color + woodPrice + windowPrice + mirrorPrice + metalPrice + thermoCladdingPrice + benchPrice;
     }
 
     if (productCategory === "hottub" && selectedHotTubType) {
@@ -1706,6 +1715,7 @@ const Configurator = () => {
       mirror: "none",
       metal: "none",
       thermoCladding: "none",
+      bench: "none",
     });
     setHotTubConfig({
       size: "none",
@@ -1762,6 +1772,7 @@ const Configurator = () => {
       mirror: "none",
       metal: "none",
       thermoCladding: "none",
+      bench: "none",
     });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
@@ -3015,6 +3026,26 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={saunaConfig.thermoCladding === option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, thermoCladding: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* LAVICE */}
+                      {selectedSaunaType?.hasBenchOptions && selectedSaunaType.benchOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.benches")}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
+                            {selectedSaunaType.benchOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={saunaConfig.bench === option.id}
+                                onClick={() => setSaunaConfig((prev) => ({ ...prev, bench: option.id }))}
                                 showImage={!!option.image}
                               />
                             ))}
