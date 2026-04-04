@@ -568,6 +568,10 @@ type ApiComboType = {
   exteriorLedOptions?: ApiOption[];
   hasHydroMassage?: boolean;
   hydroMassageOptions?: ApiOption[];
+  hasColor?: boolean;
+  hasLed?: boolean;
+  hasBluetooth?: boolean;
+  hasAccessoryKit?: boolean;
 };
 
 type ApiOption = {
