@@ -2994,6 +2994,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={saunaConfig.metal === option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, metal: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
