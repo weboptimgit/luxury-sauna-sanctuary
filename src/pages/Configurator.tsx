@@ -3459,6 +3459,114 @@ const Configurator = () => {
                         </div>
                       )}
                     </div>
+                  ) : productCategory === "sauna" && selectedSaunaType ? (
+                    <div className="space-y-4">
+                      {/* Typ dreva */}
+                      {selectedSaunaType.hasWoodType && selectedSaunaType.availableWoodTypes.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.woodType")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
+                            {woodTypeOptionsForModel.map((option) => (
+                              <button
+                                key={option.id}
+                                onClick={() => setSaunaConfig((prev) => ({ ...prev, woodType: option.id }))}
+                                className={cn(
+                                  "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all",
+                                  saunaConfig.woodType === option.id
+                                    ? "border-primary bg-primary/5"
+                                    : "border-border/50 hover:border-primary/50 bg-card/50",
+                                )}
+                              >
+                                <div className="w-10 h-10 md:w-14 md:h-14 rounded-md mb-1 md:mb-2 overflow-hidden">
+                                  <img src={option.image} alt={option.name} className="w-full h-full object-cover" />
+                                </div>
+                                <span className="font-medium text-center text-xs md:text-sm">
+                                  {option.id === "spruce" ? t("config.woodType.spruce") : t("config.woodType.thermo")}
+                                </span>
+                                {option.price > 0 ? (
+                                  <span className="text-[10px] md:text-xs text-primary">
+                                    +{option.price.toLocaleString()} €
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] md:text-xs text-muted-foreground">{t("included")}</span>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                          {selectedSaunaType.availableWoodTypes.length === 1 && (
+                            <p className="text-xs text-muted-foreground mt-2">
+                              {t("config.onlyWoodType").replace(
+                                "{woodType}",
+                                selectedSaunaType.availableWoodTypes[0] === "thermo"
+                                  ? t("config.woodType.thermo")
+                                  : t("config.woodType.spruce"),
+                              )}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Typ ohrievača */}
+                      {selectedSaunaType.hasHeater && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.heater")} <span className="text-primary">*</span>
+                          </h3>
+                          <div className="grid grid-cols-3 gap-2 md:gap-3">
+                            {saunaHeaterTypes.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={saunaConfig.heaterType === option.id}
+                                onClick={() =>
+                                  setSaunaConfig((prev) => ({
+                                    ...prev,
+                                    heaterType: option.id,
+                                    heaterModel: "none",
+                                  }))
+                                }
+                                showImage={true}
+                              />
+                            ))}
+                          </div>
+
+                          {saunaConfig.heaterType === "electric" && (
+                            <div className="mt-4 p-4 rounded-xl bg-card/50 border border-primary/30">
+                              <h4 className="text-sm font-medium text-foreground mb-3">
+                                {t("config.selectHeaterModel")} <span className="text-primary">*</span>
+                              </h4>
+                              {saunaConfig.heaterModel === "none" && (
+                                <p className="text-xs text-amber-500 mb-3">{t("config.heaterModelRequired")}</p>
+                              )}
+                              <div className="grid grid-cols-1 gap-2">
+                                {electricHeaterModels.map((model) => (
+                                  <button
+                                    key={model.id}
+                                    onClick={() => setSaunaConfig((prev) => ({ ...prev, heaterModel: model.id }))}
+                                    className={cn(
+                                      "flex items-center justify-between p-3 rounded-lg border-2 transition-all text-left",
+                                      saunaConfig.heaterModel === model.id
+                                        ? "border-primary bg-primary/5"
+                                        : "border-border/50 hover:border-primary/50 bg-card/30",
+                                    )}
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      {saunaConfig.heaterModel === model.id && (
+                                        <Check className="w-4 h-4 text-primary" />
+                                      )}
+                                      <span className="font-medium text-sm">{model.name}</span>
+                                    </div>
+                                    {model.price > 0 ? (
+                                      <span className="text-sm text-primary">+{model.price.toLocaleString()} €</span>
+                                    ) : (
+                                      <span className="text-xs text-muted-foreground">{t("included")}</span>
+                                    )}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
                           )}
 
                           {saunaConfig.heaterType === "wood" && (
