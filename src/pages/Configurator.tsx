@@ -541,6 +541,11 @@ type ComboType = {
   exteriorLedOptions: ConfigOption[];
   hasHydroMassage: boolean;
   hydroMassageOptions: ConfigOption[];
+  // Sauna-side options
+  hasColor: boolean;
+  hasLed: boolean;
+  hasBluetooth: boolean;
+  hasAccessoryKit: boolean;
 };
 
 type ApiComboType = {
