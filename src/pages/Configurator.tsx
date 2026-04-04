@@ -1483,8 +1483,9 @@ const Configurator = () => {
       const mirrorPrice = selectedSaunaType.mirrorFilmOptions.find((m) => m.id === saunaConfig.mirror)?.price ?? 0;
       const metalPrice = selectedSaunaType.metalBandsOptions.find((m) => m.id === saunaConfig.metal)?.price ?? 0;
       const thermoCladdingPrice = selectedSaunaType.thermoCladdingOptions.find((tc) => tc.id === saunaConfig.thermoCladding)?.price ?? 0;
+      const benchPrice = selectedSaunaType.benchOptions.find((b) => b.id === saunaConfig.bench)?.price ?? 0;
 
-      return basePrice + heater + heaterModelPrice + ledSum + extLedPrice + bluetooth + kit + color + woodPrice + windowPrice + mirrorPrice + metalPrice + thermoCladdingPrice;
+      return basePrice + heater + heaterModelPrice + ledSum + extLedPrice + bluetooth + kit + color + woodPrice + windowPrice + mirrorPrice + metalPrice + thermoCladdingPrice + benchPrice;
     }
 
     if (productCategory === "hottub" && selectedHotTubType) {
