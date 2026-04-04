@@ -853,6 +853,13 @@ const Configurator = () => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
+  const windowImages: Record<string, string> = {
+    "panoramic": panoramicRoofWindow,
+    "panoramic-roof": panoramicRoofWindow,
+    "panoramic-window": panoramicRoofWindow,
+    "yes": panoramicRoofWindow,
+  };
+
 
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 1024px)");
