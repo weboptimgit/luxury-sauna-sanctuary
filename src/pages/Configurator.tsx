@@ -653,6 +653,7 @@ type ApiConfig = {
     mirrorFilmOptions?: ApiOptionSource;
     metalBandsOptions?: ApiOptionSource;
     thermoCladdingOptions?: ApiOptionSource;
+    benchOptions?: ApiOptionSource;
   };
   hottub: {
     basePrice?: number;
