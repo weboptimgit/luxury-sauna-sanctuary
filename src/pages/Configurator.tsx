@@ -2065,7 +2065,7 @@ const Configurator = () => {
               </button>
 
               {/* Kombinácia - temporarily hidden */}
-              {false && comboTypesUI.length > 0 && (
+              {comboTypesUI.length > 0 && (
                 <button
                   onClick={() => {
                     setProductCategory("combo");
