@@ -931,6 +931,23 @@ const Configurator = () => {
     wood: woodHeater,
   };
 
+  const metalBandsImages: Record<string, string> = {
+    "metal-bands": metalBandsImage,
+    "metal-tightening-bands": metalBandsImage,
+  };
+
+  const thermoCladdingImages: Record<string, string> = {
+    "thermo-cladding": thermoCladdingImage,
+    "thermo-wood-cladding": thermoCladdingImage,
+  };
+
+  const benchImages: Record<string, string> = {
+    "one-story": oneStoryBenches,
+    "one-story-benches": oneStoryBenches,
+    "two-story": twoStoryBenches,
+    "two-story-l-shaped": twoStoryBenches,
+  };
+
   // --- UI Options z API configu ---
   // Model-specific options – čítané z selectedSaunaType nižšie v renderingu
   const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes, heaterImages);
