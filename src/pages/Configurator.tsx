@@ -541,6 +541,11 @@ type ComboType = {
   exteriorLedOptions: ConfigOption[];
   hasHydroMassage: boolean;
   hydroMassageOptions: ConfigOption[];
+  // Sauna-side options
+  hasColor: boolean;
+  hasLed: boolean;
+  hasBluetooth: boolean;
+  hasAccessoryKit: boolean;
 };
 
 type ApiComboType = {
@@ -563,6 +568,10 @@ type ApiComboType = {
   exteriorLedOptions?: ApiOption[];
   hasHydroMassage?: boolean;
   hydroMassageOptions?: ApiOption[];
+  hasColor?: boolean;
+  hasLed?: boolean;
+  hasBluetooth?: boolean;
+  hasAccessoryKit?: boolean;
 };
 
 type ApiOption = {
@@ -831,9 +840,13 @@ const Configurator = () => {
   // Combo konfigurácia
   const [comboConfig, setComboConfig] = useState({
     woodType: "spruce" as WoodType,
+    color: "none" as string,
     window: "none",
     heater: "none",
     electricHeater: "none",
+    led: [] as string[],
+    bluetooth: "none",
+    accessoryKit: "none",
     underwaterLed: "none",
     exteriorLed: "none",
     hydroMassage: "none",
@@ -1336,6 +1349,10 @@ const Configurator = () => {
               .map((o) => [o.id, hydroMassageImg]),
           ),
         ),
+        hasColor: ct.hasColor ?? false,
+        hasLed: ct.hasLed ?? false,
+        hasBluetooth: ct.hasBluetooth ?? false,
+        hasAccessoryKit: ct.hasAccessoryKit ?? false,
       }));
     }
 
@@ -1611,6 +1628,24 @@ const Configurator = () => {
       const headCushionPrice =
         apiConfig?.hottub?.headCushionOptions?.find((o) => o.id === comboConfig.headCushion)?.price ?? 0;
       total += headCushionPrice;
+
+      // Sauna-side options
+      // Color
+      const colorPrice = apiConfig?.sauna?.colorOptions?.find((o) => o.id === comboConfig.color)?.price ?? 0;
+      total += colorPrice;
+      // LED (multi-select like sauna)
+      for (const ledId of comboConfig.led) {
+        if (ledId === "none") continue;
+        const ledPrice = apiConfig?.sauna?.ledOptions?.find((o) => o.id === ledId)?.price ?? 0;
+        total += ledPrice;
+      }
+      // Bluetooth
+      const btPrice = apiConfig?.sauna?.bluetoothOptions?.find((o) => o.id === comboConfig.bluetooth)?.price ?? 0;
+      total += btPrice;
+      // Accessory Kit
+      const kitPrice = apiConfig?.sauna?.accessoryKitOptions?.find((o) => o.id === comboConfig.accessoryKit)?.price ?? 0;
+      total += kitPrice;
+
       return total;
     }
 
@@ -1752,9 +1787,13 @@ const Configurator = () => {
     });
     setComboConfig({
       woodType: "spruce",
+      color: "none",
       window: "none",
       heater: "none",
       electricHeater: "none",
+      led: [],
+      bluetooth: "none",
+      accessoryKit: "none",
       underwaterLed: "none",
       exteriorLed: "none",
       hydroMassage: "none",
@@ -1821,9 +1860,13 @@ const Configurator = () => {
     setSelectedComboType(null);
     setComboConfig({
       woodType: "spruce",
+      color: "none",
       window: "none",
       heater: "none",
       electricHeater: "none",
+      led: [],
+      bluetooth: "none",
+      accessoryKit: "none",
       underwaterLed: "none",
       exteriorLed: "none",
       hydroMassage: "none",
@@ -2041,7 +2084,7 @@ const Configurator = () => {
               </button>
 
               {/* Kombinácia - temporarily hidden */}
-              {false && comboTypesUI.length > 0 && (
+              {comboTypesUI.length > 0 && (
                 <button
                   onClick={() => {
                     setProductCategory("combo");
@@ -2796,6 +2839,128 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={comboConfig.hydroMassage === option.id}
                                 onClick={() => setComboConfig((prev) => ({ ...prev, hydroMassage: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
+
+                      {/* === Sauna-side options === */}
+
+                      {/* Farba exteriéru */}
+                      {selectedComboType.hasColor && saunaColorOptionsTyped.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.color")}
+                          </h3>
+                          <p className="text-xs text-muted-foreground mb-3 italic">{t("config.colorHint")}</p>
+                          <div className="grid grid-cols-4 gap-2 md:gap-3">
+                            {saunaColorOptionsTyped.map((option) => (
+                              <button
+                                key={option.id}
+                                onClick={() => setComboConfig((prev) => ({ ...prev, color: option.id }))}
+                                className={cn(
+                                  "flex flex-col items-center p-1.5 md:p-2 rounded-lg border-2 transition-all",
+                                  comboConfig.color === option.id
+                                    ? "border-primary bg-primary/5"
+                                    : "border-border/50 hover:border-primary/50 bg-card/50",
+                                )}
+                              >
+                                {option.id === "none" ? (
+                                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-md bg-muted/50 flex items-center justify-center mb-1">
+                                    <X className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="w-8 h-8 md:w-10 md:h-10 rounded-md mb-1 border border-border/30"
+                                    style={{ backgroundColor: saunaColorSwatches[option.id].colorHsl }}
+                                  />
+                                )}
+                                <span className="font-medium text-center text-xs">
+                                  {t(`color.${option.id}`) !== `color.${option.id}`
+                                    ? t(`color.${option.id}`)
+                                    : option.name || saunaColorSwatches[option.id].nameFallback}
+                                </span>
+                                {option.price > 0 ? (
+                                  <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
+                                ) : (
+                                  <span className="text-xs text-muted-foreground">{t("included")}</span>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                          <Notice variant="info" className="mt-4">
+                            {t("config.colorNotice")}
+                          </Notice>
+                        </div>
+                      )}
+
+                      {/* LED osvetlenie */}
+                      {selectedComboType.hasLed && filteredLedOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.led")}
+                          </h3>
+                          <ScrollableRow>
+                            {filteredLedOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={comboConfig.led.includes(option.id) || (option.id === "none" && comboConfig.led.length === 0)}
+                                onClick={() => {
+                                  if (option.id === "none") {
+                                    setComboConfig((prev) => ({ ...prev, led: [] }));
+                                  } else {
+                                    setComboConfig((prev) => {
+                                      const newLeds = prev.led.includes(option.id)
+                                        ? prev.led.filter((l) => l !== option.id)
+                                        : [...prev.led.filter((l) => l !== "none"), option.id];
+                                      return { ...prev, led: newLeds.length ? newLeds : [] };
+                                    });
+                                  }
+                                }}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
+
+                      {/* Bluetooth */}
+                      {selectedComboType.hasBluetooth && saunaBluetoothOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.bluetooth")}
+                          </h3>
+                          <ScrollableRow>
+                            {saunaBluetoothOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={comboConfig.bluetooth === option.id}
+                                onClick={() => setComboConfig((prev) => ({ ...prev, bluetooth: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
+
+                      {/* Saunová sada */}
+                      {selectedComboType.hasAccessoryKit && saunaAccessoryKitOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.accessories")}
+                          </h3>
+                          <Notice variant="info" className="mb-3 text-xs">{t("config.accessoryKitHint")}</Notice>
+                          <ScrollableRow>
+                            {saunaAccessoryKitOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={comboConfig.accessoryKit === option.id}
+                                onClick={() => setComboConfig((prev) => ({ ...prev, accessoryKit: option.id }))}
                                 showImage={!!option.image}
                               />
                             ))}
