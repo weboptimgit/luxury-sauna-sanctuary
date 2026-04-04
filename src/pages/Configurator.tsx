@@ -1323,7 +1323,23 @@ const Configurator = () => {
         galleryImages: [],
         hasWoodType: ct.hasWoodType ?? (ct.woodTypes?.length ?? 0) > 0,
         availableWoodTypes: ct.woodTypes ?? [],
-        windowOptions: toUIOptions(ct.windowOptions),
+        windowOptions: toUIOptions(ct.windowOptions, windowImages),
+        // Sauna-side
+        hasHeaterType: ct.hasHeaterType ?? true,
+        hasColor: ct.hasColor ?? false,
+        hasLed: ct.hasLed ?? false,
+        hasExteriorLed: ct.hasExteriorLed ?? false,
+        hasBluetooth: ct.hasBluetooth ?? false,
+        hasAccessoryKit: ct.hasAccessoryKit ?? false,
+        hasMirrorFilm: ct.hasMirrorFilm ?? false,
+        hasMetalBands: ct.hasMetalBands ?? false,
+        hasThermoCladding: ct.hasThermoCladding ?? false,
+        hasBenchOptions: ct.hasBenchOptions ?? false,
+        mirrorFilmOptions: toUIOptions(ct.mirrorFilmOptions ?? apiConfig.sauna.mirrorFilmOptions),
+        metalBandsOptions: toUIOptions(ct.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions, metalBandsImages),
+        thermoCladdingOptions: toUIOptions(ct.thermoCladdingOptions ?? apiConfig.sauna.thermoCladdingOptions, thermoCladdingImages),
+        benchOptions: toUIOptions(ct.benchOptions ?? apiConfig.sauna.benchOptions, benchImages),
+        // Hottub-side
         hasHeater: ct.hasHeater ?? false,
         heaterOptions: toUIOptions(ct.heaterOptions, {
           "external-aisi304": integratedHottubHeater,
@@ -1343,7 +1359,7 @@ const Configurator = () => {
           "1pc": underwaterLed1pc,
           "3pc": underwaterLed3pc,
         }),
-        hasExteriorLed: ct.hasExteriorLed ?? false,
+        hasExteriorLedHottub: ct.hasExteriorLedHottub ?? false,
         exteriorLedOptions: toUIOptions(
           ct.exteriorLedOptions,
           Object.fromEntries(
@@ -1361,10 +1377,6 @@ const Configurator = () => {
               .map((o) => [o.id, hydroMassageImg]),
           ),
         ),
-        hasColor: ct.hasColor ?? false,
-        hasLed: ct.hasLed ?? false,
-        hasBluetooth: ct.hasBluetooth ?? false,
-        hasAccessoryKit: ct.hasAccessoryKit ?? false,
       }));
     }
 
