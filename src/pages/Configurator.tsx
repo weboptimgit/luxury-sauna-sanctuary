@@ -58,6 +58,10 @@ import ledBenches from "@/assets/LED-lighting-under-the-benches.png";
 import ledBackrest from "@/assets/LED-lighting-in-the-back-supports-1.jpg";
 import electricHeater from "@/assets/Harvia-CILINDRO-9kw.png";
 import woodHeater from "@/assets/Harvia-M3.png";
+import metalBandsImage from "@/assets/metal-tightening-bands.jpg";
+import thermoCladdingImage from "@/assets/thermo-wood-cladding.jpg";
+import oneStoryBenches from "@/assets/one-story-benches.jpg";
+import twoStoryBenches from "@/assets/two-story-l-shaped-benches.jpg";
 import integratedHottubHeater from "@/assets/integrated-hottub-heater.jpg";
 import electricHeater3kw from "@/assets/electric-heater-3kw.jpeg";
 import electricHeater6kw from "@/assets/electric-heater-6kw.jpeg";
@@ -927,6 +931,23 @@ const Configurator = () => {
     wood: woodHeater,
   };
 
+  const metalBandsImages: Record<string, string> = {
+    "metal-bands": metalBandsImage,
+    "metal-tightening-bands": metalBandsImage,
+  };
+
+  const thermoCladdingImages: Record<string, string> = {
+    "thermo-cladding": thermoCladdingImage,
+    "thermo-wood-cladding": thermoCladdingImage,
+  };
+
+  const benchImages: Record<string, string> = {
+    "one-story": oneStoryBenches,
+    "one-story-benches": oneStoryBenches,
+    "two-story": twoStoryBenches,
+    "two-story-l-shaped": twoStoryBenches,
+  };
+
   // --- UI Options z API configu ---
   // Model-specific options – čítané z selectedSaunaType nižšie v renderingu
   const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes, heaterImages);
@@ -1147,8 +1168,8 @@ const Configurator = () => {
         hasThermoCladding: st.hasThermoCladding ?? false,
         windowOptions: toUIOptions(st.windowOptions ?? apiConfig.sauna.windowOptions),
         mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions ?? apiConfig.sauna.mirrorFilmOptions),
-        metalBandsOptions: toUIOptions(st.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions),
-        thermoCladdingOptions: toUIOptions(st.thermoCladdingOptions ?? apiConfig.sauna.thermoCladdingOptions),
+        metalBandsOptions: toUIOptions(st.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions, metalBandsImages),
+        thermoCladdingOptions: toUIOptions(st.thermoCladdingOptions ?? apiConfig.sauna.thermoCladdingOptions, thermoCladdingImages),
       };
     });
   }, [apiConfig]);
@@ -2973,6 +2994,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={saunaConfig.metal === option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, metal: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
@@ -2993,6 +3015,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={saunaConfig.thermoCladding === option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, thermoCladding: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
