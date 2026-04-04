@@ -1172,10 +1172,12 @@ const Configurator = () => {
         hasMirrorFilm: st.hasMirrorFilm ?? false,
         hasMetalBands: st.hasMetalBands ?? false,
         hasThermoCladding: st.hasThermoCladding ?? false,
+        hasBenchOptions: st.hasBenchOptions ?? false,
         windowOptions: toUIOptions(st.windowOptions ?? apiConfig.sauna.windowOptions),
         mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions ?? apiConfig.sauna.mirrorFilmOptions),
         metalBandsOptions: toUIOptions(st.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions, metalBandsImages),
         thermoCladdingOptions: toUIOptions(st.thermoCladdingOptions ?? apiConfig.sauna.thermoCladdingOptions, thermoCladdingImages),
+        benchOptions: toUIOptions(st.benchOptions ?? apiConfig.sauna.benchOptions, benchImages),
       };
     });
   }, [apiConfig]);
