@@ -840,9 +840,13 @@ const Configurator = () => {
   // Combo konfigurácia
   const [comboConfig, setComboConfig] = useState({
     woodType: "spruce" as WoodType,
+    color: "none" as string,
     window: "none",
     heater: "none",
     electricHeater: "none",
+    led: [] as string[],
+    bluetooth: "none",
+    accessoryKit: "none",
     underwaterLed: "none",
     exteriorLed: "none",
     hydroMassage: "none",
