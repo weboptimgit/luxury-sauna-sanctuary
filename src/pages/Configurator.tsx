@@ -1354,6 +1354,7 @@ const Configurator = () => {
         hasBluetooth: ct.hasBluetooth ?? false,
         hasAccessoryKit: ct.hasAccessoryKit ?? false,
       }));
+    }
 
     // Žiadne fallbacky – všetko pochádza z PHP API
     return [];
