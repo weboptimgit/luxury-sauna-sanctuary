@@ -264,12 +264,14 @@ type SaunaType = {
   hasMirrorFilm: boolean;
   hasMetalBands: boolean;
   hasThermoCladding: boolean;
+  hasBenchOptions: boolean;
   availableWoodTypes: WoodType[];
   allowedLedOptions?: string[];
   windowOptions: ConfigOption[];
   mirrorFilmOptions: ConfigOption[];
   metalBandsOptions: ConfigOption[];
   thermoCladdingOptions: ConfigOption[];
+  benchOptions: ConfigOption[];
 };
 
 // Modely ohrievačov podľa typu
