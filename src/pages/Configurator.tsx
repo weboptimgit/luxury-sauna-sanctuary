@@ -839,14 +839,23 @@ const Configurator = () => {
 
   // Combo konfigurácia
   const [comboConfig, setComboConfig] = useState({
+    // Sauna-side
     woodType: "spruce" as WoodType,
     color: "none" as string,
     window: "none",
-    heater: "none",
-    electricHeater: "none",
+    heaterType: "none",
+    heaterModel: "none" as HeaterModelType,
     led: [] as string[],
+    saunaExteriorLed: false,
     bluetooth: "none",
     accessoryKit: "none",
+    mirror: "none",
+    metal: "none",
+    thermoCladding: "none",
+    bench: "standard",
+    // Hottub-side
+    heater: "none",
+    electricHeater: "none",
     underwaterLed: "none",
     exteriorLed: "none",
     hydroMassage: "none",
@@ -860,6 +869,9 @@ const Configurator = () => {
     bluetoothSpeaker: "none",
     headCushion: "none",
   });
+
+  // Combo step: 1 = sauna options, 2 = hottub options
+  const [comboStep, setComboStep] = useState<1 | 2>(1);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
