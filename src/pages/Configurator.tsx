@@ -3000,7 +3000,6 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={saunaConfig.mirror === option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, mirror: option.id }))}
-                                showImage={!!option.image}
                               />
                             ))}
                           </div>
