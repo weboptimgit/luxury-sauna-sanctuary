@@ -948,8 +948,11 @@ const Configurator = () => {
   };
 
   const benchImages: Record<string, string> = {
+    "standard": oneStoryBenches,
     "one-story": oneStoryBenches,
     "one-story-benches": oneStoryBenches,
+    "lshape": twoStoryBenches,
+    "l-shape": twoStoryBenches,
     "two-story": twoStoryBenches,
     "two-story-l-shaped": twoStoryBenches,
   };
