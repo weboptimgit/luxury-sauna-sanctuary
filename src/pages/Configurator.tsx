@@ -1728,7 +1728,7 @@ const Configurator = () => {
       mirror: "none",
       metal: "none",
       thermoCladding: "none",
-      bench: "none",
+      bench: "standard",
     });
     setHotTubConfig({
       size: "none",
