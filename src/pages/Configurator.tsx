@@ -1842,6 +1842,8 @@ const Configurator = () => {
   };
 
   // Komponenta pre možnosť s X alebo obrázkom
+  const [zoomImage, setZoomImage] = useState<{ src: string; alt: string } | null>(null);
+
   const OptionCard = ({
     option,
     isSelected,
@@ -1869,11 +1871,22 @@ const Configurator = () => {
           <X className="w-5 h-5 md:w-7 md:h-7 text-muted-foreground" />
         </div>
       ) : showImage && option.image ? (
-        <img
-          src={option.image}
-          alt={option.name}
-          className="w-10 h-10 md:w-14 md:h-14 rounded-md object-cover mb-1 md:mb-2 flex-shrink-0"
-        />
+        <div className="relative w-10 h-10 md:w-14 md:h-14 mb-1 md:mb-2 flex-shrink-0 group/zoom">
+          <img
+            src={option.image}
+            alt={option.name}
+            className="w-full h-full rounded-md object-cover"
+          />
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              setZoomImage({ src: option.image!, alt: option.name });
+            }}
+            className="absolute top-0.5 right-0.5 w-5 h-5 md:w-6 md:h-6 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover/zoom:opacity-100 transition-opacity cursor-pointer border border-border/50 hover:bg-primary/20"
+          >
+            <ZoomIn className="w-3 h-3 md:w-3.5 md:h-3.5 text-foreground" />
+          </div>
+        </div>
       ) : (
         <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-primary/10 mb-1 md:mb-2 flex-shrink-0">
           <Check className="w-4 h-4 md:w-5 md:h-5 text-primary" />
