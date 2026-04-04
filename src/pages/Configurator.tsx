@@ -1349,7 +1349,10 @@ const Configurator = () => {
               .map((o) => [o.id, hydroMassageImg]),
           ),
         ),
-      }));
+        hasColor: ct.hasColor ?? false,
+        hasLed: ct.hasLed ?? false,
+        hasBluetooth: ct.hasBluetooth ?? false,
+        hasAccessoryKit: ct.hasAccessoryKit ?? false,
     }
 
     // Žiadne fallbacky – všetko pochádza z PHP API
