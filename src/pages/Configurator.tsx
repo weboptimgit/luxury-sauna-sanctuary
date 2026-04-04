@@ -2980,6 +2980,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={saunaConfig.window === option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, window: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
