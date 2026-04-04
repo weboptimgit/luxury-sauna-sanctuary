@@ -1628,6 +1628,24 @@ const Configurator = () => {
       const headCushionPrice =
         apiConfig?.hottub?.headCushionOptions?.find((o) => o.id === comboConfig.headCushion)?.price ?? 0;
       total += headCushionPrice;
+
+      // Sauna-side options
+      // Color
+      const colorPrice = apiConfig?.sauna?.colorOptions?.find((o) => o.id === comboConfig.color)?.price ?? 0;
+      total += colorPrice;
+      // LED (multi-select like sauna)
+      for (const ledId of comboConfig.led) {
+        if (ledId === "none") continue;
+        const ledPrice = apiConfig?.sauna?.ledOptions?.find((o) => o.id === ledId)?.price ?? 0;
+        total += ledPrice;
+      }
+      // Bluetooth
+      const btPrice = apiConfig?.sauna?.bluetoothOptions?.find((o) => o.id === comboConfig.bluetooth)?.price ?? 0;
+      total += btPrice;
+      // Accessory Kit
+      const kitPrice = apiConfig?.sauna?.accessoryKitOptions?.find((o) => o.id === comboConfig.accessoryKit)?.price ?? 0;
+      total += kitPrice;
+
       return total;
     }
 
