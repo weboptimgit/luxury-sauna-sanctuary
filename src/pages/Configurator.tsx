@@ -1768,9 +1768,13 @@ const Configurator = () => {
     });
     setComboConfig({
       woodType: "spruce",
+      color: "none",
       window: "none",
       heater: "none",
       electricHeater: "none",
+      led: [],
+      bluetooth: "none",
+      accessoryKit: "none",
       underwaterLed: "none",
       exteriorLed: "none",
       hydroMassage: "none",
