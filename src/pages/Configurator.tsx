@@ -2836,22 +2836,45 @@ const Configurator = () => {
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.color")}
                           </h3>
-                          <Notice variant="info" className="mb-3 text-xs">{t("config.colorHint")}</Notice>
-                          <ScrollableRow>
-                            {saunaColorOptionsTyped.map((option) => {
-                              const swatchInfo = saunaColorSwatches[option.id];
-                              return (
-                                <OptionCard
-                                  key={option.id}
-                                  option={option}
-                                  isSelected={comboConfig.color === option.id}
-                                  onClick={() => setComboConfig((prev) => ({ ...prev, color: option.id }))}
-                                  showImage={false}
-                                  colorSwatch={swatchInfo?.colorHsl}
-                                />
-                              );
-                            })}
-                          </ScrollableRow>
+                          <p className="text-xs text-muted-foreground mb-3 italic">{t("config.colorHint")}</p>
+                          <div className="grid grid-cols-4 gap-2 md:gap-3">
+                            {saunaColorOptionsTyped.map((option) => (
+                              <button
+                                key={option.id}
+                                onClick={() => setComboConfig((prev) => ({ ...prev, color: option.id }))}
+                                className={cn(
+                                  "flex flex-col items-center p-1.5 md:p-2 rounded-lg border-2 transition-all",
+                                  comboConfig.color === option.id
+                                    ? "border-primary bg-primary/5"
+                                    : "border-border/50 hover:border-primary/50 bg-card/50",
+                                )}
+                              >
+                                {option.id === "none" ? (
+                                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-md bg-muted/50 flex items-center justify-center mb-1">
+                                    <X className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="w-8 h-8 md:w-10 md:h-10 rounded-md mb-1 border border-border/30"
+                                    style={{ backgroundColor: saunaColorSwatches[option.id].colorHsl }}
+                                  />
+                                )}
+                                <span className="font-medium text-center text-xs">
+                                  {t(`color.${option.id}`) !== `color.${option.id}`
+                                    ? t(`color.${option.id}`)
+                                    : option.name || saunaColorSwatches[option.id].nameFallback}
+                                </span>
+                                {option.price > 0 ? (
+                                  <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
+                                ) : (
+                                  <span className="text-xs text-muted-foreground">{t("included")}</span>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                          <Notice variant="info" className="mt-4">
+                            {t("config.colorNotice")}
+                          </Notice>
                         </div>
                       )}
 
