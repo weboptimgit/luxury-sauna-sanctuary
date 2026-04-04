@@ -1904,7 +1904,19 @@ const Configurator = () => {
           {option.price === 0 ? "0,00 €" : t("included")}
         </span>
       )}
-    </button>
+      </button>
+      {showImage && option.image && option.id !== "none" && (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            setZoomImage({ src: option.image!, alt: option.name });
+          }}
+          className="absolute top-1 right-1 w-5 h-5 md:w-6 md:h-6 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center cursor-pointer border border-border/50 hover:bg-primary/20 transition-colors z-10"
+        >
+          <ZoomIn className="w-3 h-3 md:w-3.5 md:h-3.5 text-foreground" />
+        </div>
+      )}
+    </div>
   );
 
   
