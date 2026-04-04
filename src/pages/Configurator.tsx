@@ -2827,6 +2827,105 @@ const Configurator = () => {
                           </ScrollableRow>
                         </div>
                       )}
+
+                      {/* === Sauna-side options === */}
+
+                      {/* Farba exteriéru */}
+                      {selectedComboType.hasColor && saunaColorOptionsTyped.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.color")}
+                          </h3>
+                          <Notice variant="info" className="mb-3 text-xs">{t("config.colorHint")}</Notice>
+                          <ScrollableRow>
+                            {saunaColorOptionsTyped.map((option) => {
+                              const swatchInfo = saunaColorSwatches[option.id];
+                              return (
+                                <OptionCard
+                                  key={option.id}
+                                  option={option}
+                                  isSelected={comboConfig.color === option.id}
+                                  onClick={() => setComboConfig((prev) => ({ ...prev, color: option.id }))}
+                                  showImage={false}
+                                  colorSwatch={swatchInfo?.colorHsl}
+                                />
+                              );
+                            })}
+                          </ScrollableRow>
+                        </div>
+                      )}
+
+                      {/* LED osvetlenie */}
+                      {selectedComboType.hasLed && filteredLedOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.led")}
+                          </h3>
+                          <ScrollableRow>
+                            {filteredLedOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={comboConfig.led.includes(option.id) || (option.id === "none" && comboConfig.led.length === 0)}
+                                onClick={() => {
+                                  if (option.id === "none") {
+                                    setComboConfig((prev) => ({ ...prev, led: [] }));
+                                  } else {
+                                    setComboConfig((prev) => {
+                                      const newLeds = prev.led.includes(option.id)
+                                        ? prev.led.filter((l) => l !== option.id)
+                                        : [...prev.led.filter((l) => l !== "none"), option.id];
+                                      return { ...prev, led: newLeds.length ? newLeds : [] };
+                                    });
+                                  }
+                                }}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
+
+                      {/* Bluetooth */}
+                      {selectedComboType.hasBluetooth && saunaBluetoothOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.bluetooth")}
+                          </h3>
+                          <ScrollableRow>
+                            {saunaBluetoothOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={comboConfig.bluetooth === option.id}
+                                onClick={() => setComboConfig((prev) => ({ ...prev, bluetooth: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
+
+                      {/* Saunová sada */}
+                      {selectedComboType.hasAccessoryKit && saunaAccessoryKitOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.accessories")}
+                          </h3>
+                          <Notice variant="info" className="mb-3 text-xs">{t("config.accessoryKitHint")}</Notice>
+                          <ScrollableRow>
+                            {saunaAccessoryKitOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={comboConfig.accessoryKit === option.id}
+                                onClick={() => setComboConfig((prev) => ({ ...prev, accessoryKit: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
                     </div>
                   ) : productCategory === "sauna" && selectedSaunaType ? (
                     <div className="space-y-4">
