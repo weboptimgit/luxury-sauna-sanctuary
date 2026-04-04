@@ -1168,8 +1168,8 @@ const Configurator = () => {
         hasThermoCladding: st.hasThermoCladding ?? false,
         windowOptions: toUIOptions(st.windowOptions ?? apiConfig.sauna.windowOptions),
         mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions ?? apiConfig.sauna.mirrorFilmOptions),
-        metalBandsOptions: toUIOptions(st.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions),
-        thermoCladdingOptions: toUIOptions(st.thermoCladdingOptions ?? apiConfig.sauna.thermoCladdingOptions),
+        metalBandsOptions: toUIOptions(st.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions, metalBandsImages),
+        thermoCladdingOptions: toUIOptions(st.thermoCladdingOptions ?? apiConfig.sauna.thermoCladdingOptions, thermoCladdingImages),
       };
     });
   }, [apiConfig]);
