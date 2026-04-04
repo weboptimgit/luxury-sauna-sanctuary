@@ -3682,6 +3682,29 @@ const Configurator = () => {
           </div>
         </div>
       )}
+
+      {/* Option Image Zoom Modal */}
+      {zoomImage && (
+        <div
+          className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex items-center justify-center"
+          onClick={() => setZoomImage(null)}
+        >
+          <button
+            className="absolute top-6 right-6 p-3 bg-card/50 backdrop-blur-sm rounded-full hover:bg-card transition-colors z-10"
+            onClick={() => setZoomImage(null)}
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="max-w-2xl max-h-[80vh] w-full mx-6" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={zoomImage.src}
+              alt={zoomImage.alt}
+              className="w-full h-full object-contain rounded-lg"
+            />
+            <p className="text-center text-sm text-muted-foreground mt-3">{zoomImage.alt}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
