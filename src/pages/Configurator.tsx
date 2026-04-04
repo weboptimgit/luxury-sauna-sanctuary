@@ -529,7 +529,22 @@ type ComboType = {
   hasWoodType: boolean;
   availableWoodTypes: WoodType[];
   windowOptions: ConfigOption[];
-  // Combo models can also have hottub-like options from API
+  // Sauna-side options
+  hasHeaterType: boolean;
+  hasColor: boolean;
+  hasLed: boolean;
+  hasExteriorLed: boolean;
+  hasBluetooth: boolean;
+  hasAccessoryKit: boolean;
+  hasMirrorFilm: boolean;
+  hasMetalBands: boolean;
+  hasThermoCladding: boolean;
+  hasBenchOptions: boolean;
+  mirrorFilmOptions: ConfigOption[];
+  metalBandsOptions: ConfigOption[];
+  thermoCladdingOptions: ConfigOption[];
+  benchOptions: ConfigOption[];
+  // Hottub-side options
   hasHeater: boolean;
   heaterOptions: ConfigOption[];
   hasCover: boolean;
@@ -537,15 +552,10 @@ type ComboType = {
   hasCoverColor: boolean;
   hasUnderwaterLed: boolean;
   underwaterLedOptions: ConfigOption[];
-  hasExteriorLed: boolean;
+  hasExteriorLedHottub: boolean;
   exteriorLedOptions: ConfigOption[];
   hasHydroMassage: boolean;
   hydroMassageOptions: ConfigOption[];
-  // Sauna-side options
-  hasColor: boolean;
-  hasLed: boolean;
-  hasBluetooth: boolean;
-  hasAccessoryKit: boolean;
 };
 
 type ApiComboType = {
