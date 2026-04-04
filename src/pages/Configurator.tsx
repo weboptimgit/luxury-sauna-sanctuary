@@ -2683,448 +2683,782 @@ const Configurator = () => {
 
                   {productCategory === "combo" && selectedComboType ? (
                     <div className="space-y-4">
-                      {/* Typ dreva */}
-                      {selectedComboType.hasWoodType && selectedComboType.availableWoodTypes.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.woodType")} <span className="text-primary">*</span>
-                          </h3>
-                          <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {selectedComboType.availableWoodTypes.map((woodId) => {
-                              const currentComboApi = apiConfig?.comboTypes?.find(
-                                (ct) => ct.id === selectedComboType.id,
-                              );
-                              const price = currentComboApi?.woodTypePrices?.[woodId] ?? 0;
-                              return (
+                      {/* Step indicator */}
+                      <div className="flex items-center gap-3 mb-4">
+                        <button
+                          onClick={() => setComboStep(1)}
+                          className={cn(
+                            "flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all text-sm font-medium",
+                            comboStep === 1
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-border/50 text-muted-foreground hover:border-primary/30",
+                          )}
+                        >
+                          <Flame className="w-4 h-4" />
+                          {language === "en" ? "Sauna" : "Sauna"}
+                        </button>
+                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                        <button
+                          onClick={() => setComboStep(2)}
+                          className={cn(
+                            "flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all text-sm font-medium",
+                            comboStep === 2
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-border/50 text-muted-foreground hover:border-primary/30",
+                          )}
+                        >
+                          💧 {language === "en" ? "Hot Tub" : "Kaďa"}
+                        </button>
+                      </div>
+
+                      {/* ========== KROK 1: SAUNA ========== */}
+                      {comboStep === 1 && (
+                        <div className="space-y-4">
+                          {/* Typ dreva */}
+                          {selectedComboType.hasWoodType && selectedComboType.availableWoodTypes.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.woodType")} <span className="text-primary">*</span>
+                              </h3>
+                              <div className="grid grid-cols-2 gap-2 md:gap-3">
+                                {selectedComboType.availableWoodTypes.map((woodId) => {
+                                  const currentComboApi = apiConfig?.comboTypes?.find(
+                                    (ct) => ct.id === selectedComboType.id,
+                                  );
+                                  const price = currentComboApi?.woodTypePrices?.[woodId] ?? 0;
+                                  return (
+                                    <button
+                                      key={woodId}
+                                      onClick={() => setComboConfig((prev) => ({ ...prev, woodType: woodId }))}
+                                      className={cn(
+                                        "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all",
+                                        comboConfig.woodType === woodId
+                                          ? "border-primary bg-primary/5"
+                                          : "border-border/50 hover:border-primary/50 bg-card/50",
+                                      )}
+                                    >
+                                      <div className="w-10 h-10 md:w-14 md:h-14 rounded-md mb-1 md:mb-2 overflow-hidden">
+                                        <img
+                                          src={woodId === "spruce" ? spruceWoodImg : thermoWoodImg}
+                                          alt={woodId}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      </div>
+                                      <span className="font-medium text-center text-xs md:text-sm">
+                                        {woodId === "spruce" ? t("config.woodType.spruce") : t("config.woodType.thermo")}
+                                      </span>
+                                      {price > 0 ? (
+                                        <span className="text-[10px] md:text-xs text-primary">
+                                          +{price.toLocaleString()} €
+                                        </span>
+                                      ) : (
+                                        <span className="text-[10px] md:text-xs text-muted-foreground">
+                                          {t("included")}
+                                        </span>
+                                      )}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Typ ohrievača sauny */}
+                          {selectedComboType.hasHeaterType && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.heater")} <span className="text-primary">*</span>
+                              </h3>
+                              <div className="grid grid-cols-3 gap-2 md:gap-3">
+                                {saunaHeaterTypes.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.heaterType === option.id}
+                                    onClick={() =>
+                                      setComboConfig((prev) => ({
+                                        ...prev,
+                                        heaterType: option.id,
+                                        heaterModel: "none",
+                                      }))
+                                    }
+                                    showImage={true}
+                                  />
+                                ))}
+                              </div>
+
+                              {comboConfig.heaterType === "electric" && (
+                                <div className="mt-4 p-4 rounded-xl bg-card/50 border border-primary/30">
+                                  <h4 className="text-sm font-medium text-foreground mb-3">
+                                    {t("config.selectHeaterModel")} <span className="text-primary">*</span>
+                                  </h4>
+                                  {comboConfig.heaterModel === "none" && (
+                                    <p className="text-xs text-amber-500 mb-3">{t("config.heaterModelRequired")}</p>
+                                  )}
+                                  <div className="grid grid-cols-1 gap-2">
+                                    {electricHeaterModels.map((model) => (
+                                      <button
+                                        key={model.id}
+                                        onClick={() => setComboConfig((prev) => ({ ...prev, heaterModel: model.id }))}
+                                        className={cn(
+                                          "flex items-center justify-between p-3 rounded-lg border-2 transition-all text-left",
+                                          comboConfig.heaterModel === model.id
+                                            ? "border-primary bg-primary/5"
+                                            : "border-border/50 hover:border-primary/50 bg-card/30",
+                                        )}
+                                      >
+                                        <div className="flex items-center gap-3">
+                                          {comboConfig.heaterModel === model.id && (
+                                            <Check className="w-4 h-4 text-primary" />
+                                          )}
+                                          <span className="font-medium text-sm">{model.name}</span>
+                                        </div>
+                                        {model.price > 0 ? (
+                                          <span className="text-sm text-primary">+{model.price.toLocaleString()} €</span>
+                                        ) : (
+                                          <span className="text-xs text-muted-foreground">{t("included")}</span>
+                                        )}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {comboConfig.heaterType === "wood" && (
+                                <div className="mt-4 p-4 rounded-xl bg-card/50 border border-primary/30">
+                                  <h4 className="text-sm font-medium text-foreground mb-3">
+                                    {t("config.selectHeaterModel")} <span className="text-primary">*</span>
+                                  </h4>
+                                  {comboConfig.heaterModel === "none" && (
+                                    <p className="text-xs text-amber-500 mb-3">{t("config.heaterModelRequired")}</p>
+                                  )}
+                                  <div className="grid grid-cols-1 gap-2">
+                                    {woodHeaterModels.map((model) => (
+                                      <button
+                                        key={model.id}
+                                        onClick={() => setComboConfig((prev) => ({ ...prev, heaterModel: model.id }))}
+                                        className={cn(
+                                          "flex items-center justify-between p-3 rounded-lg border-2 transition-all text-left",
+                                          comboConfig.heaterModel === model.id
+                                            ? "border-primary bg-primary/5"
+                                            : "border-border/50 hover:border-primary/50 bg-card/30",
+                                        )}
+                                      >
+                                        <div className="flex items-center gap-3">
+                                          {comboConfig.heaterModel === model.id && (
+                                            <Check className="w-4 h-4 text-primary" />
+                                          )}
+                                          <span className="font-medium text-sm">{model.name}</span>
+                                        </div>
+                                        {model.price > 0 ? (
+                                          <span className="text-sm text-primary">+{model.price.toLocaleString()} €</span>
+                                        ) : (
+                                          <span className="text-xs text-muted-foreground">{t("included")}</span>
+                                        )}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Okná */}
+                          {selectedComboType.windowOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.window")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                <OptionCard
+                                  option={{ id: "none", name: t("config.noWindow"), price: 0 }}
+                                  isSelected={comboConfig.window === "none"}
+                                  onClick={() => setComboConfig((prev) => ({ ...prev, window: "none" }))}
+                                />
+                                {selectedComboType.windowOptions
+                                  .filter((o) => o.id !== "none")
+                                  .map((option) => (
+                                    <OptionCard
+                                      key={option.id}
+                                      option={option}
+                                      isSelected={comboConfig.window === option.id}
+                                      onClick={() => setComboConfig((prev) => ({ ...prev, window: option.id }))}
+                                      showImage={!!option.image}
+                                    />
+                                  ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* LED osvetlenie */}
+                          {selectedComboType.hasLed && filteredLedOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.led")}
+                              </h3>
+                              <ScrollableRow>
+                                {filteredLedOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.led.includes(option.id) || (option.id === "none" && comboConfig.led.length === 0)}
+                                    onClick={() => {
+                                      if (option.id === "none") {
+                                        setComboConfig((prev) => ({ ...prev, led: [] }));
+                                      } else {
+                                        setComboConfig((prev) => {
+                                          const newLeds = prev.led.includes(option.id)
+                                            ? prev.led.filter((l) => l !== option.id)
+                                            : [...prev.led.filter((l) => l !== "none"), option.id];
+                                          return { ...prev, led: newLeds.length ? newLeds : [] };
+                                        });
+                                      }
+                                    }}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Vonkajšie LED sauny */}
+                          {selectedComboType.hasExteriorLed && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.exteriorLed")}
+                              </h3>
+                              <div className="grid grid-cols-2 gap-2 md:gap-3">
                                 <button
-                                  key={woodId}
-                                  onClick={() => setComboConfig((prev) => ({ ...prev, woodType: woodId }))}
+                                  onClick={() => setComboConfig((prev) => ({ ...prev, saunaExteriorLed: false }))}
                                   className={cn(
                                     "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all",
-                                    comboConfig.woodType === woodId
+                                    !comboConfig.saunaExteriorLed
                                       ? "border-primary bg-primary/5"
                                       : "border-border/50 hover:border-primary/50 bg-card/50",
                                   )}
                                 >
-                                  <div className="w-10 h-10 md:w-14 md:h-14 rounded-md mb-1 md:mb-2 overflow-hidden">
-                                    <img
-                                      src={woodId === "spruce" ? spruceWoodImg : thermoWoodImg}
-                                      alt={woodId}
-                                      className="w-full h-full object-cover"
-                                    />
+                                  <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-muted/50 mb-1 md:mb-2">
+                                    <X className="w-5 h-5 md:w-7 md:h-7 text-muted-foreground" />
+                                  </div>
+                                  <span className="font-medium text-center text-xs md:text-sm">{t("config.without")}</span>
+                                  <span className="text-[10px] md:text-xs text-muted-foreground">{t("included")}</span>
+                                </button>
+                                <button
+                                  onClick={() => setComboConfig((prev) => ({ ...prev, saunaExteriorLed: true }))}
+                                  className={cn(
+                                    "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all",
+                                    comboConfig.saunaExteriorLed
+                                      ? "border-primary bg-primary/5"
+                                      : "border-border/50 hover:border-primary/50 bg-card/50",
+                                  )}
+                                >
+                                  <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-md bg-primary/10 mb-1 md:mb-2">
+                                    <Lightbulb className="w-5 h-5 md:w-7 md:h-7 text-primary" />
                                   </div>
                                   <span className="font-medium text-center text-xs md:text-sm">
-                                    {woodId === "spruce" ? t("config.woodType.spruce") : t("config.woodType.thermo")}
+                                    {t("config.exteriorLedShort")}
                                   </span>
-                                  {price > 0 ? (
-                                    <span className="text-[10px] md:text-xs text-primary">
-                                      +{price.toLocaleString()} €
-                                    </span>
-                                  ) : (
-                                    <span className="text-[10px] md:text-xs text-muted-foreground">
-                                      {t("included")}
-                                    </span>
-                                  )}
+                                  <span className="text-[10px] md:text-xs text-primary">+{exteriorLedPrice} €</span>
                                 </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
+                              </div>
+                            </div>
+                          )}
 
-                      {/* Okná */}
-                      {selectedComboType.windowOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.window")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            <OptionCard
-                              option={{ id: "none", name: t("config.noWindow"), price: 0 }}
-                              isSelected={comboConfig.window === "none"}
-                              onClick={() => setComboConfig((prev) => ({ ...prev, window: "none" }))}
-                            />
-                            {selectedComboType.windowOptions
-                              .filter((o) => o.id !== "none")
-                              .map((option) => (
-                                <OptionCard
-                                  key={option.id}
-                                  option={option}
-                                  isSelected={comboConfig.window === option.id}
-                                  onClick={() => setComboConfig((prev) => ({ ...prev, window: option.id }))}
-                                />
-                              ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* Ohrievač */}
-                      {selectedComboType.hasHeater && selectedComboType.heaterOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.hottubHeater")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {selectedComboType.heaterOptions
-                              .filter((o) => !o.id.startsWith("electric-"))
-                              .map((option) => (
-                                <OptionCard
-                                  key={option.id}
-                                  option={option}
-                                  isSelected={comboConfig.heater === option.id}
-                                  onClick={() => setComboConfig((prev) => ({ ...prev, heater: option.id }))}
-                                  showImage={!!option.image}
-                                />
-                              ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* Elektrický ohrievač */}
-                      {selectedComboType.hasHeater &&
-                        selectedComboType.heaterOptions.filter((o) => o.id.startsWith("electric-")).length > 0 && (
-                          <div>
-                            <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                              {t("config.hottubElectricHeater")} <span className="text-primary">*</span>
-                            </h3>
-                            <ScrollableRow>
-                              <OptionCard
-                                option={{ id: "none", name: t("config.noHeater"), price: 0 }}
-                                isSelected={comboConfig.electricHeater === "none"}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, electricHeater: "none" }))}
-                              />
-                              {selectedComboType.heaterOptions
-                                .filter((o) => o.id.startsWith("electric-"))
-                                .map((option) => (
+                          {/* Zrkadlová fólia */}
+                          {selectedComboType.hasMirrorFilm && selectedComboType.mirrorFilmOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.mirrorFilm")}
+                              </h3>
+                              <div className="grid grid-cols-2 gap-2 md:gap-3">
+                                {selectedComboType.mirrorFilmOptions.map((option) => (
                                   <OptionCard
                                     key={option.id}
                                     option={option}
-                                    isSelected={comboConfig.electricHeater === option.id}
-                                    onClick={() => setComboConfig((prev) => ({ ...prev, electricHeater: option.id }))}
+                                    isSelected={comboConfig.mirror === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, mirror: option.id }))}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Kovové pásy */}
+                          {selectedComboType.hasMetalBands && selectedComboType.metalBandsOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.metalBands")}
+                              </h3>
+                              <div className="grid grid-cols-2 gap-2 md:gap-3">
+                                {selectedComboType.metalBandsOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.metal === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, metal: option.id }))}
                                     showImage={!!option.image}
                                   />
                                 ))}
-                            </ScrollableRow>
-                          </div>
-                        )}
-
-                      {/* Kryt */}
-                      {selectedComboType.hasCover && selectedComboType.coverOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.cover")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {selectedComboType.coverOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={comboConfig.cover === option.id}
-                                onClick={() =>
-                                  setComboConfig((prev) => ({
-                                    ...prev,
-                                    cover: option.id,
-                                    ...(option.id === "none" ? { coverColor: "none" } : {}),
-                                  }))
-                                }
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* Podvodné LED */}
-                      {selectedComboType.hasUnderwaterLed && selectedComboType.underwaterLedOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.underwaterLed")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {selectedComboType.underwaterLedOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={comboConfig.underwaterLed === option.id}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, underwaterLed: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* LED okolo */}
-                      {selectedComboType.hasExteriorLed && selectedComboType.exteriorLedOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.hottubExteriorLed")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {selectedComboType.exteriorLedOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={comboConfig.exteriorLed === option.id}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, exteriorLed: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* Hydro masáž */}
-                      {selectedComboType.hasHydroMassage && selectedComboType.hydroMassageOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.hydroMassage")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {selectedComboType.hydroMassageOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={comboConfig.hydroMassage === option.id}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, hydroMassage: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* === Sauna-side options === */}
-
-                      {/* Farba exteriéru */}
-                      {selectedComboType.hasColor && saunaColorOptionsTyped.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.color")}
-                          </h3>
-                          <p className="text-xs text-muted-foreground mb-3 italic">{t("config.colorHint")}</p>
-                          <div className="grid grid-cols-4 gap-2 md:gap-3">
-                            {saunaColorOptionsTyped.map((option) => (
-                              <button
-                                key={option.id}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, color: option.id }))}
-                                className={cn(
-                                  "flex flex-col items-center p-1.5 md:p-2 rounded-lg border-2 transition-all",
-                                  comboConfig.color === option.id
-                                    ? "border-primary bg-primary/5"
-                                    : "border-border/50 hover:border-primary/50 bg-card/50",
-                                )}
-                              >
-                                {option.id === "none" ? (
-                                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-md bg-muted/50 flex items-center justify-center mb-1">
-                                    <X className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
-                                  </div>
-                                ) : (
-                                  <div
-                                    className="w-8 h-8 md:w-10 md:h-10 rounded-md mb-1 border border-border/30"
-                                    style={{ backgroundColor: saunaColorSwatches[option.id].colorHsl }}
-                                  />
-                                )}
-                                <span className="font-medium text-center text-xs">
-                                  {t(`color.${option.id}`) !== `color.${option.id}`
-                                    ? t(`color.${option.id}`)
-                                    : option.name || saunaColorSwatches[option.id].nameFallback}
-                                </span>
-                                {option.price > 0 ? (
-                                  <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
-                                ) : (
-                                  <span className="text-xs text-muted-foreground">{t("included")}</span>
-                                )}
-                              </button>
-                            ))}
-                          </div>
-                          <Notice variant="info" className="mt-4">
-                            {t("config.colorNotice")}
-                          </Notice>
-                        </div>
-                      )}
-
-                      {/* LED osvetlenie */}
-                      {selectedComboType.hasLed && filteredLedOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.led")}
-                          </h3>
-                          <ScrollableRow>
-                            {filteredLedOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={comboConfig.led.includes(option.id) || (option.id === "none" && comboConfig.led.length === 0)}
-                                onClick={() => {
-                                  if (option.id === "none") {
-                                    setComboConfig((prev) => ({ ...prev, led: [] }));
-                                  } else {
-                                    setComboConfig((prev) => {
-                                      const newLeds = prev.led.includes(option.id)
-                                        ? prev.led.filter((l) => l !== option.id)
-                                        : [...prev.led.filter((l) => l !== "none"), option.id];
-                                      return { ...prev, led: newLeds.length ? newLeds : [] };
-                                    });
-                                  }
-                                }}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* Bluetooth */}
-                      {selectedComboType.hasBluetooth && saunaBluetoothOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.bluetooth")}
-                          </h3>
-                          <ScrollableRow>
-                            {saunaBluetoothOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={comboConfig.bluetooth === option.id}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, bluetooth: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* Saunová sada */}
-                      {selectedComboType.hasAccessoryKit && saunaAccessoryKitOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.accessories")}
-                          </h3>
-                          <Notice variant="info" className="mb-3 text-xs">{t("config.accessoryKitHint")}</Notice>
-                          <ScrollableRow>
-                            {saunaAccessoryKitOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={comboConfig.accessoryKit === option.id}
-                                onClick={() => setComboConfig((prev) => ({ ...prev, accessoryKit: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-                    </div>
-                  ) : productCategory === "sauna" && selectedSaunaType ? (
-                    <div className="space-y-4">
-                      {/* Typ dreva */}
-                      {selectedSaunaType.hasWoodType && selectedSaunaType.availableWoodTypes.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.woodType")} <span className="text-primary">*</span>
-                          </h3>
-                          <div className="grid grid-cols-2 gap-2 md:gap-3">
-                            {woodTypeOptionsForModel.map((option) => (
-                              <button
-                                key={option.id}
-                                onClick={() => setSaunaConfig((prev) => ({ ...prev, woodType: option.id }))}
-                                className={cn(
-                                  "flex flex-col items-center p-2 md:p-3 rounded-lg border-2 transition-all",
-                                  saunaConfig.woodType === option.id
-                                    ? "border-primary bg-primary/5"
-                                    : "border-border/50 hover:border-primary/50 bg-card/50",
-                                )}
-                              >
-                                <div className="w-10 h-10 md:w-14 md:h-14 rounded-md mb-1 md:mb-2 overflow-hidden">
-                                  <img src={option.image} alt={option.name} className="w-full h-full object-cover" />
-                                </div>
-                                <span className="font-medium text-center text-xs md:text-sm">
-                                  {option.id === "spruce" ? t("config.woodType.spruce") : t("config.woodType.thermo")}
-                                </span>
-                                {option.price > 0 ? (
-                                  <span className="text-[10px] md:text-xs text-primary">
-                                    +{option.price.toLocaleString()} €
-                                  </span>
-                                ) : (
-                                  <span className="text-[10px] md:text-xs text-muted-foreground">{t("included")}</span>
-                                )}
-                              </button>
-                            ))}
-                          </div>
-                          {selectedSaunaType.availableWoodTypes.length === 1 && (
-                            <p className="text-xs text-muted-foreground mt-2">
-                              {t("config.onlyWoodType").replace(
-                                "{woodType}",
-                                selectedSaunaType.availableWoodTypes[0] === "thermo"
-                                  ? t("config.woodType.thermo")
-                                  : t("config.woodType.spruce"),
-                              )}
-                            </p>
+                              </div>
+                            </div>
                           )}
-                        </div>
-                      )}
 
-                      {/* Typ ohrievača */}
-                      {selectedSaunaType.hasHeater && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.heater")} <span className="text-primary">*</span>
-                          </h3>
-                          <div className="grid grid-cols-3 gap-2 md:gap-3">
-                            {saunaHeaterTypes.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={saunaConfig.heaterType === option.id}
-                                onClick={() =>
-                                  setSaunaConfig((prev) => ({
-                                    ...prev,
-                                    heaterType: option.id,
-                                    heaterModel: "none", // Reset model pri zmene typu
-                                  }))
-                                }
-                                showImage={true}
-                              />
-                            ))}
-                          </div>
+                          {/* Thermo obklad */}
+                          {selectedComboType.hasThermoCladding && selectedComboType.thermoCladdingOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.thermoCladding")}
+                              </h3>
+                              <div className="grid grid-cols-2 gap-2 md:gap-3">
+                                {selectedComboType.thermoCladdingOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.thermoCladding === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, thermoCladding: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          )}
 
-                          {/* Výber konkrétneho modelu ohrievača - POVINNÉ */}
-                          {saunaConfig.heaterType === "electric" && (
-                            <div className="mt-4 p-4 rounded-xl bg-card/50 border border-primary/30">
-                              <h4 className="text-sm font-medium text-foreground mb-3">
-                                {t("config.selectHeaterModel")} <span className="text-primary">*</span>
-                              </h4>
-                              {saunaConfig.heaterModel === "none" && (
-                                <p className="text-xs text-amber-500 mb-3">{t("config.heaterModelRequired")}</p>
-                              )}
-                              <div className="grid grid-cols-1 gap-2">
-                                {electricHeaterModels.map((model) => (
+                          {/* Lavice */}
+                          {selectedComboType.hasBenchOptions && selectedComboType.benchOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.benches")}
+                              </h3>
+                              <div className="grid grid-cols-2 gap-2 md:gap-3">
+                                {selectedComboType.benchOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.bench === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, bench: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Bluetooth */}
+                          {selectedComboType.hasBluetooth && saunaBluetoothOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.bluetooth")}
+                              </h3>
+                              <ScrollableRow>
+                                {saunaBluetoothOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.bluetooth === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, bluetooth: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Saunová sada */}
+                          {selectedComboType.hasAccessoryKit && saunaAccessoryKitOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.accessories")}
+                              </h3>
+                              <Notice variant="info" className="mb-3 text-xs">{t("config.accessoryKitHint")}</Notice>
+                              <ScrollableRow>
+                                {saunaAccessoryKitOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.accessoryKit === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, accessoryKit: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Farba exteriéru */}
+                          {selectedComboType.hasColor && saunaColorOptionsTyped.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.color")}
+                              </h3>
+                              <p className="text-xs text-muted-foreground mb-3 italic">{t("config.colorHint")}</p>
+                              <div className="grid grid-cols-4 gap-2 md:gap-3">
+                                {saunaColorOptionsTyped.map((option) => (
                                   <button
-                                    key={model.id}
-                                    onClick={() => setSaunaConfig((prev) => ({ ...prev, heaterModel: model.id }))}
+                                    key={option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, color: option.id }))}
                                     className={cn(
-                                      "flex items-center justify-between p-3 rounded-lg border-2 transition-all text-left",
-                                      saunaConfig.heaterModel === model.id
+                                      "flex flex-col items-center p-1.5 md:p-2 rounded-lg border-2 transition-all",
+                                      comboConfig.color === option.id
                                         ? "border-primary bg-primary/5"
-                                        : "border-border/50 hover:border-primary/50 bg-card/30",
+                                        : "border-border/50 hover:border-primary/50 bg-card/50",
                                     )}
                                   >
-                                    <div className="flex items-center gap-3">
-                                      {saunaConfig.heaterModel === model.id && (
-                                        <Check className="w-4 h-4 text-primary" />
-                                      )}
-                                      <span className="font-medium text-sm">{model.name}</span>
-                                    </div>
-                                    {model.price > 0 ? (
-                                      <span className="text-sm text-primary">+{model.price.toLocaleString()} €</span>
+                                    {option.id === "none" ? (
+                                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-md bg-muted/50 flex items-center justify-center mb-1">
+                                        <X className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
+                                      </div>
+                                    ) : (
+                                      <div
+                                        className="w-8 h-8 md:w-10 md:h-10 rounded-md mb-1 border border-border/30"
+                                        style={{ backgroundColor: saunaColorSwatches[option.id].colorHsl }}
+                                      />
+                                    )}
+                                    <span className="font-medium text-center text-xs">
+                                      {t(`color.${option.id}`) !== `color.${option.id}`
+                                        ? t(`color.${option.id}`)
+                                        : option.name || saunaColorSwatches[option.id].nameFallback}
+                                    </span>
+                                    {option.price > 0 ? (
+                                      <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
                                     ) : (
                                       <span className="text-xs text-muted-foreground">{t("included")}</span>
                                     )}
                                   </button>
                                 ))}
                               </div>
+                              <Notice variant="info" className="mt-4">
+                                {t("config.colorNotice")}
+                              </Notice>
                             </div>
+                          )}
+
+                          {/* Tlačidlo Ďalej */}
+                          <Button
+                            variant="luxury"
+                            size="lg"
+                            className="w-full gap-2 mt-4"
+                            onClick={() => setComboStep(2)}
+                          >
+                            {language === "en" ? "Next: Hot Tub options" : "Ďalej: Možnosti kade"}
+                            <ChevronRight className="w-5 h-5" />
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* ========== KROK 2: KAĎA ========== */}
+                      {comboStep === 2 && (
+                        <div className="space-y-4">
+                          {/* Späť na saunu */}
+                          <button
+                            onClick={() => setComboStep(1)}
+                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group text-sm"
+                          >
+                            <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                            {language === "en" ? "Back to Sauna options" : "Späť na možnosti sauny"}
+                          </button>
+
+                          {/* Ohrievač kade */}
+                          {selectedComboType.hasHeater && selectedComboType.heaterOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.hottubHeater")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {selectedComboType.heaterOptions
+                                  .filter((o) => !o.id.startsWith("electric-"))
+                                  .map((option) => (
+                                    <OptionCard
+                                      key={option.id}
+                                      option={option}
+                                      isSelected={comboConfig.heater === option.id}
+                                      onClick={() => setComboConfig((prev) => ({ ...prev, heater: option.id }))}
+                                      showImage={!!option.image}
+                                    />
+                                  ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Elektrický ohrievač */}
+                          {selectedComboType.hasHeater &&
+                            selectedComboType.heaterOptions.filter((o) => o.id.startsWith("electric-")).length > 0 && (
+                              <div>
+                                <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                  {t("config.hottubElectricHeater")} <span className="text-primary">*</span>
+                                </h3>
+                                <ScrollableRow>
+                                  <OptionCard
+                                    option={{ id: "none", name: t("config.noHeater"), price: 0 }}
+                                    isSelected={comboConfig.electricHeater === "none"}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, electricHeater: "none" }))}
+                                  />
+                                  {selectedComboType.heaterOptions
+                                    .filter((o) => o.id.startsWith("electric-"))
+                                    .map((option) => (
+                                      <OptionCard
+                                        key={option.id}
+                                        option={option}
+                                        isSelected={comboConfig.electricHeater === option.id}
+                                        onClick={() => setComboConfig((prev) => ({ ...prev, electricHeater: option.id }))}
+                                        showImage={!!option.image}
+                                      />
+                                    ))}
+                                </ScrollableRow>
+                              </div>
+                            )}
+
+                          {/* Podvodné LED */}
+                          {selectedComboType.hasUnderwaterLed && selectedComboType.underwaterLedOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.underwaterLed")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {selectedComboType.underwaterLedOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.underwaterLed === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, underwaterLed: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* LED okolo kade */}
+                          {selectedComboType.hasExteriorLedHottub && selectedComboType.exteriorLedOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.hottubExteriorLed")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {selectedComboType.exteriorLedOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.exteriorLed === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, exteriorLed: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Hydro masáž */}
+                          {selectedComboType.hasHydroMassage && selectedComboType.hydroMassageOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.hydroMassage")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {selectedComboType.hydroMassageOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.hydroMassage === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, hydroMassage: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Kryt */}
+                          {selectedComboType.hasCover && selectedComboType.coverOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.cover")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {selectedComboType.coverOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.cover === option.id}
+                                    onClick={() =>
+                                      setComboConfig((prev) => ({
+                                        ...prev,
+                                        cover: option.id,
+                                        ...(option.id === "none" ? { coverColor: "none" } : {}),
+                                      }))
+                                    }
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Farba krytu */}
+                          {selectedComboType.hasCoverColor &&
+                            hotTubCoverColorOptions.length > 0 &&
+                            comboConfig.cover !== "none" && (
+                              <div>
+                                <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                  {t("config.coverColor")} <span className="text-primary">*</span>
+                                </h3>
+                                <ScrollableRow>
+                                  {hotTubCoverColorOptions.map((option) => (
+                                    <OptionCard
+                                      key={option.id}
+                                      option={option}
+                                      isSelected={comboConfig.coverColor === option.id}
+                                      onClick={() => setComboConfig((prev) => ({ ...prev, coverColor: option.id }))}
+                                      showImage={!!option.image}
+                                    />
+                                  ))}
+                                </ScrollableRow>
+                              </div>
+                            )}
+
+                          {/* Vzduchové bubliny */}
+                          {hotTubAirBubblesOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.airBubbles")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {hotTubAirBubblesOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.airBubbles === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, airBubbles: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Prúdový istič */}
+                          {hotTubDrainRelayOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.drainRelay")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {hotTubDrainRelayOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.drainRelay === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, drainRelay: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Pieskový filter */}
+                          {hotTubSandFilterOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.sandFilter")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {hotTubSandFilterOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.sandFilter === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, sandFilter: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Elektronický kontrolér */}
+                          {hotTubElectronicControllerOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.electronicController")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {hotTubElectronicControllerOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.electronicController === option.id}
+                                    onClick={() =>
+                                      setComboConfig((prev) => ({ ...prev, electronicController: option.id }))
+                                    }
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Teplomer */}
+                          {hotTubThermometerOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.thermometer")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {hotTubThermometerOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.thermometer === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, thermometer: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Bluetooth reproduktor */}
+                          {hotTubBluetoothSpeakerOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.bluetoothSpeaker")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {hotTubBluetoothSpeakerOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.bluetoothSpeaker === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, bluetoothSpeaker: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+
+                          {/* Hlavový vankúš */}
+                          {hotTubHeadCushionOptions.length > 0 && (
+                            <div>
+                              <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                                {t("config.headCushion")} <span className="text-primary">*</span>
+                              </h3>
+                              <ScrollableRow>
+                                {hotTubHeadCushionOptions.map((option) => (
+                                  <OptionCard
+                                    key={option.id}
+                                    option={option}
+                                    isSelected={comboConfig.headCushion === option.id}
+                                    onClick={() => setComboConfig((prev) => ({ ...prev, headCushion: option.id }))}
+                                    showImage={!!option.image}
+                                  />
+                                ))}
+                              </ScrollableRow>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                           )}
 
                           {saunaConfig.heaterType === "wood" && (
