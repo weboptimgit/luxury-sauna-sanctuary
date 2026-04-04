@@ -938,11 +938,13 @@ const Configurator = () => {
   };
 
   const metalBandsImages: Record<string, string> = {
+    "yes": metalBandsImage,
     "metal-bands": metalBandsImage,
     "metal-tightening-bands": metalBandsImage,
   };
 
   const thermoCladdingImages: Record<string, string> = {
+    "yes": thermoCladdingImage,
     "thermo-cladding": thermoCladdingImage,
     "thermo-wood-cladding": thermoCladdingImage,
   };
