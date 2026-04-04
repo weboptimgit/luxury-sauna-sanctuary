@@ -62,6 +62,7 @@ import metalBandsImage from "@/assets/metal-tightening-bands.jpg";
 import thermoCladdingImage from "@/assets/thermo-wood-cladding.jpg";
 import oneStoryBenches from "@/assets/one-story-benches.jpg";
 import twoStoryBenches from "@/assets/two-story-l-shaped-benches.jpg";
+import panoramicRoofWindow from "@/assets/panoramic-roof-window.png";
 import integratedHottubHeater from "@/assets/integrated-hottub-heater.jpg";
 import electricHeater3kw from "@/assets/electric-heater-3kw.jpeg";
 import electricHeater6kw from "@/assets/electric-heater-6kw.jpeg";
@@ -852,6 +853,13 @@ const Configurator = () => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
+  const windowImages: Record<string, string> = {
+    "panoramic": panoramicRoofWindow,
+    "panoramic-roof": panoramicRoofWindow,
+    "panoramic-window": panoramicRoofWindow,
+    "yes": panoramicRoofWindow,
+  };
+
 
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 1024px)");
@@ -1178,7 +1186,7 @@ const Configurator = () => {
         hasMetalBands: st.hasMetalBands ?? false,
         hasThermoCladding: st.hasThermoCladding ?? false,
         hasBenchOptions: st.hasBenchOptions ?? false,
-        windowOptions: toUIOptions(st.windowOptions ?? apiConfig.sauna.windowOptions),
+        windowOptions: toUIOptions(st.windowOptions ?? apiConfig.sauna.windowOptions, windowImages),
         mirrorFilmOptions: toUIOptions(st.mirrorFilmOptions ?? apiConfig.sauna.mirrorFilmOptions),
         metalBandsOptions: toUIOptions(st.metalBandsOptions ?? apiConfig.sauna.metalBandsOptions, metalBandsImages),
         thermoCladdingOptions: toUIOptions(st.thermoCladdingOptions ?? apiConfig.sauna.thermoCladdingOptions, thermoCladdingImages),
@@ -2972,6 +2980,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={saunaConfig.window === option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, window: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
@@ -2991,7 +3000,6 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={saunaConfig.mirror === option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, mirror: option.id }))}
-                                showImage={!!option.image}
                               />
                             ))}
                           </div>
