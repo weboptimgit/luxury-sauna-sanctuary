@@ -3033,6 +3033,26 @@ const Configurator = () => {
                         </div>
                       )}
 
+                      {/* LAVICE */}
+                      {selectedSaunaType?.hasBenchOptions && selectedSaunaType.benchOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.benches")}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-2 md:gap-3">
+                            {selectedSaunaType.benchOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={saunaConfig.bench === option.id}
+                                onClick={() => setSaunaConfig((prev) => ({ ...prev, bench: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
                       {/* Vonkajšie LED osvetlenie - iba pre ModulSaunu */}
                       {selectedSaunaType.hasExteriorLed && (
                         <div>
