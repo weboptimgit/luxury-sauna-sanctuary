@@ -1825,11 +1825,18 @@ const Configurator = () => {
       woodType: "spruce",
       color: "none",
       window: "none",
-      heater: "none",
-      electricHeater: "none",
+      heaterType: "none",
+      heaterModel: "none",
       led: [],
+      saunaExteriorLed: false,
       bluetooth: "none",
       accessoryKit: "none",
+      mirror: "none",
+      metal: "none",
+      thermoCladding: "none",
+      bench: "standard",
+      heater: "none",
+      electricHeater: "none",
       underwaterLed: "none",
       exteriorLed: "none",
       hydroMassage: "none",
@@ -1843,7 +1850,7 @@ const Configurator = () => {
       bluetoothSpeaker: "none",
       headCushion: "none",
     });
-    navigate(getConfigBasePath(), { replace: true });
+    setComboStep(1);
   };
 
   const goBackToSaunaTypes = () => {
