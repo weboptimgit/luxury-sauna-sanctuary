@@ -3015,6 +3015,7 @@ const Configurator = () => {
                                 option={option}
                                 isSelected={saunaConfig.thermoCladding === option.id}
                                 onClick={() => setSaunaConfig((prev) => ({ ...prev, thermoCladding: option.id }))}
+                                showImage={!!option.image}
                               />
                             ))}
                           </div>
