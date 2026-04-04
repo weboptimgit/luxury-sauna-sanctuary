@@ -1614,73 +1614,60 @@ const Configurator = () => {
 
     if (productCategory === "combo" && selectedComboType) {
       let total = selectedComboType.basePrice;
-      // Wood type price
       const currentComboApi = apiConfig?.comboTypes?.find((ct) => ct.id === selectedComboType.id);
+      
+      // Wood type price
       const woodPrice = currentComboApi?.woodTypePrices?.[comboConfig.woodType] ?? 0;
       total += woodPrice;
-      // Window
-      const windowPrice = selectedComboType.windowOptions.find((w) => w.id === comboConfig.window)?.price ?? 0;
-      total += windowPrice;
-      // Heater
-      const heaterPrice = selectedComboType.heaterOptions.find((h) => h.id === comboConfig.heater)?.price ?? 0;
-      total += heaterPrice;
-      const electricHeaterPrice =
-        selectedComboType.heaterOptions.find((h) => h.id === comboConfig.electricHeater)?.price ?? 0;
-      total += electricHeaterPrice;
-      // Other options from combo shared
-      const underwaterLedPrice =
-        selectedComboType.underwaterLedOptions.find((l) => l.id === comboConfig.underwaterLed)?.price ?? 0;
-      total += underwaterLedPrice;
-      const exteriorLedPrice2 =
-        selectedComboType.exteriorLedOptions.find((l) => l.id === comboConfig.exteriorLed)?.price ?? 0;
-      total += exteriorLedPrice2;
-      const hydroMassagePrice =
-        selectedComboType.hydroMassageOptions.find((h) => h.id === comboConfig.hydroMassage)?.price ?? 0;
-      total += hydroMassagePrice;
-      const coverPrice = selectedComboType.coverOptions.find((c) => c.id === comboConfig.cover)?.price ?? 0;
-      total += coverPrice;
-      const coverColorPrice =
-        apiConfig?.hottub?.coverColorOptions?.find((c) => c.id === comboConfig.coverColor)?.price ?? 0;
-      total += coverColorPrice;
-      const airBubblesPrice =
-        apiConfig?.hottub?.airBubblesOptions?.find((o) => o.id === comboConfig.airBubbles)?.price ?? 0;
-      total += airBubblesPrice;
-      const drainRelayPrice =
-        apiConfig?.hottub?.drainRelayOptions?.find((o) => o.id === comboConfig.drainRelay)?.price ?? 0;
-      total += drainRelayPrice;
-      const sandFilterPrice =
-        apiConfig?.hottub?.sandFilterOptions?.find((o) => o.id === comboConfig.sandFilter)?.price ?? 0;
-      total += sandFilterPrice;
-      const electronicControllerPrice =
-        apiConfig?.hottub?.electronicControllerOptions?.find((o) => o.id === comboConfig.electronicController)?.price ??
-        0;
-      total += electronicControllerPrice;
-      const thermometerPrice =
-        apiConfig?.hottub?.thermometerOptions?.find((o) => o.id === comboConfig.thermometer)?.price ?? 0;
-      total += thermometerPrice;
-      const bluetoothSpeakerPrice =
-        apiConfig?.hottub?.bluetoothSpeakerOptions?.find((o) => o.id === comboConfig.bluetoothSpeaker)?.price ?? 0;
-      total += bluetoothSpeakerPrice;
-      const headCushionPrice =
-        apiConfig?.hottub?.headCushionOptions?.find((o) => o.id === comboConfig.headCushion)?.price ?? 0;
-      total += headCushionPrice;
 
-      // Sauna-side options
+      // === Sauna-side ===
+      // Window
+      total += selectedComboType.windowOptions.find((w) => w.id === comboConfig.window)?.price ?? 0;
+      // Sauna heater type
+      total += apiConfig?.sauna?.heaterTypes?.find((h) => h.id === comboConfig.heaterType)?.price ?? 0;
+      // Sauna heater model
+      if (comboConfig.heaterType === "electric" && comboConfig.heaterModel !== "none") {
+        total += electricHeaterModels.find((m) => m.id === comboConfig.heaterModel)?.price ?? 0;
+      } else if (comboConfig.heaterType === "wood" && comboConfig.heaterModel !== "none") {
+        total += woodHeaterModels.find((m) => m.id === comboConfig.heaterModel)?.price ?? 0;
+      }
       // Color
-      const colorPrice = apiConfig?.sauna?.colorOptions?.find((o) => o.id === comboConfig.color)?.price ?? 0;
-      total += colorPrice;
-      // LED (multi-select like sauna)
+      total += apiConfig?.sauna?.colorOptions?.find((o) => o.id === comboConfig.color)?.price ?? 0;
+      // LED (multi-select)
       for (const ledId of comboConfig.led) {
         if (ledId === "none") continue;
-        const ledPrice = apiConfig?.sauna?.ledOptions?.find((o) => o.id === ledId)?.price ?? 0;
-        total += ledPrice;
+        total += apiConfig?.sauna?.ledOptions?.find((o) => o.id === ledId)?.price ?? 0;
       }
+      // Sauna exterior LED
+      if (comboConfig.saunaExteriorLed) total += exteriorLedPrice;
       // Bluetooth
-      const btPrice = apiConfig?.sauna?.bluetoothOptions?.find((o) => o.id === comboConfig.bluetooth)?.price ?? 0;
-      total += btPrice;
+      total += apiConfig?.sauna?.bluetoothOptions?.find((o) => o.id === comboConfig.bluetooth)?.price ?? 0;
       // Accessory Kit
-      const kitPrice = apiConfig?.sauna?.accessoryKitOptions?.find((o) => o.id === comboConfig.accessoryKit)?.price ?? 0;
-      total += kitPrice;
+      total += apiConfig?.sauna?.accessoryKitOptions?.find((o) => o.id === comboConfig.accessoryKit)?.price ?? 0;
+      // Mirror film
+      total += selectedComboType.mirrorFilmOptions.find((o) => o.id === comboConfig.mirror)?.price ?? 0;
+      // Metal bands
+      total += selectedComboType.metalBandsOptions.find((o) => o.id === comboConfig.metal)?.price ?? 0;
+      // Thermo cladding
+      total += selectedComboType.thermoCladdingOptions.find((o) => o.id === comboConfig.thermoCladding)?.price ?? 0;
+      // Bench
+      total += selectedComboType.benchOptions.find((o) => o.id === comboConfig.bench)?.price ?? 0;
+
+      // === Hottub-side ===
+      total += selectedComboType.heaterOptions.find((h) => h.id === comboConfig.heater)?.price ?? 0;
+      total += selectedComboType.heaterOptions.find((h) => h.id === comboConfig.electricHeater)?.price ?? 0;
+      total += selectedComboType.underwaterLedOptions.find((l) => l.id === comboConfig.underwaterLed)?.price ?? 0;
+      total += selectedComboType.exteriorLedOptions.find((l) => l.id === comboConfig.exteriorLed)?.price ?? 0;
+      total += selectedComboType.hydroMassageOptions.find((h) => h.id === comboConfig.hydroMassage)?.price ?? 0;
+      total += selectedComboType.coverOptions.find((c) => c.id === comboConfig.cover)?.price ?? 0;
+      total += apiConfig?.hottub?.coverColorOptions?.find((c) => c.id === comboConfig.coverColor)?.price ?? 0;
+      total += apiConfig?.hottub?.airBubblesOptions?.find((o) => o.id === comboConfig.airBubbles)?.price ?? 0;
+      total += apiConfig?.hottub?.drainRelayOptions?.find((o) => o.id === comboConfig.drainRelay)?.price ?? 0;
+      total += apiConfig?.hottub?.sandFilterOptions?.find((o) => o.id === comboConfig.sandFilter)?.price ?? 0;
+      total += apiConfig?.hottub?.electronicControllerOptions?.find((o) => o.id === comboConfig.electronicController)?.price ?? 0;
+      total += apiConfig?.hottub?.thermometerOptions?.find((o) => o.id === comboConfig.thermometer)?.price ?? 0;
+      total += apiConfig?.hottub?.bluetoothSpeakerOptions?.find((o) => o.id === comboConfig.bluetoothSpeaker)?.price ?? 0;
+      total += apiConfig?.hottub?.headCushionOptions?.find((o) => o.id === comboConfig.headCushion)?.price ?? 0;
 
       return total;
     }
