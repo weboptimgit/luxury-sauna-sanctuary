@@ -803,7 +803,7 @@ const Configurator = () => {
     mirror: "none",
     metal: "none",
     thermoCladding: "none",
-    bench: "none",
+    bench: "standard",
   });
 
   // Kaďa konfigurácia
@@ -1728,7 +1728,7 @@ const Configurator = () => {
       mirror: "none",
       metal: "none",
       thermoCladding: "none",
-      bench: "none",
+      bench: "standard",
     });
     setHotTubConfig({
       size: "none",
@@ -1785,7 +1785,7 @@ const Configurator = () => {
       mirror: "none",
       metal: "none",
       thermoCladding: "none",
-      bench: "none",
+      bench: "standard",
     });
     setCurrentImageIndex(0);
     navigate(getConfigBasePath(), { replace: true });
