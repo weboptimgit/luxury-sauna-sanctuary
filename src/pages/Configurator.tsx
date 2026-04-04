@@ -598,11 +598,13 @@ type ApiSaunaType = {
   hasMirrorFilm: boolean;
   hasMetalBands: boolean;
   hasThermoCladding: boolean;
+  hasBenchOptions: boolean;
   allowedLedOptions?: string[];
   windowOptions?: ApiOptionSource;
   mirrorFilmOptions?: ApiOptionSource;
   metalBandsOptions?: ApiOptionSource;
   thermoCladdingOptions?: ApiOptionSource;
+  benchOptions?: ApiOptionSource;
 };
 
 type ApiHotTubType = {
