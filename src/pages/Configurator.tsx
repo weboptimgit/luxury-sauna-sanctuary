@@ -557,6 +557,22 @@ type ApiComboType = {
   woodTypePrices?: Record<WoodType, number>;
   hasWoodType: boolean;
   windowOptions?: ApiOption[];
+  // Sauna-side
+  hasHeaterType?: boolean;
+  hasColor?: boolean;
+  hasLed?: boolean;
+  hasExteriorLed?: boolean;
+  hasBluetooth?: boolean;
+  hasAccessoryKit?: boolean;
+  hasMirrorFilm?: boolean;
+  hasMetalBands?: boolean;
+  hasThermoCladding?: boolean;
+  hasBenchOptions?: boolean;
+  mirrorFilmOptions?: ApiOptionSource;
+  metalBandsOptions?: ApiOptionSource;
+  thermoCladdingOptions?: ApiOptionSource;
+  benchOptions?: ApiOptionSource;
+  // Hottub-side
   hasHeater?: boolean;
   heaterOptions?: ApiOption[];
   hasCover?: boolean;
@@ -564,14 +580,10 @@ type ApiComboType = {
   hasCoverColor?: boolean;
   hasUnderwaterLed?: boolean;
   underwaterLedOptions?: ApiOption[];
-  hasExteriorLed?: boolean;
+  hasExteriorLedHottub?: boolean;
   exteriorLedOptions?: ApiOption[];
   hasHydroMassage?: boolean;
   hydroMassageOptions?: ApiOption[];
-  hasColor?: boolean;
-  hasLed?: boolean;
-  hasBluetooth?: boolean;
-  hasAccessoryKit?: boolean;
 };
 
 type ApiOption = {
