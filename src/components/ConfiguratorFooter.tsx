@@ -11,7 +11,7 @@ const ConfiguratorFooter = () => {
       ? [
           { label: t("footer.sauny"), href: `${baseUrl}/c/saunas/` },
           { label: t("footer.kade"), href: `${baseUrl}/c/hot-tubs/` },
-          { label: t("footer.slovnik"), href: `${baseUrl}/glossary/` },
+          { label: t("footer.slovnik"), href: `${baseUrl}/materials-and-technology/` },
           { label: t("footer.faq"), href: `${baseUrl}/faq/` },
           { label: t("footer.konfigurator"), href: `${baseUrl}/configurator/` },
           { label: t("footer.contact"), href: `${baseUrl}/contact/` },
@@ -19,7 +19,7 @@ const ConfiguratorFooter = () => {
       : [
           { label: t("footer.sauny"), href: `${baseUrl}/k/sauny/` },
           { label: t("footer.kade"), href: `${baseUrl}/k/kade/` },
-          { label: t("footer.slovnik"), href: `${baseUrl}/slovnik-pojmov/` },
+          { label: t("footer.slovnik"), href: `${baseUrl}/materialy-a-technologie/` },
           { label: t("footer.faq"), href: `${baseUrl}/faq/` },
           { label: t("footer.konfigurator"), href: `${baseUrl}/konfigurator/` },
           { label: t("footer.contact"), href: `${baseUrl}/kontakt/` },
