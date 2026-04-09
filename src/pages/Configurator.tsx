@@ -2108,7 +2108,7 @@ const Configurator = () => {
               >
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
-                    src={acrylicRoundGallery1}
+                    src={acrylicRoundMain}
                     alt={t("config.hottub")}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
