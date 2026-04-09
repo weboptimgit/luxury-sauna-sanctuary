@@ -26,7 +26,7 @@ import { Notice } from "@/components/ui/notice";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
-import saunaBarrel from "@/assets/2M-Round-sauna-1-2-700x700.jpg";
+import saunaBarrel from "@/assets/modulsauna-gallery-1.jpg";
 import saunaCube from "@/assets/Frame-sauna-210×210-700x700.jpg";
 import saunaTraditional from "@/assets/ModulSauna-240×250-–-Thermo-wood-33-700x700.jpg";
 import saunaInterior from "@/assets/LUX-sauna-245×300-14-700x700.jpg";
