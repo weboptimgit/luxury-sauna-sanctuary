@@ -2075,7 +2075,7 @@ const Configurator = () => {
               >
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
-                    src={saunaBarrel}
+                    src={saunaCube}
                     alt="Sauna"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
