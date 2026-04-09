@@ -480,7 +480,7 @@ const saunaTypePresets: Record<string, SaunaTypePreset> = {
   "arctic-shell-glass": { image: arcticShellGlassGallery0 },
   "arctic-cabin": { image: arcticCabinGallery0 },
   "nordic-barrel": { image: nordicBarrelThumbnail },
-  "forest-barrel": { image: saunaBarrel },
+  "forest-barrel": { image: round2m1Mahagon },
   "nordic-harmony": { image: saunaHarmony },
   "arctic-pod": { image: arcticPodGallery0 },
 };
