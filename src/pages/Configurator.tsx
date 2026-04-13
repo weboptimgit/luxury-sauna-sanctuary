@@ -1436,6 +1436,9 @@ const Configurator = () => {
     if (matchedSauna) {
       setProductCategory("sauna");
       setSelectedSaunaType(matchedSauna);
+      if (matchedSauna.availableWoodTypes.length > 0) {
+        setSaunaConfig((prev) => ({ ...prev, woodType: matchedSauna.availableWoodTypes[0] }));
+      }
       hasAppliedSlug.current = true;
       return;
     }
@@ -1458,7 +1461,7 @@ const Configurator = () => {
     if (matchedCombo) {
       setProductCategory("combo");
       setSelectedComboType(matchedCombo);
-      if (matchedCombo.availableWoodTypes.length === 1) {
+      if (matchedCombo.availableWoodTypes.length > 0) {
         setComboConfig((prev) => ({ ...prev, woodType: matchedCombo.availableWoodTypes[0] }));
       }
       hasAppliedSlug.current = true;
@@ -1475,6 +1478,9 @@ const Configurator = () => {
     (saunaType: SaunaType) => {
       setSelectedSaunaType(saunaType);
       setProductCategory("sauna");
+      if (saunaType.availableWoodTypes.length > 0) {
+        setSaunaConfig((prev) => ({ ...prev, woodType: saunaType.availableWoodTypes[0] }));
+      }
       const basePath = getConfigBasePath();
       navigate(`${basePath}/${saunaType.id}`, { replace: true });
     },
@@ -1501,10 +1507,8 @@ const Configurator = () => {
     (comboType: ComboType) => {
       setSelectedComboType(comboType);
       setProductCategory("combo");
-      if (comboType.availableWoodTypes.length === 1) {
+      if (comboType.availableWoodTypes.length > 0) {
         setComboConfig((prev) => ({ ...prev, woodType: comboType.availableWoodTypes[0] }));
-      } else {
-        setComboConfig((prev) => ({ ...prev, woodType: "spruce" as WoodType }));
       }
       const basePath = getConfigBasePath();
       navigate(`${basePath}/${comboType.id}`, { replace: true });
