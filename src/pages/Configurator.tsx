@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +12,7 @@ import {
   Loader2,
   X,
   Ruler,
+  ArrowUpDown,
   Flame,
   Lightbulb,
   Bluetooth,
@@ -805,6 +807,7 @@ const Configurator = () => {
   const [selectedSaunaType, setSelectedSaunaType] = useState<SaunaType | null>(null);
   const [selectedHotTubType, setSelectedHotTubType] = useState<HotTubType | null>(null);
   const [selectedComboType, setSelectedComboType] = useState<ComboType | null>(null);
+  const [sortOrder, setSortOrder] = useState<"price-asc" | "price-desc" | "name-asc">("price-asc");
 
   const metaTitle = useMemo(() => {
     const base = language === "en" ? "LuxuRelax | Configurator" : "LuxuRelax | Konfigurátor";
