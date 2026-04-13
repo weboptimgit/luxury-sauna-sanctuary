@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +12,7 @@ import {
   Loader2,
   X,
   Ruler,
+  ArrowUpDown,
   Flame,
   Lightbulb,
   Bluetooth,
@@ -805,6 +807,7 @@ const Configurator = () => {
   const [selectedSaunaType, setSelectedSaunaType] = useState<SaunaType | null>(null);
   const [selectedHotTubType, setSelectedHotTubType] = useState<HotTubType | null>(null);
   const [selectedComboType, setSelectedComboType] = useState<ComboType | null>(null);
+  const [sortOrder, setSortOrder] = useState<"price-asc" | "price-desc" | "name-asc">("price-asc");
 
   const metaTitle = useMemo(() => {
     const base = language === "en" ? "LuxuRelax | Configurator" : "LuxuRelax | Konfigurátor";
@@ -2212,8 +2215,37 @@ const Configurator = () => {
               <p className="text-muted-foreground text-lg">{t("config.saunaSelection.subtitle")}</p>
             </div>
 
+            {/* Sort filter */}
+            <div className="flex items-center justify-end gap-2 max-w-6xl mx-auto mb-6">
+              <ArrowUpDown className="w-4 h-4 text-muted-foreground" />
+              <div className="flex items-center gap-1 bg-card/50 border border-border/50 rounded-lg p-1">
+                {([
+                  { value: "price-asc", label: language === "sk" ? "Najlacnejšie" : "Cheapest" },
+                  { value: "price-desc", label: language === "sk" ? "Najdrahšie" : "Most expensive" },
+                  { value: "name-asc", label: language === "sk" ? "Názov A-Z" : "Name A-Z" },
+                ] as const).map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setSortOrder(opt.value)}
+                    className={cn(
+                      "px-3 py-1.5 text-xs font-medium rounded-md transition-all",
+                      sortOrder === opt.value
+                        ? "bg-primary/20 text-primary border border-primary/30"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {saunaTypesUI.map((sauna) => (
+              {[...saunaTypesUI].sort((a, b) => {
+                if (sortOrder === "price-asc") return a.basePrice - b.basePrice;
+                if (sortOrder === "price-desc") return b.basePrice - a.basePrice;
+                return a.name.localeCompare(b.name);
+              }).map((sauna) => (
                 <button
                   key={sauna.id}
                   onClick={() => {
@@ -2342,8 +2374,37 @@ const Configurator = () => {
               <p className="text-muted-foreground text-lg">{t("config.hottubSelection.subtitle")}</p>
             </div>
 
+            {/* Sort filter */}
+            <div className="flex items-center justify-end gap-2 max-w-6xl mx-auto mb-6">
+              <ArrowUpDown className="w-4 h-4 text-muted-foreground" />
+              <div className="flex items-center gap-1 bg-card/50 border border-border/50 rounded-lg p-1">
+                {([
+                  { value: "price-asc", label: language === "sk" ? "Najlacnejšie" : "Cheapest" },
+                  { value: "price-desc", label: language === "sk" ? "Najdrahšie" : "Most expensive" },
+                  { value: "name-asc", label: language === "sk" ? "Názov A-Z" : "Name A-Z" },
+                ] as const).map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setSortOrder(opt.value)}
+                    className={cn(
+                      "px-3 py-1.5 text-xs font-medium rounded-md transition-all",
+                      sortOrder === opt.value
+                        ? "bg-primary/20 text-primary border border-primary/30"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 max-w-6xl mx-auto">
-              {hottubTypesUI.map((ht) => (
+              {[...hottubTypesUI].sort((a, b) => {
+                if (sortOrder === "price-asc") return a.basePrice - b.basePrice;
+                if (sortOrder === "price-desc") return b.basePrice - a.basePrice;
+                return a.name.localeCompare(b.name);
+              }).map((ht) => (
                 <button
                   key={ht.id}
                   onClick={() => {
