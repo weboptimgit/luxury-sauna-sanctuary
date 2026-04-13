@@ -2131,8 +2131,8 @@ const Configurator = () => {
                 </div>
               </button>
 
-              {/* Kombinácia - temporarily hidden */}
-              {comboTypesUI.length > 0 && (
+              {/* Kombinácia - skrytá kým nebude hotová */}
+              {false && comboTypesUI.length > 0 && (
                 <button
                   onClick={() => {
                     setProductCategory("combo");
