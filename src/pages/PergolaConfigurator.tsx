@@ -194,6 +194,12 @@ export default function PergolaConfigurator() {
   }, [config, areaM2, postLayout]);
 
   const colorObj = COLORS.find((c) => c.id === config.color)!;
+  const ralPicked = config.color === "ral" ? findRal(config.ralCode) : undefined;
+  // Display name & hex respect RAL selection when color === "ral"
+  const colorDisplayName = ralPicked
+    ? `${ralPicked.code} – ${ralPicked.name}`
+    : colorObj.name;
+  const colorDisplayHex = ralPicked ? ralPicked.hex : colorObj.hex;
   const roofObj = ROOF_TYPES.find((r) => r.id === config.roof)!;
   const transObj = TRANSPARENCIES.find((t) => t.id === config.transparency)!;
 
