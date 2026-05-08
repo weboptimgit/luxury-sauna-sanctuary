@@ -2139,6 +2139,38 @@ const Configurator = () => {
                 </div>
               </button>
 
+              {/* Pergola */}
+              <Link
+                to={language === "en" ? "/pergola-configurator" : "/konfigurator-pergoly"}
+                className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50 shadow-xl"
+              >
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={pergolaMain}
+                    alt="Pergola"
+                    loading="lazy"
+                    width={1024}
+                    height={768}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <h2 className="font-display text-4xl font-bold text-white mb-3 drop-shadow-lg">
+                    {language === "en" ? "Pergola" : "Pergola"}
+                  </h2>
+                  <p className="text-white/90 mb-4 text-base leading-relaxed drop-shadow-md">
+                    {language === "en"
+                      ? "Design your premium bioclimatic pergola — dimensions, color, roof and lighting."
+                      : "Navrhnite si prémiovú bioklimatickú pergolu — rozmery, farba, strecha a osvetlenie."}
+                  </p>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
+                    <span>{language === "en" ? "Configure" : "Konfigurovať"}</span>
+                    <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </div>
+              </Link>
+
               {/* Kombinácia - skrytá kým nebude hotová */}
               {false && comboTypesUI.length > 0 && (
                 <button
