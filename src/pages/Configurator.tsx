@@ -176,6 +176,7 @@ import frameSaunaGallery8 from "@/assets/frame-sauna-gallery-8.jpg";
 import frameSaunaGallery9 from "@/assets/frame-sauna-gallery-9.jpg";
 import frameSaunaGallery10 from "@/assets/frame-sauna-gallery-10.jpg";
 import modulsaunaGallery1 from "@/assets/modulsauna-gallery-1.jpg";
+import pergolaMain from "@/assets/pergola-main.jpg";
 import modulsaunaGallery2 from "@/assets/modulsauna-gallery-2.jpg";
 import modulsaunaGallery3 from "@/assets/modulsauna-gallery-3.jpg";
 import modulsaunaGallery4 from "@/assets/modulsauna-gallery-4.jpg";
