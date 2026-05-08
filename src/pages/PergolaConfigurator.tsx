@@ -764,16 +764,64 @@ function PergolaPreview({
               {/* Roof slab (glass / polycarbonate) */}
               <polygon
                 points={`${A1[0]},${A1[1]} ${B1[0]},${B1[1]} ${C1[0]},${C1[1]} ${D1[0]},${D1[1]}`}
-                fill="url(#pergola-glass)"
+                fill={roofFill}
                 stroke={frameColor}
                 strokeWidth={3}
               />
-              {/* Roof slats */}
-              <g stroke={frameColor} strokeWidth={1} opacity={0.55}>
+              {/* Roof slats – tlmené pre mliečne sklo */}
+              <g stroke={frameColor} strokeWidth={1} opacity={slatsOpacity}>
                 {slats.map((d, i) => (
                   <path key={i} d={d} />
                 ))}
               </g>
+              {/* IZO sklo – druhá vrstva (dvojsklo) jemne posunutá nahor */}
+              {isIzo && (() => {
+                const off = Math.max(2, H * 0.012);
+                const a = iso(0, 0, H + off);
+                const b = iso(W, 0, H + off);
+                const cc = iso(W, D, H + off);
+                const dd = iso(0, D, H + off);
+                return (
+                  <polygon
+                    points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${cc[0]},${cc[1]} ${dd[0]},${dd[1]}`}
+                    fill="url(#roof-izo)"
+                    stroke={frameColor}
+                    strokeWidth={1.5}
+                    opacity={0.85}
+                  />
+                );
+              })()}
+
+              {/* LED – teplé bodové svetlá pod prednou hranou strechy + difúzne podsvietenie */}
+              {config.led && (() => {
+                const lights: Array<readonly [number, number]> = [];
+                const count = Math.max(4, Math.round(W / 80));
+                for (let i = 1; i <= count; i++) {
+                  const x = (i / (count + 1)) * W;
+                  lights.push(iso(x, 0, H - 4));
+                }
+                // Difúzne podsvietenie pod celou strechou
+                const cTop = iso(W / 2, D / 2, H - 6);
+                const radius = Math.max((W + D) * 0.12 * SCALE, 60);
+                return (
+                  <g>
+                    <ellipse
+                      cx={cTop[0]}
+                      cy={cTop[1] + 6}
+                      rx={radius * 1.4}
+                      ry={radius * 0.45}
+                      fill="url(#pergola-led-glow)"
+                      style={{ mixBlendMode: "screen" }}
+                    />
+                    {lights.map(([x, y], i) => (
+                      <g key={`led-${i}`}>
+                        <circle cx={x} cy={y} r={10} fill="url(#pergola-led-spot)" style={{ mixBlendMode: "screen" }} />
+                        <circle cx={x} cy={y} r={1.6} fill="rgba(255,245,210,1)" />
+                      </g>
+                    ))}
+                  </g>
+                );
+              })()}
 
               {/* Reinforcement beam under front edge of roof (if required) */}
               {postLayout.reinforcement && (() => {
