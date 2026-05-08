@@ -49,9 +49,26 @@ function luxurelax_pergola_pricing() {
             'milky' => 'Mliečne',
             'clear' => 'Číre',
         ],
-        'mounting_price' => 850,
-        'led_price'      => 420,
+        'mounting_price'        => 850,
+        'led_price'             => 420,
+        'reinforcement_price'   => 180,  // EUR – výstuha pri šírkach v hraničnom pásme
+        'extra_post_price'      => 220,  // EUR za každý stĺp navyše nad 2 základné
     ];
+}
+
+/**
+ * Stĺpová logika podľa technickej tabuľky (musí byť identické s frontendom!).
+ *  ≤ 506 cm  → 2 stĺpy
+ *  ≤ 606 cm  → 2 stĺpy + výstuha
+ *  ≤ 906 cm  → 3 stĺpy
+ *  > 906 cm  → 4 stĺpy
+ */
+function luxurelax_pergola_compute_post_layout($width_cm) {
+    $w = (int) $width_cm;
+    if ($w <= 506) return ['posts' => 2, 'reinforcement' => false];
+    if ($w <= 606) return ['posts' => 2, 'reinforcement' => true];
+    if ($w <= 906) return ['posts' => 3, 'reinforcement' => false];
+    return ['posts' => 4, 'reinforcement' => false];
 }
 
 // =====================================================================
@@ -124,12 +141,19 @@ function luxurelax_pergola_calculate_price($cfg) {
     if (!empty($cfg['mounting'])) $price += $p['mounting_price'];
     if (!empty($cfg['led']))      $price += $p['led_price'];
 
+    $post_layout = luxurelax_pergola_compute_post_layout($width);
+    $extra_posts = max(0, $post_layout['posts'] - 2);
+    if ($extra_posts > 0)               $price += $extra_posts * $p['extra_post_price'];
+    if ($post_layout['reinforcement'])  $price += $p['reinforcement_price'];
+
     return [
         'price'        => round($price),
         'area_m2'      => round($area, 2),
         'color_label'  => $p['colors'][$color_key]['label'],
         'roof_label'   => $p['roofs'][$roof_key]['label'],
         'trans_label'  => $p['transparencies'][$trans_key],
+        'posts'        => $post_layout['posts'],
+        'reinforcement'=> $post_layout['reinforcement'],
         'normalized'   => [
             'width'        => $width,
             'depth'        => $depth,
@@ -139,6 +163,8 @@ function luxurelax_pergola_calculate_price($cfg) {
             'transparency' => $trans_key,
             'mounting'     => !empty($cfg['mounting']),
             'led'          => !empty($cfg['led']),
+            'posts'        => $post_layout['posts'],
+            'reinforcement'=> $post_layout['reinforcement'],
         ],
     ];
 }
@@ -316,6 +342,7 @@ function luxurelax_pergola_handle_add_to_cart(WP_REST_Request $request) {
         'Farba'          => $calc['color_label'],
         'Strecha'        => $calc['roof_label'],
         'Priehľadnosť'   => $calc['trans_label'],
+        'Stĺpy'          => $calc['posts'] . '× stĺp' . ($calc['reinforcement'] ? ' + výztuha' : ''),
         'Montáž'         => $cfg_n['mounting'] ? 'Áno' : 'Nie',
         'LED'            => $cfg_n['led'] ? 'Áno' : 'Nie',
     ];
