@@ -256,3 +256,79 @@ add_action('woocommerce_checkout_create_order_line_item', function ($item, $cart
         $item->set_total($values['pergola_price']);
     }
 }, 10, 3);
+
+// =====================================================================
+// 5) WooCommerce – Add to Cart endpoint
+//     Pridá pergolu s kompletnou konfiguráciou priamo do košíka
+//     a vráti URL na košík (kde môže zákazník pokračovať v objednávke).
+// =====================================================================
+function luxurelax_pergola_handle_add_to_cart(WP_REST_Request $request) {
+    if (!class_exists('WooCommerce')) {
+        return new WP_REST_Response(['error' => 'WooCommerce is not active'], 500);
+    }
+    if (!defined('LUXURELAX_PERGOLA_PRODUCT_ID') || (int) LUXURELAX_PERGOLA_PRODUCT_ID <= 0) {
+        return new WP_REST_Response(['error' => 'Product ID is not configured'], 500);
+    }
+
+    $body = $request->get_json_params();
+    if (!is_array($body)) {
+        return new WP_REST_Response(['error' => 'Invalid payload'], 400);
+    }
+
+    $cfg  = $body['config'] ?? [];
+    $calc = luxurelax_pergola_calculate_price($cfg);
+
+    // Inicializuj session/košík ak ešte neexistuje (pri REST volaní).
+    if (function_exists('WC') && WC()) {
+        if (null === WC()->session) {
+            WC()->initialize_session();
+        }
+        if (null === WC()->cart) {
+            WC()->initialize_cart();
+        }
+    }
+
+    $product_id = (int) LUXURELAX_PERGOLA_PRODUCT_ID;
+    $cfg_n      = $calc['normalized'];
+
+    // Pripravíme čitateľnú konfiguráciu pre meta (zobrazí sa v košíku/objednávke).
+    $pergola_config = [
+        'Rozmery'        => "{$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
+        'Plocha strechy' => "{$calc['area_m2']} m²",
+        'Farba'          => $calc['color_label'],
+        'Strecha'        => $calc['roof_label'],
+        'Priehľadnosť'   => $calc['trans_label'],
+        'Montáž'         => $cfg_n['mounting'] ? 'Áno' : 'Nie',
+        'LED'            => $cfg_n['led'] ? 'Áno' : 'Nie',
+    ];
+
+    $cart_item_data = [
+        'pergola_config' => $pergola_config,
+        'pergola_price'  => (float) $calc['price'],
+        // Unique key zaručí, že každá konfigurácia je vlastný riadok v košíku.
+        'unique_key'     => md5(microtime() . wp_rand()),
+    ];
+
+    $added = WC()->cart->add_to_cart($product_id, 1, 0, [], $cart_item_data);
+    if (!$added) {
+        return new WP_REST_Response(['error' => 'Could not add to cart'], 500);
+    }
+
+    // Prepočítaj cenu položky podľa konfigurácie.
+    add_action('woocommerce_before_calculate_totals', function ($cart) {
+        if (is_admin() && !defined('DOING_AJAX')) return;
+        foreach ($cart->get_cart() as $cart_item) {
+            if (!empty($cart_item['pergola_price'])) {
+                $cart_item['data']->set_price((float) $cart_item['pergola_price']);
+            }
+        }
+    }, 20, 1);
+
+    WC()->cart->calculate_totals();
+
+    return new WP_REST_Response([
+        'success'  => true,
+        'price'    => $calc['price'],
+        'cart_url' => wc_get_cart_url(),
+    ], 200);
+}
