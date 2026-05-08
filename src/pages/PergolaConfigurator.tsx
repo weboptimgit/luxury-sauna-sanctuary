@@ -570,14 +570,15 @@ function PergolaPreview({
 
   // Center the projected pergola inside the viewBox.
   // Iso x-range: [-D*cos30 .. W*cos30] → midpoint = (W-D)*cos30/2
-  // Iso vertical extent: front-foot at 0, roof-back at (W+D)*sin30 - H (negative on screen)
+  // Iso vertical extent on screen: ground-front at +(0)*sin30, ground-back at -(W+D)*sin30, roof above by H
   const ox = VB_W / 2 - ((W - D) * cos30 * SCALE) / 2;
-  const oy = VB_H / 2 + (((W + D) * sin30 - H) * SCALE) / 2;
+  const oy = VB_H / 2 + (((W + D) * sin30 + H) * SCALE) / 2 - H * SCALE;
 
   // Iso projection helper: (x along width, y along depth, z up) -> screen
+  // Higher z must go UP on screen → subtract z. Larger (x+y) is further back → also up.
   const iso = (x: number, y: number, z: number) => {
     const sx = ox + (x - y) * cos30 * SCALE;
-    const sy = oy - ((x + y) * sin30 - z) * SCALE;
+    const sy = oy - ((x + y) * sin30 + z) * SCALE;
     return [sx, sy] as const;
   };
 
