@@ -280,6 +280,51 @@ export default function PergolaConfigurator() {
     }
   };
 
+  const addToCart = async () => {
+    setAddingToCart(true);
+    try {
+      const endpoint =
+        (import.meta.env.VITE_PERGOLA_CART_URL as string | undefined) ||
+        "https://www.luxurelax.sk/wp-json/luxurelax-pergola/v1/add-to-cart";
+
+      const payload = {
+        config: {
+          ...config,
+          colorName: colorObj.name,
+          roofName: roofObj.name,
+          transparencyName: transObj.name,
+          areaM2: Number(areaM2.toFixed(2)),
+          posts: postLayout.posts,
+          reinforcement: postLayout.reinforcement,
+        },
+        price,
+        currency: "EUR",
+      };
+
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Nepodarilo sa pridať do košíka");
+      const data = await res.json().catch(() => ({} as { cart_url?: string }));
+      const cartUrl =
+        data?.cart_url ||
+        (window.location.hostname.endsWith(".com")
+          ? "https://www.luxurelax.com/cart/"
+          : "https://www.luxurelax.sk/kosik/");
+      window.location.href = cartUrl;
+    } catch (err) {
+      toast({
+        title: "Chyba",
+        description: (err as Error).message,
+        variant: "destructive",
+      });
+      setAddingToCart(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <ConfiguratorHeader />
