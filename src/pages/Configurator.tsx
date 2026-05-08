@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Check,
@@ -176,6 +176,7 @@ import frameSaunaGallery8 from "@/assets/frame-sauna-gallery-8.jpg";
 import frameSaunaGallery9 from "@/assets/frame-sauna-gallery-9.jpg";
 import frameSaunaGallery10 from "@/assets/frame-sauna-gallery-10.jpg";
 import modulsaunaGallery1 from "@/assets/modulsauna-gallery-1.jpg";
+import pergolaMain from "@/assets/pergola-main.jpg";
 import modulsaunaGallery2 from "@/assets/modulsauna-gallery-2.jpg";
 import modulsaunaGallery3 from "@/assets/modulsauna-gallery-3.jpg";
 import modulsaunaGallery4 from "@/assets/modulsauna-gallery-4.jpg";
@@ -2071,7 +2072,7 @@ const Configurator = () => {
               <p className="text-muted-foreground text-lg">{t("config.category.subtitle")}</p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {/* Sauna */}
               <button
                 onClick={() => {
@@ -2137,6 +2138,38 @@ const Configurator = () => {
                   </div>
                 </div>
               </button>
+
+              {/* Pergola */}
+              <Link
+                to={language === "en" ? "/pergola-configurator" : "/konfigurator-pergoly"}
+                className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50 shadow-xl"
+              >
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={pergolaMain}
+                    alt="Pergola"
+                    loading="lazy"
+                    width={1024}
+                    height={768}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <h2 className="font-display text-4xl font-bold text-white mb-3 drop-shadow-lg">
+                    {language === "en" ? "Pergola" : "Pergola"}
+                  </h2>
+                  <p className="text-white/90 mb-4 text-base leading-relaxed drop-shadow-md">
+                    {language === "en"
+                      ? "Design your premium bioclimatic pergola — dimensions, color, roof and lighting."
+                      : "Navrhnite si prémiovú bioklimatickú pergolu — rozmery, farba, strecha a osvetlenie."}
+                  </p>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
+                    <span>{language === "en" ? "Configure" : "Konfigurovať"}</span>
+                    <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </div>
+              </Link>
 
               {/* Kombinácia - skrytá kým nebude hotová */}
               {false && comboTypesUI.length > 0 && (
