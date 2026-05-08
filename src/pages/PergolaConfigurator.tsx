@@ -441,52 +441,167 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 }
 
 function PergolaPreview({ config, colorHex }: { config: Config; colorHex: string }) {
-  // Derive aspect-correct svg dims
-  const aspect = config.width / config.depth;
-  const baseW = 320;
-  const baseD = baseW / Math.max(aspect, 0.5);
-  const heightScale = (config.height / MAX_H) * 60 + 40;
+  // Real isometric projection — proportions react to width/depth/height
+  const frameColor = colorHex.startsWith("linear") ? "#3a3a3a" : colorHex;
+
+  // World units: 1 unit = 1 cm, scaled to SVG via SCALE
+  const W = config.width;
+  const D = config.depth;
+  const H = config.height;
+
+  // Auto-fit scale so any dimension fits in viewport
+  const VB_W = 520;
+  const VB_H = 360;
+  const cos30 = Math.cos(Math.PI / 6);
+  const sin30 = Math.sin(Math.PI / 6);
+  const projW = (W + D) * cos30;
+  const projH = (W + D) * sin30 + H;
+  const SCALE = Math.min((VB_W - 80) / projW, (VB_H - 80) / projH);
+
+  // Origin (front-bottom-left corner of the pergola footprint), placed nicely in viewport
+  const ox = 60;
+  const oy = VB_H - 50;
+
+  // Iso projection helper: (x along width, y along depth, z up) -> screen
+  const iso = (x: number, y: number, z: number) => {
+    const sx = ox + (x - y) * cos30 * SCALE;
+    const sy = oy - ((x + y) * sin30 - z) * SCALE;
+    return [sx, sy] as const;
+  };
+
+  // Pergola corners (footprint at z=0, roof at z=H)
+  const A0 = iso(0, 0, 0);
+  const B0 = iso(W, 0, 0);
+  const C0 = iso(W, D, 0);
+  const D0 = iso(0, D, 0);
+  const A1 = iso(0, 0, H);
+  const B1 = iso(W, 0, H);
+  const C1 = iso(W, D, H);
+  const D1 = iso(0, D, H);
+
+  // Ground plane (slightly larger than footprint)
+  const pad = Math.max(W, D) * 0.18;
+  const G1 = iso(-pad, -pad, 0);
+  const G2 = iso(W + pad, -pad, 0);
+  const G3 = iso(W + pad, D + pad, 0);
+  const G4 = iso(-pad, D + pad, 0);
+
+  // Back wall (visual context — like in reference)
+  const wallH = H * 1.4;
+  const W1 = iso(-pad, D + pad, 0);
+  const W2 = iso(W + pad, D + pad, 0);
+  const W3 = iso(W + pad, D + pad, wallH);
+  const W4 = iso(-pad, D + pad, wallH);
+
+  // Roof slats (along depth direction)
+  const slatCount = Math.max(8, Math.round(W / 35));
+  const slats: string[] = [];
+  for (let i = 0; i <= slatCount; i++) {
+    const x = (i / slatCount) * W;
+    const p1 = iso(x, 0, H);
+    const p2 = iso(x, D, H);
+    slats.push(`M ${p1[0]} ${p1[1]} L ${p2[0]} ${p2[1]}`);
+  }
+
+  // Posts (4 corners)
+  const postPath = (a: readonly [number, number], b: readonly [number, number]) =>
+    `M ${a[0]} ${a[1]} L ${b[0]} ${b[1]}`;
+
+  const fmt = (cm: number) => `${(cm / 100).toFixed(2)} m`;
 
   return (
-    <div className="relative h-56 bg-gradient-to-b from-secondary/40 to-background overflow-hidden">
-      <div className="absolute inset-0 flex items-end justify-center pb-6">
-        <div
-          className="relative"
-          style={{
-            perspective: "800px",
-          }}
-        >
-          <div
-            style={{
-              width: baseW,
-              height: heightScale,
-              transform: "rotateX(55deg)",
-              transformStyle: "preserve-3d",
-              background: colorHex.startsWith("linear") ? colorHex : colorHex,
-              borderRadius: 4,
-              boxShadow: "0 30px 60px -10px rgba(0,0,0,0.6)",
-            }}
-            className="border border-white/10"
-          />
-          {/* posts */}
-          {[0, 1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="absolute bottom-0"
-              style={{
-                width: 6,
-                height: heightScale + 20,
-                background: colorHex.startsWith("linear") ? "#444" : colorHex,
-                left: i % 2 === 0 ? 4 : baseW - 10,
-                top: i < 2 ? heightScale - 10 : "auto",
-                bottom: i < 2 ? "auto" : -8,
-                opacity: 0.85,
-                borderRadius: 2,
-              }}
-            />
+    <div className="relative h-72 md:h-80 bg-gradient-to-b from-secondary/40 to-background overflow-hidden rounded-lg">
+      <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="pergola-grass" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="hsl(95 25% 35%)" />
+            <stop offset="100%" stopColor="hsl(95 30% 22%)" />
+          </linearGradient>
+          <linearGradient id="pergola-wall" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="hsl(30 22% 48%)" />
+            <stop offset="100%" stopColor="hsl(30 22% 32%)" />
+          </linearGradient>
+          <linearGradient id="pergola-glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(220,235,255,0.55)" />
+            <stop offset="100%" stopColor="rgba(180,210,235,0.25)" />
+          </linearGradient>
+          <filter id="pergola-shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="6" stdDeviation="6" floodOpacity="0.45" />
+          </filter>
+        </defs>
+
+        {/* Back wall */}
+        <polygon
+          points={`${W1[0]},${W1[1]} ${W2[0]},${W2[1]} ${W3[0]},${W3[1]} ${W4[0]},${W4[1]}`}
+          fill="url(#pergola-wall)"
+          opacity="0.9"
+        />
+
+        {/* Ground */}
+        <polygon
+          points={`${G1[0]},${G1[1]} ${G2[0]},${G2[1]} ${G3[0]},${G3[1]} ${G4[0]},${G4[1]}`}
+          fill="url(#pergola-grass)"
+        />
+
+        {/* Soft shadow under pergola */}
+        <polygon
+          points={`${A0[0]},${A0[1]} ${B0[0]},${B0[1]} ${C0[0]},${C0[1]} ${D0[0]},${D0[1]}`}
+          fill="rgba(0,0,0,0.35)"
+          filter="url(#pergola-shadow)"
+        />
+
+        {/* Back posts (drawn first, behind roof) */}
+        <path d={postPath(D0, D1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+        <path d={postPath(C0, C1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+
+        {/* Roof slab (glass / polycarbonate) */}
+        <polygon
+          points={`${A1[0]},${A1[1]} ${B1[0]},${B1[1]} ${C1[0]},${C1[1]} ${D1[0]},${D1[1]}`}
+          fill="url(#pergola-glass)"
+          stroke={frameColor}
+          strokeWidth={3}
+        />
+        {/* Roof slats */}
+        <g stroke={frameColor} strokeWidth={1} opacity={0.55}>
+          {slats.map((d, i) => (
+            <path key={i} d={d} />
           ))}
-        </div>
-      </div>
+        </g>
+
+        {/* Front posts (drawn last, in front) */}
+        <path d={postPath(A0, A1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+        <path d={postPath(B0, B1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+
+        {/* Dimension labels */}
+        {/* Width — front edge */}
+        <text
+          x={(A0[0] + B0[0]) / 2}
+          y={(A0[1] + B0[1]) / 2 + 18}
+          textAnchor="middle"
+          fontSize="11"
+          fill="hsl(var(--foreground) / 0.85)"
+        >
+          Šírka {fmt(W)}
+        </text>
+        {/* Depth — right edge */}
+        <text
+          x={(B0[0] + C0[0]) / 2 + 12}
+          y={(B0[1] + C0[1]) / 2 + 4}
+          fontSize="11"
+          fill="hsl(var(--foreground) / 0.85)"
+        >
+          Hĺbka {fmt(D)}
+        </text>
+        {/* Height — right post */}
+        <text
+          x={B1[0] + 10}
+          y={(B0[1] + B1[1]) / 2}
+          fontSize="11"
+          fill="hsl(var(--foreground) / 0.85)"
+        >
+          Výška {fmt(H)}
+        </text>
+      </svg>
       <div className="absolute top-3 left-3 text-[10px] uppercase tracking-widest text-foreground/40">
         Náhľad
       </div>
