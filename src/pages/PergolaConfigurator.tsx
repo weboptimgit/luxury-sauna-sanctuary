@@ -815,12 +815,20 @@ function StepDimensions({
                 value={config[d.key]}
                 min={d.min}
                 max={d.max}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const raw = e.target.value;
+                  // Povoliť prázdne pole počas editácie; clamp až onBlur
+                  const n = raw === "" ? 0 : Number(raw);
+                  if (Number.isNaN(n)) return;
+                  setConfig((c) => ({ ...c, [d.key]: n }));
+                }}
+                onBlur={(e) => {
+                  const n = Number(e.target.value) || d.min;
                   setConfig((c) => ({
                     ...c,
-                    [d.key]: Math.max(d.min, Math.min(d.max, Number(e.target.value) || d.min)),
-                  }))
-                }
+                    [d.key]: Math.max(d.min, Math.min(d.max, n)),
+                  }));
+                }}
                 className="w-28 text-right font-display text-lg"
               />
               <span className="text-xs text-foreground/50">cm</span>
