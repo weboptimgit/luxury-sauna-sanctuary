@@ -407,6 +407,10 @@ export default function PergolaConfigurator() {
                   <SummaryRow label="Farba" value={colorObj.name + (colorObj.premium ? " (+10%)" : "")} />
                   <SummaryRow label="Strecha" value={roofObj.name} />
                   <SummaryRow label="Priehľadnosť" value={transObj.name} />
+                  <SummaryRow
+                    label="Stĺpy"
+                    value={`${postLayout.posts}× stĺp${postLayout.reinforcement ? " + výztuha" : ""}`}
+                  />
                   <SummaryRow label="Montáž" value={config.mounting ? "Áno" : "Nie"} />
                   <SummaryRow label="LED osvetlenie" value={config.led ? "Áno" : "Nie"} />
 
