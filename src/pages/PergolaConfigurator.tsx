@@ -105,6 +105,9 @@ interface Config {
   depth: number; // cm
   height: number; // cm
   color: ColorId;
+  ralCode?: string;   // vybraný RAL kód, keď color === "ral"
+  ralName?: string;   // čitateľný názov vybraného RAL odtieňa
+  ralHex?: string;    // hex aproximácia pre náhľad
   roof: RoofId;
   transparency: TransId;
   mounting: boolean;
