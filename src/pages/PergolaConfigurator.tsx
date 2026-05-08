@@ -257,7 +257,7 @@ export default function PergolaConfigurator() {
       const payload = {
         config: {
           ...config,
-          colorName: colorObj.name,
+          colorName: colorDisplayName,
           roofName: roofObj.name,
           transparencyName: transObj.name,
           areaM2: Number(areaM2.toFixed(2)),
