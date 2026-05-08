@@ -342,6 +342,7 @@ function luxurelax_pergola_handle_add_to_cart(WP_REST_Request $request) {
         'Farba'          => $calc['color_label'],
         'Strecha'        => $calc['roof_label'],
         'Priehľadnosť'   => $calc['trans_label'],
+        'Stĺpy'          => $calc['posts'] . '× stĺp' . ($calc['reinforcement'] ? ' + výztuha' : ''),
         'Montáž'         => $cfg_n['mounting'] ? 'Áno' : 'Nie',
         'LED'            => $cfg_n['led'] ? 'Áno' : 'Nie',
     ];
