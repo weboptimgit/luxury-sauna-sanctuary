@@ -509,9 +509,13 @@ export default function PergolaConfigurator() {
             <Button variant="luxury" onClick={next}>
               Pokračovať <ChevronRight className="w-4 h-4" />
             </Button>
-          ) : (
+          ) : finishMode === "inquiry" ? (
             <Button variant="luxury" onClick={submit} disabled={submitting}>
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Odoslať <Send className="w-4 h-4" /></>}
+            </Button>
+          ) : (
+            <Button variant="luxury" onClick={addToCart} disabled={addingToCart}>
+              {addingToCart ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Do košíka <ShoppingCart className="w-4 h-4" /></>}
             </Button>
           )}
         </div>
