@@ -17,8 +17,7 @@ if (!defined('ABSPATH')) exit;
 // 1) KONFIGURÁCIA – TU NEZABUDNI DOPLNIŤ WOO PRODUCT ID
 // =====================================================================
 if (!defined('LUXURELAX_PERGOLA_PRODUCT_ID')) {
-    // TODO: nahraď reálnym Woo Product ID, keď bude vytvorené
-    define('LUXURELAX_PERGOLA_PRODUCT_ID', 0);
+    define('LUXURELAX_PERGOLA_PRODUCT_ID', 2210);
 }
 
 if (!defined('LUXURELAX_PERGOLA_INQUIRY_EMAIL')) {
