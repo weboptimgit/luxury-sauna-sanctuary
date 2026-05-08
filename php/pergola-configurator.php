@@ -49,9 +49,26 @@ function luxurelax_pergola_pricing() {
             'milky' => 'Mliečne',
             'clear' => 'Číre',
         ],
-        'mounting_price' => 850,
-        'led_price'      => 420,
+        'mounting_price'        => 850,
+        'led_price'             => 420,
+        'reinforcement_price'   => 180,  // EUR – výstuha pri šírkach v hraničnom pásme
+        'extra_post_price'      => 220,  // EUR za každý stĺp navyše nad 2 základné
     ];
+}
+
+/**
+ * Stĺpová logika podľa technickej tabuľky (musí byť identické s frontendom!).
+ *  ≤ 506 cm  → 2 stĺpy
+ *  ≤ 606 cm  → 2 stĺpy + výstuha
+ *  ≤ 906 cm  → 3 stĺpy
+ *  > 906 cm  → 4 stĺpy
+ */
+function luxurelax_pergola_compute_post_layout($width_cm) {
+    $w = (int) $width_cm;
+    if ($w <= 506) return ['posts' => 2, 'reinforcement' => false];
+    if ($w <= 606) return ['posts' => 2, 'reinforcement' => true];
+    if ($w <= 906) return ['posts' => 3, 'reinforcement' => false];
+    return ['posts' => 4, 'reinforcement' => false];
 }
 
 // =====================================================================
