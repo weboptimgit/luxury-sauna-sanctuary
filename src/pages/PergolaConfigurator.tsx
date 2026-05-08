@@ -75,6 +75,23 @@ const TRANSPARENCIES = [
 
 const MOUNTING_PRICE = 850;
 const LED_PRICE = 420;
+const REINFORCEMENT_PRICE = 180; // EUR – výstuha pri šírkach v hraničnom pásme
+const EXTRA_POST_PRICE = 220; // EUR za každý stĺp navyše nad 2 základné
+
+/**
+ * Stĺpová logika podľa technickej tabuľky (Polykarbonát).
+ * Vstup: šírka (cm). Výstup: počet stĺpov + či je potrebná výstuha.
+ *  ≤ 506 cm  → 2 stĺpy
+ *  ≤ 606 cm  → 2 stĺpy + výstuha
+ *  ≤ 906 cm  → 3 stĺpy
+ *  > 906 cm  → 4 stĺpy
+ */
+function computePostLayout(widthCm: number): { posts: 2 | 3 | 4; reinforcement: boolean } {
+  if (widthCm <= 506) return { posts: 2, reinforcement: false };
+  if (widthCm <= 606) return { posts: 2, reinforcement: true };
+  if (widthCm <= 906) return { posts: 3, reinforcement: false };
+  return { posts: 4, reinforcement: false };
+}
 
 type ColorId = typeof COLORS[number]["id"];
 type RoofId = typeof ROOF_TYPES[number]["id"];
