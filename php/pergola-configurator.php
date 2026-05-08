@@ -64,6 +64,11 @@ add_action('rest_api_init', function () {
         'callback'            => 'luxurelax_pergola_handle_inquiry',
         'permission_callback' => '__return_true',
     ]);
+    register_rest_route('luxurelax-pergola/v1', '/add-to-cart', [
+        'methods'             => 'POST',
+        'callback'            => 'luxurelax_pergola_handle_add_to_cart',
+        'permission_callback' => '__return_true',
+    ]);
 });
 
 // CORS pre konfigurátor (ak je hostovaný na inom hoste)
