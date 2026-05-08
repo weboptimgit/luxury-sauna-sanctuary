@@ -633,6 +633,25 @@ function PergolaPreview({
 
   const fmt = (cm: number) => `${(cm / 100).toFixed(2)} m`;
 
+  // ---- Roof appearance derived from selection ----
+  // Clear/milky × polycarbonate / safety_glass / izo_glass_24
+  const isMilky = config.transparency === "milky";
+  const roofId =
+    config.roof === "izo_glass_24"
+      ? "roof-izo"
+      : config.roof === "safety_glass"
+      ? isMilky
+        ? "roof-glass-milky"
+        : "roof-glass-clear"
+      : isMilky
+      ? "roof-poly-milky"
+      : "roof-poly-clear";
+  const roofFill = `url(#${roofId})`;
+  // Slats viditeľné len cez priehľadné materiály
+  const slatsOpacity = isMilky ? 0.08 : config.roof === "polycarbonate" ? 0.55 : 0.35;
+  // Druhá vrstva pre IZO sklo (dvojsklo)
+  const isIzo = config.roof === "izo_glass_24";
+
   return (
     <div className="relative h-72 md:h-80 bg-gradient-to-b from-secondary/40 to-background overflow-hidden rounded-lg">
       <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
@@ -645,10 +664,51 @@ function PergolaPreview({
             <stop offset="0%" stopColor="hsl(30 22% 48%)" />
             <stop offset="100%" stopColor="hsl(30 22% 32%)" />
           </linearGradient>
-          <linearGradient id="pergola-glass" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="rgba(220,235,255,0.55)" />
-            <stop offset="100%" stopColor="rgba(180,210,235,0.25)" />
+
+          {/* Polykarbonát – číry: jemne modrastý priesvit */}
+          <linearGradient id="roof-poly-clear" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(200,225,250,0.50)" />
+            <stop offset="100%" stopColor="rgba(160,195,230,0.22)" />
           </linearGradient>
+          {/* Polykarbonát – mliečny: biely difúzny */}
+          <linearGradient id="roof-poly-milky" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(245,245,240,0.92)" />
+            <stop offset="100%" stopColor="rgba(220,222,218,0.78)" />
+          </linearGradient>
+          {/* Bezpečnostné sklo – číre: kryštalická modrá s odleskom */}
+          <linearGradient id="roof-glass-clear" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(170,210,240,0.55)" />
+            <stop offset="45%" stopColor="rgba(255,255,255,0.35)" />
+            <stop offset="100%" stopColor="rgba(120,170,210,0.20)" />
+          </linearGradient>
+          {/* Bezpečnostné sklo – mliečne: matné s ľahkým chladným nádychom */}
+          <linearGradient id="roof-glass-milky" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(235,238,240,0.90)" />
+            <stop offset="100%" stopColor="rgba(205,212,218,0.78)" />
+          </linearGradient>
+          {/* IZO sklo 24 – dvojsklo: hlbší modrý nádych */}
+          <linearGradient id="roof-izo" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(150,195,230,0.65)" />
+            <stop offset="50%" stopColor="rgba(210,235,250,0.45)" />
+            <stop offset="100%" stopColor="rgba(110,160,200,0.30)" />
+          </linearGradient>
+
+          {/* LED warm glow */}
+          <radialGradient id="pergola-led-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255,210,140,0.85)" />
+            <stop offset="55%" stopColor="rgba(255,190,110,0.35)" />
+            <stop offset="100%" stopColor="rgba(255,180,90,0)" />
+          </radialGradient>
+          <radialGradient id="pergola-led-spot" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255,235,170,1)" />
+            <stop offset="60%" stopColor="rgba(255,205,120,0.6)" />
+            <stop offset="100%" stopColor="rgba(255,180,80,0)" />
+          </radialGradient>
+          <radialGradient id="pergola-led-ground" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255,200,120,0.55)" />
+            <stop offset="100%" stopColor="rgba(255,180,90,0)" />
+          </radialGradient>
+
           <filter id="pergola-shadow" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="6" stdDeviation="6" floodOpacity="0.45" />
           </filter>
@@ -673,6 +733,22 @@ function PergolaPreview({
           fill="rgba(0,0,0,0.35)"
           filter="url(#pergola-shadow)"
         />
+
+        {/* LED – teplý odlesk na zemi pod pergolou */}
+        {config.led && (() => {
+          const cBot = iso(W / 2, D / 2, 0);
+          const r = Math.max((W + D) * 0.18 * SCALE, 70);
+          return (
+            <ellipse
+              cx={cBot[0]}
+              cy={cBot[1]}
+              rx={r * 1.5}
+              ry={r * 0.55}
+              fill="url(#pergola-led-ground)"
+              style={{ mixBlendMode: "screen" }}
+            />
+          );
+        })()}
 
         {/* Intermediate post X-positions along width based on table layout */}
         {(() => {
@@ -704,16 +780,64 @@ function PergolaPreview({
               {/* Roof slab (glass / polycarbonate) */}
               <polygon
                 points={`${A1[0]},${A1[1]} ${B1[0]},${B1[1]} ${C1[0]},${C1[1]} ${D1[0]},${D1[1]}`}
-                fill="url(#pergola-glass)"
+                fill={roofFill}
                 stroke={frameColor}
                 strokeWidth={3}
               />
-              {/* Roof slats */}
-              <g stroke={frameColor} strokeWidth={1} opacity={0.55}>
+              {/* Roof slats – tlmené pre mliečne sklo */}
+              <g stroke={frameColor} strokeWidth={1} opacity={slatsOpacity}>
                 {slats.map((d, i) => (
                   <path key={i} d={d} />
                 ))}
               </g>
+              {/* IZO sklo – druhá vrstva (dvojsklo) jemne posunutá nahor */}
+              {isIzo && (() => {
+                const off = Math.max(2, H * 0.012);
+                const a = iso(0, 0, H + off);
+                const b = iso(W, 0, H + off);
+                const cc = iso(W, D, H + off);
+                const dd = iso(0, D, H + off);
+                return (
+                  <polygon
+                    points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${cc[0]},${cc[1]} ${dd[0]},${dd[1]}`}
+                    fill="url(#roof-izo)"
+                    stroke={frameColor}
+                    strokeWidth={1.5}
+                    opacity={0.85}
+                  />
+                );
+              })()}
+
+              {/* LED – teplé bodové svetlá pod prednou hranou strechy + difúzne podsvietenie */}
+              {config.led && (() => {
+                const lights: Array<readonly [number, number]> = [];
+                const count = Math.max(4, Math.round(W / 80));
+                for (let i = 1; i <= count; i++) {
+                  const x = (i / (count + 1)) * W;
+                  lights.push(iso(x, 0, H - 4));
+                }
+                // Difúzne podsvietenie pod celou strechou
+                const cTop = iso(W / 2, D / 2, H - 6);
+                const radius = Math.max((W + D) * 0.12 * SCALE, 60);
+                return (
+                  <g>
+                    <ellipse
+                      cx={cTop[0]}
+                      cy={cTop[1] + 6}
+                      rx={radius * 1.4}
+                      ry={radius * 0.45}
+                      fill="url(#pergola-led-glow)"
+                      style={{ mixBlendMode: "screen" }}
+                    />
+                    {lights.map(([x, y], i) => (
+                      <g key={`led-${i}`}>
+                        <circle cx={x} cy={y} r={10} fill="url(#pergola-led-spot)" style={{ mixBlendMode: "screen" }} />
+                        <circle cx={x} cy={y} r={1.6} fill="rgba(255,245,210,1)" />
+                      </g>
+                    ))}
+                  </g>
+                );
+              })()}
 
               {/* Reinforcement beam under front edge of roof (if required) */}
               {postLayout.reinforcement && (() => {
