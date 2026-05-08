@@ -11,6 +11,7 @@ import {
   Send,
   Sparkles,
   Loader2,
+  ShoppingCart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -123,7 +124,7 @@ const STEPS = [
   { id: 2, title: "Farba", subtitle: "Vyberte farbu konštrukcie", icon: Palette },
   { id: 3, title: "Strecha", subtitle: "Typ zastrešenia a priehľadnosť", icon: Square },
   { id: 4, title: "Montáž a doplnky", subtitle: "Doladenie posledných detailov", icon: Wrench },
-  { id: 5, title: "Kontakt", subtitle: "Pošlite nám nezáväzný dopyt", icon: Send },
+  { id: 5, title: "Dokončenie", subtitle: "Pridajte do košíka alebo pošlite nezáväzný dopyt", icon: Send },
 ];
 
 const MIN_W = 200;
@@ -140,6 +141,8 @@ export default function PergolaConfigurator() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [finishMode, setFinishMode] = useState<"choice" | "inquiry">("choice");
+  const [addingToCart, setAddingToCart] = useState(false);
 
   const [config, setConfig] = useState<Config>({
     width: 400,
@@ -277,6 +280,51 @@ export default function PergolaConfigurator() {
     }
   };
 
+  const addToCart = async () => {
+    setAddingToCart(true);
+    try {
+      const endpoint =
+        (import.meta.env.VITE_PERGOLA_CART_URL as string | undefined) ||
+        "https://www.luxurelax.sk/wp-json/luxurelax-pergola/v1/add-to-cart";
+
+      const payload = {
+        config: {
+          ...config,
+          colorName: colorObj.name,
+          roofName: roofObj.name,
+          transparencyName: transObj.name,
+          areaM2: Number(areaM2.toFixed(2)),
+          posts: postLayout.posts,
+          reinforcement: postLayout.reinforcement,
+        },
+        price,
+        currency: "EUR",
+      };
+
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("Nepodarilo sa pridať do košíka");
+      const data = await res.json().catch(() => ({} as { cart_url?: string }));
+      const cartUrl =
+        data?.cart_url ||
+        (window.location.hostname.endsWith(".com")
+          ? "https://www.luxurelax.com/cart/"
+          : "https://www.luxurelax.sk/kosik/");
+      window.location.href = cartUrl;
+    } catch (err) {
+      toast({
+        title: "Chyba",
+        description: (err as Error).message,
+        variant: "destructive",
+      });
+      setAddingToCart(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <ConfiguratorHeader />
@@ -364,7 +412,15 @@ export default function PergolaConfigurator() {
                   {step === 4 && (
                     <StepExtras config={config} setConfig={setConfig} />
                   )}
-                  {step === 5 && !submitted && (
+                  {step === 5 && !submitted && finishMode === "choice" && (
+                    <StepChoice
+                      price={price}
+                      onAddToCart={addToCart}
+                      onInquiry={() => setFinishMode("inquiry")}
+                      addingToCart={addingToCart}
+                    />
+                  )}
+                  {step === 5 && !submitted && finishMode === "inquiry" && (
                     <StepLead form={form} setForm={setForm} errors={errors} />
                   )}
                   {step === 5 && submitted && <StepSuccess />}
@@ -374,14 +430,24 @@ export default function PergolaConfigurator() {
               {/* Navigation */}
               {!submitted && (
                 <div className="flex justify-between items-center mt-6">
-                  <Button variant="ghost" onClick={prev} disabled={step === 1}>
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      if (step === 5 && finishMode === "inquiry") {
+                        setFinishMode("choice");
+                      } else {
+                        prev();
+                      }
+                    }}
+                    disabled={step === 1}
+                  >
                     <ChevronLeft className="w-4 h-4" /> Späť
                   </Button>
                   {step < STEPS.length ? (
                     <Button variant="luxury" size="lg" onClick={next}>
                       Pokračovať <ChevronRight className="w-4 h-4" />
                     </Button>
-                  ) : (
+                  ) : finishMode === "inquiry" ? (
                     <Button variant="luxury" size="lg" onClick={submit} disabled={submitting}>
                       {submitting ? (
                         <><Loader2 className="w-4 h-4 animate-spin" /> Odosielam…</>
@@ -389,6 +455,8 @@ export default function PergolaConfigurator() {
                         <>Odoslať nezáväzný dopyt <Send className="w-4 h-4" /></>
                       )}
                     </Button>
+                  ) : (
+                    <div />
                   )}
                 </div>
               )}
@@ -441,9 +509,13 @@ export default function PergolaConfigurator() {
             <Button variant="luxury" onClick={next}>
               Pokračovať <ChevronRight className="w-4 h-4" />
             </Button>
-          ) : (
+          ) : finishMode === "inquiry" ? (
             <Button variant="luxury" onClick={submit} disabled={submitting}>
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Odoslať <Send className="w-4 h-4" /></>}
+            </Button>
+          ) : (
+            <Button variant="luxury" onClick={addToCart} disabled={addingToCart}>
+              {addingToCart ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Do košíka <ShoppingCart className="w-4 h-4" /></>}
             </Button>
           )}
         </div>
@@ -1022,6 +1094,60 @@ function StepLead({
         </label>
         {errors.consentTerms && <div className="text-xs text-destructive">{errors.consentTerms}</div>}
       </div>
+    </div>
+  );
+}
+
+function StepChoice({
+  price,
+  onAddToCart,
+  onInquiry,
+  addingToCart,
+}: {
+  price: number;
+  onAddToCart: () => void;
+  onInquiry: () => void;
+  addingToCart: boolean;
+}) {
+  return (
+    <div className="grid md:grid-cols-2 gap-5">
+      <button
+        onClick={onAddToCart}
+        disabled={addingToCart}
+        className="group text-left rounded-2xl border-2 border-primary/40 bg-primary/5 hover:bg-primary/10 hover:border-primary transition-all p-6 flex flex-col gap-4 disabled:opacity-60 disabled:cursor-wait"
+      >
+        <div className="w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center">
+          {addingToCart ? <Loader2 className="w-6 h-6 animate-spin" /> : <ShoppingCart className="w-6 h-6" />}
+        </div>
+        <div>
+          <h3 className="font-display text-2xl mb-1">Pridať do košíka</h3>
+          <p className="text-sm text-foreground/60">
+            Okamžite pokračujte v objednávke. Vaša pergola bude pridaná do košíka za{" "}
+            <span className="text-primary font-semibold">{formatPrice(price)}</span>.
+          </p>
+        </div>
+        <div className="mt-auto text-xs uppercase tracking-widest text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+          Pokračovať na pokladnicu →
+        </div>
+      </button>
+
+      <button
+        onClick={onInquiry}
+        className="group text-left rounded-2xl border border-border bg-card/40 hover:bg-card/70 hover:border-primary/40 transition-all p-6 flex flex-col gap-4"
+      >
+        <div className="w-12 h-12 rounded-full bg-foreground/10 text-foreground flex items-center justify-center">
+          <Send className="w-6 h-6" />
+        </div>
+        <div>
+          <h3 className="font-display text-2xl mb-1">Odoslať nezáväzný dopyt</h3>
+          <p className="text-sm text-foreground/60">
+            Vyplňte krátky formulár a my vám pripravíme nezáväznú cenovú ponuku na mieru.
+          </p>
+        </div>
+        <div className="mt-auto text-xs uppercase tracking-widest text-foreground/50 opacity-0 group-hover:opacity-100 transition-opacity">
+          Vyplniť formulár →
+        </div>
+      </button>
     </div>
   );
 }
