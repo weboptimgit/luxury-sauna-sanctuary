@@ -124,7 +124,7 @@ const STEPS = [
   { id: 2, title: "Farba", subtitle: "Vyberte farbu konštrukcie", icon: Palette },
   { id: 3, title: "Strecha", subtitle: "Typ zastrešenia a priehľadnosť", icon: Square },
   { id: 4, title: "Montáž a doplnky", subtitle: "Doladenie posledných detailov", icon: Wrench },
-  { id: 5, title: "Kontakt", subtitle: "Pošlite nám nezáväzný dopyt", icon: Send },
+  { id: 5, title: "Dokončenie", subtitle: "Pridajte do košíka alebo pošlite nezáväzný dopyt", icon: Send },
 ];
 
 const MIN_W = 200;
