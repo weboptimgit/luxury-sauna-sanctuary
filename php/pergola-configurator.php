@@ -281,6 +281,26 @@ add_action('woocommerce_checkout_create_order_line_item', function ($item, $cart
     }
 }, 10, 3);
 
+// Premenovanie položky v košíku
+add_filter('woocommerce_cart_item_name', function ($name, $cart_item, $cart_item_key) {
+    if (!empty($cart_item['pergola_config'])) {
+        return '<a href="' . esc_url(home_url('/konfigurator-pergoly/')) . '">' . esc_html__('Pergola – konfigurácia na mieru', 'luxurelax') . '</a>';
+    }
+    return $name;
+}, 10, 3);
+
+// Vlastný obrázok v košíku (nahraď URL svojím obrázkom pergoly)
+if (!defined('LUXURELAX_PERGOLA_CART_IMAGE_URL')) {
+    define('LUXURELAX_PERGOLA_CART_IMAGE_URL', 'https://www.luxurelax.sk/wp-content/uploads/pergola-cart.jpg');
+}
+add_filter('woocommerce_cart_item_thumbnail', function ($thumbnail, $cart_item, $cart_item_key) {
+    if (!empty($cart_item['pergola_config'])) {
+        $url = LUXURELAX_PERGOLA_CART_IMAGE_URL;
+        return '<img src="' . esc_url($url) . '" alt="Pergola" style="width:64px;height:auto;border-radius:4px;" />';
+    }
+    return $thumbnail;
+}, 10, 3);
+
 // Aplikuj custom cenu na položku v košíku (musí byť globálny hook!)
 add_action('woocommerce_before_calculate_totals', function ($cart) {
     if (is_admin() && !defined('DOING_AJAX')) return;
