@@ -412,7 +412,15 @@ export default function PergolaConfigurator() {
                   {step === 4 && (
                     <StepExtras config={config} setConfig={setConfig} />
                   )}
-                  {step === 5 && !submitted && (
+                  {step === 5 && !submitted && finishMode === "choice" && (
+                    <StepChoice
+                      price={price}
+                      onAddToCart={addToCart}
+                      onInquiry={() => setFinishMode("inquiry")}
+                      addingToCart={addingToCart}
+                    />
+                  )}
+                  {step === 5 && !submitted && finishMode === "inquiry" && (
                     <StepLead form={form} setForm={setForm} errors={errors} />
                   )}
                   {step === 5 && submitted && <StepSuccess />}
@@ -422,14 +430,24 @@ export default function PergolaConfigurator() {
               {/* Navigation */}
               {!submitted && (
                 <div className="flex justify-between items-center mt-6">
-                  <Button variant="ghost" onClick={prev} disabled={step === 1}>
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      if (step === 5 && finishMode === "inquiry") {
+                        setFinishMode("choice");
+                      } else {
+                        prev();
+                      }
+                    }}
+                    disabled={step === 1}
+                  >
                     <ChevronLeft className="w-4 h-4" /> Späť
                   </Button>
                   {step < STEPS.length ? (
                     <Button variant="luxury" size="lg" onClick={next}>
                       Pokračovať <ChevronRight className="w-4 h-4" />
                     </Button>
-                  ) : (
+                  ) : finishMode === "inquiry" ? (
                     <Button variant="luxury" size="lg" onClick={submit} disabled={submitting}>
                       {submitting ? (
                         <><Loader2 className="w-4 h-4 animate-spin" /> Odosielam…</>
@@ -437,6 +455,8 @@ export default function PergolaConfigurator() {
                         <>Odoslať nezáväzný dopyt <Send className="w-4 h-4" /></>
                       )}
                     </Button>
+                  ) : (
+                    <div />
                   )}
                 </div>
               )}
