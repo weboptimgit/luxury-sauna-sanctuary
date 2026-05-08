@@ -974,8 +974,16 @@ function StepRoof({
                 )}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <Square className={cn("w-6 h-6", active ? "text-primary" : "text-foreground/40")} />
-                  {active && <Check className="w-4 h-4 text-primary" />}
+                  <div
+                    className={cn(
+                      "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
+                      active
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-background/40 group-hover:border-primary/60",
+                    )}
+                  >
+                    {active && <Check className="w-3.5 h-3.5" strokeWidth={3} />}
+                  </div>
                 </div>
                 <div className="font-medium mb-1">{r.name}</div>
                 <div className="text-xs text-foreground/50 mb-2">{r.desc}</div>
