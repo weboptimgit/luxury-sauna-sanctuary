@@ -734,6 +734,22 @@ function PergolaPreview({
           filter="url(#pergola-shadow)"
         />
 
+        {/* LED – teplý odlesk na zemi pod pergolou */}
+        {config.led && (() => {
+          const cBot = iso(W / 2, D / 2, 0);
+          const r = Math.max((W + D) * 0.18 * SCALE, 70);
+          return (
+            <ellipse
+              cx={cBot[0]}
+              cy={cBot[1]}
+              rx={r * 1.5}
+              ry={r * 0.55}
+              fill="url(#pergola-led-ground)"
+              style={{ mixBlendMode: "screen" }}
+            />
+          );
+        })()}
+
         {/* Intermediate post X-positions along width based on table layout */}
         {(() => {
           const intermediates: number[] =
