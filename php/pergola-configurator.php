@@ -141,12 +141,19 @@ function luxurelax_pergola_calculate_price($cfg) {
     if (!empty($cfg['mounting'])) $price += $p['mounting_price'];
     if (!empty($cfg['led']))      $price += $p['led_price'];
 
+    $post_layout = luxurelax_pergola_compute_post_layout($width);
+    $extra_posts = max(0, $post_layout['posts'] - 2);
+    if ($extra_posts > 0)               $price += $extra_posts * $p['extra_post_price'];
+    if ($post_layout['reinforcement'])  $price += $p['reinforcement_price'];
+
     return [
         'price'        => round($price),
         'area_m2'      => round($area, 2),
         'color_label'  => $p['colors'][$color_key]['label'],
         'roof_label'   => $p['roofs'][$roof_key]['label'],
         'trans_label'  => $p['transparencies'][$trans_key],
+        'posts'        => $post_layout['posts'],
+        'reinforcement'=> $post_layout['reinforcement'],
         'normalized'   => [
             'width'        => $width,
             'depth'        => $depth,
@@ -156,6 +163,8 @@ function luxurelax_pergola_calculate_price($cfg) {
             'transparency' => $trans_key,
             'mounting'     => !empty($cfg['mounting']),
             'led'          => !empty($cfg['led']),
+            'posts'        => $post_layout['posts'],
+            'reinforcement'=> $post_layout['reinforcement'],
         ],
     ];
 }
