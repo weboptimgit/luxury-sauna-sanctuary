@@ -23,6 +23,8 @@ import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import ConfiguratorHeader from "@/components/ConfiguratorHeader";
 import ConfiguratorFooter from "@/components/ConfiguratorFooter";
+import RalPickerDialog from "@/components/RalPickerDialog";
+import { findRal, type RalColor } from "@/data/ralClassic";
 
 /**
  * PERGOLA CONFIGURATOR – Luxurelax
