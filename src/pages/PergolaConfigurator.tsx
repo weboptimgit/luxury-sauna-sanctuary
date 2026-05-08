@@ -307,14 +307,19 @@ export default function PergolaConfigurator() {
         credentials: "include",
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Nepodarilo sa pridať do košíka");
-      const data = await res.json().catch(() => ({} as { cart_url?: string }));
-      const cartUrl =
+      const data = await res
+        .json()
+        .catch(() => ({}) as { redirect_url?: string; cart_url?: string; error?: string });
+      if (!res.ok) {
+        throw new Error(data?.error || `Nepodarilo sa pridať do košíka (HTTP ${res.status})`);
+      }
+      const redirectUrl =
+        data?.redirect_url ||
         data?.cart_url ||
         (window.location.hostname.endsWith(".com")
           ? "https://www.luxurelax.com/cart/"
           : "https://www.luxurelax.sk/kosik/");
-      window.location.href = cartUrl;
+      window.location.href = redirectUrl;
     } catch (err) {
       toast({
         title: "Chyba",
