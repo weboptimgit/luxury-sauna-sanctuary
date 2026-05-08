@@ -770,8 +770,7 @@ function StepLead({
   ) => (
     <div className="relative">
       <Comp
-        // @ts-expect-error – textarea also accepts type
-        type={type}
+        type={type as never}
         value={form[key] as string}
         onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
         placeholder=" "
