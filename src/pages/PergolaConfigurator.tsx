@@ -458,9 +458,11 @@ function PergolaPreview({ config, colorHex }: { config: Config; colorHex: string
   const projH = (W + D) * sin30 + H;
   const SCALE = Math.min((VB_W - 80) / projW, (VB_H - 80) / projH);
 
-  // Origin (front-bottom-left corner of the pergola footprint), placed nicely in viewport
-  const ox = 60;
-  const oy = VB_H - 50;
+  // Center the projected pergola inside the viewBox.
+  // Iso x-range: [-D*cos30 .. W*cos30] → midpoint = (W-D)*cos30/2
+  // Iso vertical extent: front-foot at 0, roof-back at (W+D)*sin30 - H (negative on screen)
+  const ox = VB_W / 2 - ((W - D) * cos30 * SCALE) / 2;
+  const oy = VB_H / 2 + (((W + D) * sin30 - H) * SCALE) / 2;
 
   // Iso projection helper: (x along width, y along depth, z up) -> screen
   const iso = (x: number, y: number, z: number) => {
