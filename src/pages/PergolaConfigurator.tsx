@@ -585,27 +585,81 @@ function PergolaPreview({
           filter="url(#pergola-shadow)"
         />
 
-        {/* Back posts (drawn first, behind roof) */}
-        <path d={postPath(D0, D1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
-        <path d={postPath(C0, C1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+        {/* Intermediate post X-positions along width based on table layout */}
+        {(() => {
+          const intermediates: number[] =
+            postLayout.posts === 3
+              ? [W / 2]
+              : postLayout.posts === 4
+              ? [W / 3, (2 * W) / 3]
+              : [];
+          return (
+            <>
+              {/* Back posts (drawn first, behind roof) */}
+              <path d={postPath(D0, D1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+              <path d={postPath(C0, C1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+              {intermediates.map((x, i) => {
+                const a = iso(x, D, 0);
+                const b = iso(x, D, H);
+                return (
+                  <path
+                    key={`back-${i}`}
+                    d={postPath(a, b)}
+                    stroke={frameColor}
+                    strokeWidth={4}
+                    strokeLinecap="round"
+                  />
+                );
+              })}
 
-        {/* Roof slab (glass / polycarbonate) */}
-        <polygon
-          points={`${A1[0]},${A1[1]} ${B1[0]},${B1[1]} ${C1[0]},${C1[1]} ${D1[0]},${D1[1]}`}
-          fill="url(#pergola-glass)"
-          stroke={frameColor}
-          strokeWidth={3}
-        />
-        {/* Roof slats */}
-        <g stroke={frameColor} strokeWidth={1} opacity={0.55}>
-          {slats.map((d, i) => (
-            <path key={i} d={d} />
-          ))}
-        </g>
+              {/* Roof slab (glass / polycarbonate) */}
+              <polygon
+                points={`${A1[0]},${A1[1]} ${B1[0]},${B1[1]} ${C1[0]},${C1[1]} ${D1[0]},${D1[1]}`}
+                fill="url(#pergola-glass)"
+                stroke={frameColor}
+                strokeWidth={3}
+              />
+              {/* Roof slats */}
+              <g stroke={frameColor} strokeWidth={1} opacity={0.55}>
+                {slats.map((d, i) => (
+                  <path key={i} d={d} />
+                ))}
+              </g>
 
-        {/* Front posts (drawn last, in front) */}
-        <path d={postPath(A0, A1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
-        <path d={postPath(B0, B1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+              {/* Reinforcement beam under front edge of roof (if required) */}
+              {postLayout.reinforcement && (() => {
+                const a = iso(0, 0, H - 8);
+                const b = iso(W, 0, H - 8);
+                return (
+                  <path
+                    d={postPath(a, b)}
+                    stroke={frameColor}
+                    strokeWidth={6}
+                    strokeLinecap="round"
+                    opacity={0.95}
+                  />
+                );
+              })()}
+
+              {/* Front posts (drawn last, in front) */}
+              <path d={postPath(A0, A1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+              <path d={postPath(B0, B1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+              {intermediates.map((x, i) => {
+                const a = iso(x, 0, 0);
+                const b = iso(x, 0, H);
+                return (
+                  <path
+                    key={`front-${i}`}
+                    d={postPath(a, b)}
+                    stroke={frameColor}
+                    strokeWidth={4}
+                    strokeLinecap="round"
+                  />
+                );
+              })}
+            </>
+          );
+        })()}
 
         {/* Dimension labels */}
         {/* Width — front edge */}
