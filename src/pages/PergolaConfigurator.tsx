@@ -465,7 +465,15 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function PergolaPreview({ config, colorHex }: { config: Config; colorHex: string }) {
+function PergolaPreview({
+  config,
+  colorHex,
+  postLayout,
+}: {
+  config: Config;
+  colorHex: string;
+  postLayout: { posts: 2 | 3 | 4; reinforcement: boolean };
+}) {
   // Real isometric projection — proportions react to width/depth/height
   const frameColor = colorHex.startsWith("linear") ? "#3a3a3a" : colorHex;
 
