@@ -166,6 +166,8 @@ export default function PergolaConfigurator() {
 
   const areaM2 = useMemo(() => (config.width * config.depth) / 10000, [config.width, config.depth]);
 
+  const postLayout = useMemo(() => computePostLayout(config.width), [config.width]);
+
   const price = useMemo(() => {
     const roof = ROOF_TYPES.find((r) => r.id === config.roof)!;
     const colorObj = COLORS.find((c) => c.id === config.color)!;
@@ -178,8 +180,10 @@ export default function PergolaConfigurator() {
     if (colorObj.premium) p *= 1.1;
     if (config.mounting) p += MOUNTING_PRICE;
     if (config.led) p += LED_PRICE;
+    p += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
+    if (postLayout.reinforcement) p += REINFORCEMENT_PRICE;
     return Math.round(p);
-  }, [config, areaM2]);
+  }, [config, areaM2, postLayout]);
 
   const colorObj = COLORS.find((c) => c.id === config.color)!;
   const roofObj = ROOF_TYPES.find((r) => r.id === config.roof)!;
