@@ -397,7 +397,7 @@ export default function PergolaConfigurator() {
             {/* Summary panel */}
             <aside className="lg:sticky lg:top-28 self-start">
               <div className="rounded-2xl border border-border bg-gradient-to-b from-card to-card/40 backdrop-blur-md overflow-hidden">
-                <PergolaPreview config={config} colorHex={colorObj.hex} />
+                <PergolaPreview config={config} colorHex={colorObj.hex} postLayout={postLayout} />
                 <div className="p-6">
                   <div className="text-xs uppercase tracking-widest text-primary mb-1">Vaša konfigurácia</div>
                   <h3 className="font-display text-2xl mb-5">Pergola na mieru</h3>
