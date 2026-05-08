@@ -141,6 +141,8 @@ export default function PergolaConfigurator() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [finishMode, setFinishMode] = useState<"choice" | "inquiry">("choice");
+  const [addingToCart, setAddingToCart] = useState(false);
 
   const [config, setConfig] = useState<Config>({
     width: 400,
