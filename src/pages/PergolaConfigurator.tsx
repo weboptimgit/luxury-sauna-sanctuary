@@ -633,6 +633,25 @@ function PergolaPreview({
 
   const fmt = (cm: number) => `${(cm / 100).toFixed(2)} m`;
 
+  // ---- Roof appearance derived from selection ----
+  // Clear/milky × polycarbonate / safety_glass / izo_glass_24
+  const isMilky = config.transparency === "milky";
+  const roofId =
+    config.roof === "izo_glass_24"
+      ? "roof-izo"
+      : config.roof === "safety_glass"
+      ? isMilky
+        ? "roof-glass-milky"
+        : "roof-glass-clear"
+      : isMilky
+      ? "roof-poly-milky"
+      : "roof-poly-clear";
+  const roofFill = `url(#${roofId})`;
+  // Slats viditeľné len cez priehľadné materiály
+  const slatsOpacity = isMilky ? 0.08 : config.roof === "polycarbonate" ? 0.55 : 0.35;
+  // Druhá vrstva pre IZO sklo (dvojsklo)
+  const isIzo = config.roof === "izo_glass_24";
+
   return (
     <div className="relative h-72 md:h-80 bg-gradient-to-b from-secondary/40 to-background overflow-hidden rounded-lg">
       <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
@@ -645,10 +664,51 @@ function PergolaPreview({
             <stop offset="0%" stopColor="hsl(30 22% 48%)" />
             <stop offset="100%" stopColor="hsl(30 22% 32%)" />
           </linearGradient>
-          <linearGradient id="pergola-glass" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="rgba(220,235,255,0.55)" />
-            <stop offset="100%" stopColor="rgba(180,210,235,0.25)" />
+
+          {/* Polykarbonát – číry: jemne modrastý priesvit */}
+          <linearGradient id="roof-poly-clear" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(200,225,250,0.50)" />
+            <stop offset="100%" stopColor="rgba(160,195,230,0.22)" />
           </linearGradient>
+          {/* Polykarbonát – mliečny: biely difúzny */}
+          <linearGradient id="roof-poly-milky" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(245,245,240,0.92)" />
+            <stop offset="100%" stopColor="rgba(220,222,218,0.78)" />
+          </linearGradient>
+          {/* Bezpečnostné sklo – číre: kryštalická modrá s odleskom */}
+          <linearGradient id="roof-glass-clear" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(170,210,240,0.55)" />
+            <stop offset="45%" stopColor="rgba(255,255,255,0.35)" />
+            <stop offset="100%" stopColor="rgba(120,170,210,0.20)" />
+          </linearGradient>
+          {/* Bezpečnostné sklo – mliečne: matné s ľahkým chladným nádychom */}
+          <linearGradient id="roof-glass-milky" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(235,238,240,0.90)" />
+            <stop offset="100%" stopColor="rgba(205,212,218,0.78)" />
+          </linearGradient>
+          {/* IZO sklo 24 – dvojsklo: hlbší modrý nádych */}
+          <linearGradient id="roof-izo" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(150,195,230,0.65)" />
+            <stop offset="50%" stopColor="rgba(210,235,250,0.45)" />
+            <stop offset="100%" stopColor="rgba(110,160,200,0.30)" />
+          </linearGradient>
+
+          {/* LED warm glow */}
+          <radialGradient id="pergola-led-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255,210,140,0.85)" />
+            <stop offset="55%" stopColor="rgba(255,190,110,0.35)" />
+            <stop offset="100%" stopColor="rgba(255,180,90,0)" />
+          </radialGradient>
+          <radialGradient id="pergola-led-spot" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255,235,170,1)" />
+            <stop offset="60%" stopColor="rgba(255,205,120,0.6)" />
+            <stop offset="100%" stopColor="rgba(255,180,80,0)" />
+          </radialGradient>
+          <radialGradient id="pergola-led-ground" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255,200,120,0.55)" />
+            <stop offset="100%" stopColor="rgba(255,180,90,0)" />
+          </radialGradient>
+
           <filter id="pergola-shadow" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="6" stdDeviation="6" floodOpacity="0.45" />
           </filter>
