@@ -23,6 +23,8 @@ import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import ConfiguratorHeader from "@/components/ConfiguratorHeader";
 import ConfiguratorFooter from "@/components/ConfiguratorFooter";
+import RalPickerDialog from "@/components/RalPickerDialog";
+import { findRal, type RalColor } from "@/data/ralClassic";
 
 /**
  * PERGOLA CONFIGURATOR – Luxurelax
@@ -103,6 +105,9 @@ interface Config {
   depth: number; // cm
   height: number; // cm
   color: ColorId;
+  ralCode?: string;   // vybraný RAL kód, keď color === "ral"
+  ralName?: string;   // čitateľný názov vybraného RAL odtieňa
+  ralHex?: string;    // hex aproximácia pre náhľad
   roof: RoofId;
   transparency: TransId;
   mounting: boolean;
@@ -189,6 +194,12 @@ export default function PergolaConfigurator() {
   }, [config, areaM2, postLayout]);
 
   const colorObj = COLORS.find((c) => c.id === config.color)!;
+  const ralPicked = config.color === "ral" ? findRal(config.ralCode) : undefined;
+  // Display name & hex respect RAL selection when color === "ral"
+  const colorDisplayName = ralPicked
+    ? `${ralPicked.code} – ${ralPicked.name}`
+    : colorObj.name;
+  const colorDisplayHex = ralPicked ? ralPicked.hex : colorObj.hex;
   const roofObj = ROOF_TYPES.find((r) => r.id === config.roof)!;
   const transObj = TRANSPARENCIES.find((t) => t.id === config.transparency)!;
 
@@ -246,7 +257,7 @@ export default function PergolaConfigurator() {
       const payload = {
         config: {
           ...config,
-          colorName: colorObj.name,
+          colorName: colorDisplayName,
           roofName: roofObj.name,
           transparencyName: transObj.name,
           areaM2: Number(areaM2.toFixed(2)),
@@ -290,7 +301,7 @@ export default function PergolaConfigurator() {
       const payload = {
         config: {
           ...config,
-          colorName: colorObj.name,
+          colorName: colorDisplayName,
           roofName: roofObj.name,
           transparencyName: transObj.name,
           areaM2: Number(areaM2.toFixed(2)),
@@ -470,14 +481,14 @@ export default function PergolaConfigurator() {
             {/* Summary panel */}
             <aside className="lg:sticky lg:top-28 self-start">
               <div className="rounded-2xl border border-border bg-gradient-to-b from-card to-card/40 backdrop-blur-md overflow-hidden">
-                <PergolaPreview config={config} colorHex={colorObj.hex} postLayout={postLayout} />
+                <PergolaPreview config={config} colorHex={colorDisplayHex} postLayout={postLayout} />
                 <div className="p-6">
                   <div className="text-xs uppercase tracking-widest text-primary mb-1">Vaša konfigurácia</div>
                   <h3 className="font-display text-2xl mb-5">Pergola na mieru</h3>
 
                   <SummaryRow label="Rozmery" value={`${config.width} × ${config.depth} × ${config.height} cm`} />
                   <SummaryRow label="Plocha strechy" value={`${areaM2.toFixed(2)} m²`} />
-                  <SummaryRow label="Farba" value={colorObj.name + (colorObj.premium ? " (+10%)" : "")} />
+                  <SummaryRow label="Farba" value={colorDisplayName + (colorObj.premium ? " (+10%)" : "")} />
                   <SummaryRow label="Strecha" value={roofObj.name} />
                   <SummaryRow label="Priehľadnosť" value={transObj.name} />
                   <SummaryRow
@@ -840,42 +851,89 @@ function StepColor({
   config: Config;
   setConfig: React.Dispatch<React.SetStateAction<Config>>;
 }) {
+  const [ralOpen, setRalOpen] = useState(false);
+  const ralPicked = config.color === "ral" ? findRal(config.ralCode) : undefined;
+
+  const handleRalSelect = (ral: RalColor) => {
+    setConfig((cfg) => ({
+      ...cfg,
+      color: "ral",
+      ralCode: ral.code,
+      ralName: ral.name,
+      ralHex: ral.hex,
+    }));
+  };
+
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-      {COLORS.map((c) => {
-        const active = config.color === c.id;
-        return (
-          <button
-            key={c.id}
-            onClick={() => setConfig((cfg) => ({ ...cfg, color: c.id }))}
-            className={cn(
-              "group relative rounded-xl border overflow-hidden transition-all text-left",
-              active
-                ? "border-primary shadow-[0_0_30px_hsl(var(--primary)/0.3)] -translate-y-0.5"
-                : "border-border hover:border-primary/50",
-            )}
-          >
-            <div
-              className="h-28 w-full"
-              style={{ background: c.hex.startsWith("linear") ? c.hex : c.hex }}
-            />
-            <div className="p-3 bg-card">
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-sm">{c.name}</span>
-                {active && <Check className="w-4 h-4 text-primary" />}
+    <>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {COLORS.map((c) => {
+          const active = config.color === c.id;
+          const isRal = c.id === "ral";
+          // Pre RAL dlaždicu zobraz vybraný hex (ak existuje), inak farebný gradient vzorkovníka
+          const swatchBg = isRal && ralPicked
+            ? ralPicked.hex
+            : c.hex.startsWith("linear")
+            ? c.hex
+            : c.hex;
+          const tileLabel = isRal && ralPicked ? ralPicked.code : c.name;
+          const tileSub = isRal
+            ? ralPicked
+              ? ralPicked.name
+              : "Otvoriť vzorkovník →"
+            : null;
+          return (
+            <button
+              key={c.id}
+              onClick={() => {
+                if (isRal) {
+                  setRalOpen(true);
+                } else {
+                  setConfig((cfg) => ({
+                    ...cfg,
+                    color: c.id,
+                    ralCode: undefined,
+                    ralName: undefined,
+                    ralHex: undefined,
+                  }));
+                }
+              }}
+              className={cn(
+                "group relative rounded-xl border overflow-hidden transition-all text-left",
+                active
+                  ? "border-primary shadow-[0_0_30px_hsl(var(--primary)/0.3)] -translate-y-0.5"
+                  : "border-border hover:border-primary/50",
+              )}
+            >
+              <div className="h-28 w-full" style={{ background: swatchBg }} />
+              <div className="p-3 bg-card">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-sm truncate">{tileLabel}</span>
+                  {active && <Check className="w-4 h-4 text-primary shrink-0" />}
+                </div>
+                <div className="text-[11px] mt-0.5 flex items-center justify-between gap-2">
+                  {c.premium ? (
+                    <span className="text-primary">+10% doplatok</span>
+                  ) : (
+                    <span className="text-foreground/50">bez doplatku</span>
+                  )}
+                  {tileSub && (
+                    <span className="text-foreground/50 truncate">{tileSub}</span>
+                  )}
+                </div>
               </div>
-              <div className="text-[11px] mt-0.5">
-                {c.premium ? (
-                  <span className="text-primary">+10% doplatok</span>
-                ) : (
-                  <span className="text-foreground/50">bez doplatku</span>
-                )}
-              </div>
-            </div>
-          </button>
-        );
-      })}
-    </div>
+            </button>
+          );
+        })}
+      </div>
+
+      <RalPickerDialog
+        open={ralOpen}
+        onOpenChange={setRalOpen}
+        selectedCode={config.ralCode}
+        onSelect={handleRalSelect}
+      />
+    </>
   );
 }
 
