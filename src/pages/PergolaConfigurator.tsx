@@ -75,6 +75,23 @@ const TRANSPARENCIES = [
 
 const MOUNTING_PRICE = 850;
 const LED_PRICE = 420;
+const REINFORCEMENT_PRICE = 180; // EUR – výstuha pri šírkach v hraničnom pásme
+const EXTRA_POST_PRICE = 220; // EUR za každý stĺp navyše nad 2 základné
+
+/**
+ * Stĺpová logika podľa technickej tabuľky (Polykarbonát).
+ * Vstup: šírka (cm). Výstup: počet stĺpov + či je potrebná výstuha.
+ *  ≤ 506 cm  → 2 stĺpy
+ *  ≤ 606 cm  → 2 stĺpy + výstuha
+ *  ≤ 906 cm  → 3 stĺpy
+ *  > 906 cm  → 4 stĺpy
+ */
+function computePostLayout(widthCm: number): { posts: 2 | 3 | 4; reinforcement: boolean } {
+  if (widthCm <= 506) return { posts: 2, reinforcement: false };
+  if (widthCm <= 606) return { posts: 2, reinforcement: true };
+  if (widthCm <= 906) return { posts: 3, reinforcement: false };
+  return { posts: 4, reinforcement: false };
+}
 
 type ColorId = typeof COLORS[number]["id"];
 type RoofId = typeof ROOF_TYPES[number]["id"];
@@ -149,6 +166,8 @@ export default function PergolaConfigurator() {
 
   const areaM2 = useMemo(() => (config.width * config.depth) / 10000, [config.width, config.depth]);
 
+  const postLayout = useMemo(() => computePostLayout(config.width), [config.width]);
+
   const price = useMemo(() => {
     const roof = ROOF_TYPES.find((r) => r.id === config.roof)!;
     const colorObj = COLORS.find((c) => c.id === config.color)!;
@@ -161,8 +180,10 @@ export default function PergolaConfigurator() {
     if (colorObj.premium) p *= 1.1;
     if (config.mounting) p += MOUNTING_PRICE;
     if (config.led) p += LED_PRICE;
+    p += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
+    if (postLayout.reinforcement) p += REINFORCEMENT_PRICE;
     return Math.round(p);
-  }, [config, areaM2]);
+  }, [config, areaM2, postLayout]);
 
   const colorObj = COLORS.find((c) => c.id === config.color)!;
   const roofObj = ROOF_TYPES.find((r) => r.id === config.roof)!;
@@ -376,7 +397,7 @@ export default function PergolaConfigurator() {
             {/* Summary panel */}
             <aside className="lg:sticky lg:top-28 self-start">
               <div className="rounded-2xl border border-border bg-gradient-to-b from-card to-card/40 backdrop-blur-md overflow-hidden">
-                <PergolaPreview config={config} colorHex={colorObj.hex} />
+                <PergolaPreview config={config} colorHex={colorObj.hex} postLayout={postLayout} />
                 <div className="p-6">
                   <div className="text-xs uppercase tracking-widest text-primary mb-1">Vaša konfigurácia</div>
                   <h3 className="font-display text-2xl mb-5">Pergola na mieru</h3>
@@ -386,6 +407,10 @@ export default function PergolaConfigurator() {
                   <SummaryRow label="Farba" value={colorObj.name + (colorObj.premium ? " (+10%)" : "")} />
                   <SummaryRow label="Strecha" value={roofObj.name} />
                   <SummaryRow label="Priehľadnosť" value={transObj.name} />
+                  <SummaryRow
+                    label="Stĺpy"
+                    value={`${postLayout.posts}× stĺp${postLayout.reinforcement ? " + výztuha" : ""}`}
+                  />
                   <SummaryRow label="Montáž" value={config.mounting ? "Áno" : "Nie"} />
                   <SummaryRow label="LED osvetlenie" value={config.led ? "Áno" : "Nie"} />
 
@@ -440,7 +465,15 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function PergolaPreview({ config, colorHex }: { config: Config; colorHex: string }) {
+function PergolaPreview({
+  config,
+  colorHex,
+  postLayout,
+}: {
+  config: Config;
+  colorHex: string;
+  postLayout: { posts: 2 | 3 | 4; reinforcement: boolean };
+}) {
   // Real isometric projection — proportions react to width/depth/height
   const frameColor = colorHex.startsWith("linear") ? "#3a3a3a" : colorHex;
 
@@ -552,27 +585,81 @@ function PergolaPreview({ config, colorHex }: { config: Config; colorHex: string
           filter="url(#pergola-shadow)"
         />
 
-        {/* Back posts (drawn first, behind roof) */}
-        <path d={postPath(D0, D1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
-        <path d={postPath(C0, C1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+        {/* Intermediate post X-positions along width based on table layout */}
+        {(() => {
+          const intermediates: number[] =
+            postLayout.posts === 3
+              ? [W / 2]
+              : postLayout.posts === 4
+              ? [W / 3, (2 * W) / 3]
+              : [];
+          return (
+            <>
+              {/* Back posts (drawn first, behind roof) */}
+              <path d={postPath(D0, D1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+              <path d={postPath(C0, C1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+              {intermediates.map((x, i) => {
+                const a = iso(x, D, 0);
+                const b = iso(x, D, H);
+                return (
+                  <path
+                    key={`back-${i}`}
+                    d={postPath(a, b)}
+                    stroke={frameColor}
+                    strokeWidth={4}
+                    strokeLinecap="round"
+                  />
+                );
+              })}
 
-        {/* Roof slab (glass / polycarbonate) */}
-        <polygon
-          points={`${A1[0]},${A1[1]} ${B1[0]},${B1[1]} ${C1[0]},${C1[1]} ${D1[0]},${D1[1]}`}
-          fill="url(#pergola-glass)"
-          stroke={frameColor}
-          strokeWidth={3}
-        />
-        {/* Roof slats */}
-        <g stroke={frameColor} strokeWidth={1} opacity={0.55}>
-          {slats.map((d, i) => (
-            <path key={i} d={d} />
-          ))}
-        </g>
+              {/* Roof slab (glass / polycarbonate) */}
+              <polygon
+                points={`${A1[0]},${A1[1]} ${B1[0]},${B1[1]} ${C1[0]},${C1[1]} ${D1[0]},${D1[1]}`}
+                fill="url(#pergola-glass)"
+                stroke={frameColor}
+                strokeWidth={3}
+              />
+              {/* Roof slats */}
+              <g stroke={frameColor} strokeWidth={1} opacity={0.55}>
+                {slats.map((d, i) => (
+                  <path key={i} d={d} />
+                ))}
+              </g>
 
-        {/* Front posts (drawn last, in front) */}
-        <path d={postPath(A0, A1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
-        <path d={postPath(B0, B1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+              {/* Reinforcement beam under front edge of roof (if required) */}
+              {postLayout.reinforcement && (() => {
+                const a = iso(0, 0, H - 8);
+                const b = iso(W, 0, H - 8);
+                return (
+                  <path
+                    d={postPath(a, b)}
+                    stroke={frameColor}
+                    strokeWidth={6}
+                    strokeLinecap="round"
+                    opacity={0.95}
+                  />
+                );
+              })()}
+
+              {/* Front posts (drawn last, in front) */}
+              <path d={postPath(A0, A1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+              <path d={postPath(B0, B1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
+              {intermediates.map((x, i) => {
+                const a = iso(x, 0, 0);
+                const b = iso(x, 0, H);
+                return (
+                  <path
+                    key={`front-${i}`}
+                    d={postPath(a, b)}
+                    stroke={frameColor}
+                    strokeWidth={4}
+                    strokeLinecap="round"
+                  />
+                );
+              })}
+            </>
+          );
+        })()}
 
         {/* Dimension labels */}
         {/* Width — front edge */}
