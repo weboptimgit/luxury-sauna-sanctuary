@@ -760,22 +760,20 @@ function PergolaPreview({
               : [];
           return (
             <>
-              {/* Back posts (drawn first, behind roof) */}
-              <path d={postPath(D0, D1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
-              <path d={postPath(C0, C1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
-              {intermediates.map((x, i) => {
-                const a = iso(x, D, 0);
-                const b = iso(x, D, H);
+              {/* Wall-mount ledger beam (pergola attached to wall) */}
+              {(() => {
+                const a = iso(0, D, H);
+                const b = iso(W, D, H);
                 return (
                   <path
-                    key={`back-${i}`}
                     d={postPath(a, b)}
                     stroke={frameColor}
-                    strokeWidth={4}
+                    strokeWidth={6}
                     strokeLinecap="round"
+                    opacity={0.95}
                   />
                 );
-              })}
+              })()}
 
               {/* Roof slab (glass / polycarbonate) */}
               <polygon
