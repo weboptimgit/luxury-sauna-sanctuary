@@ -603,19 +603,19 @@ function PergolaPreview({
   const C1 = iso(W, D, H);
   const D1 = iso(0, D, H);
 
-  // Ground plane (slightly larger than footprint)
+  // Ground plane (in front of wall only)
   const pad = Math.max(W, D) * 0.18;
   const G1 = iso(-pad, -pad, 0);
   const G2 = iso(W + pad, -pad, 0);
-  const G3 = iso(W + pad, D + pad, 0);
-  const G4 = iso(-pad, D + pad, 0);
+  const G3 = iso(W + pad, D, 0);
+  const G4 = iso(-pad, D, 0);
 
-  // Back wall (visual context — like in reference)
-  const wallH = H * 1.4;
-  const W1 = iso(-pad, D + pad, 0);
-  const W2 = iso(W + pad, D + pad, 0);
-  const W3 = iso(W + pad, D + pad, wallH);
-  const W4 = iso(-pad, D + pad, wallH);
+  // Back wall — pergola is wall-mounted, so wall sits exactly at back edge (y = D)
+  const wallH = Math.max(H * 1.35, H + 60);
+  const W1 = iso(-pad, D, 0);
+  const W2 = iso(W + pad, D, 0);
+  const W3 = iso(W + pad, D, wallH);
+  const W4 = iso(-pad, D, wallH);
 
   // Roof slats (along depth direction)
   const slatCount = Math.max(8, Math.round(W / 35));
@@ -760,22 +760,20 @@ function PergolaPreview({
               : [];
           return (
             <>
-              {/* Back posts (drawn first, behind roof) */}
-              <path d={postPath(D0, D1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
-              <path d={postPath(C0, C1)} stroke={frameColor} strokeWidth={4} strokeLinecap="round" />
-              {intermediates.map((x, i) => {
-                const a = iso(x, D, 0);
-                const b = iso(x, D, H);
+              {/* Wall-mount ledger beam (pergola attached to wall) */}
+              {(() => {
+                const a = iso(0, D, H);
+                const b = iso(W, D, H);
                 return (
                   <path
-                    key={`back-${i}`}
                     d={postPath(a, b)}
                     stroke={frameColor}
-                    strokeWidth={4}
+                    strokeWidth={6}
                     strokeLinecap="round"
+                    opacity={0.95}
                   />
                 );
-              })}
+              })()}
 
               {/* Roof slab (glass / polycarbonate) */}
               <polygon
