@@ -35,9 +35,46 @@ import { findRal, type RalColor } from "@/data/ralClassic";
  * Pricing here is ILUSTRATIVE – nahraď podľa reálneho cenníka.
  */
 
-// ---------- Pricing (illustrative) ----------
-const BASE_PRICE = 1800; // EUR base
-const PRICE_PER_M2 = 220; // EUR per m² of roof area (width × depth)
+// ---------- Pricing ----------
+// Cenník hliníkových prístreškov, krytina komôrkový polykarbonát (bez DPH)
+// Riadky = hĺbka (cm), Stĺpce = šírka (cm)
+const PRICE_TABLE_WIDTHS = [300, 400, 500, 600, 700, 800, 900, 1000, 1100] as const;
+const PRICE_TABLE_DEPTHS = [200, 250, 300, 350, 400, 450, 500] as const;
+const PRICE_TABLE: number[][] = [
+  // 300   400   500   600   700   800   900   1000  1100
+  [ 1350, 1481, 1593, 1836, 1971, 2164, 2461, 2600, 2830 ], // 200
+  [ 1518, 1630, 1823, 2100, 2241, 2363, 2793, 2962, 3203 ], // 250
+  [ 1622, 1796, 2020, 2262, 2410, 2535, 3041, 3308, 3459 ], // 300
+  [ 1797, 1922, 2114, 2498, 2612, 2717, 3166, 3541, 3736 ], // 350
+  [ 1933, 2090, 2325, 2594, 2717, 2834, 3302, 3833, 4150 ], // 400
+  [ 2184, 2332, 2560, 2936, 3224, 3459, 3663, 4222, 4667 ], // 450
+  [ 2351, 2456, 2691, 3226, 3450, 3720, 4215, 4750, 5250 ], // 500
+];
+
+function lookupBasePrice(widthCm: number, depthCm: number): number {
+  const ws = PRICE_TABLE_WIDTHS;
+  const ds = PRICE_TABLE_DEPTHS;
+  const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
+  const w = clamp(widthCm, ws[0], ws[ws.length - 1]);
+  const d = clamp(depthCm, ds[0], ds[ds.length - 1]);
+  // Find bracketing indices
+  let wi = 0;
+  while (wi < ws.length - 2 && w > ws[wi + 1]) wi++;
+  let di = 0;
+  while (di < ds.length - 2 && d > ds[di + 1]) di++;
+  const w0 = ws[wi], w1 = ws[wi + 1];
+  const d0 = ds[di], d1 = ds[di + 1];
+  const tw = w1 === w0 ? 0 : (w - w0) / (w1 - w0);
+  const td = d1 === d0 ? 0 : (d - d0) / (d1 - d0);
+  const p00 = PRICE_TABLE[di][wi];
+  const p01 = PRICE_TABLE[di][wi + 1];
+  const p10 = PRICE_TABLE[di + 1][wi];
+  const p11 = PRICE_TABLE[di + 1][wi + 1];
+  const top = p00 + (p01 - p00) * tw;
+  const bot = p10 + (p11 - p10) * tw;
+  return top + (bot - top) * td;
+}
+
 const HEIGHT_SURCHARGE_PER_CM_OVER = 4; // over 250cm
 const HEIGHT_BASELINE = 250;
 
