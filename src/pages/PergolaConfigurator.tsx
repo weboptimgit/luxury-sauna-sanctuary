@@ -169,10 +169,10 @@ const STEPS = [
   { id: 5, title: "Dokončenie", subtitle: "Pridajte do košíka alebo pošlite nezáväzný dopyt", icon: Send },
 ];
 
-const MIN_W = 200;
-const MAX_W = 5000;
+const MIN_W = 300;
+const MAX_W = 1100;
 const MIN_D = 200;
-const MAX_D = 600;
+const MAX_D = 500;
 const MIN_H = 200;
 const MAX_H = 350;
 
