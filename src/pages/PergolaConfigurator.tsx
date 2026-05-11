@@ -216,8 +216,9 @@ export default function PergolaConfigurator() {
   const price = useMemo(() => {
     const roof = ROOF_TYPES.find((r) => r.id === config.roof)!;
     const colorObj = COLORS.find((c) => c.id === config.color)!;
-    let p = BASE_PRICE;
-    p += areaM2 * PRICE_PER_M2;
+    // Základ = cenníková cena podľa rozmerov (polykarbonát v cene).
+    // Sklo / IZO sklo = príplatok za m² nad rámec polykarbonátu.
+    let p = lookupBasePrice(config.width, config.depth);
     p += areaM2 * roof.pricePerM2;
     if (config.height > HEIGHT_BASELINE) {
       p += (config.height - HEIGHT_BASELINE) * HEIGHT_SURCHARGE_PER_CM_OVER;
