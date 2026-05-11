@@ -923,8 +923,8 @@ function PergolaPreview({
         </text>
         {/* Depth — left edge */}
         <text
-          x={A0[0] * 0.75 + D0[0] * 0.25 - 12}
-          y={A0[1] * 0.75 + D0[1] * 0.25 + 14}
+          x={Math.min(A0[0], D0[0], A1[0], D1[0]) - 18}
+          y={(A0[1] + D0[1]) / 2 + 10}
           textAnchor="end"
           fontSize="11"
           fill="hsl(var(--foreground) / 0.85)"
