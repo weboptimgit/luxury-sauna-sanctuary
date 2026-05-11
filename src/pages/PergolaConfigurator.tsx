@@ -921,10 +921,11 @@ function PergolaPreview({
         >
           Šírka {fmt(W)}
         </text>
-        {/* Depth — right edge */}
+        {/* Depth — left edge */}
         <text
-          x={B0[0] * 0.75 + C0[0] * 0.25 + 12}
-          y={B0[1] * 0.75 + C0[1] * 0.25 + 14}
+          x={A0[0] * 0.75 + D0[0] * 0.25 - 12}
+          y={A0[1] * 0.75 + D0[1] * 0.25 + 14}
+          textAnchor="end"
           fontSize="11"
           fill="hsl(var(--foreground) / 0.85)"
         >
