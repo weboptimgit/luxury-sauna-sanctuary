@@ -603,12 +603,12 @@ function PergolaPreview({
   const C1 = iso(W, D, H);
   const D1 = iso(0, D, H);
 
-  // Ground plane (slightly larger than footprint)
+  // Ground plane (in front of wall only)
   const pad = Math.max(W, D) * 0.18;
   const G1 = iso(-pad, -pad, 0);
   const G2 = iso(W + pad, -pad, 0);
-  const G3 = iso(W + pad, D + pad, 0);
-  const G4 = iso(-pad, D + pad, 0);
+  const G3 = iso(W + pad, D, 0);
+  const G4 = iso(-pad, D, 0);
 
   // Back wall — pergola is wall-mounted, so wall sits exactly at back edge (y = D)
   const wallH = Math.max(H * 1.35, H + 60);
