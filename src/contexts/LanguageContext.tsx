@@ -161,6 +161,22 @@ const translations: Record<Language, Record<string, string>> = {
     "success.addedToCart": "Produkt bol pridaný do košíka",
     "success.addedToCartDesc": "Pokračujte v nákupe alebo prejdite do košíka.",
 
+    // Inline UI (Configurator.tsx)
+    "config.metaTitle": "LuxuRelax | Konfigurátor",
+    "config.metaDescription":
+      "Nakonfigurujte si svoju vysnívanú saunu alebo kaďu. Vyberte si typ dreva, ohrievač, osvetlenie a príslušenstvo.",
+    "config.heaterModelCartError": "Pred pridaním do košíka musíte vybrať konkrétny model ohrievača.",
+    "config.pergola": "Pergola",
+    "config.pergola.description": "Navrhnite si prémiovú bioklimatickú pergolu — rozmery, farba, strecha a osvetlenie.",
+    "config.sort.priceAsc": "Najlacnejšie",
+    "config.sort.priceDesc": "Najdrahšie",
+    "config.sort.nameAsc": "Názov A-Z",
+    "config.combo.tabSauna": "Sauna",
+    "config.combo.tabHottub": "Kaďa",
+    "config.combo.nextHottub": "Ďalej: Možnosti kade",
+    "config.combo.backSauna": "Späť na možnosti sauny",
+    "config.heater.externalChimney": "s komínom, čiapkou a ochranou, vhodné pre vodu s chémiou",
+
     // Footer
     "footer.brand.description":
       "Prémiové sauny a wellness riešenia vytvorené s vášňou a dodané s dôrazom na dokonalosť. Vaša cesta k relaxu začína tu.",
