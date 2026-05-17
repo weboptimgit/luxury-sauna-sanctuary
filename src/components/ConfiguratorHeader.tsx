@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import flagUk from "@/assets/flag-uk.png";
 import flagSk from "@/assets/flag-sk.png";
+import flagHu from "@/assets/flag-hu.png";
 import brelaxLogo from "@/assets/LuxuRelax-LOGO-text-gradient.png";
 
 const currencies = ["EUR", "CZK", "HUF"] as const;
