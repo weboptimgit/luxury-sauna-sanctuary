@@ -33,22 +33,28 @@ const ConfiguratorHeader = () => {
   const configuratorPath =
     language === "en" ? "/configurator" : language === "hu" ? "/konfigurator-hu" : "/konfigurator";
 
+  const aboutHref =
+    language === "en" ? `${baseUrl}/about-us/` : language === "hu" ? `${baseUrl}/rolunk/` : `${baseUrl}/o-nas/`;
+  const contactHref =
+    language === "en" ? `${baseUrl}/contact/` : language === "hu" ? `${baseUrl}/kapcsolat/` : `${baseUrl}/kontakt/`;
+
   const navItems = [
     { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
     { labelKey: "nav.hotTubs", href: `${baseUrl}${prefix}/${tubs}/`, external: true },
-    { labelKey: "nav.configurator", href: language === "en" ? "/configurator" : "/konfigurator", external: false },
+    { labelKey: "nav.configurator", href: configuratorPath, external: false },
     { labelKey: "nav.blog", href: `${baseUrl}/blog/`, external: true },
-    { labelKey: "nav.about", href: language === "en" ? `${baseUrl}/about-us/` : `${baseUrl}/o-nas/`, external: true },
-    {
-      labelKey: "nav.contact",
-      href: language === "en" ? `${baseUrl}/contact/` : `${baseUrl}/kontakt/`,
-      external: true,
-    },
+    { labelKey: "nav.about", href: aboutHref, external: true },
+    { labelKey: "nav.contact", href: contactHref, external: true },
   ];
 
+  // Cycle sk -> en -> hu -> sk
   const toggleLanguage = () => {
-    setLanguage(language === "sk" ? "en" : "sk");
+    const next = language === "sk" ? "en" : language === "en" ? "hu" : "sk";
+    setLanguage(next);
   };
+
+  const nextFlag = language === "sk" ? flagUk : language === "en" ? flagHu : flagSk;
+  const nextLangLabel = language === "sk" ? "English" : language === "en" ? "Magyar" : "Slovensky";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-dark">
