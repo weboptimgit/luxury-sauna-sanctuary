@@ -188,7 +188,7 @@ const ConfiguratorHeader = () => {
                   </Link>
                 ),
               )}
-              <a href={`${baseUrl}/kontakt/`} onClick={() => setIsMenuOpen(false)}>
+              <a href={contactHref} onClick={() => setIsMenuOpen(false)}>
                 <Button variant="luxury" size="sm" className="mt-2 w-full">
                   {t("nav.inquiry")}
                 </Button>
