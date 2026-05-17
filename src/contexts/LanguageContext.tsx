@@ -607,38 +607,43 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     return path.replace(/\/+$/, "");
   };
 
-  // Detect language from URL path - /configurator = EN, /konfigurator = SK
+  // Detect language: hostname .hu => HU, /configurator => EN, /konfigurator-hu => HU (dev), else SK
   const getLanguageFromPath = (): Language => {
-    return location.pathname.startsWith("/configurator") ? "en" : "sk";
+    if (typeof window !== "undefined") {
+      const host = window.location.hostname;
+      if (host.endsWith(".hu") || host === "luxurelax.hu") return "hu";
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("lang") === "hu") return "hu";
+    }
+    const p = location.pathname;
+    if (p.startsWith("/konfigurator-hu") || p.startsWith("/hu/")) return "hu";
+    if (p.startsWith("/configurator")) return "en";
+    return "sk";
   };
 
   const [language, setLanguageState] = useState<Language>(getLanguageFromPath);
-  const [currency, setCurrency] = useState<Currency>("EUR");
+  const [currency, setCurrency] = useState<Currency>(() => (getLanguageFromPath() === "hu" ? "HUF" : "EUR"));
 
   // Update language when path changes
   useEffect(() => {
-    setLanguageState(getLanguageFromPath());
+    const next = getLanguageFromPath();
+    setLanguageState(next);
+    if (next === "hu") setCurrency("HUF");
   }, [location.pathname]);
 
   const setLanguage = (lang: Language) => {
     const currentPath = normalizePath(location.pathname);
+    const subPath = currentPath
+      .replace(/^\/konfigurator-hu/, "")
+      .replace(/^\/configurator/, "")
+      .replace(/^\/konfigurator/, "");
 
     if (lang === "en") {
-      // Switch to English on .com domain
-      if (currentPath.startsWith("/konfigurator")) {
-        const subPath = currentPath.replace("/konfigurator", "");
-        window.location.href = "https://www.luxurelax.com/configurator" + subPath;
-      } else {
-        window.location.href = "https://www.luxurelax.com/configurator";
-      }
+      window.location.href = "https://www.luxurelax.com/configurator" + subPath;
+    } else if (lang === "hu") {
+      window.location.href = "https://www.luxurelax.hu/konfigurator" + subPath;
     } else {
-      // Switch to Slovak on .sk domain
-      if (currentPath.startsWith("/configurator")) {
-        const subPath = currentPath.replace("/configurator", "");
-        window.location.href = "https://www.luxurelax.sk/konfigurator" + subPath;
-      } else {
-        window.location.href = "https://www.luxurelax.sk/konfigurator";
-      }
+      window.location.href = "https://www.luxurelax.sk/konfigurator" + subPath;
     }
   };
 
