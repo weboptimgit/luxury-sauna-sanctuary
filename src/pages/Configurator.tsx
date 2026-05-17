@@ -1714,10 +1714,7 @@ const Configurator = () => {
     if (productCategory === "sauna" && isHeaterModelRequired) {
       toast({
         title: t("config.selectHeaterModel"),
-        description:
-          language === "en"
-            ? "You must select a specific heater model before adding to cart."
-            : "Pred pridaním do košíka musíte vybrať konkrétny model ohrievača.",
+        description: t("config.heaterModelCartError"),
         variant: "destructive",
       });
       return;
