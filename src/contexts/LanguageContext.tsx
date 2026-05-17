@@ -351,6 +351,22 @@ const translations: Record<Language, Record<string, string>> = {
     "success.addedToCart": "Product added to cart",
     "success.addedToCartDesc": "Continue shopping or go to cart.",
 
+    // Inline UI (Configurator.tsx)
+    "config.metaTitle": "LuxuRelax | Configurator",
+    "config.metaDescription":
+      "Configure your dream sauna or hot tub. Choose wood type, heater, lighting and accessories.",
+    "config.heaterModelCartError": "You must select a specific heater model before adding to cart.",
+    "config.pergola": "Pergola",
+    "config.pergola.description": "Design your premium bioclimatic pergola — dimensions, color, roof and lighting.",
+    "config.sort.priceAsc": "Cheapest",
+    "config.sort.priceDesc": "Most expensive",
+    "config.sort.nameAsc": "Name A-Z",
+    "config.combo.tabSauna": "Sauna",
+    "config.combo.tabHottub": "Hot Tub",
+    "config.combo.nextHottub": "Next: Hot Tub options",
+    "config.combo.backSauna": "Back to Sauna options",
+    "config.heater.externalChimney": "with chimney, cap and protection, suitable for water with chemicals",
+
     // Footer
     "footer.brand.description":
       " Premium saunas and wellness solutions created with passion and delivered with an emphasis on perfection. Your journey to relaxation starts here.",
