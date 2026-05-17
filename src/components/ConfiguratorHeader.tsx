@@ -163,12 +163,8 @@ const ConfiguratorHeader = () => {
                 }}
                 className="flex items-center gap-3 text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300"
               >
-                <img
-                  src={language === "sk" ? flagUk : flagSk}
-                  alt={language === "sk" ? "English" : "Slovensky"}
-                  className="w-6 h-4 object-cover"
-                />
-                {language === "sk" ? "English" : "Slovensky"}
+                <img src={nextFlag} alt={nextLangLabel} className="w-6 h-4 object-cover" />
+                {nextLangLabel}
               </button>
 
               {navItems.map((item) =>
