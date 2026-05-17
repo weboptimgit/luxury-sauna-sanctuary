@@ -14,23 +14,24 @@ const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, setLanguage, currency, setCurrency, t } = useLanguage();
 
-  // Base URL changes based on language - .com for EN, .sk for SK
-  const baseUrl = language === "en" ? "https://www.luxurelax.com" : "https://www.luxurelax.sk";
+  // Base URL changes based on language - .com for EN, .sk for SK, .hu for HU
+  const baseUrl =
+    language === "en"
+      ? "https://www.luxurelax.com"
+      : language === "hu"
+        ? "https://www.luxurelax.hu"
+        : "https://www.luxurelax.sk";
 
   const categoryMap = {
-    sk: {
-      prefix: "/k",
-      saunas: "sauny",
-      tubs: "kade",
-    },
-    en: {
-      prefix: "/c",
-      saunas: "saunas",
-      tubs: "hottubs",
-    },
-  };
+    sk: { prefix: "/k", saunas: "sauny", tubs: "kade" },
+    en: { prefix: "/c", saunas: "saunas", tubs: "hottubs" },
+    hu: { prefix: "/k", saunas: "szaunak", tubs: "dezsafurdok" },
+  } as const;
 
   const { prefix, saunas, tubs } = categoryMap[language] || categoryMap.sk;
+
+  const configuratorPath =
+    language === "en" ? "/configurator" : language === "hu" ? "/konfigurator-hu" : "/konfigurator";
 
   const navItems = [
     { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
