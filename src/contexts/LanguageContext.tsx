@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-type Language = "sk" | "en";
+type Language = "sk" | "en" | "hu";
 type Currency = "EUR" | "CZK" | "HUF";
 
 interface LanguageContextType {
