@@ -811,19 +811,14 @@ const Configurator = () => {
   const [sortOrder, setSortOrder] = useState<"price-asc" | "price-desc" | "name-asc">("price-asc");
 
   const metaTitle = useMemo(() => {
-    const base = language === "en" ? "LuxuRelax | Configurator" : "LuxuRelax | Konfigurátor";
+    const base = t("config.metaTitle");
     if (selectedSaunaType) return `${selectedSaunaType.name} | ${base}`;
     if (selectedHotTubType) return `${selectedHotTubType.name} | ${base}`;
     if (selectedComboType) return `${selectedComboType.name} | ${base}`;
     return base;
-  }, [language, selectedSaunaType, selectedHotTubType, selectedComboType]);
+  }, [language, selectedSaunaType, selectedHotTubType, selectedComboType, t]);
 
-  useDocumentMeta(
-    metaTitle,
-    language === "en"
-      ? "Configure your dream sauna or hot tub. Choose wood type, heater, lighting and accessories."
-      : "Nakonfigurujte si svoju vysnívanú saunu alebo kaďu. Vyberte si typ dreva, ohrievač, osvetlenie a príslušenstvo.",
-  );
+  useDocumentMeta(metaTitle, t("config.metaDescription"));
 
   // Sauna konfigurácia (ids musia sedieť s PHP configom)
   const [saunaConfig, setSaunaConfig] = useState({
