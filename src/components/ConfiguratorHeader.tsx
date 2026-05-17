@@ -105,22 +105,18 @@ const ConfiguratorHeader = () => {
               ))}
             </div>
 
-            {/* Language Toggle */}
+            {/* Language Toggle (cycles SK -> EN -> HU) */}
             <button
               onClick={toggleLanguage}
               className="flex items-center justify-center pl-4 border-l border-border/50 hover:opacity-80 transition-opacity"
-              title={language === "sk" ? "Switch to English" : "Prepnúť na slovenčinu"}
+              title={`Switch to ${nextLangLabel}`}
             >
-              <img
-                src={language === "sk" ? flagUk : flagSk}
-                alt={language === "sk" ? "English" : "Slovensky"}
-                className="w-4 h-[11px] object-cover"
-              />
+              <img src={nextFlag} alt={nextLangLabel} className="w-4 h-[11px] object-cover" />
             </button>
 
             {/* Cart - last item */}
             <a
-              href={language === "en" ? `${baseUrl}/cart/` : `${baseUrl}/kosik/`}
+              href={language === "en" ? `${baseUrl}/cart/` : language === "hu" ? `${baseUrl}/kosar/` : `${baseUrl}/kosik/`}
               className="relative p-2 pl-4 border-l border-border/50 text-foreground/70 hover:text-primary transition-colors"
             >
               <ShoppingCart className="w-5 h-5" />
