@@ -243,8 +243,9 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
 
     $cfg      = $body['config']   ?? [];
     $customer = $body['customer'] ?? [];
+    $lang     = luxurelax_pergola_normalize_lang($body['lang'] ?? 'sk');
+    $s        = luxurelax_pergola_strings($lang);
 
-    // Server-side validácia zákazníka
     $name  = sanitize_text_field($customer['name']  ?? '');
     $phone = sanitize_text_field($customer['phone'] ?? '');
     $email = sanitize_email($customer['email']      ?? '');
@@ -255,9 +256,8 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         return new WP_REST_Response(['error' => 'Missing or invalid fields'], 422);
     }
 
-    $calc = luxurelax_pergola_calculate_price($cfg);
+    $calc = luxurelax_pergola_calculate_price($cfg, $lang);
 
-    // Uloženie ako CPT inquiry (jednoduchá CRM stopa)
     $post_id = wp_insert_post([
         'post_type'   => 'pergola_inquiry',
         'post_status' => 'publish',
@@ -267,36 +267,36 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
     if ($post_id && !is_wp_error($post_id)) {
         update_post_meta($post_id, '_pergola_config', $calc['normalized']);
         update_post_meta($post_id, '_pergola_price',  $calc['price']);
+        update_post_meta($post_id, '_pergola_lang',   $lang);
         update_post_meta($post_id, '_pergola_customer', [
             'name' => $name, 'phone' => $phone, 'email' => $email, 'city' => $city,
         ]);
     }
 
-    // E-mail
     $cfg_n = $calc['normalized'];
     $lines = [
-        "Nový dopyt na pergolu (Luxurelax)",
+        $s['email_heading'],
         "------------------------------------",
-        "Meno:      $name",
-        "Telefón:   $phone",
-        "E-mail:    $email",
-        "Mesto:     $city",
-        "Poznámka:  $note",
+        "{$s['email_name']}:    $name",
+        "{$s['email_phone']}:   $phone",
+        "{$s['email_email']}:   $email",
+        "{$s['email_city']}:    $city",
+        "{$s['email_note']}:    $note",
         "",
-        "Konfigurácia:",
-        "  Rozmery:       {$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
-        "  Plocha strechy: {$calc['area_m2']} m²",
-        "  Farba:         {$calc['color_label']}",
-        "  Strecha:       {$calc['roof_label']}",
-        "  Priehľadnosť:  {$calc['trans_label']}",
-        "  Montáž:        " . ($cfg_n['mounting'] ? 'Áno' : 'Nie'),
-        "  LED:           " . ($cfg_n['led'] ? 'Áno' : 'Nie'),
+        "{$s['email_config']}:",
+        "  {$s['rozmery']}:      {$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
+        "  {$s['plocha']}:       {$calc['area_m2']} m²",
+        "  {$s['farba']}:        {$calc['color_label']}",
+        "  {$s['strecha']}:      {$calc['roof_label']}",
+        "  {$s['priehladnost']}: {$calc['trans_label']}",
+        "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
+        "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
         "",
-        "Orientačná cena: {$calc['price']} €",
+        "{$s['email_price']}: {$calc['price']} €",
     ];
     wp_mail(
         LUXURELAX_PERGOLA_INQUIRY_EMAIL,
-        'Nový dopyt – Pergola konfigurátor',
+        $s['email_subject'],
         implode("\n", $lines),
         ['Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $email]
     );
