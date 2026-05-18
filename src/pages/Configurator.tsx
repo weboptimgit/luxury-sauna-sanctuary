@@ -1015,9 +1015,24 @@ const Configurator = () => {
   };
 
   // --- UI Options z API configu ---
+  // Client-side label override pre option IDs (API labels chodia v SK z PHP).
+  // Použije i18n kľúč `option.<group>.<id>`; ak chýba, ostane API label.
+  const localizeOptions = (opts: ConfigOption[], group: string): ConfigOption[] =>
+    opts.map((o) => {
+      const key = `option.${group}.${o.id}`;
+      const translated = t(key);
+      return translated && translated !== key ? { ...o, name: translated } : o;
+    });
+
   // Model-specific options – čítané z selectedSaunaType nižšie v renderingu
-  const saunaHeaterTypes: ConfigOption[] = toUIOptions(apiConfig?.sauna.heaterTypes, heaterImages);
-  const saunaLedOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.ledOptions, ledImages);
+  const saunaHeaterTypes: ConfigOption[] = localizeOptions(
+    toUIOptions(apiConfig?.sauna.heaterTypes, heaterImages),
+    "heater",
+  );
+  const saunaLedOptions: ConfigOption[] = localizeOptions(
+    toUIOptions(apiConfig?.sauna.ledOptions, ledImages),
+    "led",
+  );
   const filteredLedOptions = useMemo(() => {
     if (!selectedSaunaType) return saunaLedOptions;
 
@@ -1027,10 +1042,13 @@ const Configurator = () => {
     return saunaLedOptions.filter((o) => allowed.includes(o.id));
   }, [saunaLedOptions, selectedSaunaType]);
 
-  const saunaBluetoothOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.bluetoothOptions, saunaSpeakerImage);
-  const saunaAccessoryKitOptions: ConfigOption[] = toUIOptions(
-    apiConfig?.sauna.accessoryKitOptions,
-    saunaAccessoryImages,
+  const saunaBluetoothOptions: ConfigOption[] = localizeOptions(
+    toUIOptions(apiConfig?.sauna.bluetoothOptions, saunaSpeakerImage),
+    "bluetooth",
+  );
+  const saunaAccessoryKitOptions: ConfigOption[] = localizeOptions(
+    toUIOptions(apiConfig?.sauna.accessoryKitOptions, saunaAccessoryImages),
+    "kit",
   );
   const saunaColorOptions: ConfigOption[] = toUIOptions(apiConfig?.sauna.colorOptions, saunaColorThumbs);
 
