@@ -350,7 +350,10 @@ add_action('woocommerce_checkout_create_order_line_item', function ($item, $cart
 // Premenovanie položky v košíku
 add_filter('woocommerce_cart_item_name', function ($name, $cart_item, $cart_item_key) {
     if (!empty($cart_item['pergola_config'])) {
-        return '<a href="' . esc_url(home_url('/konfigurator-pergoly/')) . '">' . esc_html__('Pergola – konfigurácia na mieru', 'luxurelax') . '</a>';
+        $lang = luxurelax_pergola_normalize_lang($cart_item['pergola_lang'] ?? 'sk');
+        $s = luxurelax_pergola_strings($lang);
+        $path = $lang === 'hu' ? '/konfigurator-pergoly-hu/' : ($lang === 'en' ? '/pergola-configurator/' : '/konfigurator-pergoly/');
+        return '<a href="' . esc_url(home_url($path)) . '">' . esc_html($s['cart_item_name']) . '</a>';
     }
     return $name;
 }, 10, 3);
