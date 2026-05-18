@@ -375,6 +375,7 @@ add_action('woocommerce_before_calculate_totals', function ($cart) {
 add_filter('woocommerce_get_cart_item_from_session', function ($cart_item, $values) {
     if (!empty($values['pergola_config']))  $cart_item['pergola_config'] = $values['pergola_config'];
     if (!empty($values['pergola_price']))   $cart_item['pergola_price']  = $values['pergola_price'];
+    if (!empty($values['pergola_lang']))    $cart_item['pergola_lang']   = $values['pergola_lang'];
     if (!empty($cart_item['pergola_price']) && isset($cart_item['data'])) {
         $cart_item['data']->set_price((float) $cart_item['pergola_price']);
     }
