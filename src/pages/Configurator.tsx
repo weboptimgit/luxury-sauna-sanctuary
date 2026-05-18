@@ -3227,7 +3227,7 @@ const Configurator = () => {
                             className="w-full gap-2 mt-4"
                             onClick={() => setComboStep(2)}
                           >
-                            {language === "en" ? "Next: Hot Tub options" : "Ďalej: Možnosti kade"}
+                            {t("config.combo.nextHottub")}
                             <ChevronRight className="w-5 h-5" />
                           </Button>
                         </div>
