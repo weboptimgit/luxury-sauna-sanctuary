@@ -4,7 +4,12 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const ConfiguratorFooter = () => {
   const { language, t } = useLanguage();
-  const baseUrl = language === "en" ? "https://www.luxurelax.com" : "https://www.luxurelax.sk";
+  const baseUrl =
+    language === "en"
+      ? "https://www.luxurelax.com"
+      : language === "hu"
+        ? "https://www.luxurelax.hu"
+        : "https://www.luxurelax.sk";
 
   const quickLinks =
     language === "en"
@@ -16,14 +21,23 @@ const ConfiguratorFooter = () => {
           { label: t("footer.konfigurator"), href: `${baseUrl}/configurator/` },
           { label: t("footer.contact"), href: `${baseUrl}/contact/` },
         ]
-      : [
-          { label: t("footer.sauny"), href: `${baseUrl}/k/sauny/` },
-          { label: t("footer.kade"), href: `${baseUrl}/k/kade/` },
-          { label: t("footer.slovnik"), href: `${baseUrl}/materialy-a-technologie/` },
-          { label: t("footer.faq"), href: `${baseUrl}/faq/` },
-          { label: t("footer.konfigurator"), href: `${baseUrl}/konfigurator/` },
-          { label: t("footer.contact"), href: `${baseUrl}/kontakt/` },
-        ];
+      : language === "hu"
+        ? [
+            { label: t("footer.sauny"), href: `${baseUrl}/k/szaunak/` },
+            { label: t("footer.kade"), href: `${baseUrl}/k/dezsafurdok/` },
+            { label: t("footer.slovnik"), href: `${baseUrl}/anyagok-es-technologia/` },
+            { label: t("footer.faq"), href: `${baseUrl}/gyik/` },
+            { label: t("footer.konfigurator"), href: `${baseUrl}/konfigurator/` },
+            { label: t("footer.contact"), href: `${baseUrl}/kapcsolat/` },
+          ]
+        : [
+            { label: t("footer.sauny"), href: `${baseUrl}/k/sauny/` },
+            { label: t("footer.kade"), href: `${baseUrl}/k/kade/` },
+            { label: t("footer.slovnik"), href: `${baseUrl}/materialy-a-technologie/` },
+            { label: t("footer.faq"), href: `${baseUrl}/faq/` },
+            { label: t("footer.konfigurator"), href: `${baseUrl}/konfigurator/` },
+            { label: t("footer.contact"), href: `${baseUrl}/kontakt/` },
+          ];
 
   const productLinks =
     language === "en"
@@ -32,16 +46,24 @@ const ConfiguratorFooter = () => {
           { label: t("footer.gdpr"), href: `${baseUrl}/privacy-policy/` },
           { label: t("footer.cookies"), href: `${baseUrl}/cookies/` },
         ]
-      : [
-          { label: t("footer.vop"), href: `${baseUrl}/vseobecne-obchodne-podmienky/` },
-          { label: t("footer.gdpr"), href: `${baseUrl}/ochrana-osobnych-udajov/` },
-          { label: t("footer.cookies"), href: `${baseUrl}/cookies/` },
-        ];
+      : language === "hu"
+        ? [
+            { label: t("footer.vop"), href: `${baseUrl}/altalanos-szerzodesi-feltetelek/` },
+            { label: t("footer.gdpr"), href: `${baseUrl}/adatvedelmi-szabalyzat/` },
+            { label: t("footer.cookies"), href: `${baseUrl}/cookies/` },
+          ]
+        : [
+            { label: t("footer.vop"), href: `${baseUrl}/vseobecne-obchodne-podmienky/` },
+            { label: t("footer.gdpr"), href: `${baseUrl}/ochrana-osobnych-udajov/` },
+            { label: t("footer.cookies"), href: `${baseUrl}/cookies/` },
+          ];
 
   const bottomLinks =
     language === "en"
       ? [{ label: t("footer.weboptim"), href: `https://www.weboptim.eu/services/ecommerce-website/` }]
-      : [{ label: t("footer.weboptim"), href: `https://www.weboptim.sk/sluzby/tvorba-eshopu` }];
+      : language === "hu"
+        ? [{ label: t("footer.weboptim"), href: `https://www.weboptim.eu/services/ecommerce-website/` }]
+        : [{ label: t("footer.weboptim"), href: `https://www.weboptim.sk/sluzby/tvorba-eshopu` }];
 
   return (
     <footer className="bg-secondary/30 pt-16 pb-8">

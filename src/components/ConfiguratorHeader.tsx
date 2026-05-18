@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import flagUk from "@/assets/flag-uk.png";
 import flagSk from "@/assets/flag-sk.png";
+import flagHu from "@/assets/flag-hu.png";
 import brelaxLogo from "@/assets/LuxuRelax-LOGO-text-gradient.png";
 
 const currencies = ["EUR", "CZK", "HUF"] as const;
@@ -13,40 +14,47 @@ const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, setLanguage, currency, setCurrency, t } = useLanguage();
 
-  // Base URL changes based on language - .com for EN, .sk for SK
-  const baseUrl = language === "en" ? "https://www.luxurelax.com" : "https://www.luxurelax.sk";
+  // Base URL changes based on language - .com for EN, .sk for SK, .hu for HU
+  const baseUrl =
+    language === "en"
+      ? "https://www.luxurelax.com"
+      : language === "hu"
+        ? "https://www.luxurelax.hu"
+        : "https://www.luxurelax.sk";
 
   const categoryMap = {
-    sk: {
-      prefix: "/k",
-      saunas: "sauny",
-      tubs: "kade",
-    },
-    en: {
-      prefix: "/c",
-      saunas: "saunas",
-      tubs: "hottubs",
-    },
-  };
+    sk: { prefix: "/k", saunas: "sauny", tubs: "kade" },
+    en: { prefix: "/c", saunas: "saunas", tubs: "hottubs" },
+    hu: { prefix: "/k", saunas: "szaunak", tubs: "dezsafurdok" },
+  } as const;
 
   const { prefix, saunas, tubs } = categoryMap[language] || categoryMap.sk;
+
+  const configuratorPath =
+    language === "en" ? "/configurator" : language === "hu" ? "/konfigurator-hu" : "/konfigurator";
+
+  const aboutHref =
+    language === "en" ? `${baseUrl}/about-us/` : language === "hu" ? `${baseUrl}/rolunk/` : `${baseUrl}/o-nas/`;
+  const contactHref =
+    language === "en" ? `${baseUrl}/contact/` : language === "hu" ? `${baseUrl}/kapcsolat/` : `${baseUrl}/kontakt/`;
 
   const navItems = [
     { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
     { labelKey: "nav.hotTubs", href: `${baseUrl}${prefix}/${tubs}/`, external: true },
-    { labelKey: "nav.configurator", href: language === "en" ? "/configurator" : "/konfigurator", external: false },
+    { labelKey: "nav.configurator", href: configuratorPath, external: false },
     { labelKey: "nav.blog", href: `${baseUrl}/blog/`, external: true },
-    { labelKey: "nav.about", href: language === "en" ? `${baseUrl}/about-us/` : `${baseUrl}/o-nas/`, external: true },
-    {
-      labelKey: "nav.contact",
-      href: language === "en" ? `${baseUrl}/contact/` : `${baseUrl}/kontakt/`,
-      external: true,
-    },
+    { labelKey: "nav.about", href: aboutHref, external: true },
+    { labelKey: "nav.contact", href: contactHref, external: true },
   ];
 
+  // Cycle sk -> en -> hu -> sk
   const toggleLanguage = () => {
-    setLanguage(language === "sk" ? "en" : "sk");
+    const next = language === "sk" ? "en" : language === "en" ? "hu" : "sk";
+    setLanguage(next);
   };
+
+  const nextFlag = language === "sk" ? flagUk : language === "en" ? flagHu : flagSk;
+  const nextLangLabel = language === "sk" ? "English" : language === "en" ? "Magyar" : "Slovensky";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-dark">
@@ -97,22 +105,18 @@ const ConfiguratorHeader = () => {
               ))}
             </div>
 
-            {/* Language Toggle */}
+            {/* Language Toggle (cycles SK -> EN -> HU) */}
             <button
               onClick={toggleLanguage}
               className="flex items-center justify-center pl-4 border-l border-border/50 hover:opacity-80 transition-opacity"
-              title={language === "sk" ? "Switch to English" : "Prepnúť na slovenčinu"}
+              title={`Switch to ${nextLangLabel}`}
             >
-              <img
-                src={language === "sk" ? flagUk : flagSk}
-                alt={language === "sk" ? "English" : "Slovensky"}
-                className="w-4 h-[11px] object-cover"
-              />
+              <img src={nextFlag} alt={nextLangLabel} className="w-4 h-[11px] object-cover" />
             </button>
 
             {/* Cart - last item */}
             <a
-              href={language === "en" ? `${baseUrl}/cart/` : `${baseUrl}/kosik/`}
+              href={language === "en" ? `${baseUrl}/cart/` : language === "hu" ? `${baseUrl}/kosar/` : `${baseUrl}/kosik/`}
               className="relative p-2 pl-4 border-l border-border/50 text-foreground/70 hover:text-primary transition-colors"
             >
               <ShoppingCart className="w-5 h-5" />
@@ -159,12 +163,8 @@ const ConfiguratorHeader = () => {
                 }}
                 className="flex items-center gap-3 text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300"
               >
-                <img
-                  src={language === "sk" ? flagUk : flagSk}
-                  alt={language === "sk" ? "English" : "Slovensky"}
-                  className="w-6 h-4 object-cover"
-                />
-                {language === "sk" ? "English" : "Slovensky"}
+                <img src={nextFlag} alt={nextLangLabel} className="w-6 h-4 object-cover" />
+                {nextLangLabel}
               </button>
 
               {navItems.map((item) =>
@@ -188,7 +188,7 @@ const ConfiguratorHeader = () => {
                   </Link>
                 ),
               )}
-              <a href={`${baseUrl}/kontakt/`} onClick={() => setIsMenuOpen(false)}>
+              <a href={contactHref} onClick={() => setIsMenuOpen(false)}>
                 <Button variant="luxury" size="sm" className="mt-2 w-full">
                   {t("nav.inquiry")}
                 </Button>

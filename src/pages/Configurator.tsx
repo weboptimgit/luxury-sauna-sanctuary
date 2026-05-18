@@ -811,19 +811,14 @@ const Configurator = () => {
   const [sortOrder, setSortOrder] = useState<"price-asc" | "price-desc" | "name-asc">("price-asc");
 
   const metaTitle = useMemo(() => {
-    const base = language === "en" ? "LuxuRelax | Configurator" : "LuxuRelax | Konfigurátor";
+    const base = t("config.metaTitle");
     if (selectedSaunaType) return `${selectedSaunaType.name} | ${base}`;
     if (selectedHotTubType) return `${selectedHotTubType.name} | ${base}`;
     if (selectedComboType) return `${selectedComboType.name} | ${base}`;
     return base;
-  }, [language, selectedSaunaType, selectedHotTubType, selectedComboType]);
+  }, [language, selectedSaunaType, selectedHotTubType, selectedComboType, t]);
 
-  useDocumentMeta(
-    metaTitle,
-    language === "en"
-      ? "Configure your dream sauna or hot tub. Choose wood type, heater, lighting and accessories."
-      : "Nakonfigurujte si svoju vysnívanú saunu alebo kaďu. Vyberte si typ dreva, ohrievač, osvetlenie a príslušenstvo.",
-  );
+  useDocumentMeta(metaTitle, t("config.metaDescription"));
 
   // Sauna konfigurácia (ids musia sedieť s PHP configom)
   const [saunaConfig, setSaunaConfig] = useState({
@@ -1719,10 +1714,7 @@ const Configurator = () => {
     if (productCategory === "sauna" && isHeaterModelRequired) {
       toast({
         title: t("config.selectHeaterModel"),
-        description:
-          language === "en"
-            ? "You must select a specific heater model before adding to cart."
-            : "Pred pridaním do košíka musíte vybrať konkrétny model ohrievača.",
+        description: t("config.heaterModelCartError"),
         variant: "destructive",
       });
       return;
@@ -1773,7 +1765,7 @@ const Configurator = () => {
         description: t("success.addedToCartDesc"),
       });
 
-      window.location.href = language === "en" ? "/cart/" : "/kosik/";
+      window.location.href = language === "en" ? "/cart/" : language === "hu" ? "/kosar/" : "/kosik/";
     } catch (error) {
       console.error("Add to cart error:", error);
       toast({
@@ -2141,7 +2133,7 @@ const Configurator = () => {
 
               {/* Pergola */}
               <Link
-                to={language === "en" ? "/pergola-configurator" : "/konfigurator-pergoly"}
+                to={language === "en" ? "/pergola-configurator" : language === "hu" ? "/konfigurator-pergoly-hu" : "/konfigurator-pergoly"}
                 className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50 shadow-xl"
               >
                 <div className="aspect-[4/3] overflow-hidden">
@@ -2157,15 +2149,13 @@ const Configurator = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h2 className="font-display text-4xl font-bold text-white mb-3 drop-shadow-lg">
-                    {language === "en" ? "Pergola" : "Pergola"}
+                    {t("config.pergola")}
                   </h2>
                   <p className="text-white/90 mb-4 text-base leading-relaxed drop-shadow-md">
-                    {language === "en"
-                      ? "Design your premium bioclimatic pergola — dimensions, color, roof and lighting."
-                      : "Navrhnite si prémiovú bioklimatickú pergolu — rozmery, farba, strecha a osvetlenie."}
+                    {t("config.pergola.description")}
                   </p>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
-                    <span>{language === "en" ? "Configure" : "Konfigurovať"}</span>
+                    <span>{t("config.configure")}</span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -2253,9 +2243,9 @@ const Configurator = () => {
               <ArrowUpDown className="w-4 h-4 text-muted-foreground" />
               <div className="flex items-center gap-1 bg-card/50 border border-border/50 rounded-lg p-1">
                 {([
-                  { value: "price-asc", label: language === "sk" ? "Najlacnejšie" : "Cheapest" },
-                  { value: "price-desc", label: language === "sk" ? "Najdrahšie" : "Most expensive" },
-                  { value: "name-asc", label: language === "sk" ? "Názov A-Z" : "Name A-Z" },
+                  { value: "price-asc", label: t("config.sort.priceAsc") },
+                  { value: "price-desc", label: t("config.sort.priceDesc") },
+                  { value: "name-asc", label: t("config.sort.nameAsc") },
                 ] as const).map((opt) => (
                   <button
                     key={opt.value}
@@ -2412,9 +2402,9 @@ const Configurator = () => {
               <ArrowUpDown className="w-4 h-4 text-muted-foreground" />
               <div className="flex items-center gap-1 bg-card/50 border border-border/50 rounded-lg p-1">
                 {([
-                  { value: "price-asc", label: language === "sk" ? "Najlacnejšie" : "Cheapest" },
-                  { value: "price-desc", label: language === "sk" ? "Najdrahšie" : "Most expensive" },
-                  { value: "name-asc", label: language === "sk" ? "Názov A-Z" : "Name A-Z" },
+                  { value: "price-asc", label: t("config.sort.priceAsc") },
+                  { value: "price-desc", label: t("config.sort.priceDesc") },
+                  { value: "name-asc", label: t("config.sort.nameAsc") },
                 ] as const).map((opt) => (
                   <button
                     key={opt.value}
@@ -2793,7 +2783,7 @@ const Configurator = () => {
                           )}
                         >
                           <Flame className="w-4 h-4" />
-                          {language === "en" ? "Sauna" : "Sauna"}
+                          {t("config.combo.tabSauna")}
                         </button>
                         <ChevronRight className="w-4 h-4 text-muted-foreground" />
                         <button
@@ -2805,7 +2795,7 @@ const Configurator = () => {
                               : "border-border/50 text-muted-foreground hover:border-primary/30",
                           )}
                         >
-                          💧 {language === "en" ? "Hot Tub" : "Kaďa"}
+                          💧 {t("config.combo.tabHottub")}
                         </button>
                       </div>
 
@@ -3237,7 +3227,7 @@ const Configurator = () => {
                             className="w-full gap-2 mt-4"
                             onClick={() => setComboStep(2)}
                           >
-                            {language === "en" ? "Next: Hot Tub options" : "Ďalej: Možnosti kade"}
+                            {t("config.combo.nextHottub")}
                             <ChevronRight className="w-5 h-5" />
                           </Button>
                         </div>
@@ -3252,7 +3242,7 @@ const Configurator = () => {
                             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group text-sm"
                           >
                             <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                            {language === "en" ? "Back to Sauna options" : "Späť na možnosti sauny"}
+                            {t("config.combo.backSauna")}
                           </button>
 
                           {/* Ohrievač kade */}
@@ -4049,9 +4039,7 @@ const Configurator = () => {
                                   showImage={!!option.image}
                                   description={
                                     option.id === "external-aisi316"
-                                      ? language === "en"
-                                        ? "with chimney, cap and protection, suitable for water with chemicals"
-                                        : "s komínom, čiapkou a ochranou, vhodné pre vodu s chémiou"
+                                      ? t("config.heater.externalChimney")
                                       : undefined
                                   }
                                 />

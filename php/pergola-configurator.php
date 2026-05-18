@@ -32,28 +32,93 @@ function luxurelax_pergola_pricing() {
         'height_baseline_cm'    => 250,
         'height_surcharge_per_cm' => 4,    // za každý cm nad baseline
         'colors' => [
-            'anthracite'  => ['label' => 'Antracit',         'premium' => false],
-            'white'       => ['label' => 'Biela',            'premium' => false],
-            'brown'       => ['label' => 'Hnedá',            'premium' => false],
-            'golden_oak'  => ['label' => 'Zlatý dub',        'premium' => true],
-            'walnut'      => ['label' => 'Orech',            'premium' => true],
-            'ral'         => ['label' => 'RAL vlastná farba','premium' => true],
+            'anthracite'  => ['label' => ['sk' => 'Antracit',         'en' => 'Anthracite',       'hu' => 'Antracit'],         'premium' => false],
+            'white'       => ['label' => ['sk' => 'Biela',            'en' => 'White',            'hu' => 'Fehér'],            'premium' => false],
+            'brown'       => ['label' => ['sk' => 'Hnedá',            'en' => 'Brown',            'hu' => 'Barna'],            'premium' => false],
+            'golden_oak'  => ['label' => ['sk' => 'Zlatý dub',        'en' => 'Golden Oak',       'hu' => 'Aranytölgy'],       'premium' => true],
+            'walnut'      => ['label' => ['sk' => 'Orech',            'en' => 'Walnut',           'hu' => 'Dió'],              'premium' => true],
+            'ral'         => ['label' => ['sk' => 'RAL vlastná farba','en' => 'Custom RAL color', 'hu' => 'Egyedi RAL szín'],  'premium' => true],
         ],
         'premium_color_multiplier' => 1.10, // +10 %
         'roofs' => [
-            'polycarbonate' => ['label' => 'Polykarbonát',       'price_per_m2' => 0],
-            'safety_glass'  => ['label' => 'Bezpečnostné sklo',  'price_per_m2' => 90],
-            'izo_glass_24'  => ['label' => 'IZO Sklo 24',        'price_per_m2' => 180],
+            'polycarbonate' => ['label' => ['sk' => 'Polykarbonát',      'en' => 'Polycarbonate',  'hu' => 'Polikarbonát'],   'price_per_m2' => 0],
+            'safety_glass'  => ['label' => ['sk' => 'Bezpečnostné sklo', 'en' => 'Safety glass',   'hu' => 'Biztonsági üveg'], 'price_per_m2' => 90],
+            'izo_glass_24'  => ['label' => ['sk' => 'IZO Sklo 24',       'en' => 'IZO Glass 24',   'hu' => 'IZO üveg 24'],    'price_per_m2' => 180],
         ],
         'transparencies' => [
-            'milky' => 'Mliečne',
-            'clear' => 'Číre',
+            'milky' => ['sk' => 'Mliečne', 'en' => 'Milky', 'hu' => 'Tejüveg'],
+            'clear' => ['sk' => 'Číre',    'en' => 'Clear', 'hu' => 'Átlátszó'],
         ],
         'mounting_price'        => 850,
         'led_price'             => 420,
-        'reinforcement_price'   => 180,  // EUR – výstuha pri šírkach v hraničnom pásme
-        'extra_post_price'      => 220,  // EUR za každý stĺp navyše nad 2 základné
+        'reinforcement_price'   => 180,
+        'extra_post_price'      => 220,
     ];
+}
+
+// Resolve a multilingual label array to a single string based on lang.
+function luxurelax_pergola_t($value, $lang) {
+    if (is_array($value)) {
+        return $value[$lang] ?? $value['sk'] ?? reset($value);
+    }
+    return (string) $value;
+}
+
+// Centrálne UI/email preklady
+function luxurelax_pergola_strings($lang) {
+    $dict = [
+        'sk' => [
+            'yes' => 'Áno', 'no' => 'Nie',
+            'rozmery' => 'Rozmery', 'plocha' => 'Plocha strechy',
+            'farba' => 'Farba', 'strecha' => 'Strecha', 'priehladnost' => 'Priehľadnosť',
+            'stlpy' => 'Stĺpy', 'stlp' => 'stĺp', 'vystuha' => 'výztuha',
+            'montaz' => 'Montáž', 'led' => 'LED',
+            'cart_item_name' => 'Pergola – konfigurácia na mieru',
+            'expired' => 'Konfigurácia pergoly vypršala alebo je neplatná. Skús to prosím znova.',
+            'add_failed' => 'Pergolu sa nepodarilo pridať do košíka.',
+            'email_subject' => 'Nový dopyt – Pergola konfigurátor',
+            'email_heading' => 'Nový dopyt na pergolu (Luxurelax)',
+            'email_name' => 'Meno', 'email_phone' => 'Telefón', 'email_email' => 'E-mail',
+            'email_city' => 'Mesto', 'email_note' => 'Poznámka',
+            'email_config' => 'Konfigurácia', 'email_price' => 'Orientačná cena',
+        ],
+        'en' => [
+            'yes' => 'Yes', 'no' => 'No',
+            'rozmery' => 'Dimensions', 'plocha' => 'Roof area',
+            'farba' => 'Color', 'strecha' => 'Roof', 'priehladnost' => 'Transparency',
+            'stlpy' => 'Posts', 'stlp' => 'post', 'vystuha' => 'reinforcement',
+            'montaz' => 'Installation', 'led' => 'LED',
+            'cart_item_name' => 'Pergola – custom configuration',
+            'expired' => 'Pergola configuration expired or is invalid. Please try again.',
+            'add_failed' => 'Failed to add pergola to cart.',
+            'email_subject' => 'New inquiry – Pergola configurator',
+            'email_heading' => 'New pergola inquiry (Luxurelax)',
+            'email_name' => 'Name', 'email_phone' => 'Phone', 'email_email' => 'E-mail',
+            'email_city' => 'City', 'email_note' => 'Note',
+            'email_config' => 'Configuration', 'email_price' => 'Indicative price',
+        ],
+        'hu' => [
+            'yes' => 'Igen', 'no' => 'Nem',
+            'rozmery' => 'Méretek', 'plocha' => 'Tetőfelület',
+            'farba' => 'Szín', 'strecha' => 'Tető', 'priehladnost' => 'Átlátszóság',
+            'stlpy' => 'Oszlopok', 'stlp' => 'oszlop', 'vystuha' => 'merevítés',
+            'montaz' => 'Telepítés', 'led' => 'LED',
+            'cart_item_name' => 'Pergola – egyedi konfiguráció',
+            'expired' => 'A pergola konfiguráció lejárt vagy érvénytelen. Kérjük, próbálja újra.',
+            'add_failed' => 'A pergolát nem sikerült a kosárba helyezni.',
+            'email_subject' => 'Új ajánlatkérés – Pergola konfigurátor',
+            'email_heading' => 'Új pergola ajánlatkérés (Luxurelax)',
+            'email_name' => 'Név', 'email_phone' => 'Telefon', 'email_email' => 'E-mail',
+            'email_city' => 'Város', 'email_note' => 'Megjegyzés',
+            'email_config' => 'Konfiguráció', 'email_price' => 'Tájékoztató ár',
+        ],
+    ];
+    return $dict[$lang] ?? $dict['sk'];
+}
+
+function luxurelax_pergola_normalize_lang($lang) {
+    $lang = strtolower((string) $lang);
+    return in_array($lang, ['sk', 'en', 'hu'], true) ? $lang : 'sk';
 }
 
 /**
@@ -104,7 +169,8 @@ add_action('rest_api_init', function () {
     });
 });
 
-function luxurelax_pergola_calculate_price($cfg) {
+function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
+    $lang = luxurelax_pergola_normalize_lang($lang);
     $p = luxurelax_pergola_pricing();
 
     $width  = max(200, min(5000, intval($cfg['width']  ?? 0)));
@@ -149,9 +215,9 @@ function luxurelax_pergola_calculate_price($cfg) {
     return [
         'price'        => round($price),
         'area_m2'      => round($area, 2),
-        'color_label'  => $p['colors'][$color_key]['label'],
-        'roof_label'   => $p['roofs'][$roof_key]['label'],
-        'trans_label'  => $p['transparencies'][$trans_key],
+        'color_label'  => luxurelax_pergola_t($p['colors'][$color_key]['label'], $lang),
+        'roof_label'   => luxurelax_pergola_t($p['roofs'][$roof_key]['label'], $lang),
+        'trans_label'  => luxurelax_pergola_t($p['transparencies'][$trans_key], $lang),
         'posts'        => $post_layout['posts'],
         'reinforcement'=> $post_layout['reinforcement'],
         'normalized'   => [
@@ -177,8 +243,9 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
 
     $cfg      = $body['config']   ?? [];
     $customer = $body['customer'] ?? [];
+    $lang     = luxurelax_pergola_normalize_lang($body['lang'] ?? 'sk');
+    $s        = luxurelax_pergola_strings($lang);
 
-    // Server-side validácia zákazníka
     $name  = sanitize_text_field($customer['name']  ?? '');
     $phone = sanitize_text_field($customer['phone'] ?? '');
     $email = sanitize_email($customer['email']      ?? '');
@@ -189,9 +256,8 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         return new WP_REST_Response(['error' => 'Missing or invalid fields'], 422);
     }
 
-    $calc = luxurelax_pergola_calculate_price($cfg);
+    $calc = luxurelax_pergola_calculate_price($cfg, $lang);
 
-    // Uloženie ako CPT inquiry (jednoduchá CRM stopa)
     $post_id = wp_insert_post([
         'post_type'   => 'pergola_inquiry',
         'post_status' => 'publish',
@@ -201,36 +267,36 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
     if ($post_id && !is_wp_error($post_id)) {
         update_post_meta($post_id, '_pergola_config', $calc['normalized']);
         update_post_meta($post_id, '_pergola_price',  $calc['price']);
+        update_post_meta($post_id, '_pergola_lang',   $lang);
         update_post_meta($post_id, '_pergola_customer', [
             'name' => $name, 'phone' => $phone, 'email' => $email, 'city' => $city,
         ]);
     }
 
-    // E-mail
     $cfg_n = $calc['normalized'];
     $lines = [
-        "Nový dopyt na pergolu (Luxurelax)",
+        $s['email_heading'],
         "------------------------------------",
-        "Meno:      $name",
-        "Telefón:   $phone",
-        "E-mail:    $email",
-        "Mesto:     $city",
-        "Poznámka:  $note",
+        "{$s['email_name']}:    $name",
+        "{$s['email_phone']}:   $phone",
+        "{$s['email_email']}:   $email",
+        "{$s['email_city']}:    $city",
+        "{$s['email_note']}:    $note",
         "",
-        "Konfigurácia:",
-        "  Rozmery:       {$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
-        "  Plocha strechy: {$calc['area_m2']} m²",
-        "  Farba:         {$calc['color_label']}",
-        "  Strecha:       {$calc['roof_label']}",
-        "  Priehľadnosť:  {$calc['trans_label']}",
-        "  Montáž:        " . ($cfg_n['mounting'] ? 'Áno' : 'Nie'),
-        "  LED:           " . ($cfg_n['led'] ? 'Áno' : 'Nie'),
+        "{$s['email_config']}:",
+        "  {$s['rozmery']}:      {$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
+        "  {$s['plocha']}:       {$calc['area_m2']} m²",
+        "  {$s['farba']}:        {$calc['color_label']}",
+        "  {$s['strecha']}:      {$calc['roof_label']}",
+        "  {$s['priehladnost']}: {$calc['trans_label']}",
+        "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
+        "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
         "",
-        "Orientačná cena: {$calc['price']} €",
+        "{$s['email_price']}: {$calc['price']} €",
     ];
     wp_mail(
         LUXURELAX_PERGOLA_INQUIRY_EMAIL,
-        'Nový dopyt – Pergola konfigurátor',
+        $s['email_subject'],
         implode("\n", $lines),
         ['Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $email]
     );
@@ -284,7 +350,10 @@ add_action('woocommerce_checkout_create_order_line_item', function ($item, $cart
 // Premenovanie položky v košíku
 add_filter('woocommerce_cart_item_name', function ($name, $cart_item, $cart_item_key) {
     if (!empty($cart_item['pergola_config'])) {
-        return '<a href="' . esc_url(home_url('/konfigurator-pergoly/')) . '">' . esc_html__('Pergola – konfigurácia na mieru', 'luxurelax') . '</a>';
+        $lang = luxurelax_pergola_normalize_lang($cart_item['pergola_lang'] ?? 'sk');
+        $s = luxurelax_pergola_strings($lang);
+        $path = $lang === 'hu' ? '/konfigurator-pergoly-hu/' : ($lang === 'en' ? '/pergola-configurator/' : '/konfigurator-pergoly/');
+        return '<a href="' . esc_url(home_url($path)) . '">' . esc_html($s['cart_item_name']) . '</a>';
     }
     return $name;
 }, 10, 3);
@@ -306,6 +375,7 @@ add_action('woocommerce_before_calculate_totals', function ($cart) {
 add_filter('woocommerce_get_cart_item_from_session', function ($cart_item, $values) {
     if (!empty($values['pergola_config']))  $cart_item['pergola_config'] = $values['pergola_config'];
     if (!empty($values['pergola_price']))   $cart_item['pergola_price']  = $values['pergola_price'];
+    if (!empty($values['pergola_lang']))    $cart_item['pergola_lang']   = $values['pergola_lang'];
     if (!empty($cart_item['pergola_price']) && isset($cart_item['data'])) {
         $cart_item['data']->set_price((float) $cart_item['pergola_price']);
     }
@@ -343,18 +413,20 @@ function luxurelax_pergola_handle_add_to_cart(WP_REST_Request $request) {
     }
 
     $cfg  = $body['config'] ?? [];
-    $calc = luxurelax_pergola_calculate_price($cfg);
+    $lang = luxurelax_pergola_normalize_lang($body['lang'] ?? 'sk');
+    $s    = luxurelax_pergola_strings($lang);
+    $calc = luxurelax_pergola_calculate_price($cfg, $lang);
     $cfg_n = $calc['normalized'];
 
     $pergola_config = [
-        'Rozmery'        => "{$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
-        'Plocha strechy' => "{$calc['area_m2']} m²",
-        'Farba'          => $calc['color_label'],
-        'Strecha'        => $calc['roof_label'],
-        'Priehľadnosť'   => $calc['trans_label'],
-        'Stĺpy'          => $calc['posts'] . '× stĺp' . ($calc['reinforcement'] ? ' + výztuha' : ''),
-        'Montáž'         => $cfg_n['mounting'] ? 'Áno' : 'Nie',
-        'LED'            => $cfg_n['led'] ? 'Áno' : 'Nie',
+        $s['rozmery']      => "{$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
+        $s['plocha']       => "{$calc['area_m2']} m²",
+        $s['farba']        => $calc['color_label'],
+        $s['strecha']      => $calc['roof_label'],
+        $s['priehladnost'] => $calc['trans_label'],
+        $s['stlpy']        => $calc['posts'] . '× ' . $s['stlp'] . ($calc['reinforcement'] ? ' + ' . $s['vystuha'] : ''),
+        $s['montaz']       => $cfg_n['mounting'] ? $s['yes'] : $s['no'],
+        $s['led']          => $cfg_n['led'] ? $s['yes'] : $s['no'],
     ];
 
     $token = wp_generate_password(20, false, false);
@@ -362,6 +434,7 @@ function luxurelax_pergola_handle_add_to_cart(WP_REST_Request $request) {
         'product_id'     => $product_id,
         'pergola_config' => $pergola_config,
         'pergola_price'  => (float) $calc['price'],
+        'pergola_lang'   => $lang,
     ], 30 * MINUTE_IN_SECONDS);
 
     $redirect_url = add_query_arg('luxurelax_pergola_add', $token, home_url('/'));
@@ -381,8 +454,10 @@ add_action('template_redirect', function () {
 
     $token = sanitize_text_field(wp_unslash($_GET['luxurelax_pergola_add']));
     $data  = get_transient('luxurelax_pergola_' . $token);
+    $lang  = luxurelax_pergola_normalize_lang($data['pergola_lang'] ?? 'sk');
+    $s     = luxurelax_pergola_strings($lang);
     if (!$data || empty($data['product_id'])) {
-        wc_add_notice('Konfigurácia pergoly vypršala alebo je neplatná. Skús to prosím znova.', 'error');
+        wc_add_notice($s['expired'], 'error');
         wp_safe_redirect(wc_get_cart_url());
         exit;
     }
@@ -393,12 +468,13 @@ add_action('template_redirect', function () {
     $cart_item_data = [
         'pergola_config' => $data['pergola_config'],
         'pergola_price'  => (float) $data['pergola_price'],
+        'pergola_lang'   => $lang,
         'unique_key'     => md5(microtime() . wp_rand()),
     ];
 
     $added = WC()->cart->add_to_cart((int) $data['product_id'], 1, 0, [], $cart_item_data);
     if (!$added) {
-        wc_add_notice('Pergolu sa nepodarilo pridať do košíka.', 'error');
+        wc_add_notice($s['add_failed'], 'error');
     }
     wp_safe_redirect(wc_get_cart_url());
     exit;

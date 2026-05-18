@@ -23,8 +23,11 @@ const App = () => (
             <Route path="/konfigurator/:modelSlug" element={<Configurator />} />
             <Route path="/configurator" element={<Configurator />} />
             <Route path="/configurator/:modelSlug" element={<Configurator />} />
+            <Route path="/konfigurator-hu" element={<Configurator />} />
+            <Route path="/konfigurator-hu/:modelSlug" element={<Configurator />} />
             <Route path="/konfigurator-pergoly" element={<PergolaConfigurator />} />
             <Route path="/pergola-configurator" element={<PergolaConfigurator />} />
+            <Route path="/konfigurator-pergoly-hu" element={<PergolaConfigurator />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </LanguageProvider>

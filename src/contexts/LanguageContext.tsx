@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-type Language = "sk" | "en";
+type Language = "sk" | "en" | "hu";
 type Currency = "EUR" | "CZK" | "HUF";
 
 interface LanguageContextType {
@@ -160,6 +160,22 @@ const translations: Record<Language, Record<string, string>> = {
     "error.addToCart": "Nepodarilo sa pridať do košíka. Skúste to znova.",
     "success.addedToCart": "Produkt bol pridaný do košíka",
     "success.addedToCartDesc": "Pokračujte v nákupe alebo prejdite do košíka.",
+
+    // Inline UI (Configurator.tsx)
+    "config.metaTitle": "LuxuRelax | Konfigurátor",
+    "config.metaDescription":
+      "Nakonfigurujte si svoju vysnívanú saunu alebo kaďu. Vyberte si typ dreva, ohrievač, osvetlenie a príslušenstvo.",
+    "config.heaterModelCartError": "Pred pridaním do košíka musíte vybrať konkrétny model ohrievača.",
+    "config.pergola": "Pergola",
+    "config.pergola.description": "Navrhnite si prémiovú bioklimatickú pergolu — rozmery, farba, strecha a osvetlenie.",
+    "config.sort.priceAsc": "Najlacnejšie",
+    "config.sort.priceDesc": "Najdrahšie",
+    "config.sort.nameAsc": "Názov A-Z",
+    "config.combo.tabSauna": "Sauna",
+    "config.combo.tabHottub": "Kaďa",
+    "config.combo.nextHottub": "Ďalej: Možnosti kade",
+    "config.combo.backSauna": "Späť na možnosti sauny",
+    "config.heater.externalChimney": "s komínom, čiapkou a ochranou, vhodné pre vodu s chémiou",
 
     // Footer
     "footer.brand.description":
@@ -335,6 +351,22 @@ const translations: Record<Language, Record<string, string>> = {
     "success.addedToCart": "Product added to cart",
     "success.addedToCartDesc": "Continue shopping or go to cart.",
 
+    // Inline UI (Configurator.tsx)
+    "config.metaTitle": "LuxuRelax | Configurator",
+    "config.metaDescription":
+      "Configure your dream sauna or hot tub. Choose wood type, heater, lighting and accessories.",
+    "config.heaterModelCartError": "You must select a specific heater model before adding to cart.",
+    "config.pergola": "Pergola",
+    "config.pergola.description": "Design your premium bioclimatic pergola — dimensions, color, roof and lighting.",
+    "config.sort.priceAsc": "Cheapest",
+    "config.sort.priceDesc": "Most expensive",
+    "config.sort.nameAsc": "Name A-Z",
+    "config.combo.tabSauna": "Sauna",
+    "config.combo.tabHottub": "Hot Tub",
+    "config.combo.nextHottub": "Next: Hot Tub options",
+    "config.combo.backSauna": "Back to Sauna options",
+    "config.heater.externalChimney": "with chimney, cap and protection, suitable for water with chemicals",
+
     // Footer
     "footer.brand.description":
       " Premium saunas and wellness solutions created with passion and delivered with an emphasis on perfection. Your journey to relaxation starts here.",
@@ -361,6 +393,197 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.copyright": "© 2026 LuxuRelax. All rights reserved.",
     "footer.weboptim": "E-Shop by weboptim",
   },
+  hu: {
+    // Header
+    "nav.home": "Főoldal",
+    "nav.finnishSaunas": "Szaunák",
+    "nav.infraSaunas": "Infraszaunák",
+    "nav.hotTubs": "Dézsafürdők",
+    "nav.accessories": "Kiegészítők",
+    "nav.configurator": "Konfigurátor",
+    "nav.contact": "Kapcsolat",
+    "nav.inquiry": "Ajánlatkérés",
+    "nav.blog": "Blog",
+    "nav.about": "Rólunk",
+
+    // Configurator - Category selection
+    "config.breadcrumb.home": "Főoldal",
+    "config.breadcrumb.configurator": "Konfigurátor",
+    "config.breadcrumb.saunaSelection": "Szauna kiválasztása",
+    "config.breadcrumb.configuration": "Konfiguráció",
+
+    "config.category.title": "Mit szeretne",
+    "config.category.titleHighlight": "konfigurálni?",
+    "config.category.subtitle": "Válassza ki a terméktípust és szabja személyre saját igényei szerint.",
+
+    "config.sauna": "Szauna",
+    "config.sauna.description": "Konfigurálja saját szaunáját kályha, világítás és kiegészítők kiválasztásával.",
+    "config.hottub": "Dézsafürdő",
+    "config.hottub.description": "Válassza ki a méretet, fúvókákat, világítást és további kiegészítőket a dézsafürdőjéhez.",
+    "config.combo": "Szauna + dézsafürdő kombináció",
+    "config.combo.description": "2in1 termékek – szauna és dézsafürdő egyben. Válasszon modellt és szabja személyre.",
+    "config.from": "Ettől",
+
+    // Combo selection
+    "config.comboSelection.title": "Válassza ki a",
+    "config.comboSelection.titleHighlight": "2in1 kombinációt",
+    "config.comboSelection.subtitle": "Szauna és dézsafürdő egy termékben, konfigurálási lehetőségekkel.",
+    "config.breadcrumb.comboSelection": "Kombináció kiválasztása",
+    "config.back.combo": "Vissza a kombináció kiválasztásához",
+    "config.combo.configTitle": "Kombináció konfigurációja",
+    "config.window": "Ablakok",
+    "config.noWindow": "Ablak nélkül",
+    "config.window.round": "Kerek ablak",
+    "config.window.back": "Hátsó ablak",
+    "config.window.145x57": "Ablak 145×57cm",
+    "config.window.panoramic50": "50% panorámaablak",
+
+    // Sauna selection
+    "config.saunaSelection.title": "Válassza ki a",
+    "config.saunaSelection.titleHighlight": "szauna típusát",
+    "config.saunaSelection.subtitle": "Minden modellnek megvannak a maga egyedi tulajdonságai és konfigurációs lehetőségei.",
+    "config.hottubSelection.title": "Válassza ki a",
+    "config.hottubSelection.titleHighlight": "dézsafürdő típusát",
+    "config.hottubSelection.subtitle": "Minden modellnek megvannak a maga egyedi tulajdonságai és konfigurációs lehetőségei.",
+    "config.breadcrumb.hottubSelection": "Dézsafürdő kiválasztása",
+    "config.back.category": "Vissza a termék kiválasztásához",
+    "config.back.sauna": "Vissza a szauna kiválasztásához",
+    "config.back.hottub": "Vissza a dézsafürdő kiválasztásához",
+
+    // Configuration options
+    "config.woodType": "Fa típusa",
+    "config.woodType.spruce": "Lucfenyő",
+    "config.woodType.thermo": "Thermo fa",
+    "config.color": "Külső szín",
+    "config.heater": "Kályha típusa",
+    "config.led": "LED világítás",
+    "config.bluetooth": "Bluetooth audió",
+    "config.accessories": "Szauna szett",
+    "config.mirrorFilm": "Tükörfólia",
+    "config.metalBands": "Fém pántok",
+    "config.benches": "Padok",
+    "config.thermoCladding": "Thermo fa burkolat",
+
+    // Hot tub options
+    "config.size": "Méret",
+    "config.hottubHeater": "Dézsafürdő kályhája",
+    "config.hottubElectricHeater": "Elektromos kályha",
+    "config.underwaterLed": "Vízalatti LED világítás",
+    "config.hottubExteriorLed": "LED világítás a dézsa körül",
+    "config.hydroMassage": "Hidromasszázs",
+    "config.jets": "Masszázsfúvókák",
+    "config.cover": "Fedél",
+    "config.coverColor": "Fedél színe",
+    "config.airBubbles": "Légbuborékok",
+    "config.drainRelay": "Áramvédő relé 25A",
+    "config.sandFilter": "Homokszűrő",
+    "config.electronicController": "Elektronikus vezérlő",
+    "config.thermometer": "Beépített hőmérő",
+    "config.bluetoothSpeaker": "Bluetooth hangszóró",
+    "config.headCushion": "Fejpárna 4db",
+
+    // Summary
+    "config.summary": "Konfiguráció összegzése",
+    "config.basePrice": "Alapár",
+    "config.total": "Összesen",
+    "config.addToCart": "Kosárba",
+    "config.addingToCart": "Hozzáadás...",
+    "config.configure": "Konfigurálás",
+
+    // Gallery
+    "config.gallery": "Galéria",
+    "config.gallery.close": "Bezárás",
+
+    // Colors
+    "color.none": "Szín nélkül (Natural)",
+    "color.1-mahagon": "Mahagóni",
+    "color.2-teak": "Teak / meleg borostyán",
+    "color.3-svetly-orech": "Világos dió",
+    "color.4-zlaty-dub": "Aranytölgy",
+    "color.5-olejovana-borovica": "Olajozott fenyő",
+    "color.14-svetla-popolavosiva": "Világos hamuszürke",
+    "color.15-greige": "Greige (szürkésbarna)",
+    "color.16-studena-siva": "Hideg szürke",
+    "color.17-antracit": "Antracit",
+    "color.18-tmavy-orech": "Sötét dió",
+    "color.20-tmavy-mahagon": "Sötét mahagóni",
+
+    // Option labels
+    "config.noLed": "LED nélkül",
+    "config.noBluetooth": "Bluetooth nélkül",
+    "config.noHeater": "Kályha nélkül",
+    "config.noColor": "Szín nélkül",
+    "config.noAccessoryKit": "Szett nélkül",
+    "config.onlyWoodType": "Ehhez a modellhez csak {woodType} érhető el.",
+    "config.accessoryKitHint": "A szauna szett tartalmazza a kényelmes szaunázáshoz szükséges alapvető kiegészítőket.",
+    "config.colorHint": "A külső szín opcionális. Szín nélkül a fa természetes megjelenése marad.",
+    "config.colorNotice": "A tényleges árnyalat enyhén eltérhet a képernyőn megjelenítettől.",
+    "config.selectHeaterModel": "Válassza ki a kályha modelljét",
+    "config.heaterModelRequired": "A folytatáshoz konkrét kályha modellt kell választania.",
+    "config.exteriorLed": "Külső LED világítás",
+    "config.exteriorLedShort": "Külső LED",
+    "config.without": "Nélkül",
+    "config.scrollMore": "Görgessen további lehetőségekért",
+    "config.priceNote": "Az ár tájékoztató jellegű, áfával együtt. A pontos kalkuláció a megrendelésben lesz.",
+    "config.exteriorWood": "Külső burkolat",
+    "config.acrylicLiner": "Akril belső szín",
+    "config.hottub.configTitle": "Dézsafürdő konfigurációja",
+    "config.lightboxAlt": "Termék részlet",
+
+    // Misc
+    included: "Az árban",
+    selected: "Kiválasztva",
+    notSelected: "Nincs kiválasztva",
+    "error.generic": "Hiba",
+    "error.loadConfig": "A konfigurációt nem sikerült betölteni. Próbálja meg frissíteni, vagy ellenőrizze a végpontot",
+    "error.loadConfigShort": "A konfigurációt nem sikerült betölteni.",
+    "error.addToCart": "A kosárba helyezés nem sikerült. Próbálja újra.",
+    "success.addedToCart": "A termék a kosárba került",
+    "success.addedToCartDesc": "Folytassa a vásárlást vagy lépjen a kosárhoz.",
+
+    // Inline UI (Configurator.tsx)
+    "config.metaTitle": "LuxuRelax | Konfigurátor",
+    "config.metaDescription":
+      "Konfigurálja álmai szaunáját vagy dézsafürdőjét. Válasszon fa típust, kályhát, világítást és kiegészítőket.",
+    "config.heaterModelCartError": "Mielőtt a kosárba helyezné, válassza ki a kályha konkrét modelljét.",
+    "config.pergola": "Pergola",
+    "config.pergola.description":
+      "Tervezze meg prémium bioklimatikus pergoláját — méretek, szín, tető és világítás.",
+    "config.sort.priceAsc": "Legolcsóbb",
+    "config.sort.priceDesc": "Legdrágább",
+    "config.sort.nameAsc": "Név A-Z",
+    "config.combo.tabSauna": "Szauna",
+    "config.combo.tabHottub": "Dézsafürdő",
+    "config.combo.nextHottub": "Következő: Dézsafürdő opciók",
+    "config.combo.backSauna": "Vissza a szauna opciókhoz",
+    "config.heater.externalChimney": "kéménnyel, sapkával és védelemmel, kémiailag kezelt vízhez alkalmas",
+
+    // Footer
+    "footer.brand.description":
+      "Prémium szaunák és wellness megoldások szenvedéllyel készítve, a tökéletességre törekedve. Az Ön relaxációs utazása itt kezdődik.",
+    "footer.quickLinks": "Gyors linkek",
+    "footer.home": "Főoldal",
+    "footer.shop": "Bolt",
+    "footer.aboutUs": "Rólunk",
+    "footer.faq": "Gyakori kérdések",
+    "footer.sauny": "Egyedi finn szaunák",
+    "footer.kade": "Pezsgőfürdős dézsák",
+    "footer.slovnik": "Anyagok és technológia",
+    "footer.konfigurator": "Konfigurátor",
+    "footer.contact": "Kapcsolat",
+    "footer.products": "Információ",
+    "footer.vop": "Általános szerződési feltételek",
+    "footer.cookies": "Cookie-k",
+    "footer.gdpr": "Adatvédelmi szabályzat",
+    "footer.barrelSaunas": "Hordó szaunák",
+    "footer.cubeSaunas": "Kocka szaunák",
+    "footer.traditionalSaunas": "Hagyományos kabinok",
+    "footer.hotTubs": "Dézsafürdők",
+    "footer.accessories": "Kiegészítők",
+    "footer.contactTitle": "Kapcsolat",
+    "footer.copyright": "© 2026 LuxuRelax. Minden jog fenntartva.",
+    "footer.weboptim": "E-Shop a weboptim-tól",
+  },
 };
 
 const defaultContext: LanguageContextType = {
@@ -384,38 +607,43 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     return path.replace(/\/+$/, "");
   };
 
-  // Detect language from URL path - /configurator = EN, /konfigurator = SK
+  // Detect language: hostname .hu => HU, /configurator => EN, /konfigurator-hu => HU (dev), else SK
   const getLanguageFromPath = (): Language => {
-    return location.pathname.startsWith("/configurator") ? "en" : "sk";
+    if (typeof window !== "undefined") {
+      const host = window.location.hostname;
+      if (host.endsWith(".hu") || host === "luxurelax.hu") return "hu";
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("lang") === "hu") return "hu";
+    }
+    const p = location.pathname;
+    if (p.startsWith("/konfigurator-hu") || p.startsWith("/hu/")) return "hu";
+    if (p.startsWith("/configurator")) return "en";
+    return "sk";
   };
 
   const [language, setLanguageState] = useState<Language>(getLanguageFromPath);
-  const [currency, setCurrency] = useState<Currency>("EUR");
+  const [currency, setCurrency] = useState<Currency>(() => (getLanguageFromPath() === "hu" ? "HUF" : "EUR"));
 
   // Update language when path changes
   useEffect(() => {
-    setLanguageState(getLanguageFromPath());
+    const next = getLanguageFromPath();
+    setLanguageState(next);
+    if (next === "hu") setCurrency("HUF");
   }, [location.pathname]);
 
   const setLanguage = (lang: Language) => {
     const currentPath = normalizePath(location.pathname);
+    const subPath = currentPath
+      .replace(/^\/konfigurator-hu/, "")
+      .replace(/^\/configurator/, "")
+      .replace(/^\/konfigurator/, "");
 
     if (lang === "en") {
-      // Switch to English on .com domain
-      if (currentPath.startsWith("/konfigurator")) {
-        const subPath = currentPath.replace("/konfigurator", "");
-        window.location.href = "https://www.luxurelax.com/configurator" + subPath;
-      } else {
-        window.location.href = "https://www.luxurelax.com/configurator";
-      }
+      window.location.href = "https://www.luxurelax.com/configurator" + subPath;
+    } else if (lang === "hu") {
+      window.location.href = "https://www.luxurelax.hu/konfigurator" + subPath;
     } else {
-      // Switch to Slovak on .sk domain
-      if (currentPath.startsWith("/configurator")) {
-        const subPath = currentPath.replace("/configurator", "");
-        window.location.href = "https://www.luxurelax.sk/konfigurator" + subPath;
-      } else {
-        window.location.href = "https://www.luxurelax.sk/konfigurator";
-      }
+      window.location.href = "https://www.luxurelax.sk/konfigurator" + subPath;
     }
   };
 
