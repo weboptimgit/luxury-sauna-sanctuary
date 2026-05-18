@@ -215,9 +215,9 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
     return [
         'price'        => round($price),
         'area_m2'      => round($area, 2),
-        'color_label'  => $p['colors'][$color_key]['label'],
-        'roof_label'   => $p['roofs'][$roof_key]['label'],
-        'trans_label'  => $p['transparencies'][$trans_key],
+        'color_label'  => luxurelax_pergola_t($p['colors'][$color_key]['label'], $lang),
+        'roof_label'   => luxurelax_pergola_t($p['roofs'][$roof_key]['label'], $lang),
+        'trans_label'  => luxurelax_pergola_t($p['transparencies'][$trans_key], $lang),
         'posts'        => $post_layout['posts'],
         'reinforcement'=> $post_layout['reinforcement'],
         'normalized'   => [
