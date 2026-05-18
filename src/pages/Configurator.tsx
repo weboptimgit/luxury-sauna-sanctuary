@@ -4039,9 +4039,7 @@ const Configurator = () => {
                                   showImage={!!option.image}
                                   description={
                                     option.id === "external-aisi316"
-                                      ? language === "en"
-                                        ? "with chimney, cap and protection, suitable for water with chemicals"
-                                        : "s komínom, čiapkou a ochranou, vhodné pre vodu s chémiou"
+                                      ? t("config.heater.externalChimney")
                                       : undefined
                                   }
                                 />
