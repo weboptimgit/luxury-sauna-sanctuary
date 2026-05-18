@@ -169,7 +169,8 @@ add_action('rest_api_init', function () {
     });
 });
 
-function luxurelax_pergola_calculate_price($cfg) {
+function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
+    $lang = luxurelax_pergola_normalize_lang($lang);
     $p = luxurelax_pergola_pricing();
 
     $width  = max(200, min(5000, intval($cfg['width']  ?? 0)));
