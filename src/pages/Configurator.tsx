@@ -3242,7 +3242,7 @@ const Configurator = () => {
                             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group text-sm"
                           >
                             <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                            {language === "en" ? "Back to Sauna options" : "Späť na možnosti sauny"}
+                            {t("config.combo.backSauna")}
                           </button>
 
                           {/* Ohrievač kade */}
