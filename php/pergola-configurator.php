@@ -453,8 +453,10 @@ add_action('template_redirect', function () {
 
     $token = sanitize_text_field(wp_unslash($_GET['luxurelax_pergola_add']));
     $data  = get_transient('luxurelax_pergola_' . $token);
+    $lang  = luxurelax_pergola_normalize_lang($data['pergola_lang'] ?? 'sk');
+    $s     = luxurelax_pergola_strings($lang);
     if (!$data || empty($data['product_id'])) {
-        wc_add_notice('Konfigurácia pergoly vypršala alebo je neplatná. Skús to prosím znova.', 'error');
+        wc_add_notice($s['expired'], 'error');
         wp_safe_redirect(wc_get_cart_url());
         exit;
     }
@@ -465,12 +467,13 @@ add_action('template_redirect', function () {
     $cart_item_data = [
         'pergola_config' => $data['pergola_config'],
         'pergola_price'  => (float) $data['pergola_price'],
+        'pergola_lang'   => $lang,
         'unique_key'     => md5(microtime() . wp_rand()),
     ];
 
     $added = WC()->cart->add_to_cart((int) $data['product_id'], 1, 0, [], $cart_item_data);
     if (!$added) {
-        wc_add_notice('Pergolu sa nepodarilo pridať do košíka.', 'error');
+        wc_add_notice($s['add_failed'], 'error');
     }
     wp_safe_redirect(wc_get_cart_url());
     exit;
