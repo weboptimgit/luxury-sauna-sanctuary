@@ -412,18 +412,20 @@ function luxurelax_pergola_handle_add_to_cart(WP_REST_Request $request) {
     }
 
     $cfg  = $body['config'] ?? [];
-    $calc = luxurelax_pergola_calculate_price($cfg);
+    $lang = luxurelax_pergola_normalize_lang($body['lang'] ?? 'sk');
+    $s    = luxurelax_pergola_strings($lang);
+    $calc = luxurelax_pergola_calculate_price($cfg, $lang);
     $cfg_n = $calc['normalized'];
 
     $pergola_config = [
-        'Rozmery'        => "{$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
-        'Plocha strechy' => "{$calc['area_m2']} m²",
-        'Farba'          => $calc['color_label'],
-        'Strecha'        => $calc['roof_label'],
-        'Priehľadnosť'   => $calc['trans_label'],
-        'Stĺpy'          => $calc['posts'] . '× stĺp' . ($calc['reinforcement'] ? ' + výztuha' : ''),
-        'Montáž'         => $cfg_n['mounting'] ? 'Áno' : 'Nie',
-        'LED'            => $cfg_n['led'] ? 'Áno' : 'Nie',
+        $s['rozmery']      => "{$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
+        $s['plocha']       => "{$calc['area_m2']} m²",
+        $s['farba']        => $calc['color_label'],
+        $s['strecha']      => $calc['roof_label'],
+        $s['priehladnost'] => $calc['trans_label'],
+        $s['stlpy']        => $calc['posts'] . '× ' . $s['stlp'] . ($calc['reinforcement'] ? ' + ' . $s['vystuha'] : ''),
+        $s['montaz']       => $cfg_n['mounting'] ? $s['yes'] : $s['no'],
+        $s['led']          => $cfg_n['led'] ? $s['yes'] : $s['no'],
     ];
 
     $token = wp_generate_password(20, false, false);
@@ -431,6 +433,7 @@ function luxurelax_pergola_handle_add_to_cart(WP_REST_Request $request) {
         'product_id'     => $product_id,
         'pergola_config' => $pergola_config,
         'pergola_price'  => (float) $calc['price'],
+        'pergola_lang'   => $lang,
     ], 30 * MINUTE_IN_SECONDS);
 
     $redirect_url = add_query_arg('luxurelax_pergola_add', $token, home_url('/'));
