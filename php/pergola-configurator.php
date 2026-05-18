@@ -32,28 +32,93 @@ function luxurelax_pergola_pricing() {
         'height_baseline_cm'    => 250,
         'height_surcharge_per_cm' => 4,    // za každý cm nad baseline
         'colors' => [
-            'anthracite'  => ['label' => 'Antracit',         'premium' => false],
-            'white'       => ['label' => 'Biela',            'premium' => false],
-            'brown'       => ['label' => 'Hnedá',            'premium' => false],
-            'golden_oak'  => ['label' => 'Zlatý dub',        'premium' => true],
-            'walnut'      => ['label' => 'Orech',            'premium' => true],
-            'ral'         => ['label' => 'RAL vlastná farba','premium' => true],
+            'anthracite'  => ['label' => ['sk' => 'Antracit',         'en' => 'Anthracite',       'hu' => 'Antracit'],         'premium' => false],
+            'white'       => ['label' => ['sk' => 'Biela',            'en' => 'White',            'hu' => 'Fehér'],            'premium' => false],
+            'brown'       => ['label' => ['sk' => 'Hnedá',            'en' => 'Brown',            'hu' => 'Barna'],            'premium' => false],
+            'golden_oak'  => ['label' => ['sk' => 'Zlatý dub',        'en' => 'Golden Oak',       'hu' => 'Aranytölgy'],       'premium' => true],
+            'walnut'      => ['label' => ['sk' => 'Orech',            'en' => 'Walnut',           'hu' => 'Dió'],              'premium' => true],
+            'ral'         => ['label' => ['sk' => 'RAL vlastná farba','en' => 'Custom RAL color', 'hu' => 'Egyedi RAL szín'],  'premium' => true],
         ],
         'premium_color_multiplier' => 1.10, // +10 %
         'roofs' => [
-            'polycarbonate' => ['label' => 'Polykarbonát',       'price_per_m2' => 0],
-            'safety_glass'  => ['label' => 'Bezpečnostné sklo',  'price_per_m2' => 90],
-            'izo_glass_24'  => ['label' => 'IZO Sklo 24',        'price_per_m2' => 180],
+            'polycarbonate' => ['label' => ['sk' => 'Polykarbonát',      'en' => 'Polycarbonate',  'hu' => 'Polikarbonát'],   'price_per_m2' => 0],
+            'safety_glass'  => ['label' => ['sk' => 'Bezpečnostné sklo', 'en' => 'Safety glass',   'hu' => 'Biztonsági üveg'], 'price_per_m2' => 90],
+            'izo_glass_24'  => ['label' => ['sk' => 'IZO Sklo 24',       'en' => 'IZO Glass 24',   'hu' => 'IZO üveg 24'],    'price_per_m2' => 180],
         ],
         'transparencies' => [
-            'milky' => 'Mliečne',
-            'clear' => 'Číre',
+            'milky' => ['sk' => 'Mliečne', 'en' => 'Milky', 'hu' => 'Tejüveg'],
+            'clear' => ['sk' => 'Číre',    'en' => 'Clear', 'hu' => 'Átlátszó'],
         ],
         'mounting_price'        => 850,
         'led_price'             => 420,
-        'reinforcement_price'   => 180,  // EUR – výstuha pri šírkach v hraničnom pásme
-        'extra_post_price'      => 220,  // EUR za každý stĺp navyše nad 2 základné
+        'reinforcement_price'   => 180,
+        'extra_post_price'      => 220,
     ];
+}
+
+// Resolve a multilingual label array to a single string based on lang.
+function luxurelax_pergola_t($value, $lang) {
+    if (is_array($value)) {
+        return $value[$lang] ?? $value['sk'] ?? reset($value);
+    }
+    return (string) $value;
+}
+
+// Centrálne UI/email preklady
+function luxurelax_pergola_strings($lang) {
+    $dict = [
+        'sk' => [
+            'yes' => 'Áno', 'no' => 'Nie',
+            'rozmery' => 'Rozmery', 'plocha' => 'Plocha strechy',
+            'farba' => 'Farba', 'strecha' => 'Strecha', 'priehladnost' => 'Priehľadnosť',
+            'stlpy' => 'Stĺpy', 'stlp' => 'stĺp', 'vystuha' => 'výztuha',
+            'montaz' => 'Montáž', 'led' => 'LED',
+            'cart_item_name' => 'Pergola – konfigurácia na mieru',
+            'expired' => 'Konfigurácia pergoly vypršala alebo je neplatná. Skús to prosím znova.',
+            'add_failed' => 'Pergolu sa nepodarilo pridať do košíka.',
+            'email_subject' => 'Nový dopyt – Pergola konfigurátor',
+            'email_heading' => 'Nový dopyt na pergolu (Luxurelax)',
+            'email_name' => 'Meno', 'email_phone' => 'Telefón', 'email_email' => 'E-mail',
+            'email_city' => 'Mesto', 'email_note' => 'Poznámka',
+            'email_config' => 'Konfigurácia', 'email_price' => 'Orientačná cena',
+        ],
+        'en' => [
+            'yes' => 'Yes', 'no' => 'No',
+            'rozmery' => 'Dimensions', 'plocha' => 'Roof area',
+            'farba' => 'Color', 'strecha' => 'Roof', 'priehladnost' => 'Transparency',
+            'stlpy' => 'Posts', 'stlp' => 'post', 'vystuha' => 'reinforcement',
+            'montaz' => 'Installation', 'led' => 'LED',
+            'cart_item_name' => 'Pergola – custom configuration',
+            'expired' => 'Pergola configuration expired or is invalid. Please try again.',
+            'add_failed' => 'Failed to add pergola to cart.',
+            'email_subject' => 'New inquiry – Pergola configurator',
+            'email_heading' => 'New pergola inquiry (Luxurelax)',
+            'email_name' => 'Name', 'email_phone' => 'Phone', 'email_email' => 'E-mail',
+            'email_city' => 'City', 'email_note' => 'Note',
+            'email_config' => 'Configuration', 'email_price' => 'Indicative price',
+        ],
+        'hu' => [
+            'yes' => 'Igen', 'no' => 'Nem',
+            'rozmery' => 'Méretek', 'plocha' => 'Tetőfelület',
+            'farba' => 'Szín', 'strecha' => 'Tető', 'priehladnost' => 'Átlátszóság',
+            'stlpy' => 'Oszlopok', 'stlp' => 'oszlop', 'vystuha' => 'merevítés',
+            'montaz' => 'Telepítés', 'led' => 'LED',
+            'cart_item_name' => 'Pergola – egyedi konfiguráció',
+            'expired' => 'A pergola konfiguráció lejárt vagy érvénytelen. Kérjük, próbálja újra.',
+            'add_failed' => 'A pergolát nem sikerült a kosárba helyezni.',
+            'email_subject' => 'Új ajánlatkérés – Pergola konfigurátor',
+            'email_heading' => 'Új pergola ajánlatkérés (Luxurelax)',
+            'email_name' => 'Név', 'email_phone' => 'Telefon', 'email_email' => 'E-mail',
+            'email_city' => 'Város', 'email_note' => 'Megjegyzés',
+            'email_config' => 'Konfiguráció', 'email_price' => 'Tájékoztató ár',
+        ],
+    ];
+    return $dict[$lang] ?? $dict['sk'];
+}
+
+function luxurelax_pergola_normalize_lang($lang) {
+    $lang = strtolower((string) $lang);
+    return in_array($lang, ['sk', 'en', 'hu'], true) ? $lang : 'sk';
 }
 
 /**
