@@ -2133,7 +2133,7 @@ const Configurator = () => {
 
               {/* Pergola */}
               <Link
-                to={language === "en" ? "/pergola-configurator" : "/konfigurator-pergoly"}
+                to={language === "en" ? "/pergola-configurator" : language === "hu" ? "/konfigurator-pergoly-hu" : "/konfigurator-pergoly"}
                 className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50 shadow-xl"
               >
                 <div className="aspect-[4/3] overflow-hidden">
@@ -2149,15 +2149,13 @@ const Configurator = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h2 className="font-display text-4xl font-bold text-white mb-3 drop-shadow-lg">
-                    {language === "en" ? "Pergola" : "Pergola"}
+                    {t("config.pergola")}
                   </h2>
                   <p className="text-white/90 mb-4 text-base leading-relaxed drop-shadow-md">
-                    {language === "en"
-                      ? "Design your premium bioclimatic pergola — dimensions, color, roof and lighting."
-                      : "Navrhnite si prémiovú bioklimatickú pergolu — rozmery, farba, strecha a osvetlenie."}
+                    {t("config.pergola.description")}
                   </p>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
-                    <span>{language === "en" ? "Configure" : "Konfigurovať"}</span>
+                    <span>{t("config.configure")}</span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
