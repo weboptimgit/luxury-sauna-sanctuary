@@ -2795,7 +2795,7 @@ const Configurator = () => {
                               : "border-border/50 text-muted-foreground hover:border-primary/30",
                           )}
                         >
-                          💧 {language === "en" ? "Hot Tub" : "Kaďa"}
+                          💧 {t("config.combo.tabHottub")}
                         </button>
                       </div>
 
