@@ -2783,7 +2783,7 @@ const Configurator = () => {
                           )}
                         >
                           <Flame className="w-4 h-4" />
-                          {language === "en" ? "Sauna" : "Sauna"}
+                          {t("config.combo.tabSauna")}
                         </button>
                         <ChevronRight className="w-4 h-4 text-muted-foreground" />
                         <button
