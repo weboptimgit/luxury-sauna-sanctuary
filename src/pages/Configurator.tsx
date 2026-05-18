@@ -2402,9 +2402,9 @@ const Configurator = () => {
               <ArrowUpDown className="w-4 h-4 text-muted-foreground" />
               <div className="flex items-center gap-1 bg-card/50 border border-border/50 rounded-lg p-1">
                 {([
-                  { value: "price-asc", label: language === "sk" ? "Najlacnejšie" : "Cheapest" },
-                  { value: "price-desc", label: language === "sk" ? "Najdrahšie" : "Most expensive" },
-                  { value: "name-asc", label: language === "sk" ? "Názov A-Z" : "Name A-Z" },
+                  { value: "price-asc", label: t("config.sort.priceAsc") },
+                  { value: "price-desc", label: t("config.sort.priceDesc") },
+                  { value: "name-asc", label: t("config.sort.nameAsc") },
                 ] as const).map((opt) => (
                   <button
                     key={opt.value}
