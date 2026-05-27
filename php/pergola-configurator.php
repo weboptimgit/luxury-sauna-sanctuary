@@ -318,11 +318,48 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         "",
         "{$s['email_price']}: {$calc['price']} €",
     ];
+    $from_header = 'From: ' . LUXURELAX_PERGOLA_FROM_NAME . ' <' . LUXURELAX_PERGOLA_FROM_EMAIL . '>';
+
+    // 1) Email pre admina (info@luxurelax.sk)
     wp_mail(
         LUXURELAX_PERGOLA_INQUIRY_EMAIL,
         $s['email_subject'],
         implode("\n", $lines),
-        ['Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $email]
+        [
+            'Content-Type: text/plain; charset=UTF-8',
+            $from_header,
+            'Reply-To: ' . $name . ' <' . $email . '>',
+        ]
+    );
+
+    // 2) Potvrdzovací email zákazníkovi
+    $cust_lines = [
+        str_replace('\n', "\n", $s['cust_hello']) . ' ' . $name . ',',
+        '',
+        $s['cust_thanks'],
+        '',
+        $s['cust_your_config'] . ':',
+        "  {$s['rozmery']}:      {$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
+        "  {$s['plocha']}:       {$calc['area_m2']} m²",
+        "  {$s['farba']}:        {$calc['color_label']}",
+        "  {$s['strecha']}:      {$calc['roof_label']}",
+        "  {$s['priehladnost']}: {$calc['trans_label']}",
+        "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
+        "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
+        '',
+        $s['cust_indicative'] . ': ' . $calc['price'] . ' €',
+        '',
+        str_replace('\n', "\n", $s['cust_signature']),
+    ];
+    wp_mail(
+        $email,
+        $s['cust_subject'],
+        implode("\n", $cust_lines),
+        [
+            'Content-Type: text/plain; charset=UTF-8',
+            $from_header,
+            'Reply-To: ' . LUXURELAX_PERGOLA_FROM_NAME . ' <' . LUXURELAX_PERGOLA_FROM_EMAIL . '>',
+        ]
     );
 
     return new WP_REST_Response([
