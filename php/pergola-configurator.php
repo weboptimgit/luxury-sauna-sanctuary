@@ -315,8 +315,6 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         "  {$s['priehladnost']}: {$calc['trans_label']}",
         "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
         "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
-        "",
-        "{$s['email_price']}: {$calc['price']} €",
     ];
     $from_header = 'From: ' . LUXURELAX_PERGOLA_FROM_NAME . ' <' . LUXURELAX_PERGOLA_FROM_EMAIL . '>';
 
@@ -346,8 +344,6 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         "  {$s['priehladnost']}: {$calc['trans_label']}",
         "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
         "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
-        '',
-        $s['cust_indicative'] . ': ' . $calc['price'] . ' €',
         '',
         str_replace('\n', "\n", $s['cust_signature']),
     ];

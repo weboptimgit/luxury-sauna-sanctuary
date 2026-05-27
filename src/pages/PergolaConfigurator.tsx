@@ -468,12 +468,11 @@ export default function PergolaConfigurator() {
 
                   <div className="mt-6 pt-5 border-t border-border">
                     <div className="text-xs text-foreground/60 uppercase tracking-widest mb-1">
-                      Orientačná cena
+                      Cenová ponuka
                     </div>
-                    <div className="font-display text-4xl font-bold text-primary">
-                      {formatPrice(price)}
+                    <div className="text-sm text-foreground/80 leading-relaxed">
+                      Po odoslaní dopytu vám pripravíme nezáväznú cenovú ponuku na mieru.
                     </div>
-                    <div className="text-xs text-foreground/40 mt-1">vrátane DPH</div>
                   </div>
                 </div>
               </div>
@@ -485,9 +484,8 @@ export default function PergolaConfigurator() {
       {/* Mobile sticky CTA */}
       {!submitted && (
         <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur border-t border-border p-3 flex items-center justify-between gap-3">
-          <div>
-            <div className="text-[10px] uppercase tracking-widest text-foreground/50">Cena</div>
-            <div className="font-display text-xl font-bold text-primary">{formatPrice(price)}</div>
+          <div className="text-xs text-foreground/60 leading-tight max-w-[55%]">
+            Nezáväzný dopyt – cenovú ponuku pripravíme na mieru.
           </div>
           {step < STEPS.length ? (
             <Button variant="luxury" onClick={next}>
@@ -1074,9 +1072,9 @@ function StepRoof({
                 </div>
                 <div className="font-medium mb-1">{r.name}</div>
                 <div className="text-xs text-foreground/50 mb-2">{r.desc}</div>
-                <div className="text-xs text-primary">
-                  {r.pricePerM2 === 0 ? "v základe" : `+${r.pricePerM2} €/m²`}
-                </div>
+                {r.pricePerM2 === 0 && (
+                  <div className="text-xs text-primary">v základe</div>
+                )}
               </button>
             );
           })}
@@ -1153,7 +1151,7 @@ function StepExtras({
                   {active && <Check className="w-4 h-4 text-primary" />}
                 </div>
                 <div className="text-xs text-foreground/50 mb-2">{m.desc}</div>
-                <div className="text-xs text-primary">{m.price === 0 ? "v základe" : `+${formatPrice(m.price)}`}</div>
+                {m.price === 0 && <div className="text-xs text-primary">v základe</div>}
               </button>
             );
           })}
@@ -1174,7 +1172,6 @@ function StepExtras({
             <div className="text-xs text-foreground/50">Integrované LED pre večernú atmosféru.</div>
           </div>
           <div className="text-right">
-            <div className="text-sm text-primary">+{formatPrice(LED_PRICE)}</div>
             <div
               className={cn(
                 "mt-2 w-10 h-6 rounded-full relative transition-colors",
