@@ -154,28 +154,37 @@ add_action('wp_mail_failed', function ($error) {
     }
 });
 
-function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '') {
+function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '', $from_email = '', $from_name = '') {
     $GLOBALS['luxurelax_pergola_last_mail_error'] = '';
 
-    $from_email_filter = function () { return LUXURELAX_PERGOLA_FROM_EMAIL; };
-    $from_name_filter = function () { return LUXURELAX_PERGOLA_FROM_NAME; };
+    $active_from_email = is_email($from_email) ? sanitize_email($from_email) : LUXURELAX_PERGOLA_FROM_EMAIL;
+    $active_from_name  = sanitize_text_field($from_name ?: LUXURELAX_PERGOLA_FROM_NAME);
 
-    add_filter('wp_mail_from', $from_email_filter, 99);
-    add_filter('wp_mail_from_name', $from_name_filter, 99);
+    $from_email_filter = function () use ($active_from_email) { return $active_from_email; };
+    $from_name_filter = function () use ($active_from_name) { return $active_from_name; };
 
-    $headers = ['Content-Type: text/plain; charset=UTF-8'];
+    add_filter('wp_mail_from', $from_email_filter, 999);
+    add_filter('wp_mail_from_name', $from_name_filter, 999);
+
+    $headers = [
+        'Content-Type: text/plain; charset=UTF-8',
+        'X-LuxuRelax-Mail: pergola-configurator',
+    ];
     if ($reply_to_email && is_email($reply_to_email)) {
         $headers[] = 'Reply-To: ' . sanitize_text_field($reply_to_name ?: LUXURELAX_PERGOLA_FROM_NAME) . ' <' . sanitize_email($reply_to_email) . '>';
     }
 
     $sent = wp_mail($to, $subject, $message, $headers);
 
-    remove_filter('wp_mail_from', $from_email_filter, 99);
-    remove_filter('wp_mail_from_name', $from_name_filter, 99);
+    remove_filter('wp_mail_from', $from_email_filter, 999);
+    remove_filter('wp_mail_from_name', $from_name_filter, 999);
 
     return [
         'sent'  => (bool) $sent,
         'error' => $sent ? '' : ($GLOBALS['luxurelax_pergola_last_mail_error'] ?: 'wp_mail() returned false without a detailed error'),
+        'to' => $to,
+        'from' => $active_from_name . ' <' . $active_from_email . '>',
+        'subject' => $subject,
     ];
 }
 
