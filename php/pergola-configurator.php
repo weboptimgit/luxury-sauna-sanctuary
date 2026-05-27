@@ -546,7 +546,7 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
     $customer_pdf_bin  = luxurelax_pergola_build_pdf(
         $s['cust_your_config'],
         $config_rows,
-        ['intro' => $s['cust_thanks'], 'price' => $price_str, 'price_label' => $s['cust_indicative']]
+        ['intro' => $s['cust_thanks']]
     );
     $customer_pdf_path = luxurelax_pergola_write_pdf_tmp(
         $customer_pdf_bin,
