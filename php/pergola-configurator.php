@@ -108,6 +108,12 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Name', 'email_phone' => 'Phone', 'email_email' => 'E-mail',
             'email_city' => 'City', 'email_note' => 'Note',
             'email_config' => 'Configuration', 'email_price' => 'Indicative price',
+            'cust_subject' => 'We received your inquiry – LuxuRelax pergola',
+            'cust_hello' => 'Hello',
+            'cust_thanks' => 'Thank you for your pergola inquiry. We have successfully received your configuration and will contact you shortly with a non-binding price quote.',
+            'cust_your_config' => 'Your configuration',
+            'cust_indicative' => 'Indicative price (may be adjusted based on final specification)',
+            'cust_signature' => 'Best regards,\nThe LuxuRelax Team\ninfo@luxurelax.sk',
         ],
         'hu' => [
             'yes' => 'Igen', 'no' => 'Nem',
