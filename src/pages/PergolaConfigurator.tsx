@@ -11,7 +11,7 @@ import {
   Send,
   Sparkles,
   Loader2,
-  ShoppingCart,
+  
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -183,7 +183,7 @@ export default function PergolaConfigurator() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [finishMode] = useState<"inquiry">("inquiry");
+  
 
   const [config, setConfig] = useState<Config>({
     width: 400,
