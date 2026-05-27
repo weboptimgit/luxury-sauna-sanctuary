@@ -87,6 +87,12 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Meno', 'email_phone' => 'Telefón', 'email_email' => 'E-mail',
             'email_city' => 'Mesto', 'email_note' => 'Poznámka',
             'email_config' => 'Konfigurácia', 'email_price' => 'Orientačná cena',
+            'cust_subject' => 'Prijali sme váš dopyt – LuxuRelax pergola',
+            'cust_hello' => 'Dobrý deň',
+            'cust_thanks' => 'Ďakujeme za váš dopyt na pergolu. Vašu konfiguráciu sme úspešne prijali a čoskoro vás budeme kontaktovať s nezáväznou cenovou ponukou.',
+            'cust_your_config' => 'Vaša konfigurácia',
+            'cust_indicative' => 'Orientačná cena (môže sa upraviť podľa finálnej špecifikácie)',
+            'cust_signature' => 'S pozdravom,\nTím LuxuRelax\ninfo@luxurelax.sk',
         ],
         'en' => [
             'yes' => 'Yes', 'no' => 'No',
