@@ -418,6 +418,31 @@ add_action('init', function () {
     ]);
 });
 
+add_action('add_meta_boxes', function () {
+    add_meta_box('luxurelax_pergola_mail_status', 'Stav e-mailov', function ($post) {
+        $status = get_post_meta($post->ID, '_pergola_mail_status', true);
+        if (!is_array($status)) {
+            echo '<p>E-mail ešte nebol zaznamenaný pri tomto dopyte.</p>';
+            return;
+        }
+
+        foreach (['admin' => 'LuxuRelax', 'customer' => 'Zákazník'] as $key => $label) {
+            $mail = $status[$key] ?? ['sent' => false, 'error' => 'Neznámy stav'];
+            $sent = !empty($mail['sent']);
+            echo '<p><strong>' . esc_html($label) . ':</strong> ';
+            echo $sent ? '<span style="color:#008a20">odoslané</span>' : '<span style="color:#b32d2e">neodoslané</span>';
+            if (!$sent && !empty($mail['error'])) {
+                echo '<br><small>' . esc_html($mail['error']) . '</small>';
+            }
+            echo '</p>';
+        }
+
+        if (!empty($status['sent_at'])) {
+            echo '<p><small>Čas: ' . esc_html($status['sent_at']) . '</small></p>';
+        }
+    }, 'pergola_inquiry', 'side', 'high');
+});
+
 // =====================================================================
 // 4) WooCommerce – zobrazenie konfigurácie a ceny v košíku/objednávke
 // =====================================================================
