@@ -21,7 +21,13 @@ if (!defined('LUXURELAX_PERGOLA_PRODUCT_ID')) {
 }
 
 if (!defined('LUXURELAX_PERGOLA_INQUIRY_EMAIL')) {
-    define('LUXURELAX_PERGOLA_INQUIRY_EMAIL', get_option('admin_email'));
+    define('LUXURELAX_PERGOLA_INQUIRY_EMAIL', 'info@luxurelax.sk');
+}
+if (!defined('LUXURELAX_PERGOLA_FROM_EMAIL')) {
+    define('LUXURELAX_PERGOLA_FROM_EMAIL', 'info@luxurelax.sk');
+}
+if (!defined('LUXURELAX_PERGOLA_FROM_NAME')) {
+    define('LUXURELAX_PERGOLA_FROM_NAME', 'LuxuRelax');
 }
 
 // Cenník (ilustračný – synchronizuj s frontendom!)
