@@ -328,55 +328,6 @@ export default function PergolaConfigurator() {
     }
   };
 
-  const addToCart = async () => {
-    setAddingToCart(true);
-    try {
-      const endpoint =
-        (import.meta.env.VITE_PERGOLA_CART_URL as string | undefined) ||
-        "https://www.luxurelax.sk/wp-json/luxurelax-pergola/v1/add-to-cart";
-
-      const payload = {
-        config: {
-          ...config,
-          colorName: colorDisplayName,
-          roofName: roofObj.name,
-          transparencyName: transObj.name,
-          areaM2: Number(areaM2.toFixed(2)),
-          posts: postLayout.posts,
-          reinforcement: postLayout.reinforcement,
-        },
-        price,
-        currency: "EUR",
-      };
-
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
-      const data = await res
-        .json()
-        .catch(() => ({}) as { redirect_url?: string; cart_url?: string; error?: string });
-      if (!res.ok) {
-        throw new Error(data?.error || `Nepodarilo sa pridať do košíka (HTTP ${res.status})`);
-      }
-      const redirectUrl =
-        data?.redirect_url ||
-        data?.cart_url ||
-        (window.location.hostname.endsWith(".com")
-          ? "https://www.luxurelax.com/cart/"
-          : "https://www.luxurelax.sk/kosik/");
-      window.location.href = redirectUrl;
-    } catch (err) {
-      toast({
-        title: "Chyba",
-        description: (err as Error).message,
-        variant: "destructive",
-      });
-      setAddingToCart(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
