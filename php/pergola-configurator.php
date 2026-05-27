@@ -345,8 +345,6 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
         "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
         '',
-        $s['cust_indicative'] . ': ' . $calc['price'] . ' €',
-        '',
         str_replace('\n', "\n", $s['cust_signature']),
     ];
     wp_mail(
