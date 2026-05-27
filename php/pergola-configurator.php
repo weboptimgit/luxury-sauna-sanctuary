@@ -129,6 +129,12 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Név', 'email_phone' => 'Telefon', 'email_email' => 'E-mail',
             'email_city' => 'Város', 'email_note' => 'Megjegyzés',
             'email_config' => 'Konfiguráció', 'email_price' => 'Tájékoztató ár',
+            'cust_subject' => 'Megkaptuk az ajánlatkérését – LuxuRelax pergola',
+            'cust_hello' => 'Tisztelt',
+            'cust_thanks' => 'Köszönjük a pergolára vonatkozó ajánlatkérését. Konfigurációját sikeresen megkaptuk, és hamarosan felvesszük Önnel a kapcsolatot egy nem kötelező árajánlattal.',
+            'cust_your_config' => 'Az Ön konfigurációja',
+            'cust_indicative' => 'Tájékoztató ár (a végleges specifikáció alapján módosulhat)',
+            'cust_signature' => 'Üdvözlettel,\nA LuxuRelax csapata\ninfo@luxurelax.sk',
         ],
     ];
     return $dict[$lang] ?? $dict['sk'];
