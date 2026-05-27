@@ -402,56 +402,63 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
     }
 
     $cfg_n = $calc['normalized'];
-    $lines = [
-        $s['email_heading'],
-        "------------------------------------",
-        "{$s['email_name']}:    $name",
-        "{$s['email_phone']}:   $phone",
-        "{$s['email_email']}:   $email",
-        "{$s['email_city']}:    $city",
-        "{$s['email_note']}:    $note",
-        "",
-        "{$s['email_config']}:",
-        "  {$s['rozmery']}:      {$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
-        "  {$s['plocha']}:       {$calc['area_m2']} m²",
-        "  {$s['farba']}:        {$calc['color_label']}",
-        "  {$s['strecha']}:      {$calc['roof_label']}",
-        "  {$s['priehladnost']}: {$calc['trans_label']}",
-        "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
-        "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
+
+    $config_rows = [
+        ['label' => $s['rozmery'],      'value' => "{$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm"],
+        ['label' => $s['plocha'],       'value' => "{$calc['area_m2']} m²"],
+        ['label' => $s['farba'],        'value' => $calc['color_label']],
+        ['label' => $s['strecha'],      'value' => $calc['roof_label']],
+        ['label' => $s['priehladnost'], 'value' => $calc['trans_label']],
+        ['label' => $s['montaz'],       'value' => $cfg_n['mounting'] ? $s['yes'] : $s['no']],
+        ['label' => $s['led'],          'value' => $cfg_n['led'] ? $s['yes'] : $s['no']],
     ];
-    // 1) Email pre admina (info@luxurelax.sk)
+
+    // 1) Email pre admina (info@luxurelax.sk) – HTML
+    $admin_rows = array_merge(
+        [
+            ['label' => $s['email_name'],  'value' => $name],
+            ['label' => $s['email_phone'], 'value' => $phone],
+            ['label' => $s['email_email'], 'value' => $email],
+            ['label' => $s['email_city'],  'value' => $city],
+        ],
+        $config_rows
+    );
+    if ($note !== '') {
+        $admin_rows[] = ['label' => $s['email_note'], 'value' => $note];
+    }
+    $admin_html = luxurelax_pergola_render_email_html(
+        $s['email_heading'],
+        $admin_rows,
+        ['intro' => '']
+    );
     $admin_mail = luxurelax_pergola_send_mail(
         LUXURELAX_PERGOLA_INQUIRY_EMAIL,
         $s['email_subject'],
-        implode("\n", $lines),
+        $admin_html,
         $email,
-        $name
+        $name,
+        '', '',
+        true
     );
 
-    // 2) Potvrdzovací email zákazníkovi
-    $cust_lines = [
-        str_replace('\n', "\n", $s['cust_hello']) . ' ' . $name . ',',
-        '',
-        $s['cust_thanks'],
-        '',
-        $s['cust_your_config'] . ':',
-        "  {$s['rozmery']}:      {$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
-        "  {$s['plocha']}:       {$calc['area_m2']} m²",
-        "  {$s['farba']}:        {$calc['color_label']}",
-        "  {$s['strecha']}:      {$calc['roof_label']}",
-        "  {$s['priehladnost']}: {$calc['trans_label']}",
-        "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
-        "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
-        '',
-        str_replace('\n', "\n", $s['cust_signature']),
-    ];
+    // 2) Potvrdzovací email zákazníkovi – HTML
+    $customer_html = luxurelax_pergola_render_email_html(
+        $s['cust_your_config'],
+        $config_rows,
+        [
+            'greeting'  => $s['cust_hello'] . ' ' . $name . ',',
+            'intro'     => $s['cust_thanks'],
+            'signature' => str_replace('\n', "\n", $s['cust_signature']),
+        ]
+    );
     $customer_mail = luxurelax_pergola_send_mail(
         $email,
         $s['cust_subject'],
-        implode("\n", $cust_lines),
+        $customer_html,
         LUXURELAX_PERGOLA_FROM_EMAIL,
-        LUXURELAX_PERGOLA_FROM_NAME
+        LUXURELAX_PERGOLA_FROM_NAME,
+        '', '',
+        true
     );
 
     if ($post_id && !is_wp_error($post_id)) {
