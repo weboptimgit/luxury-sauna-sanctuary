@@ -321,7 +321,11 @@ function luxurelax_pergola_render_email_html($title, $rows, $opts = []) {
 
     $title_html = esc_html($title);
 
-    return '<!DOCTYPE html><html lang="sk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . $title_html . '</title></head>'
+    $footer_html = ($footer === 'LUXURELAX · info@luxurelax.sk · www.luxurelax.sk')
+        ? 'LUXURELAX · <a href="mailto:info@luxurelax.sk" style="color:#78716c;text-decoration:underline;font-weight:600;">info@luxurelax.sk</a> · <a href="https://www.luxurelax.sk" style="color:#78716c;text-decoration:underline;font-weight:600;">www.luxurelax.sk</a>'
+        : esc_html($footer);
+
+    return '<!DOCTYPE html><html lang="sk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . $title_html . '</title><style type="text/css">a,a:link,a:visited,a:hover,a:active{color:inherit!important;text-decoration:underline!important;font-weight:600!important;}</style></head>'
         . '<body style="margin:0;padding:0;background:#f5f3f0;font-family:Arial,Helvetica,sans-serif;">'
         . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f5f3f0;padding:32px 12px;">'
         . '<tr><td align="center">'
@@ -346,7 +350,7 @@ function luxurelax_pergola_render_email_html($title, $rows, $opts = []) {
         . '<tr><td style="height:4px;background:linear-gradient(90deg,#d99936,#b8761f,#d99936);font-size:0;line-height:0;">&nbsp;</td></tr>'
         // Footer
         . '<tr><td style="background:#0e0c09;padding:18px 32px;text-align:center;color:#78716c;font-size:12px;font-family:Arial,Helvetica,sans-serif;letter-spacing:0.04em;">'
-        . esc_html($footer)
+        . $footer_html
         . '</td></tr>'
         . '</table>'
         . '</td></tr></table></body></html>';
