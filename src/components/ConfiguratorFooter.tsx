@@ -72,7 +72,7 @@ const ConfiguratorFooter = () => {
           {/* Brand */}
           <div>
             <a href={`${baseUrl}/`} className="flex items-center">
-              <img src={brelaxLogo} alt="LuxuRelax" className="w-[100px] h-auto" />
+              <img src={brelaxLogo} alt="LUXURELAX" className="w-[100px] h-auto" />
             </a>
             <p className="text-muted-foreground text-sm mt-4 leading-relaxed">{t("footer.brand.description")}</p>
             <div className="flex gap-4 mt-6">

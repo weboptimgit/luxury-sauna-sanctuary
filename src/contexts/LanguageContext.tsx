@@ -176,7 +176,7 @@ const translations: Record<Language, Record<string, string>> = {
     "success.addedToCartDesc": "Pokračujte v nákupe alebo prejdite do košíka.",
 
     // Inline UI (Configurator.tsx)
-    "config.metaTitle": "LuxuRelax | Konfigurátor",
+    "config.metaTitle": "LUXURELAX | Konfigurátor",
     "config.metaDescription":
       "Nakonfigurujte si svoju vysnívanú saunu alebo kaďu. Vyberte si typ dreva, ohrievač, osvetlenie a príslušenstvo.",
     "config.heaterModelCartError": "Pred pridaním do košíka musíte vybrať konkrétny model ohrievača.",
@@ -214,7 +214,7 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.hotTubs": "Kade",
     "footer.accessories": "Príslušenstvo",
     "footer.contactTitle": "Kontakt",
-    "footer.copyright": "© 2026 LuxuRelax. Všetky práva vyhradené.",
+    "footer.copyright": "© 2026 LUXURELAX. Všetky práva vyhradené.",
     "footer.weboptim": "E-Shop od weboptim",
   },
   en: {
@@ -380,7 +380,7 @@ const translations: Record<Language, Record<string, string>> = {
     "success.addedToCartDesc": "Continue shopping or go to cart.",
 
     // Inline UI (Configurator.tsx)
-    "config.metaTitle": "LuxuRelax | Configurator",
+    "config.metaTitle": "LUXURELAX | Configurator",
     "config.metaDescription":
       "Configure your dream sauna or hot tub. Choose wood type, heater, lighting and accessories.",
     "config.heaterModelCartError": "You must select a specific heater model before adding to cart.",
@@ -418,7 +418,7 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.hotTubs": "Hot Tubs",
     "footer.accessories": "Accessories",
     "footer.contactTitle": "Contact",
-    "footer.copyright": "© 2026 LuxuRelax. All rights reserved.",
+    "footer.copyright": "© 2026 LUXURELAX. All rights reserved.",
     "footer.weboptim": "E-Shop by weboptim",
   },
   hu: {
@@ -584,7 +584,7 @@ const translations: Record<Language, Record<string, string>> = {
     "success.addedToCartDesc": "Folytassa a vásárlást vagy lépjen a kosárhoz.",
 
     // Inline UI (Configurator.tsx)
-    "config.metaTitle": "LuxuRelax | Konfigurátor",
+    "config.metaTitle": "LUXURELAX | Konfigurátor",
     "config.metaDescription":
       "Konfigurálja álmai szaunáját vagy dézsafürdőjét. Válasszon fa típust, kályhát, világítást és kiegészítőket.",
     "config.heaterModelCartError": "Mielőtt a kosárba helyezné, válassza ki a kályha konkrét modelljét.",
@@ -623,7 +623,7 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.hotTubs": "Dézsafürdők",
     "footer.accessories": "Kiegészítők",
     "footer.contactTitle": "Kapcsolat",
-    "footer.copyright": "© 2026 LuxuRelax. Minden jog fenntartva.",
+    "footer.copyright": "© 2026 LUXURELAX. Minden jog fenntartva.",
     "footer.weboptim": "E-Shop a weboptim-tól",
   },
 };
