@@ -1072,9 +1072,9 @@ function StepRoof({
                 </div>
                 <div className="font-medium mb-1">{r.name}</div>
                 <div className="text-xs text-foreground/50 mb-2">{r.desc}</div>
-                <div className="text-xs text-primary">
-                  {r.pricePerM2 === 0 ? "v základe" : `+${r.pricePerM2} €/m²`}
-                </div>
+                {r.pricePerM2 === 0 && (
+                  <div className="text-xs text-primary">v základe</div>
+                )}
               </button>
             );
           })}
