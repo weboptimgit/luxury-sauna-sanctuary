@@ -27,7 +27,7 @@ if (!defined('LUXURELAX_PERGOLA_FROM_EMAIL')) {
     define('LUXURELAX_PERGOLA_FROM_EMAIL', 'info@luxurelax.sk');
 }
 if (!defined('LUXURELAX_PERGOLA_FROM_NAME')) {
-    define('LUXURELAX_PERGOLA_FROM_NAME', 'LuxuRelax');
+    define('LUXURELAX_PERGOLA_FROM_NAME', 'LUXURELAX');
 }
 
 // Cenník (ilustračný – synchronizuj s frontendom!)
@@ -87,12 +87,12 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Meno', 'email_phone' => 'Telefón', 'email_email' => 'E-mail',
             'email_city' => 'Mesto', 'email_note' => 'Poznámka',
             'email_config' => 'Konfigurácia', 'email_price' => 'Orientačná cena',
-            'cust_subject' => 'Prijali sme váš dopyt – LuxuRelax pergola',
+            'cust_subject' => 'Prijali sme váš dopyt – LUXURELAX pergola',
             'cust_hello' => 'Dobrý deň',
             'cust_thanks' => 'Ďakujeme za váš dopyt na pergolu. Vašu konfiguráciu sme úspešne prijali a čoskoro vás budeme kontaktovať s nezáväznou cenovou ponukou.',
             'cust_your_config' => 'Vaša konfigurácia',
             'cust_indicative' => 'Orientačná cena (môže sa upraviť podľa finálnej špecifikácie)',
-            'cust_signature' => 'S pozdravom,\nTím LuxuRelax\ninfo@luxurelax.sk',
+            'cust_signature' => 'S pozdravom,\nTím LUXURELAX\ninfo@luxurelax.sk',
         ],
         'en' => [
             'yes' => 'Yes', 'no' => 'No',
@@ -108,12 +108,12 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Name', 'email_phone' => 'Phone', 'email_email' => 'E-mail',
             'email_city' => 'City', 'email_note' => 'Note',
             'email_config' => 'Configuration', 'email_price' => 'Indicative price',
-            'cust_subject' => 'We received your inquiry – LuxuRelax pergola',
+            'cust_subject' => 'We received your inquiry – LUXURELAX pergola',
             'cust_hello' => 'Hello',
             'cust_thanks' => 'Thank you for your pergola inquiry. We have successfully received your configuration and will contact you shortly with a non-binding price quote.',
             'cust_your_config' => 'Your configuration',
             'cust_indicative' => 'Indicative price (may be adjusted based on final specification)',
-            'cust_signature' => 'Best regards,\nThe LuxuRelax Team\ninfo@luxurelax.sk',
+            'cust_signature' => 'Best regards,\nThe LUXURELAX Team\ninfo@luxurelax.sk',
         ],
         'hu' => [
             'yes' => 'Igen', 'no' => 'Nem',
@@ -129,12 +129,12 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Név', 'email_phone' => 'Telefon', 'email_email' => 'E-mail',
             'email_city' => 'Város', 'email_note' => 'Megjegyzés',
             'email_config' => 'Konfiguráció', 'email_price' => 'Tájékoztató ár',
-            'cust_subject' => 'Megkaptuk az ajánlatkérését – LuxuRelax pergola',
+            'cust_subject' => 'Megkaptuk az ajánlatkérését – LUXURELAX pergola',
             'cust_hello' => 'Tisztelt',
             'cust_thanks' => 'Köszönjük a pergolára vonatkozó ajánlatkérését. Konfigurációját sikeresen megkaptuk, és hamarosan felvesszük Önnel a kapcsolatot egy nem kötelező árajánlattal.',
             'cust_your_config' => 'Az Ön konfigurációja',
             'cust_indicative' => 'Tájékoztató ár (a végleges specifikáció alapján módosulhat)',
-            'cust_signature' => 'Üdvözlettel,\nA LuxuRelax csapata\ninfo@luxurelax.sk',
+            'cust_signature' => 'Üdvözlettel,\nA LUXURELAX csapata\ninfo@luxurelax.sk',
         ],
     ];
     return $dict[$lang] ?? $dict['sk'];
@@ -150,7 +150,7 @@ $GLOBALS['luxurelax_pergola_last_mail_error'] = '';
 add_action('wp_mail_failed', function ($error) {
     if (is_wp_error($error)) {
         $GLOBALS['luxurelax_pergola_last_mail_error'] = $error->get_error_message();
-        error_log('LuxuRelax pergola wp_mail failed: ' . $error->get_error_message());
+        error_log('LUXURELAX pergola wp_mail failed: ' . $error->get_error_message());
     }
 });
 
@@ -168,7 +168,7 @@ function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = 
 
     $headers = [
         'Content-Type: ' . ($is_html ? 'text/html' : 'text/plain') . '; charset=UTF-8',
-        'X-LuxuRelax-Mail: pergola-configurator',
+        'X-LUXURELAX-Mail: pergola-configurator',
     ];
     if ($reply_to_email && is_email($reply_to_email)) {
         $headers[] = 'Reply-To: ' . sanitize_text_field($reply_to_name ?: LUXURELAX_PERGOLA_FROM_NAME) . ' <' . sanitize_email($reply_to_email) . '>';
@@ -206,13 +206,13 @@ function luxurelax_pergola_build_pdf($title, $rows, $opts = []) {
     };
 
     $intro       = $opts['intro']       ?? '';
-    $footer      = $opts['footer']      ?? 'LuxuRelax  ·  info@luxurelax.sk  ·  www.luxurelax.sk';
+    $footer      = $opts['footer']      ?? 'LUXURELAX  ·  info@luxurelax.sk  ·  www.luxurelax.sk';
     $price       = $opts['price']       ?? '';
     $price_label = $opts['price_label'] ?? 'Orientacna cena';
 
     $stream  = "q\n";
     $stream .= "0.851 0.600 0.212 rg\n0 762 595 80 re f\n";
-    $stream .= "BT /F2 26 Tf 0.078 0.067 0.051 rg 40 805 Td (LuxuRelax) Tj ET\n";
+    $stream .= "BT /F2 26 Tf 0.078 0.067 0.051 rg 40 805 Td (LUXURELAX) Tj ET\n";
     $stream .= "BT /F1 9 Tf 0.078 0.067 0.051 rg 40 786 Td (PERGOLA KONFIGURATOR) Tj ET\n";
     $stream .= "BT /F2 16 Tf 0.118 0.106 0.090 rg 40 730 Td (" . $enc($title) . ") Tj ET\n";
 
@@ -292,7 +292,7 @@ function luxurelax_pergola_write_pdf_tmp($pdf_binary, $filename) {
 }
 
 /**
- * Render branded HTML email (LuxuRelax dark/amber theme).
+ * Render branded HTML email (LUXURELAX dark/amber theme).
  *
  * $rows: array of ['label' => '...', 'value' => '...']
  * $opts: ['intro' => '', 'outro' => '', 'greeting' => '', 'lang' => 'sk']
@@ -302,7 +302,7 @@ function luxurelax_pergola_render_email_html($title, $rows, $opts = []) {
     $outro     = $opts['outro']     ?? '';
     $greeting  = $opts['greeting']  ?? '';
     $signature = $opts['signature'] ?? '';
-    $footer    = $opts['footer']    ?? 'LuxuRelax · info@luxurelax.sk · www.luxurelax.sk';
+    $footer    = $opts['footer']    ?? 'LUXURELAX · info@luxurelax.sk · www.luxurelax.sk';
 
     $rows_html = '';
     foreach ($rows as $r) {
@@ -328,7 +328,7 @@ function luxurelax_pergola_render_email_html($title, $rows, $opts = []) {
         . '<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#14110d;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.25);">'
         // Header
         . '<tr><td style="background:linear-gradient(135deg,#d99936 0%,#b8761f 100%);padding:28px 32px;text-align:center;">'
-        . '<div style="font-family:Georgia,\'Times New Roman\',serif;font-size:28px;font-weight:700;color:#14110d;letter-spacing:0.08em;">LuxuRelax</div>'
+        . '<div style="font-family:Georgia,\'Times New Roman\',serif;font-size:28px;font-weight:700;color:#14110d;letter-spacing:0.08em;">LUXURELAX</div>'
         . '<div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#14110d;letter-spacing:0.3em;text-transform:uppercase;margin-top:6px;opacity:0.75;">Pergola Konfigurátor</div>'
         . '</td></tr>'
         // Body
@@ -550,7 +550,7 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
     );
     $customer_pdf_path = luxurelax_pergola_write_pdf_tmp(
         $customer_pdf_bin,
-        'LuxuRelax-pergola-konfiguracia.pdf'
+        'LUXURELAX-pergola-konfiguracia.pdf'
     );
 
     // 1) Email pre admina – HTML + PDF
@@ -638,7 +638,7 @@ add_action('add_meta_boxes', function () {
             return;
         }
 
-        foreach (['admin' => 'LuxuRelax', 'customer' => 'Zákazník'] as $key => $label) {
+        foreach (['admin' => 'LUXURELAX', 'customer' => 'Zákazník'] as $key => $label) {
             $mail = $status[$key] ?? ['sent' => false, 'error' => 'Neznámy stav'];
             $sent = !empty($mail['sent']);
             echo '<p><strong>' . esc_html($label) . ':</strong> ';
