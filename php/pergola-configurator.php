@@ -516,7 +516,7 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         ['label' => $s['led'],          'value' => $cfg_n['led'] ? $s['yes'] : $s['no']],
     ];
 
-    // 1) Email pre admina (info@luxurelax.sk) – HTML
+    // Admin rows (kontaktné údaje + konfigurácia)
     $admin_rows = array_merge(
         [
             ['label' => $s['email_name'],  'value' => $name],
@@ -529,6 +529,31 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
     if ($note !== '') {
         $admin_rows[] = ['label' => $s['email_note'], 'value' => $note];
     }
+
+    // PDF prílohy (priložené k obom mailom)
+    $price_str = number_format($calc['price'], 0, ',', ' ') . ' EUR';
+
+    $admin_pdf_bin  = luxurelax_pergola_build_pdf(
+        $s['email_heading'],
+        $admin_rows,
+        ['price' => $price_str, 'price_label' => $s['email_price']]
+    );
+    $admin_pdf_path = luxurelax_pergola_write_pdf_tmp(
+        $admin_pdf_bin,
+        'pergola-dopyt-' . ($post_id ?: time()) . '.pdf'
+    );
+
+    $customer_pdf_bin  = luxurelax_pergola_build_pdf(
+        $s['cust_your_config'],
+        $config_rows,
+        ['intro' => $s['cust_thanks'], 'price' => $price_str, 'price_label' => $s['cust_indicative']]
+    );
+    $customer_pdf_path = luxurelax_pergola_write_pdf_tmp(
+        $customer_pdf_bin,
+        'LuxuRelax-pergola-konfiguracia.pdf'
+    );
+
+    // 1) Email pre admina – HTML + PDF
     $admin_html = luxurelax_pergola_render_email_html(
         $s['email_heading'],
         $admin_rows,
@@ -541,10 +566,11 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         $email,
         $name,
         '', '',
-        true
+        true,
+        $admin_pdf_path ? [$admin_pdf_path] : []
     );
 
-    // 2) Potvrdzovací email zákazníkovi – HTML
+    // 2) Potvrdzovací email zákazníkovi – HTML + PDF
     $customer_html = luxurelax_pergola_render_email_html(
         $s['cust_your_config'],
         $config_rows,
@@ -561,8 +587,14 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         LUXURELAX_PERGOLA_FROM_EMAIL,
         LUXURELAX_PERGOLA_FROM_NAME,
         '', '',
-        true
+        true,
+        $customer_pdf_path ? [$customer_pdf_path] : []
     );
+
+    // Cleanup dočasných PDF
+    if ($admin_pdf_path && file_exists($admin_pdf_path))       @unlink($admin_pdf_path);
+    if ($customer_pdf_path && file_exists($customer_pdf_path)) @unlink($customer_pdf_path);
+
 
     if ($post_id && !is_wp_error($post_id)) {
         update_post_meta($post_id, '_pergola_mail_status', [
