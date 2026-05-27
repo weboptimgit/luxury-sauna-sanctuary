@@ -443,10 +443,24 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
     if ($extra_posts > 0)               $price += $extra_posts * $p['extra_post_price'];
     if ($post_layout['reinforcement'])  $price += $p['reinforcement_price'];
 
+    $color_label = luxurelax_pergola_t($p['colors'][$color_key]['label'], $lang);
+    if ($color_key === 'ral') {
+        $ral_code = isset($cfg['ralCode']) ? trim((string) $cfg['ralCode']) : '';
+        $ral_name = isset($cfg['ralName']) ? trim((string) $cfg['ralName']) : '';
+        $ral_hex  = isset($cfg['ralHex'])  ? trim((string) $cfg['ralHex'])  : '';
+        if ($ral_code !== '' || $ral_name !== '') {
+            $parts = array_filter([$ral_code, $ral_name], static function ($v) { return $v !== ''; });
+            $color_label = implode(' – ', $parts);
+            if ($ral_hex !== '') {
+                $color_label .= ' (' . $ral_hex . ')';
+            }
+        }
+    }
+
     return [
         'price'        => round($price),
         'area_m2'      => round($area, 2),
-        'color_label'  => luxurelax_pergola_t($p['colors'][$color_key]['label'], $lang),
+        'color_label'  => $color_label,
         'roof_label'   => luxurelax_pergola_t($p['roofs'][$roof_key]['label'], $lang),
         'trans_label'  => luxurelax_pergola_t($p['transparencies'][$trans_key], $lang),
         'posts'        => $post_layout['posts'],
