@@ -183,8 +183,7 @@ export default function PergolaConfigurator() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [finishMode, setFinishMode] = useState<"choice" | "inquiry">("choice");
-  const [addingToCart, setAddingToCart] = useState(false);
+  const [finishMode] = useState<"inquiry">("inquiry");
 
   const [config, setConfig] = useState<Config>({
     width: 400,
@@ -466,15 +465,7 @@ export default function PergolaConfigurator() {
                   {step === 4 && (
                     <StepExtras config={config} setConfig={setConfig} />
                   )}
-                  {step === 5 && !submitted && finishMode === "choice" && (
-                    <StepChoice
-                      price={price}
-                      onAddToCart={addToCart}
-                      onInquiry={() => setFinishMode("inquiry")}
-                      addingToCart={addingToCart}
-                    />
-                  )}
-                  {step === 5 && !submitted && finishMode === "inquiry" && (
+                  {step === 5 && !submitted && (
                     <StepLead form={form} setForm={setForm} errors={errors} />
                   )}
                   {step === 5 && submitted && <StepSuccess />}
@@ -484,24 +475,14 @@ export default function PergolaConfigurator() {
               {/* Navigation */}
               {!submitted && (
                 <div className="flex justify-between items-center mt-6">
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      if (step === 5 && finishMode === "inquiry") {
-                        setFinishMode("choice");
-                      } else {
-                        prev();
-                      }
-                    }}
-                    disabled={step === 1}
-                  >
+                  <Button variant="ghost" onClick={prev} disabled={step === 1}>
                     <ChevronLeft className="w-4 h-4" /> Späť
                   </Button>
                   {step < STEPS.length ? (
                     <Button variant="luxury" size="lg" onClick={next}>
                       Pokračovať <ChevronRight className="w-4 h-4" />
                     </Button>
-                  ) : finishMode === "inquiry" ? (
+                  ) : (
                     <Button variant="luxury" size="lg" onClick={submit} disabled={submitting}>
                       {submitting ? (
                         <><Loader2 className="w-4 h-4 animate-spin" /> Odosielam…</>
@@ -509,8 +490,6 @@ export default function PergolaConfigurator() {
                         <>Odoslať nezáväzný dopyt <Send className="w-4 h-4" /></>
                       )}
                     </Button>
-                  ) : (
-                    <div />
                   )}
                 </div>
               )}
@@ -563,13 +542,9 @@ export default function PergolaConfigurator() {
             <Button variant="luxury" onClick={next}>
               Pokračovať <ChevronRight className="w-4 h-4" />
             </Button>
-          ) : finishMode === "inquiry" ? (
+          ) : (
             <Button variant="luxury" onClick={submit} disabled={submitting}>
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Odoslať <Send className="w-4 h-4" /></>}
-            </Button>
-          ) : (
-            <Button variant="luxury" onClick={addToCart} disabled={addingToCart}>
-              {addingToCart ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Do košíka <ShoppingCart className="w-4 h-4" /></>}
             </Button>
           )}
         </div>
