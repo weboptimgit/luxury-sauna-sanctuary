@@ -468,12 +468,11 @@ export default function PergolaConfigurator() {
 
                   <div className="mt-6 pt-5 border-t border-border">
                     <div className="text-xs text-foreground/60 uppercase tracking-widest mb-1">
-                      Orientačná cena
+                      Cenová ponuka
                     </div>
-                    <div className="font-display text-4xl font-bold text-primary">
-                      {formatPrice(price)}
+                    <div className="text-sm text-foreground/80 leading-relaxed">
+                      Po odoslaní dopytu vám pripravíme nezáväznú cenovú ponuku na mieru.
                     </div>
-                    <div className="text-xs text-foreground/40 mt-1">vrátane DPH</div>
                   </div>
                 </div>
               </div>
