@@ -484,9 +484,8 @@ export default function PergolaConfigurator() {
       {/* Mobile sticky CTA */}
       {!submitted && (
         <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur border-t border-border p-3 flex items-center justify-between gap-3">
-          <div>
-            <div className="text-[10px] uppercase tracking-widest text-foreground/50">Cena</div>
-            <div className="font-display text-xl font-bold text-primary">{formatPrice(price)}</div>
+          <div className="text-xs text-foreground/60 leading-tight max-w-[55%]">
+            Nezáväzný dopyt – cenovú ponuku pripravíme na mieru.
           </div>
           {step < STEPS.length ? (
             <Button variant="luxury" onClick={next}>
