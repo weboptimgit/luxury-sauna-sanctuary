@@ -21,7 +21,13 @@ if (!defined('LUXURELAX_PERGOLA_PRODUCT_ID')) {
 }
 
 if (!defined('LUXURELAX_PERGOLA_INQUIRY_EMAIL')) {
-    define('LUXURELAX_PERGOLA_INQUIRY_EMAIL', get_option('admin_email'));
+    define('LUXURELAX_PERGOLA_INQUIRY_EMAIL', 'info@luxurelax.sk');
+}
+if (!defined('LUXURELAX_PERGOLA_FROM_EMAIL')) {
+    define('LUXURELAX_PERGOLA_FROM_EMAIL', 'info@luxurelax.sk');
+}
+if (!defined('LUXURELAX_PERGOLA_FROM_NAME')) {
+    define('LUXURELAX_PERGOLA_FROM_NAME', 'LuxuRelax');
 }
 
 // Cenník (ilustračný – synchronizuj s frontendom!)
@@ -81,6 +87,12 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Meno', 'email_phone' => 'Telefón', 'email_email' => 'E-mail',
             'email_city' => 'Mesto', 'email_note' => 'Poznámka',
             'email_config' => 'Konfigurácia', 'email_price' => 'Orientačná cena',
+            'cust_subject' => 'Prijali sme váš dopyt – LuxuRelax pergola',
+            'cust_hello' => 'Dobrý deň',
+            'cust_thanks' => 'Ďakujeme za váš dopyt na pergolu. Vašu konfiguráciu sme úspešne prijali a čoskoro vás budeme kontaktovať s nezáväznou cenovou ponukou.',
+            'cust_your_config' => 'Vaša konfigurácia',
+            'cust_indicative' => 'Orientačná cena (môže sa upraviť podľa finálnej špecifikácie)',
+            'cust_signature' => 'S pozdravom,\nTím LuxuRelax\ninfo@luxurelax.sk',
         ],
         'en' => [
             'yes' => 'Yes', 'no' => 'No',
@@ -96,6 +108,12 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Name', 'email_phone' => 'Phone', 'email_email' => 'E-mail',
             'email_city' => 'City', 'email_note' => 'Note',
             'email_config' => 'Configuration', 'email_price' => 'Indicative price',
+            'cust_subject' => 'We received your inquiry – LuxuRelax pergola',
+            'cust_hello' => 'Hello',
+            'cust_thanks' => 'Thank you for your pergola inquiry. We have successfully received your configuration and will contact you shortly with a non-binding price quote.',
+            'cust_your_config' => 'Your configuration',
+            'cust_indicative' => 'Indicative price (may be adjusted based on final specification)',
+            'cust_signature' => 'Best regards,\nThe LuxuRelax Team\ninfo@luxurelax.sk',
         ],
         'hu' => [
             'yes' => 'Igen', 'no' => 'Nem',
@@ -111,6 +129,12 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Név', 'email_phone' => 'Telefon', 'email_email' => 'E-mail',
             'email_city' => 'Város', 'email_note' => 'Megjegyzés',
             'email_config' => 'Konfiguráció', 'email_price' => 'Tájékoztató ár',
+            'cust_subject' => 'Megkaptuk az ajánlatkérését – LuxuRelax pergola',
+            'cust_hello' => 'Tisztelt',
+            'cust_thanks' => 'Köszönjük a pergolára vonatkozó ajánlatkérését. Konfigurációját sikeresen megkaptuk, és hamarosan felvesszük Önnel a kapcsolatot egy nem kötelező árajánlattal.',
+            'cust_your_config' => 'Az Ön konfigurációja',
+            'cust_indicative' => 'Tájékoztató ár (a végleges specifikáció alapján módosulhat)',
+            'cust_signature' => 'Üdvözlettel,\nA LuxuRelax csapata\ninfo@luxurelax.sk',
         ],
     ];
     return $dict[$lang] ?? $dict['sk'];
@@ -294,11 +318,48 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         "",
         "{$s['email_price']}: {$calc['price']} €",
     ];
+    $from_header = 'From: ' . LUXURELAX_PERGOLA_FROM_NAME . ' <' . LUXURELAX_PERGOLA_FROM_EMAIL . '>';
+
+    // 1) Email pre admina (info@luxurelax.sk)
     wp_mail(
         LUXURELAX_PERGOLA_INQUIRY_EMAIL,
         $s['email_subject'],
         implode("\n", $lines),
-        ['Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $email]
+        [
+            'Content-Type: text/plain; charset=UTF-8',
+            $from_header,
+            'Reply-To: ' . $name . ' <' . $email . '>',
+        ]
+    );
+
+    // 2) Potvrdzovací email zákazníkovi
+    $cust_lines = [
+        str_replace('\n', "\n", $s['cust_hello']) . ' ' . $name . ',',
+        '',
+        $s['cust_thanks'],
+        '',
+        $s['cust_your_config'] . ':',
+        "  {$s['rozmery']}:      {$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
+        "  {$s['plocha']}:       {$calc['area_m2']} m²",
+        "  {$s['farba']}:        {$calc['color_label']}",
+        "  {$s['strecha']}:      {$calc['roof_label']}",
+        "  {$s['priehladnost']}: {$calc['trans_label']}",
+        "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
+        "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
+        '',
+        $s['cust_indicative'] . ': ' . $calc['price'] . ' €',
+        '',
+        str_replace('\n', "\n", $s['cust_signature']),
+    ];
+    wp_mail(
+        $email,
+        $s['cust_subject'],
+        implode("\n", $cust_lines),
+        [
+            'Content-Type: text/plain; charset=UTF-8',
+            $from_header,
+            'Reply-To: ' . LUXURELAX_PERGOLA_FROM_NAME . ' <' . LUXURELAX_PERGOLA_FROM_EMAIL . '>',
+        ]
     );
 
     return new WP_REST_Response([
