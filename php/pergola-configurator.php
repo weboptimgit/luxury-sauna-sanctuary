@@ -154,7 +154,7 @@ add_action('wp_mail_failed', function ($error) {
     }
 });
 
-function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '', $from_email = '', $from_name = '') {
+function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '', $from_email = '', $from_name = '', $is_html = false) {
     $GLOBALS['luxurelax_pergola_last_mail_error'] = '';
 
     $active_from_email = is_email($from_email) ? sanitize_email($from_email) : LUXURELAX_PERGOLA_FROM_EMAIL;
@@ -167,7 +167,7 @@ function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = 
     add_filter('wp_mail_from_name', $from_name_filter, 999);
 
     $headers = [
-        'Content-Type: text/plain; charset=UTF-8',
+        'Content-Type: ' . ($is_html ? 'text/html' : 'text/plain') . '; charset=UTF-8',
         'X-LuxuRelax-Mail: pergola-configurator',
     ];
     if ($reply_to_email && is_email($reply_to_email)) {
@@ -186,6 +186,67 @@ function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = 
         'from' => $active_from_name . ' <' . $active_from_email . '>',
         'subject' => $subject,
     ];
+}
+
+/**
+ * Render branded HTML email (LuxuRelax dark/amber theme).
+ *
+ * $rows: array of ['label' => '...', 'value' => '...']
+ * $opts: ['intro' => '', 'outro' => '', 'greeting' => '', 'lang' => 'sk']
+ */
+function luxurelax_pergola_render_email_html($title, $rows, $opts = []) {
+    $intro     = $opts['intro']     ?? '';
+    $outro     = $opts['outro']     ?? '';
+    $greeting  = $opts['greeting']  ?? '';
+    $signature = $opts['signature'] ?? '';
+    $footer    = $opts['footer']    ?? 'LuxuRelax · info@luxurelax.sk · www.luxurelax.sk';
+
+    $rows_html = '';
+    foreach ($rows as $r) {
+        $label = esc_html($r['label']);
+        $value = esc_html($r['value']);
+        $rows_html .= '<tr>'
+            . '<td style="padding:10px 16px;border-bottom:1px solid #2a2520;color:#a8a29e;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;width:42%;vertical-align:top;font-family:Arial,Helvetica,sans-serif;">' . $label . '</td>'
+            . '<td style="padding:10px 16px;border-bottom:1px solid #2a2520;color:#f5f5f4;font-size:15px;font-weight:600;vertical-align:top;font-family:Arial,Helvetica,sans-serif;">' . $value . '</td>'
+            . '</tr>';
+    }
+
+    $intro_html     = $intro     ? '<p style="margin:0 0 18px;color:#d6d3d1;font-size:15px;line-height:1.65;font-family:Arial,Helvetica,sans-serif;">' . nl2br(esc_html($intro)) . '</p>' : '';
+    $outro_html     = $outro     ? '<p style="margin:24px 0 0;color:#d6d3d1;font-size:14px;line-height:1.65;font-family:Arial,Helvetica,sans-serif;">' . nl2br(esc_html($outro)) . '</p>' : '';
+    $greeting_html  = $greeting  ? '<p style="margin:0 0 8px;color:#f5f5f4;font-size:16px;font-family:Arial,Helvetica,sans-serif;">' . esc_html($greeting) . '</p>' : '';
+    $signature_html = $signature ? '<p style="margin:24px 0 0;color:#a8a29e;font-size:13px;line-height:1.6;font-family:Arial,Helvetica,sans-serif;">' . nl2br(esc_html($signature)) . '</p>' : '';
+
+    $title_html = esc_html($title);
+
+    return '<!DOCTYPE html><html lang="sk"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . $title_html . '</title></head>'
+        . '<body style="margin:0;padding:0;background:#f5f3f0;font-family:Arial,Helvetica,sans-serif;">'
+        . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f5f3f0;padding:32px 12px;">'
+        . '<tr><td align="center">'
+        . '<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#14110d;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.25);">'
+        // Header
+        . '<tr><td style="background:linear-gradient(135deg,#d99936 0%,#b8761f 100%);padding:28px 32px;text-align:center;">'
+        . '<div style="font-family:Georgia,\'Times New Roman\',serif;font-size:28px;font-weight:700;color:#14110d;letter-spacing:0.08em;">LuxuRelax</div>'
+        . '<div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#14110d;letter-spacing:0.3em;text-transform:uppercase;margin-top:6px;opacity:0.75;">Pergola Konfigurátor</div>'
+        . '</td></tr>'
+        // Body
+        . '<tr><td style="padding:32px;">'
+        . $greeting_html
+        . '<h1 style="margin:0 0 18px;font-family:Georgia,\'Times New Roman\',serif;font-size:22px;font-weight:600;color:#f5f5f4;line-height:1.3;">' . $title_html . '</h1>'
+        . $intro_html
+        . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1c1814;border:1px solid #2a2520;border-radius:10px;overflow:hidden;margin-top:8px;">'
+        . $rows_html
+        . '</table>'
+        . $outro_html
+        . $signature_html
+        . '</td></tr>'
+        // Accent strip
+        . '<tr><td style="height:4px;background:linear-gradient(90deg,#d99936,#b8761f,#d99936);font-size:0;line-height:0;">&nbsp;</td></tr>'
+        // Footer
+        . '<tr><td style="background:#0e0c09;padding:18px 32px;text-align:center;color:#78716c;font-size:12px;font-family:Arial,Helvetica,sans-serif;letter-spacing:0.04em;">'
+        . esc_html($footer)
+        . '</td></tr>'
+        . '</table>'
+        . '</td></tr></table></body></html>';
 }
 
 /**
@@ -341,56 +402,63 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
     }
 
     $cfg_n = $calc['normalized'];
-    $lines = [
-        $s['email_heading'],
-        "------------------------------------",
-        "{$s['email_name']}:    $name",
-        "{$s['email_phone']}:   $phone",
-        "{$s['email_email']}:   $email",
-        "{$s['email_city']}:    $city",
-        "{$s['email_note']}:    $note",
-        "",
-        "{$s['email_config']}:",
-        "  {$s['rozmery']}:      {$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
-        "  {$s['plocha']}:       {$calc['area_m2']} m²",
-        "  {$s['farba']}:        {$calc['color_label']}",
-        "  {$s['strecha']}:      {$calc['roof_label']}",
-        "  {$s['priehladnost']}: {$calc['trans_label']}",
-        "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
-        "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
+
+    $config_rows = [
+        ['label' => $s['rozmery'],      'value' => "{$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm"],
+        ['label' => $s['plocha'],       'value' => "{$calc['area_m2']} m²"],
+        ['label' => $s['farba'],        'value' => $calc['color_label']],
+        ['label' => $s['strecha'],      'value' => $calc['roof_label']],
+        ['label' => $s['priehladnost'], 'value' => $calc['trans_label']],
+        ['label' => $s['montaz'],       'value' => $cfg_n['mounting'] ? $s['yes'] : $s['no']],
+        ['label' => $s['led'],          'value' => $cfg_n['led'] ? $s['yes'] : $s['no']],
     ];
-    // 1) Email pre admina (info@luxurelax.sk)
+
+    // 1) Email pre admina (info@luxurelax.sk) – HTML
+    $admin_rows = array_merge(
+        [
+            ['label' => $s['email_name'],  'value' => $name],
+            ['label' => $s['email_phone'], 'value' => $phone],
+            ['label' => $s['email_email'], 'value' => $email],
+            ['label' => $s['email_city'],  'value' => $city],
+        ],
+        $config_rows
+    );
+    if ($note !== '') {
+        $admin_rows[] = ['label' => $s['email_note'], 'value' => $note];
+    }
+    $admin_html = luxurelax_pergola_render_email_html(
+        $s['email_heading'],
+        $admin_rows,
+        ['intro' => '']
+    );
     $admin_mail = luxurelax_pergola_send_mail(
         LUXURELAX_PERGOLA_INQUIRY_EMAIL,
         $s['email_subject'],
-        implode("\n", $lines),
+        $admin_html,
         $email,
-        $name
+        $name,
+        '', '',
+        true
     );
 
-    // 2) Potvrdzovací email zákazníkovi
-    $cust_lines = [
-        str_replace('\n', "\n", $s['cust_hello']) . ' ' . $name . ',',
-        '',
-        $s['cust_thanks'],
-        '',
-        $s['cust_your_config'] . ':',
-        "  {$s['rozmery']}:      {$cfg_n['width']} × {$cfg_n['depth']} × {$cfg_n['height']} cm",
-        "  {$s['plocha']}:       {$calc['area_m2']} m²",
-        "  {$s['farba']}:        {$calc['color_label']}",
-        "  {$s['strecha']}:      {$calc['roof_label']}",
-        "  {$s['priehladnost']}: {$calc['trans_label']}",
-        "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
-        "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
-        '',
-        str_replace('\n', "\n", $s['cust_signature']),
-    ];
+    // 2) Potvrdzovací email zákazníkovi – HTML
+    $customer_html = luxurelax_pergola_render_email_html(
+        $s['cust_your_config'],
+        $config_rows,
+        [
+            'greeting'  => $s['cust_hello'] . ' ' . $name . ',',
+            'intro'     => $s['cust_thanks'],
+            'signature' => str_replace('\n', "\n", $s['cust_signature']),
+        ]
+    );
     $customer_mail = luxurelax_pergola_send_mail(
         $email,
         $s['cust_subject'],
-        implode("\n", $cust_lines),
+        $customer_html,
         LUXURELAX_PERGOLA_FROM_EMAIL,
-        LUXURELAX_PERGOLA_FROM_NAME
+        LUXURELAX_PERGOLA_FROM_NAME,
+        '', '',
+        true
     );
 
     if ($post_id && !is_wp_error($post_id)) {
