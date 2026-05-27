@@ -154,7 +154,7 @@ add_action('wp_mail_failed', function ($error) {
     }
 });
 
-function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '', $from_email = '', $from_name = '', $is_html = false) {
+function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '', $from_email = '', $from_name = '', $is_html = false, $attachments = []) {
     $GLOBALS['luxurelax_pergola_last_mail_error'] = '';
 
     $active_from_email = is_email($from_email) ? sanitize_email($from_email) : LUXURELAX_PERGOLA_FROM_EMAIL;
@@ -174,7 +174,7 @@ function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = 
         $headers[] = 'Reply-To: ' . sanitize_text_field($reply_to_name ?: LUXURELAX_PERGOLA_FROM_NAME) . ' <' . sanitize_email($reply_to_email) . '>';
     }
 
-    $sent = wp_mail($to, $subject, $message, $headers);
+    $sent = wp_mail($to, $subject, $message, $headers, $attachments);
 
     remove_filter('wp_mail_from', $from_email_filter, 999);
     remove_filter('wp_mail_from_name', $from_name_filter, 999);
@@ -185,7 +185,110 @@ function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = 
         'to' => $to,
         'from' => $active_from_name . ' <' . $active_from_email . '>',
         'subject' => $subject,
+        'attachments' => array_map('basename', (array) $attachments),
     ];
+}
+
+/**
+ * Build a simple branded PDF (pure PHP, no external libs).
+ * Uses Helvetica core font (WinAnsi). Returns binary PDF string.
+ */
+function luxurelax_pergola_build_pdf($title, $rows, $opts = []) {
+    $enc = function ($s) {
+        $s = (string) $s;
+        if (function_exists('iconv')) {
+            $conv = @iconv('UTF-8', 'CP1252//TRANSLIT//IGNORE', $s);
+            if ($conv !== false) $s = $conv;
+        } elseif (function_exists('mb_convert_encoding')) {
+            $s = mb_convert_encoding($s, 'CP1252', 'UTF-8');
+        }
+        return strtr($s, ['\\' => '\\\\', '(' => '\\(', ')' => '\\)']);
+    };
+
+    $intro       = $opts['intro']       ?? '';
+    $footer      = $opts['footer']      ?? 'LuxuRelax  ·  info@luxurelax.sk  ·  www.luxurelax.sk';
+    $price       = $opts['price']       ?? '';
+    $price_label = $opts['price_label'] ?? 'Orientacna cena';
+
+    $stream  = "q\n";
+    $stream .= "0.851 0.600 0.212 rg\n0 762 595 80 re f\n";
+    $stream .= "BT /F2 26 Tf 0.078 0.067 0.051 rg 40 805 Td (LuxuRelax) Tj ET\n";
+    $stream .= "BT /F1 9 Tf 0.078 0.067 0.051 rg 40 786 Td (PERGOLA KONFIGURATOR) Tj ET\n";
+    $stream .= "BT /F2 16 Tf 0.118 0.106 0.090 rg 40 730 Td (" . $enc($title) . ") Tj ET\n";
+
+    $y = 700;
+    if ($intro !== '') {
+        $lines = explode("\n", wordwrap($intro, 85, "\n", false));
+        $stream .= "BT /F1 10 Tf 0.247 0.227 0.196 rg 40 {$y} Td 12 TL\n";
+        $first = true;
+        foreach ($lines as $ln) {
+            if ($first) { $stream .= "(" . $enc($ln) . ") Tj\n"; $first = false; }
+            else        { $stream .= "T* (" . $enc($ln) . ") Tj\n"; }
+            $y -= 12;
+        }
+        $stream .= "ET\n";
+        $y -= 10;
+    }
+
+    $row_h = 22;
+    $col_x = 200;
+    foreach ($rows as $i => $r) {
+        $bottom = $y - $row_h;
+        if ($i % 2 === 0) {
+            $stream .= "0.965 0.957 0.941 rg\n40 {$bottom} 515 {$row_h} re f\n";
+        }
+        $stream .= "0.831 0.812 0.776 RG 0.5 w\n40 {$bottom} m 555 {$bottom} l S\n";
+        $label_y = $bottom + 7;
+        $stream .= "BT /F1 9 Tf 0.408 0.380 0.345 rg 50 {$label_y} Td (" . $enc(strtoupper($r['label'])) . ") Tj ET\n";
+        $stream .= "BT /F2 11 Tf 0.118 0.106 0.090 rg {$col_x} {$label_y} Td (" . $enc($r['value']) . ") Tj ET\n";
+        $y -= $row_h;
+        if ($y < 140) break;
+    }
+
+    if ($price !== '') {
+        $y -= 18;
+        $by = $y - 36;
+        $stream .= "0.118 0.106 0.090 rg 40 {$by} 515 36 re f\n";
+        $stream .= "BT /F1 10 Tf 0.851 0.600 0.212 rg 50 " . ($by + 21) . " Td (" . $enc($price_label) . ") Tj ET\n";
+        $stream .= "BT /F2 16 Tf 0.961 0.961 0.957 rg 50 " . ($by + 6) . " Td (" . $enc($price) . ") Tj ET\n";
+    }
+
+    $stream .= "0.851 0.600 0.212 rg 0 60 595 3 re f\n";
+    $stream .= "BT /F1 8 Tf 0.471 0.443 0.408 rg 40 40 Td (" . $enc($footer) . ") Tj ET\n";
+    $stream .= "Q\n";
+
+    $objects = [];
+    $objects[1] = "<< /Type /Catalog /Pages 2 0 R >>";
+    $objects[2] = "<< /Type /Pages /Kids [3 0 R] /Count 1 >>";
+    $objects[3] = "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>";
+    $objects[4] = "<< /Length " . strlen($stream) . " >>\nstream\n" . $stream . "endstream";
+    $objects[5] = "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>";
+    $objects[6] = "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>";
+
+    $pdf = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";
+    $offsets = [];
+    foreach ($objects as $i => $obj) {
+        $offsets[$i] = strlen($pdf);
+        $pdf .= $i . " 0 obj\n" . $obj . "\nendobj\n";
+    }
+    $xref_off = strlen($pdf);
+    $count = count($objects) + 1;
+    $pdf .= "xref\n0 {$count}\n0000000000 65535 f \n";
+    for ($i = 1; $i <= count($objects); $i++) {
+        $pdf .= sprintf("%010d 00000 n \n", $offsets[$i]);
+    }
+    $pdf .= "trailer\n<< /Size {$count} /Root 1 0 R >>\nstartxref\n{$xref_off}\n%%EOF";
+    return $pdf;
+}
+
+function luxurelax_pergola_write_pdf_tmp($pdf_binary, $filename) {
+    $upload = wp_upload_dir();
+    if (!empty($upload['error'])) return '';
+    $dir = trailingslashit($upload['basedir']) . 'luxurelax-pergola-tmp';
+    if (!file_exists($dir)) wp_mkdir_p($dir);
+    $path = trailingslashit($dir) . sanitize_file_name($filename);
+    $ok = @file_put_contents($path, $pdf_binary);
+    return $ok !== false ? $path : '';
 }
 
 /**
@@ -413,7 +516,7 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         ['label' => $s['led'],          'value' => $cfg_n['led'] ? $s['yes'] : $s['no']],
     ];
 
-    // 1) Email pre admina (info@luxurelax.sk) – HTML
+    // Admin rows (kontaktné údaje + konfigurácia)
     $admin_rows = array_merge(
         [
             ['label' => $s['email_name'],  'value' => $name],
@@ -426,6 +529,31 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
     if ($note !== '') {
         $admin_rows[] = ['label' => $s['email_note'], 'value' => $note];
     }
+
+    // PDF prílohy (priložené k obom mailom)
+    $price_str = number_format($calc['price'], 0, ',', ' ') . ' EUR';
+
+    $admin_pdf_bin  = luxurelax_pergola_build_pdf(
+        $s['email_heading'],
+        $admin_rows,
+        ['price' => $price_str, 'price_label' => $s['email_price']]
+    );
+    $admin_pdf_path = luxurelax_pergola_write_pdf_tmp(
+        $admin_pdf_bin,
+        'pergola-dopyt-' . ($post_id ?: time()) . '.pdf'
+    );
+
+    $customer_pdf_bin  = luxurelax_pergola_build_pdf(
+        $s['cust_your_config'],
+        $config_rows,
+        ['intro' => $s['cust_thanks'], 'price' => $price_str, 'price_label' => $s['cust_indicative']]
+    );
+    $customer_pdf_path = luxurelax_pergola_write_pdf_tmp(
+        $customer_pdf_bin,
+        'LuxuRelax-pergola-konfiguracia.pdf'
+    );
+
+    // 1) Email pre admina – HTML + PDF
     $admin_html = luxurelax_pergola_render_email_html(
         $s['email_heading'],
         $admin_rows,
@@ -438,10 +566,11 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         $email,
         $name,
         '', '',
-        true
+        true,
+        $admin_pdf_path ? [$admin_pdf_path] : []
     );
 
-    // 2) Potvrdzovací email zákazníkovi – HTML
+    // 2) Potvrdzovací email zákazníkovi – HTML + PDF
     $customer_html = luxurelax_pergola_render_email_html(
         $s['cust_your_config'],
         $config_rows,
@@ -458,8 +587,14 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         LUXURELAX_PERGOLA_FROM_EMAIL,
         LUXURELAX_PERGOLA_FROM_NAME,
         '', '',
-        true
+        true,
+        $customer_pdf_path ? [$customer_pdf_path] : []
     );
+
+    // Cleanup dočasných PDF
+    if ($admin_pdf_path && file_exists($admin_pdf_path))       @unlink($admin_pdf_path);
+    if ($customer_pdf_path && file_exists($customer_pdf_path)) @unlink($customer_pdf_path);
+
 
     if ($post_id && !is_wp_error($post_id)) {
         update_post_meta($post_id, '_pergola_mail_status', [
