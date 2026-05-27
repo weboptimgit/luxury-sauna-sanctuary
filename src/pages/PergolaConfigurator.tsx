@@ -1151,7 +1151,7 @@ function StepExtras({
                   {active && <Check className="w-4 h-4 text-primary" />}
                 </div>
                 <div className="text-xs text-foreground/50 mb-2">{m.desc}</div>
-                <div className="text-xs text-primary">{m.price === 0 ? "v základe" : `+${formatPrice(m.price)}`}</div>
+                {m.price === 0 && <div className="text-xs text-primary">v základe</div>}
               </button>
             );
           })}
