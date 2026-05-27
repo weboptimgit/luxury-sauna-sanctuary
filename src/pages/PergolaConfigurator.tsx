@@ -1265,59 +1265,6 @@ function StepLead({
   );
 }
 
-function StepChoice({
-  price,
-  onAddToCart,
-  onInquiry,
-  addingToCart,
-}: {
-  price: number;
-  onAddToCart: () => void;
-  onInquiry: () => void;
-  addingToCart: boolean;
-}) {
-  return (
-    <div className="grid md:grid-cols-2 gap-5">
-      <button
-        onClick={onAddToCart}
-        disabled={addingToCart}
-        className="group text-left rounded-2xl border-2 border-primary/40 bg-primary/5 hover:bg-primary/10 hover:border-primary transition-all p-6 flex flex-col gap-4 disabled:opacity-60 disabled:cursor-wait"
-      >
-        <div className="w-12 h-12 rounded-full bg-primary/15 text-primary flex items-center justify-center">
-          {addingToCart ? <Loader2 className="w-6 h-6 animate-spin" /> : <ShoppingCart className="w-6 h-6" />}
-        </div>
-        <div>
-          <h3 className="font-display text-2xl mb-1">Pridať do košíka</h3>
-          <p className="text-sm text-foreground/60">
-            Okamžite pokračujte v objednávke. Vaša pergola bude pridaná do košíka za{" "}
-            <span className="text-primary font-semibold">{formatPrice(price)}</span>.
-          </p>
-        </div>
-        <div className="mt-auto text-xs uppercase tracking-widest text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-          Pokračovať na pokladnicu →
-        </div>
-      </button>
-
-      <button
-        onClick={onInquiry}
-        className="group text-left rounded-2xl border border-border bg-card/40 hover:bg-card/70 hover:border-primary/40 transition-all p-6 flex flex-col gap-4"
-      >
-        <div className="w-12 h-12 rounded-full bg-foreground/10 text-foreground flex items-center justify-center">
-          <Send className="w-6 h-6" />
-        </div>
-        <div>
-          <h3 className="font-display text-2xl mb-1">Odoslať nezáväzný dopyt</h3>
-          <p className="text-sm text-foreground/60">
-            Vyplňte krátky formulár a my vám pripravíme nezáväznú cenovú ponuku na mieru.
-          </p>
-        </div>
-        <div className="mt-auto text-xs uppercase tracking-widest text-foreground/50 opacity-0 group-hover:opacity-100 transition-opacity">
-          Vyplniť formulár →
-        </div>
-      </button>
-    </div>
-  );
-}
 
 function StepSuccess() {
   return (
