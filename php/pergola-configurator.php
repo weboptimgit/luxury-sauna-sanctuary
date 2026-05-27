@@ -350,7 +350,7 @@ function luxurelax_pergola_render_email_html($title, $rows, $opts = []) {
         . '<tr><td style="height:4px;background:linear-gradient(90deg,#d99936,#b8761f,#d99936);font-size:0;line-height:0;">&nbsp;</td></tr>'
         // Footer
         . '<tr><td style="background:#0e0c09;padding:18px 32px;text-align:center;color:#78716c;font-size:12px;font-family:Arial,Helvetica,sans-serif;letter-spacing:0.04em;">'
-        . esc_html($footer)
+        . $footer_html
         . '</td></tr>'
         . '</table>'
         . '</td></tr></table></body></html>';
