@@ -145,6 +145,40 @@ function luxurelax_pergola_normalize_lang($lang) {
     return in_array($lang, ['sk', 'en', 'hu'], true) ? $lang : 'sk';
 }
 
+$GLOBALS['luxurelax_pergola_last_mail_error'] = '';
+
+add_action('wp_mail_failed', function ($error) {
+    if (is_wp_error($error)) {
+        $GLOBALS['luxurelax_pergola_last_mail_error'] = $error->get_error_message();
+        error_log('LuxuRelax pergola wp_mail failed: ' . $error->get_error_message());
+    }
+});
+
+function luxurelax_pergola_send_mail($to, $subject, $message, $reply_to_email = '', $reply_to_name = '') {
+    $GLOBALS['luxurelax_pergola_last_mail_error'] = '';
+
+    $from_email_filter = function () { return LUXURELAX_PERGOLA_FROM_EMAIL; };
+    $from_name_filter = function () { return LUXURELAX_PERGOLA_FROM_NAME; };
+
+    add_filter('wp_mail_from', $from_email_filter, 99);
+    add_filter('wp_mail_from_name', $from_name_filter, 99);
+
+    $headers = ['Content-Type: text/plain; charset=UTF-8'];
+    if ($reply_to_email && is_email($reply_to_email)) {
+        $headers[] = 'Reply-To: ' . sanitize_text_field($reply_to_name ?: LUXURELAX_PERGOLA_FROM_NAME) . ' <' . sanitize_email($reply_to_email) . '>';
+    }
+
+    $sent = wp_mail($to, $subject, $message, $headers);
+
+    remove_filter('wp_mail_from', $from_email_filter, 99);
+    remove_filter('wp_mail_from_name', $from_name_filter, 99);
+
+    return [
+        'sent'  => (bool) $sent,
+        'error' => $sent ? '' : ($GLOBALS['luxurelax_pergola_last_mail_error'] ?: 'wp_mail() returned false without a detailed error'),
+    ];
+}
+
 /**
  * Stĺpová logika podľa technickej tabuľky (musí byť identické s frontendom!).
  *  ≤ 506 cm  → 2 stĺpy
@@ -316,18 +350,13 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         "  {$s['montaz']}:       " . ($cfg_n['mounting'] ? $s['yes'] : $s['no']),
         "  {$s['led']}:          " . ($cfg_n['led'] ? $s['yes'] : $s['no']),
     ];
-    $from_header = 'From: ' . LUXURELAX_PERGOLA_FROM_NAME . ' <' . LUXURELAX_PERGOLA_FROM_EMAIL . '>';
-
     // 1) Email pre admina (info@luxurelax.sk)
-    wp_mail(
+    $admin_mail = luxurelax_pergola_send_mail(
         LUXURELAX_PERGOLA_INQUIRY_EMAIL,
         $s['email_subject'],
         implode("\n", $lines),
-        [
-            'Content-Type: text/plain; charset=UTF-8',
-            $from_header,
-            'Reply-To: ' . $name . ' <' . $email . '>',
-        ]
+        $email,
+        $name
     );
 
     // 2) Potvrdzovací email zákazníkovi
@@ -347,21 +376,30 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         '',
         str_replace('\n', "\n", $s['cust_signature']),
     ];
-    wp_mail(
+    $customer_mail = luxurelax_pergola_send_mail(
         $email,
         $s['cust_subject'],
         implode("\n", $cust_lines),
-        [
-            'Content-Type: text/plain; charset=UTF-8',
-            $from_header,
-            'Reply-To: ' . LUXURELAX_PERGOLA_FROM_NAME . ' <' . LUXURELAX_PERGOLA_FROM_EMAIL . '>',
-        ]
+        LUXURELAX_PERGOLA_FROM_EMAIL,
+        LUXURELAX_PERGOLA_FROM_NAME
     );
+
+    if ($post_id && !is_wp_error($post_id)) {
+        update_post_meta($post_id, '_pergola_mail_status', [
+            'admin' => $admin_mail,
+            'customer' => $customer_mail,
+            'sent_at' => current_time('mysql'),
+        ]);
+    }
 
     return new WP_REST_Response([
         'success' => true,
         'price'   => $calc['price'],
         'inquiry_id' => $post_id ?: null,
+        'mail' => [
+            'admin' => $admin_mail['sent'],
+            'customer' => $customer_mail['sent'],
+        ],
     ], 200);
 }
 
@@ -378,6 +416,31 @@ add_action('init', function () {
         'supports'     => ['title', 'editor', 'custom-fields'],
         'capability_type' => 'post',
     ]);
+});
+
+add_action('add_meta_boxes', function () {
+    add_meta_box('luxurelax_pergola_mail_status', 'Stav e-mailov', function ($post) {
+        $status = get_post_meta($post->ID, '_pergola_mail_status', true);
+        if (!is_array($status)) {
+            echo '<p>E-mail ešte nebol zaznamenaný pri tomto dopyte.</p>';
+            return;
+        }
+
+        foreach (['admin' => 'LuxuRelax', 'customer' => 'Zákazník'] as $key => $label) {
+            $mail = $status[$key] ?? ['sent' => false, 'error' => 'Neznámy stav'];
+            $sent = !empty($mail['sent']);
+            echo '<p><strong>' . esc_html($label) . ':</strong> ';
+            echo $sent ? '<span style="color:#008a20">odoslané</span>' : '<span style="color:#b32d2e">neodoslané</span>';
+            if (!$sent && !empty($mail['error'])) {
+                echo '<br><small>' . esc_html($mail['error']) . '</small>';
+            }
+            echo '</p>';
+        }
+
+        if (!empty($status['sent_at'])) {
+            echo '<p><small>Čas: ' . esc_html($status['sent_at']) . '</small></p>';
+        }
+    }, 'pergola_inquiry', 'side', 'high');
 });
 
 // =====================================================================
