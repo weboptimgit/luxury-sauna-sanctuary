@@ -1172,7 +1172,6 @@ function StepExtras({
             <div className="text-xs text-foreground/50">Integrované LED pre večernú atmosféru.</div>
           </div>
           <div className="text-right">
-            <div className="text-sm text-primary">+{formatPrice(LED_PRICE)}</div>
             <div
               className={cn(
                 "mt-2 w-10 h-6 rounded-full relative transition-colors",
