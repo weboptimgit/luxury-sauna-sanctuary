@@ -26,6 +26,7 @@ import ConfiguratorHeader from "@/components/ConfiguratorHeader";
 import ConfiguratorFooter from "@/components/ConfiguratorFooter";
 import { Notice } from "@/components/ui/notice";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useFormatPrice } from "@/lib/formatPrice";
 import { useDocumentMeta } from "@/hooks/useDocumentMeta";
 
 import saunaBarrel from "@/assets/2M-Round-sauna-1-2-700x700.jpg";
@@ -764,6 +765,7 @@ const ScrollableRow = ({ children, cols = 3 }: { children: React.ReactNode; cols
 const Configurator = () => {
   const { toast } = useToast();
   const { t, language } = useLanguage();
+  const formatPrice = useFormatPrice();
   const { modelSlug } = useParams<{ modelSlug?: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -2003,14 +2005,14 @@ const Configurator = () => {
         <div className="flex items-center gap-1 mt-auto pt-1">
           {option.originalPrice && (
             <span className="text-[10px] md:text-xs text-muted-foreground line-through">
-              {option.originalPrice.toLocaleString()} €
+              {formatPrice(option.originalPrice)}
             </span>
           )}
-          <span className="text-[10px] md:text-xs text-primary">{option.price.toLocaleString()} €</span>
+          <span className="text-[10px] md:text-xs text-primary">{formatPrice(option.price)}</span>
         </div>
       ) : (
         <span className="text-[10px] md:text-xs text-muted-foreground mt-auto pt-1">
-          {option.price === 0 ? "0,00 €" : t("included")}
+          {option.price === 0 ? formatPrice(0) : t("included")}
         </span>
       )}
       </button>
@@ -2109,7 +2111,7 @@ const Configurator = () => {
                   </p>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
                     <span>
-                      {t("config.from")} {minSaunaBasePrice.toLocaleString()} €
+                      {t("config.from")} {formatPrice(minSaunaBasePrice)}
                     </span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -2142,7 +2144,7 @@ const Configurator = () => {
                   </p>
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
                     <span>
-                      {t("config.from")} {minHotTubBasePrice.toLocaleString()} €
+                      {t("config.from")} {formatPrice(minHotTubBasePrice)}
                     </span>
                     <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -2205,7 +2207,7 @@ const Configurator = () => {
                     </p>
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary font-semibold">
                       <span>
-                        {t("config.from")} {minComboBasePrice.toLocaleString()} €
+                        {t("config.from")} {formatPrice(minComboBasePrice)}
                       </span>
                       <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                     </div>
@@ -2361,7 +2363,7 @@ const Configurator = () => {
                             {t("config.from")}
                           </p>
                           <span className="text-2xl font-bold text-gradient-amber">
-                            {sauna.basePrice.toLocaleString()} €
+                            {formatPrice(sauna.basePrice)}
                           </span>
                         </div>
                         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/30">
@@ -2480,7 +2482,7 @@ const Configurator = () => {
                             {t("config.from")}
                           </p>
                           <span className="text-lg md:text-2xl font-bold text-gradient-amber">
-                            {ht.basePrice.toLocaleString()} €
+                            {formatPrice(ht.basePrice)}
                           </span>
                         </div>
                         <div className="flex items-center justify-center w-8 h-8 md:w-12 md:h-12 rounded-full bg-primary text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/30">
@@ -2570,7 +2572,7 @@ const Configurator = () => {
                             {t("config.from")}
                           </p>
                           <span className="text-lg md:text-2xl font-bold text-gradient-amber">
-                            {ct.basePrice.toLocaleString()} €
+                            {formatPrice(ct.basePrice)}
                           </span>
                         </div>
                         <div className="flex items-center justify-center w-8 h-8 md:w-12 md:h-12 rounded-full bg-primary text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/30">
@@ -2721,9 +2723,9 @@ const Configurator = () => {
                   <span className="text-lg font-medium">{t("config.total")}</span>
                   <div className="text-right">
                     <span className="text-muted-foreground line-through text-sm mr-2">
-                      {originalPrice.toLocaleString()} €
+                      {formatPrice(originalPrice)}
                     </span>
-                    <span className="text-3xl font-bold text-primary">{totalPrice.toLocaleString()} €</span>
+                    <span className="text-3xl font-bold text-primary">{formatPrice(totalPrice)}</span>
                   </div>
                 </div>
 
@@ -2781,9 +2783,9 @@ const Configurator = () => {
                     )}
                     <div className="flex items-baseline gap-3 lg:hidden">
                       <span className="text-muted-foreground line-through text-lg">
-                        {originalPrice.toLocaleString()} €
+                        {formatPrice(originalPrice)}
                       </span>
-                      <span className="text-3xl font-bold text-primary">{totalPrice.toLocaleString()} €</span>
+                      <span className="text-3xl font-bold text-primary">{formatPrice(totalPrice)}</span>
                     </div>
                   </div>
 
@@ -2855,7 +2857,7 @@ const Configurator = () => {
                                       </span>
                                       {price > 0 ? (
                                         <span className="text-[10px] md:text-xs text-primary">
-                                          +{price.toLocaleString()} €
+                                          +{formatPrice(price)}
                                         </span>
                                       ) : (
                                         <span className="text-[10px] md:text-xs text-muted-foreground">
@@ -2920,7 +2922,7 @@ const Configurator = () => {
                                           <span className="font-medium text-sm">{model.name}</span>
                                         </div>
                                         {model.price > 0 ? (
-                                          <span className="text-sm text-primary">+{model.price.toLocaleString()} €</span>
+                                          <span className="text-sm text-primary">+{formatPrice(model.price)}</span>
                                         ) : (
                                           <span className="text-xs text-muted-foreground">{t("included")}</span>
                                         )}
@@ -2957,7 +2959,7 @@ const Configurator = () => {
                                           <span className="font-medium text-sm">{model.name}</span>
                                         </div>
                                         {model.price > 0 ? (
-                                          <span className="text-sm text-primary">+{model.price.toLocaleString()} €</span>
+                                          <span className="text-sm text-primary">+{formatPrice(model.price)}</span>
                                         ) : (
                                           <span className="text-xs text-muted-foreground">{t("included")}</span>
                                         )}
@@ -3064,7 +3066,7 @@ const Configurator = () => {
                                   <span className="font-medium text-center text-xs md:text-sm">
                                     {t("config.exteriorLedShort")}
                                   </span>
-                                  <span className="text-[10px] md:text-xs text-primary">+{exteriorLedPrice} €</span>
+                                  <span className="text-[10px] md:text-xs text-primary">+{formatPrice(exteriorLedPrice)}</span>
                                 </button>
                               </div>
                             </div>
@@ -3225,7 +3227,7 @@ const Configurator = () => {
                                         : option.name || saunaColorSwatches[option.id].nameFallback}
                                     </span>
                                     {option.price > 0 ? (
-                                      <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
+                                      <span className="text-xs text-primary">+{formatPrice(option.price)}</span>
                                     ) : (
                                       <span className="text-xs text-muted-foreground">{t("included")}</span>
                                     )}
@@ -3593,7 +3595,7 @@ const Configurator = () => {
                                 </span>
                                 {option.price > 0 ? (
                                   <span className="text-[10px] md:text-xs text-primary">
-                                    +{option.price.toLocaleString()} €
+                                    +{formatPrice(option.price)}
                                   </span>
                                 ) : (
                                   <span className="text-[10px] md:text-xs text-muted-foreground">{t("included")}</span>
@@ -3665,7 +3667,7 @@ const Configurator = () => {
                                       <span className="font-medium text-sm">{model.name}</span>
                                     </div>
                                     {model.price > 0 ? (
-                                      <span className="text-sm text-primary">+{model.price.toLocaleString()} €</span>
+                                      <span className="text-sm text-primary">+{formatPrice(model.price)}</span>
                                     ) : (
                                       <span className="text-xs text-muted-foreground">{t("included")}</span>
                                     )}
@@ -3702,7 +3704,7 @@ const Configurator = () => {
                                       <span className="font-medium text-sm">{model.name}</span>
                                     </div>
                                     {model.price > 0 ? (
-                                      <span className="text-sm text-primary">+{model.price.toLocaleString()} €</span>
+                                      <span className="text-sm text-primary">+{formatPrice(model.price)}</span>
                                     ) : (
                                       <span className="text-xs text-muted-foreground">{t("included")}</span>
                                     )}
@@ -3881,7 +3883,7 @@ const Configurator = () => {
                               <span className="font-medium text-center text-xs md:text-sm">
                                 {t("config.exteriorLedShort")}
                               </span>
-                              <span className="text-[10px] md:text-xs text-primary">+{exteriorLedPrice} €</span>
+                              <span className="text-[10px] md:text-xs text-primary">+{formatPrice(exteriorLedPrice)}</span>
                             </button>
                           </div>
                         </div>
@@ -3966,7 +3968,7 @@ const Configurator = () => {
                                     : option.name || saunaColorSwatches[option.id].nameFallback}
                                 </span>
                                 {option.price > 0 ? (
-                                  <span className="text-xs text-primary">+{option.price.toLocaleString()} €</span>
+                                  <span className="text-xs text-primary">+{formatPrice(option.price)}</span>
                                 ) : (
                                   <span className="text-xs text-muted-foreground">{t("included")}</span>
                                 )}
@@ -4353,9 +4355,9 @@ const Configurator = () => {
                     <span className="text-lg font-medium">{t("config.total")}</span>
                     <div className="text-right">
                       <span className="text-muted-foreground line-through text-sm mr-2">
-                        {originalPrice.toLocaleString()} €
+                        {formatPrice(originalPrice)}
                       </span>
-                      <span className="text-3xl font-bold text-primary">{totalPrice.toLocaleString()} €</span>
+                      <span className="text-3xl font-bold text-primary">{formatPrice(totalPrice)}</span>
                     </div>
                   </div>
 
