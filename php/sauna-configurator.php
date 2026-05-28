@@ -1515,7 +1515,8 @@ add_action('rest_api_init', function () {
     'permission_callback' => '__return_true',
     'callback' => function (WP_REST_Request $req) {
 
-      $lang = $req->get_param('lang') === 'en' ? 'en' : 'sk';
+      $lang_param = $req->get_param('lang');
+      $lang = in_array($lang_param, ['en', 'hu', 'sk'], true) ? $lang_param : 'sk';
       $cfg = sauna_get_config($lang);
 
       $comboTypes = $cfg['comboTypes'] ?? ($cfg['hottub']['comboTypes'] ?? []);
@@ -1713,7 +1714,8 @@ add_action('rest_api_init', function () {
 
       $product_id = absint($req['product_id']);
       $options = (array)$req['options'];
-      $lang = $req->get_param('lang') === 'en' ? 'en' : 'sk';
+      $lang_param = $req->get_param('lang');
+      $lang = in_array($lang_param, ['en', 'hu', 'sk'], true) ? $lang_param : 'sk';
 
       $cfg = sauna_get_config($lang);
 
