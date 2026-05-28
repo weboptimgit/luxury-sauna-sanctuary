@@ -15,24 +15,22 @@ const SYMBOLS: Record<CurrencyCode, string> = {
   HUF: "Ft",
 };
 
-// Round HUF to nearest 100, CZK to nearest whole, EUR keep as-is (no decimals to match prior UI)
-function roundForCurrency(value: number, currency: CurrencyCode): number {
-  if (currency === "HUF") return Math.round(value / 100) * 100;
-  if (currency === "CZK") return Math.round(value);
-  return Math.round(value);
+function formatOptions(currency: CurrencyCode): Intl.NumberFormatOptions {
+  if (currency === "EUR") return { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+  if (currency === "CZK") return { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+  return { maximumFractionDigits: 0 };
 }
 
 // Locale-aware grouping (space for SK/CZ/HU, matches existing look)
 function groupNumber(value: number, currency: CurrencyCode): string {
   const locale =
     currency === "HUF" ? "hu-HU" : currency === "CZK" ? "cs-CZ" : "sk-SK";
-  return new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(value);
+  return new Intl.NumberFormat(locale, formatOptions(currency)).format(value);
 }
 
 export function formatPriceWith(eurPrice: number, currency: CurrencyCode): string {
-  const converted = roundForCurrency(eurPrice * CURRENCY_RATES[currency], currency);
+  const converted = eurPrice * CURRENCY_RATES[currency];
   const symbol = SYMBOLS[currency];
-  // Symbol position: € and Kč suffix with space, Ft suffix with space
   return `${groupNumber(converted, currency)} ${symbol}`;
 }
 
