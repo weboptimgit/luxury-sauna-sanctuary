@@ -1849,9 +1849,15 @@ add_filter('woocommerce_cart_item_thumbnail', function($thumbnail, $cart_item, $
  * ULOŽIŤ OBRÁZOK A NÁZOV DO ORDER LINE ITEM
  * ---------------------------------------------------- */
 add_action('woocommerce_checkout_create_order_line_item', function ($item, $key, $values) {
+    $lang = sauna_detect_display_lang($values['sauna_config']['lang'] ?? 'sk');
+
     // Display data
     foreach ($values['sauna_config']['display'] ?? [] as $row) {
-        $item->add_meta_data($row['label'], $row['value'], true);
+        $item->add_meta_data(
+            sauna_translate_config_text($row['label'], $lang),
+            sauna_translate_config_text($row['value'], $lang),
+            true
+        );
     }
     
     // Obrázok
@@ -1861,7 +1867,7 @@ add_action('woocommerce_checkout_create_order_line_item', function ($item, $key,
     
     // Vlastný názov produktu (podľa typu sauny) - language-agnostic label matching
     $display = $values['sauna_config']['display'] ?? [];
-    $nameLabels = ['Typ sauny', 'Sauna Type', 'Produkt', 'Product', 'Kombinácia', 'Combo'];
+    $nameLabels = ['Typ sauny', 'Sauna Type', 'Szauna típusa', 'Produkt', 'Product', 'Termék', 'Kombinácia', 'Combo', 'Kombináció'];
     foreach ($display as $row) {
         if (in_array($row['label'], $nameLabels, true)) {
             $item->set_name($row['value']);
@@ -1875,7 +1881,7 @@ add_action('woocommerce_checkout_create_order_line_item', function ($item, $key,
  * ---------------------------------------------------- */
 add_filter('woocommerce_cart_item_name', function($name, $cart_item, $cart_item_key) {
     $display = $cart_item['sauna_config']['display'] ?? [];
-    $nameLabels = ['Typ sauny', 'Sauna Type', 'Produkt', 'Product', 'Kombinácia', 'Combo'];
+    $nameLabels = ['Typ sauny', 'Sauna Type', 'Szauna típusa', 'Produkt', 'Product', 'Termék', 'Kombinácia', 'Combo', 'Kombináció'];
     foreach ($display as $row) {
         if (in_array($row['label'], $nameLabels, true)) {
             return '<a href="' . get_permalink($cart_item['product_id']) . '">' . esc_html($row['value']) . '</a>';
