@@ -1751,6 +1751,7 @@ add_action('rest_api_init', function () {
           'sauna_config' => [
             'price' => $calc['price'],
             'display' => $calc['display'],
+            'lang' => $lang,
             'hash' => md5(wp_json_encode($options)),
             'image' => $image_url,
           ],
@@ -1776,9 +1777,62 @@ add_action('woocommerce_before_calculate_totals', function ($cart) {
 /* ----------------------------------------------------
  * DISPLAY IN CART / ORDER
  * ---------------------------------------------------- */
+function sauna_detect_display_lang($fallback = 'sk') {
+    $allowed = ['sk', 'en', 'hu'];
+
+    if (in_array($fallback, $allowed, true)) {
+        $detected = $fallback;
+    } else {
+        $detected = 'sk';
+    }
+
+    $request_lang = isset($_REQUEST['lang']) ? sanitize_text_field(wp_unslash($_REQUEST['lang'])) : '';
+    if (in_array($request_lang, $allowed, true)) {
+        return $request_lang;
+    }
+
+    $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
+    $uri = strtolower($_SERVER['REQUEST_URI'] ?? '');
+    $referer = strtolower($_SERVER['HTTP_REFERER'] ?? '');
+
+    if (preg_match('/(^|\.)luxurelax\.hu$/', $host) || preg_match('/\.hu$/', $host) || strpos($uri, '/kosar') !== false || strpos($uri, '/konfigurator-hu') !== false || strpos($uri, '/hu/') !== false || strpos($referer, 'luxurelax.hu') !== false) {
+        return 'hu';
+    }
+
+    if (preg_match('/(^|\.)luxurelax\.com$/', $host) || preg_match('/\.com$/', $host) || strpos($uri, '/cart') !== false || strpos($uri, '/configurator') !== false || strpos($referer, 'luxurelax.com') !== false) {
+        return 'en';
+    }
+
+    return $detected;
+}
+
+function sauna_translate_config_text($text, $target_lang = 'sk') {
+    if (!is_string($text) || $text === '') return $text;
+    if (!in_array($target_lang, ['sk', 'en', 'hu'], true)) return $text;
+
+    $clean = trim(wp_strip_all_tags($text));
+    $clean = rtrim($clean, ": \t\n\r\0\x0B");
+    $target_translations = sauna_get_translations($target_lang);
+
+    foreach (['sk', 'en', 'hu'] as $source_lang) {
+        foreach (sauna_get_translations($source_lang) as $key => $source_text) {
+            if ($clean === $source_text && isset($target_translations[$key])) {
+                return $target_translations[$key];
+            }
+        }
+    }
+
+    return $text;
+}
+
 add_filter('woocommerce_get_item_data', function ($data, $item) {
+  $lang = sauna_detect_display_lang($item['sauna_config']['lang'] ?? 'sk');
+
   foreach ($item['sauna_config']['display'] ?? [] as $row) {
-    $data[] = ['key' => $row['label'], 'value' => $row['value']];
+    $data[] = [
+      'key' => sauna_translate_config_text($row['label'], $lang),
+      'value' => sauna_translate_config_text($row['value'], $lang),
+    ];
   }
   return $data;
 }, 10, 2);
@@ -1795,9 +1849,15 @@ add_filter('woocommerce_cart_item_thumbnail', function($thumbnail, $cart_item, $
  * ULOŽIŤ OBRÁZOK A NÁZOV DO ORDER LINE ITEM
  * ---------------------------------------------------- */
 add_action('woocommerce_checkout_create_order_line_item', function ($item, $key, $values) {
+    $lang = sauna_detect_display_lang($values['sauna_config']['lang'] ?? 'sk');
+
     // Display data
     foreach ($values['sauna_config']['display'] ?? [] as $row) {
-        $item->add_meta_data($row['label'], $row['value'], true);
+        $item->add_meta_data(
+            sauna_translate_config_text($row['label'], $lang),
+            sauna_translate_config_text($row['value'], $lang),
+            true
+        );
     }
     
     // Obrázok
@@ -1807,7 +1867,7 @@ add_action('woocommerce_checkout_create_order_line_item', function ($item, $key,
     
     // Vlastný názov produktu (podľa typu sauny) - language-agnostic label matching
     $display = $values['sauna_config']['display'] ?? [];
-    $nameLabels = ['Typ sauny', 'Sauna Type', 'Produkt', 'Product', 'Kombinácia', 'Combo'];
+    $nameLabels = ['Typ sauny', 'Sauna Type', 'Szauna típusa', 'Produkt', 'Product', 'Termék', 'Kombinácia', 'Combo', 'Kombináció'];
     foreach ($display as $row) {
         if (in_array($row['label'], $nameLabels, true)) {
             $item->set_name($row['value']);
@@ -1821,7 +1881,7 @@ add_action('woocommerce_checkout_create_order_line_item', function ($item, $key,
  * ---------------------------------------------------- */
 add_filter('woocommerce_cart_item_name', function($name, $cart_item, $cart_item_key) {
     $display = $cart_item['sauna_config']['display'] ?? [];
-    $nameLabels = ['Typ sauny', 'Sauna Type', 'Produkt', 'Product', 'Kombinácia', 'Combo'];
+    $nameLabels = ['Typ sauny', 'Sauna Type', 'Szauna típusa', 'Produkt', 'Product', 'Termék', 'Kombinácia', 'Combo', 'Kombináció'];
     foreach ($display as $row) {
         if (in_array($row['label'], $nameLabels, true)) {
             return '<a href="' . get_permalink($cart_item['product_id']) . '">' . esc_html($row['value']) . '</a>';
