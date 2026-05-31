@@ -149,11 +149,11 @@ interface LeadForm {
 }
 
 const STEPS = [
-  { id: 1, title: "Rozmery", subtitle: "Zadajte rozmery vašej pergoly", icon: Ruler },
-  { id: 2, title: "Farba", subtitle: "Vyberte farbu konštrukcie", icon: Palette },
-  { id: 3, title: "Strecha", subtitle: "Typ zastrešenia a priehľadnosť", icon: Square },
-  { id: 4, title: "Montáž a doplnky", subtitle: "Doladenie posledných detailov", icon: Wrench },
-  { id: 5, title: "Dokončenie", subtitle: "Pridajte do košíka alebo pošlite nezáväzný dopyt", icon: Send },
+  { id: 1, icon: Ruler },
+  { id: 2, icon: Palette },
+  { id: 3, icon: Square },
+  { id: 4, icon: Wrench },
+  { id: 5, icon: Send },
 ];
 
 const MIN_W = 300;
@@ -162,9 +162,6 @@ const MIN_D = 200;
 const MAX_D = 500;
 const MIN_H = 200;
 const MAX_H = 350;
-
-const formatPrice = (n: number) =>
-  new Intl.NumberFormat("sk-SK", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
 
 export default function PergolaConfigurator() {
   const [step, setStep] = useState(1);
