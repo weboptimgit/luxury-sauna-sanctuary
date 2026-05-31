@@ -833,7 +833,7 @@ function PergolaPreview({
           fontSize="11"
           fill="hsl(var(--foreground) / 0.85)"
         >
-          Šírka {fmt(W)}
+          {t("pergola.preview.width")} {fmt(W)}
         </text>
         {/* Depth — left edge */}
         <text
@@ -843,7 +843,7 @@ function PergolaPreview({
           fontSize="11"
           fill="hsl(var(--foreground) / 0.85)"
         >
-          Hĺbka {fmt(D)}
+          {t("pergola.preview.depth")} {fmt(D)}
         </text>
         {/* Height — right post */}
         <text
@@ -852,11 +852,11 @@ function PergolaPreview({
           fontSize="11"
           fill="hsl(var(--foreground) / 0.85)"
         >
-          Výška {fmt(H)}
+          {t("pergola.preview.height")} {fmt(H)}
         </text>
       </svg>
       <div className="absolute top-3 left-3 text-[10px] uppercase tracking-widest text-foreground/40">
-        {"Náhľad"}
+        {t("pergola.preview.label")}
       </div>
     </div>
   );
