@@ -25,6 +25,8 @@ import ConfiguratorHeader from "@/components/ConfiguratorHeader";
 import ConfiguratorFooter from "@/components/ConfiguratorFooter";
 import RalPickerDialog from "@/components/RalPickerDialog";
 import { findRal, type RalColor } from "@/data/ralClassic";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useFormatPrice } from "@/lib/formatPrice";
 
 /**
  * PERGOLA CONFIGURATOR – Luxurelax
@@ -79,38 +81,23 @@ const HEIGHT_SURCHARGE_PER_CM_OVER = 4; // over 250cm
 const HEIGHT_BASELINE = 250;
 
 const COLORS = [
-  { id: "anthracite", name: "Antracit", hex: "#2b2b2e", premium: false },
-  { id: "white", name: "Biela", hex: "#f4f4f0", premium: false },
-  { id: "brown", name: "Hnedá", hex: "#5a3a25", premium: false },
-  { id: "golden_oak", name: "Zlatý dub", hex: "#b6883f", premium: true },
-  { id: "walnut", name: "Orech", hex: "#3a2418", premium: true },
-  { id: "ral", name: "RAL vlastná farba", hex: "linear-gradient(135deg,#e94e77,#5b8def,#7ed957)", premium: true },
+  { id: "anthracite", hex: "#2b2b2e", premium: false },
+  { id: "white", hex: "#f4f4f0", premium: false },
+  { id: "brown", hex: "#5a3a25", premium: false },
+  { id: "golden_oak", hex: "#b6883f", premium: true },
+  { id: "walnut", hex: "#3a2418", premium: true },
+  { id: "ral", hex: "linear-gradient(135deg,#e94e77,#5b8def,#7ed957)", premium: true },
 ] as const;
 
 const ROOF_TYPES = [
-  {
-    id: "polycarbonate",
-    name: "Polykarbonát",
-    desc: "Ľahký, odolný a cenovo dostupný materiál.",
-    pricePerM2: 0,
-  },
-  {
-    id: "safety_glass",
-    name: "Bezpečnostné sklo",
-    desc: "Kalené sklo s prémiovým vzhľadom.",
-    pricePerM2: 90,
-  },
-  {
-    id: "izo_glass_24",
-    name: "IZO Sklo 24",
-    desc: "Izolačné dvojsklo – maximálny komfort celoročne.",
-    pricePerM2: 180,
-  },
+  { id: "polycarbonate", pricePerM2: 0 },
+  { id: "safety_glass", pricePerM2: 90 },
+  { id: "izo_glass_24", pricePerM2: 180 },
 ] as const;
 
 const TRANSPARENCIES = [
-  { id: "milky", name: "Mliečne", desc: "Difúzne svetlo, viac súkromia." },
-  { id: "clear", name: "Číre", desc: "Maximálny priezor a presvetlenie." },
+  { id: "milky" },
+  { id: "clear" },
 ] as const;
 
 const MOUNTING_PRICE = 850;
@@ -162,11 +149,11 @@ interface LeadForm {
 }
 
 const STEPS = [
-  { id: 1, title: "Rozmery", subtitle: "Zadajte rozmery vašej pergoly", icon: Ruler },
-  { id: 2, title: "Farba", subtitle: "Vyberte farbu konštrukcie", icon: Palette },
-  { id: 3, title: "Strecha", subtitle: "Typ zastrešenia a priehľadnosť", icon: Square },
-  { id: 4, title: "Montáž a doplnky", subtitle: "Doladenie posledných detailov", icon: Wrench },
-  { id: 5, title: "Dokončenie", subtitle: "Pridajte do košíka alebo pošlite nezáväzný dopyt", icon: Send },
+  { id: 1, icon: Ruler },
+  { id: 2, icon: Palette },
+  { id: 3, icon: Square },
+  { id: 4, icon: Wrench },
+  { id: 5, icon: Send },
 ];
 
 const MIN_W = 300;
@@ -176,10 +163,9 @@ const MAX_D = 500;
 const MIN_H = 200;
 const MAX_H = 350;
 
-const formatPrice = (n: number) =>
-  new Intl.NumberFormat("sk-SK", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
-
 export default function PergolaConfigurator() {
+  const { t } = useLanguage();
+  const formatPrice = useFormatPrice();
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -215,8 +201,6 @@ export default function PergolaConfigurator() {
   const price = useMemo(() => {
     const roof = ROOF_TYPES.find((r) => r.id === config.roof)!;
     const colorObj = COLORS.find((c) => c.id === config.color)!;
-    // Základ = cenníková cena podľa rozmerov (polykarbonát v cene).
-    // Sklo / IZO sklo = príplatok za m² nad rámec polykarbonátu.
     let p = lookupBasePrice(config.width, config.depth);
     p += areaM2 * roof.pricePerM2;
     if (config.height > HEIGHT_BASELINE) {
@@ -232,13 +216,15 @@ export default function PergolaConfigurator() {
 
   const colorObj = COLORS.find((c) => c.id === config.color)!;
   const ralPicked = config.color === "ral" ? findRal(config.ralCode) : undefined;
-  // Display name & hex respect RAL selection when color === "ral"
+  const colorBaseName = t(`pergola.color.${colorObj.id}`);
   const colorDisplayName = ralPicked
     ? `${ralPicked.code} – ${ralPicked.name}`
-    : colorObj.name;
+    : colorBaseName;
   const colorDisplayHex = ralPicked ? ralPicked.hex : colorObj.hex;
   const roofObj = ROOF_TYPES.find((r) => r.id === config.roof)!;
-  const transObj = TRANSPARENCIES.find((t) => t.id === config.transparency)!;
+  const transObj = TRANSPARENCIES.find((t2) => t2.id === config.transparency)!;
+  const roofName = t(`pergola.roof.${roofObj.id}`);
+  const transparencyName = t(`pergola.transparency.${transObj.id}`);
 
   // IZO Sklo 24 forces "clear"
   const handleRoofChange = (roof: RoofId) => {
@@ -262,12 +248,12 @@ export default function PergolaConfigurator() {
     }
     if (s === 5) {
       const e: Partial<Record<keyof LeadForm, string>> = {};
-      if (!form.name.trim()) e.name = "Zadajte meno";
-      if (!form.phone.trim() || form.phone.trim().length < 6) e.phone = "Zadajte platné telefónne číslo";
-      if (!/^\S+@\S+\.\S+$/.test(form.email)) e.email = "Zadajte platný e-mail";
-      if (!form.city.trim()) e.city = "Zadajte mesto";
-      if (!form.consentGdpr) e.consentGdpr = "Vyžadovaný súhlas";
-      if (!form.consentTerms) e.consentTerms = "Vyžadovaný súhlas";
+      if (!form.name.trim()) e.name = t("pergola.lead.err.name");
+      if (!form.phone.trim() || form.phone.trim().length < 6) e.phone = t("pergola.lead.err.phone");
+      if (!/^\S+@\S+\.\S+$/.test(form.email)) e.email = t("pergola.lead.err.email");
+      if (!form.city.trim()) e.city = t("pergola.lead.err.city");
+      if (!form.consentGdpr) e.consentGdpr = t("pergola.lead.err.consent");
+      if (!form.consentTerms) e.consentTerms = t("pergola.lead.err.consent");
       setErrors(e);
       return Object.keys(e).length === 0;
     }
@@ -276,7 +262,7 @@ export default function PergolaConfigurator() {
 
   const next = () => {
     if (!validateStep(step)) {
-      toast({ title: "Skontrolujte zadané údaje", variant: "destructive" });
+      toast({ title: t("pergola.toast.validate"), variant: "destructive" });
       return;
     }
     setStep((s) => Math.min(STEPS.length, s + 1));
@@ -295,8 +281,8 @@ export default function PergolaConfigurator() {
         config: {
           ...config,
           colorName: colorDisplayName,
-          roofName: roofObj.name,
-          transparencyName: transObj.name,
+          roofName,
+          transparencyName,
           areaM2: Number(areaM2.toFixed(2)),
         },
         price,
@@ -315,11 +301,11 @@ export default function PergolaConfigurator() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Nepodarilo sa odoslať dopyt");
+      if (!res.ok) throw new Error(t("pergola.error.send"));
       setSubmitted(true);
     } catch (err) {
       toast({
-        title: "Chyba pri odosielaní",
+        title: t("pergola.toast.errorTitle"),
         description: (err as Error).message,
         variant: "destructive",
       });
@@ -337,13 +323,13 @@ export default function PergolaConfigurator() {
           {/* Hero */}
           <div className="text-center mb-10 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/5 text-primary text-xs uppercase tracking-widest mb-4">
-              <Sparkles className="w-3.5 h-3.5" /> Luxurelax Pergoly
+              <Sparkles className="w-3.5 h-3.5" /> {t("pergola.hero.badge")}
             </div>
             <h1 className="font-display text-4xl md:text-5xl font-bold mb-3">
-              Konfigurátor pergoly
+              {t("pergola.hero.title")}
             </h1>
             <p className="text-foreground/60">
-              Navrhnite si pergolu na mieru – krok za krokom. Nezáväzná cenová ponuka do pár minút.
+              {t("pergola.hero.subtitle")}
             </p>
           </div>
 
@@ -374,7 +360,7 @@ export default function PergolaConfigurator() {
                     >
                       {done ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
                     </div>
-                    <span className="text-[11px] uppercase tracking-wider hidden md:block">{s.title}</span>
+                    <span className="text-[11px] uppercase tracking-wider hidden md:block">{t(`pergola.step.${s.id}.title`)}</span>
                   </button>
                 );
               })}
@@ -396,12 +382,12 @@ export default function PergolaConfigurator() {
                 >
                   <div className="mb-8">
                     <div className="text-xs text-primary uppercase tracking-widest mb-2">
-                      Krok {step} / {STEPS.length}
+                      {t("pergola.step.label")} {step} / {STEPS.length}
                     </div>
                     <h2 className="font-display text-3xl md:text-4xl font-semibold mb-2">
-                      {STEPS[step - 1].title}
+                      {t(`pergola.step.${step}.title`)}
                     </h2>
-                    <p className="text-foreground/60">{STEPS[step - 1].subtitle}</p>
+                    <p className="text-foreground/60">{t(`pergola.step.${step}.subtitle`)}</p>
                   </div>
 
                   {step === 1 && (
@@ -427,18 +413,18 @@ export default function PergolaConfigurator() {
               {!submitted && (
                 <div className="flex justify-between items-center mt-6">
                   <Button variant="ghost" onClick={prev} disabled={step === 1}>
-                    <ChevronLeft className="w-4 h-4" /> Späť
+                    <ChevronLeft className="w-4 h-4" /> {t("pergola.nav.back")}
                   </Button>
                   {step < STEPS.length ? (
                     <Button variant="luxury" size="lg" onClick={next}>
-                      Pokračovať <ChevronRight className="w-4 h-4" />
+                      {t("pergola.nav.continue")} <ChevronRight className="w-4 h-4" />
                     </Button>
                   ) : (
                     <Button variant="luxury" size="lg" onClick={submit} disabled={submitting}>
                       {submitting ? (
-                        <><Loader2 className="w-4 h-4 animate-spin" /> Odosielam…</>
+                        <><Loader2 className="w-4 h-4 animate-spin" /> {t("pergola.nav.sending")}</>
                       ) : (
-                        <>Odoslať nezáväzný dopyt <Send className="w-4 h-4" /></>
+                        <>{t("pergola.nav.submit")} <Send className="w-4 h-4" /></>
                       )}
                     </Button>
                   )}
@@ -451,27 +437,30 @@ export default function PergolaConfigurator() {
               <div className="rounded-2xl border border-border bg-gradient-to-b from-card to-card/40 backdrop-blur-md overflow-hidden">
                 <PergolaPreview config={config} colorHex={colorDisplayHex} postLayout={postLayout} />
                 <div className="p-6">
-                  <div className="text-xs uppercase tracking-widest text-primary mb-1">Vaša konfigurácia</div>
-                  <h3 className="font-display text-2xl mb-5">Pergola na mieru</h3>
+                  <div className="text-xs uppercase tracking-widest text-primary mb-1">{t("pergola.summary.label")}</div>
+                  <h3 className="font-display text-2xl mb-5">{t("pergola.summary.title")}</h3>
 
-                  <SummaryRow label="Rozmery" value={`${config.width} × ${config.depth} × ${config.height} cm`} />
-                  <SummaryRow label="Plocha strechy" value={`${areaM2.toFixed(2)} m²`} />
-                  <SummaryRow label="Farba" value={colorDisplayName + (colorObj.premium ? " (+10%)" : "")} />
-                  <SummaryRow label="Strecha" value={roofObj.name} />
-                  <SummaryRow label="Priehľadnosť" value={transObj.name} />
+                  <SummaryRow label={t("pergola.summary.dimensions")} value={`${config.width} × ${config.depth} × ${config.height} cm`} />
+                  <SummaryRow label={t("pergola.summary.roofArea")} value={`${areaM2.toFixed(2)} m²`} />
+                  <SummaryRow label={t("pergola.summary.color")} value={colorDisplayName + (colorObj.premium ? " (+10%)" : "")} />
+                  <SummaryRow label={t("pergola.summary.roof")} value={roofName} />
+                  <SummaryRow label={t("pergola.summary.transparency")} value={transparencyName} />
                   <SummaryRow
-                    label="Stĺpy"
-                    value={`${postLayout.posts}× stĺp${postLayout.reinforcement ? " + výztuha" : ""}`}
+                    label={t("pergola.summary.posts")}
+                    value={`${postLayout.posts}× ${t("pergola.summary.postUnit")}${postLayout.reinforcement ? ` + ${t("pergola.summary.reinforcement")}` : ""}`}
                   />
-                  <SummaryRow label="Montáž" value={config.mounting ? "Áno" : "Nie"} />
-                  <SummaryRow label="LED osvetlenie" value={config.led ? "Áno" : "Nie"} />
+                  <SummaryRow label={t("pergola.summary.mounting")} value={config.mounting ? t("pergola.summary.yes") : t("pergola.summary.no")} />
+                  <SummaryRow label={t("pergola.summary.led")} value={config.led ? t("pergola.summary.yes") : t("pergola.summary.no")} />
 
                   <div className="mt-6 pt-5 border-t border-border">
                     <div className="text-xs text-foreground/60 uppercase tracking-widest mb-1">
-                      Cenová ponuka
+                      {t("pergola.summary.quote.label")}
                     </div>
                     <div className="text-sm text-foreground/80 leading-relaxed">
-                      Po odoslaní dopytu vám pripravíme nezáväznú cenovú ponuku na mieru.
+                      {t("pergola.summary.quote.desc")}
+                    </div>
+                    <div className="mt-3 font-display text-2xl text-primary">
+                      {formatPrice(price)}
                     </div>
                   </div>
                 </div>
@@ -485,15 +474,15 @@ export default function PergolaConfigurator() {
       {!submitted && (
         <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur border-t border-border p-3 flex items-center justify-between gap-3">
           <div className="text-xs text-foreground/60 leading-tight max-w-[55%]">
-            Nezáväzný dopyt – cenovú ponuku pripravíme na mieru.
+            {t("pergola.mobile.cta")}
           </div>
           {step < STEPS.length ? (
             <Button variant="luxury" onClick={next}>
-              Pokračovať <ChevronRight className="w-4 h-4" />
+              {t("pergola.nav.continue")} <ChevronRight className="w-4 h-4" />
             </Button>
           ) : (
             <Button variant="luxury" onClick={submit} disabled={submitting}>
-              {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Odoslať <Send className="w-4 h-4" /></>}
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <>{t("pergola.nav.sendShort")} <Send className="w-4 h-4" /></>}
             </Button>
           )}
         </div>
@@ -524,6 +513,7 @@ function PergolaPreview({
   colorHex: string;
   postLayout: { posts: 2 | 3 | 4; reinforcement: boolean };
 }) {
+  const { t } = useLanguage();
   // Real isometric projection — proportions react to width/depth/height
   const frameColor = colorHex.startsWith("linear") ? "#3a3a3a" : colorHex;
 
@@ -843,7 +833,7 @@ function PergolaPreview({
           fontSize="11"
           fill="hsl(var(--foreground) / 0.85)"
         >
-          Šírka {fmt(W)}
+          {t("pergola.preview.width")} {fmt(W)}
         </text>
         {/* Depth — left edge */}
         <text
@@ -853,7 +843,7 @@ function PergolaPreview({
           fontSize="11"
           fill="hsl(var(--foreground) / 0.85)"
         >
-          Hĺbka {fmt(D)}
+          {t("pergola.preview.depth")} {fmt(D)}
         </text>
         {/* Height — right post */}
         <text
@@ -862,11 +852,11 @@ function PergolaPreview({
           fontSize="11"
           fill="hsl(var(--foreground) / 0.85)"
         >
-          Výška {fmt(H)}
+          {t("pergola.preview.height")} {fmt(H)}
         </text>
       </svg>
       <div className="absolute top-3 left-3 text-[10px] uppercase tracking-widest text-foreground/40">
-        Náhľad
+        {t("pergola.preview.label")}
       </div>
     </div>
   );
@@ -880,10 +870,11 @@ function StepDimensions({
   config: Config;
   setConfig: React.Dispatch<React.SetStateAction<Config>>;
 }) {
+  const { t } = useLanguage();
   const dims: Array<{ key: "width" | "depth" | "height"; label: string; min: number; max: number; rec: string }> = [
-    { key: "width", label: "Šírka", min: MIN_W, max: MAX_W, rec: "Odporúčané 300–600 cm" },
-    { key: "depth", label: "Hĺbka", min: MIN_D, max: MAX_D, rec: "Odporúčané 300–500 cm" },
-    { key: "height", label: "Výška", min: MIN_H, max: MAX_H, rec: "Odporúčané 240–280 cm" },
+    { key: "width", label: t("pergola.dim.width"), min: MIN_W, max: MAX_W, rec: t("pergola.dim.width.rec") },
+    { key: "depth", label: t("pergola.dim.depth"), min: MIN_D, max: MAX_D, rec: t("pergola.dim.depth.rec") },
+    { key: "height", label: t("pergola.dim.height"), min: MIN_H, max: MAX_H, rec: t("pergola.dim.height.rec") },
   ];
   return (
     <div className="space-y-8">
@@ -902,7 +893,6 @@ function StepDimensions({
                 max={d.max}
                 onChange={(e) => {
                   const raw = e.target.value;
-                  // Povoliť prázdne pole počas editácie; clamp až onBlur
                   const n = raw === "" ? 0 : Number(raw);
                   if (Number.isNaN(n)) return;
                   setConfig((c) => ({ ...c, [d.key]: n }));
@@ -927,8 +917,8 @@ function StepDimensions({
             onValueChange={(v) => setConfig((c) => ({ ...c, [d.key]: v[0] }))}
           />
           <div className="flex justify-between text-[10px] text-foreground/40 mt-1">
-            <span>min {d.min} cm</span>
-            <span>max {d.max} cm</span>
+            <span>{t("pergola.dim.min")} {d.min} cm</span>
+            <span>{t("pergola.dim.max")} {d.max} cm</span>
           </div>
         </div>
       ))}
@@ -944,6 +934,7 @@ function StepColor({
   config: Config;
   setConfig: React.Dispatch<React.SetStateAction<Config>>;
 }) {
+  const { t } = useLanguage();
   const [ralOpen, setRalOpen] = useState(false);
   const ralPicked = config.color === "ral" ? findRal(config.ralCode) : undefined;
 
@@ -963,17 +954,13 @@ function StepColor({
         {COLORS.map((c) => {
           const active = config.color === c.id;
           const isRal = c.id === "ral";
-          // Pre RAL dlaždicu zobraz vybraný hex (ak existuje), inak farebný gradient vzorkovníka
-          const swatchBg = isRal && ralPicked
-            ? ralPicked.hex
-            : c.hex.startsWith("linear")
-            ? c.hex
-            : c.hex;
-          const tileLabel = isRal && ralPicked ? ralPicked.code : c.name;
+          const swatchBg = isRal && ralPicked ? ralPicked.hex : c.hex;
+          const baseName = t(`pergola.color.${c.id}`);
+          const tileLabel = isRal && ralPicked ? ralPicked.code : baseName;
           const tileSub = isRal
             ? ralPicked
               ? ralPicked.name
-              : "Otvoriť vzorkovník →"
+              : t("pergola.color.ralOpen")
             : null;
           return (
             <button
@@ -1006,9 +993,9 @@ function StepColor({
                 </div>
                 <div className="text-[11px] mt-0.5 flex items-center justify-between gap-2">
                   {c.premium ? (
-                    <span className="text-primary">+10% doplatok</span>
+                    <span className="text-primary">{t("pergola.color.surcharge")}</span>
                   ) : (
-                    <span className="text-foreground/50">bez doplatku</span>
+                    <span className="text-foreground/50">{t("pergola.color.noSurcharge")}</span>
                   )}
                   {tileSub && (
                     <span className="text-foreground/50 truncate">{tileSub}</span>
@@ -1040,10 +1027,11 @@ function StepRoof({
   setConfig: React.Dispatch<React.SetStateAction<Config>>;
   onRoofChange: (r: RoofId) => void;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="space-y-8">
       <div>
-        <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">Typ zastrešenia</div>
+        <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">{t("pergola.roof.title")}</div>
         <div className="grid md:grid-cols-3 gap-4">
           {ROOF_TYPES.map((r) => {
             const active = config.roof === r.id;
@@ -1070,10 +1058,10 @@ function StepRoof({
                     {active && <Check className="w-3.5 h-3.5" strokeWidth={3} />}
                   </div>
                 </div>
-                <div className="font-medium mb-1">{r.name}</div>
-                <div className="text-xs text-foreground/50 mb-2">{r.desc}</div>
+                <div className="font-medium mb-1">{t(`pergola.roof.${r.id}`)}</div>
+                <div className="text-xs text-foreground/50 mb-2">{t(`pergola.roof.${r.id}.desc`)}</div>
                 {r.pricePerM2 === 0 && (
-                  <div className="text-xs text-primary">v základe</div>
+                  <div className="text-xs text-primary">{t("pergola.roof.included")}</div>
                 )}
               </button>
             );
@@ -1082,16 +1070,16 @@ function StepRoof({
       </div>
 
       <div>
-        <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">Priehľadnosť</div>
+        <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">{t("pergola.transparency.title")}</div>
         <div className="grid md:grid-cols-2 gap-4">
-          {TRANSPARENCIES.map((t) => {
-            const disabled = config.roof === "izo_glass_24" && t.id === "milky";
-            const active = config.transparency === t.id;
+          {TRANSPARENCIES.map((tr) => {
+            const disabled = config.roof === "izo_glass_24" && tr.id === "milky";
+            const active = config.transparency === tr.id;
             return (
               <button
-                key={t.id}
+                key={tr.id}
                 disabled={disabled}
-                onClick={() => setConfig((c) => ({ ...c, transparency: t.id }))}
+                onClick={() => setConfig((c) => ({ ...c, transparency: tr.id }))}
                 className={cn(
                   "rounded-xl border p-5 text-left transition-all",
                   active && !disabled
@@ -1101,13 +1089,13 @@ function StepRoof({
                 )}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">{t.name}</span>
+                  <span className="font-medium">{t(`pergola.transparency.${tr.id}`)}</span>
                   {active && !disabled && <Check className="w-4 h-4 text-primary" />}
                 </div>
-                <div className="text-xs text-foreground/50">{t.desc}</div>
+                <div className="text-xs text-foreground/50">{t(`pergola.transparency.${tr.id}.desc`)}</div>
                 {disabled && (
                   <div className="text-[11px] text-destructive mt-2">
-                    Pri IZO Sklo 24 nie je dostupné.
+                    {t("pergola.transparency.izoOnlyClear")}
                   </div>
                 )}
               </button>
@@ -1127,15 +1115,17 @@ function StepExtras({
   config: Config;
   setConfig: React.Dispatch<React.SetStateAction<Config>>;
 }) {
+  const { t } = useLanguage();
+  const mountingOptions = [
+    { id: false, name: t("pergola.mounting.no"), desc: t("pergola.mounting.no.desc"), price: 0 },
+    { id: true, name: t("pergola.mounting.yes"), desc: t("pergola.mounting.yes.desc"), price: MOUNTING_PRICE },
+  ];
   return (
     <div className="space-y-8">
       <div>
-        <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">Montáž</div>
+        <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">{t("pergola.mounting.title")}</div>
         <div className="grid md:grid-cols-2 gap-4">
-          {[
-            { id: false, name: "Bez montáže", desc: "Doručenie a vlastná montáž.", price: 0 },
-            { id: true, name: "S montážou", desc: "Profesionálna inštalácia naším tímom.", price: MOUNTING_PRICE },
-          ].map((m) => {
+          {mountingOptions.map((m) => {
             const active = config.mounting === m.id;
             return (
               <button
@@ -1151,7 +1141,7 @@ function StepExtras({
                   {active && <Check className="w-4 h-4 text-primary" />}
                 </div>
                 <div className="text-xs text-foreground/50 mb-2">{m.desc}</div>
-                {m.price === 0 && <div className="text-xs text-primary">v základe</div>}
+                {m.price === 0 && <div className="text-xs text-primary">{t("pergola.roof.included")}</div>}
               </button>
             );
           })}
@@ -1159,7 +1149,7 @@ function StepExtras({
       </div>
 
       <div>
-        <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">Doplnky</div>
+        <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">{t("pergola.extras.title")}</div>
         <button
           onClick={() => setConfig((c) => ({ ...c, led: !c.led }))}
           className={cn(
@@ -1168,8 +1158,8 @@ function StepExtras({
           )}
         >
           <div>
-            <div className="font-medium mb-1">LED osvetlenie</div>
-            <div className="text-xs text-foreground/50">Integrované LED pre večernú atmosféru.</div>
+            <div className="font-medium mb-1">{t("pergola.led.title")}</div>
+            <div className="text-xs text-foreground/50">{t("pergola.led.desc")}</div>
           </div>
           <div className="text-right">
             <div
@@ -1202,6 +1192,7 @@ function StepLead({
   setForm: React.Dispatch<React.SetStateAction<LeadForm>>;
   errors: Partial<Record<keyof LeadForm, string>>;
 }) {
+  const { t } = useLanguage();
   const field = (
     key: keyof LeadForm,
     label: string,
@@ -1229,12 +1220,12 @@ function StepLead({
   return (
     <div className="space-y-5 max-w-2xl">
       <div className="grid md:grid-cols-2 gap-4">
-        {field("name", "Meno a priezvisko")}
-        {field("phone", "Telefón", "tel")}
-        {field("email", "E-mail", "email")}
-        {field("city", "Mesto")}
+        {field("name", t("pergola.lead.name"))}
+        {field("phone", t("pergola.lead.phone"), "tel")}
+        {field("email", t("pergola.lead.email"), "email")}
+        {field("city", t("pergola.lead.city"))}
       </div>
-      {field("note", "Poznámka", "text", Textarea)}
+      {field("note", t("pergola.lead.note"), "text", Textarea)}
 
       <div className="space-y-3 pt-2">
         <label className="flex items-start gap-3 cursor-pointer">
@@ -1243,7 +1234,7 @@ function StepLead({
             onCheckedChange={(v) => setForm((f) => ({ ...f, consentGdpr: !!v }))}
           />
           <span className="text-sm text-foreground/70">
-            Súhlasím so spracovaním osobných údajov.
+            {t("pergola.lead.consentGdpr")}
           </span>
         </label>
         {errors.consentGdpr && <div className="text-xs text-destructive">{errors.consentGdpr}</div>}
@@ -1253,7 +1244,7 @@ function StepLead({
             onCheckedChange={(v) => setForm((f) => ({ ...f, consentTerms: !!v }))}
           />
           <span className="text-sm text-foreground/70">
-            Súhlasím s obchodnými podmienkami.
+            {t("pergola.lead.consentTerms")}
           </span>
         </label>
         {errors.consentTerms && <div className="text-xs text-destructive">{errors.consentTerms}</div>}
@@ -1264,14 +1255,15 @@ function StepLead({
 
 
 function StepSuccess() {
+  const { t } = useLanguage();
   return (
     <div className="text-center py-12">
       <div className="w-16 h-16 mx-auto rounded-full bg-primary/15 flex items-center justify-center mb-5">
         <Check className="w-8 h-8 text-primary" />
       </div>
-      <h3 className="font-display text-3xl mb-3">Ďakujeme!</h3>
+      <h3 className="font-display text-3xl mb-3">{t("pergola.success.title")}</h3>
       <p className="text-foreground/60 max-w-md mx-auto">
-        Váš dopyt sme prijali. Náš špecialista vás bude čo najskôr kontaktovať s nezáväznou cenovou ponukou.
+        {t("pergola.success.desc")}
       </p>
     </div>
   );
