@@ -81,38 +81,23 @@ const HEIGHT_SURCHARGE_PER_CM_OVER = 4; // over 250cm
 const HEIGHT_BASELINE = 250;
 
 const COLORS = [
-  { id: "anthracite", name: "Antracit", hex: "#2b2b2e", premium: false },
-  { id: "white", name: "Biela", hex: "#f4f4f0", premium: false },
-  { id: "brown", name: "Hnedá", hex: "#5a3a25", premium: false },
-  { id: "golden_oak", name: "Zlatý dub", hex: "#b6883f", premium: true },
-  { id: "walnut", name: "Orech", hex: "#3a2418", premium: true },
-  { id: "ral", name: "RAL vlastná farba", hex: "linear-gradient(135deg,#e94e77,#5b8def,#7ed957)", premium: true },
+  { id: "anthracite", hex: "#2b2b2e", premium: false },
+  { id: "white", hex: "#f4f4f0", premium: false },
+  { id: "brown", hex: "#5a3a25", premium: false },
+  { id: "golden_oak", hex: "#b6883f", premium: true },
+  { id: "walnut", hex: "#3a2418", premium: true },
+  { id: "ral", hex: "linear-gradient(135deg,#e94e77,#5b8def,#7ed957)", premium: true },
 ] as const;
 
 const ROOF_TYPES = [
-  {
-    id: "polycarbonate",
-    name: "Polykarbonát",
-    desc: "Ľahký, odolný a cenovo dostupný materiál.",
-    pricePerM2: 0,
-  },
-  {
-    id: "safety_glass",
-    name: "Bezpečnostné sklo",
-    desc: "Kalené sklo s prémiovým vzhľadom.",
-    pricePerM2: 90,
-  },
-  {
-    id: "izo_glass_24",
-    name: "IZO Sklo 24",
-    desc: "Izolačné dvojsklo – maximálny komfort celoročne.",
-    pricePerM2: 180,
-  },
+  { id: "polycarbonate", pricePerM2: 0 },
+  { id: "safety_glass", pricePerM2: 90 },
+  { id: "izo_glass_24", pricePerM2: 180 },
 ] as const;
 
 const TRANSPARENCIES = [
-  { id: "milky", name: "Mliečne", desc: "Difúzne svetlo, viac súkromia." },
-  { id: "clear", name: "Číre", desc: "Maximálny priezor a presvetlenie." },
+  { id: "milky" },
+  { id: "clear" },
 ] as const;
 
 const MOUNTING_PRICE = 850;
