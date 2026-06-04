@@ -2153,7 +2153,7 @@ const Configurator = () => {
 
               {/* Pergola */}
               <Link
-                to={language === "en" ? "/pergola-configurator" : language === "hu" ? "/konfigurator-pergoly-hu" : "/konfigurator-pergoly"}
+                to={language === "en" ? "/konfigurator/pergola-configurator" : language === "hu" ? "/konfigurator/pergoly-hu" : "/konfigurator/pergoly"}
                 className="group relative overflow-hidden rounded-2xl border-2 border-border/50 hover:border-primary/50 transition-all bg-card/50 shadow-xl"
               >
                 <div className="aspect-[4/3] overflow-hidden">

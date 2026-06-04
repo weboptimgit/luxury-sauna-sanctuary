@@ -30,9 +30,9 @@ const App = () => (
             <Route path="/konfigurator-hu" element={<Configurator />} />
             <Route path="/konfigurator-hu/pergoly" element={<PergolaConfigurator />} />
             <Route path="/konfigurator-hu/:modelSlug" element={<Configurator />} />
-            <Route path="/konfigurator-pergoly" element={<PergolaConfigurator />} />
-            <Route path="/pergola-configurator" element={<PergolaConfigurator />} />
-            <Route path="/konfigurator-pergoly-hu" element={<PergolaConfigurator />} />
+            <Route path="/konfigurator-pergoly" element={<Navigate to="/konfigurator/pergoly" replace />} />
+            <Route path="/pergola-configurator" element={<Navigate to="/konfigurator/pergola-configurator" replace />} />
+            <Route path="/konfigurator-pergoly-hu" element={<Navigate to="/konfigurator/pergoly-hu" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </LanguageProvider>
