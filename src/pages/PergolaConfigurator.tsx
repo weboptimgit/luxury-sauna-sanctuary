@@ -283,7 +283,6 @@ export default function PergolaConfigurator() {
           transparencyName,
           areaM2: Number(areaM2.toFixed(2)),
         },
-        price,
         currency: "EUR",
         customer: {
           name: form.name,
