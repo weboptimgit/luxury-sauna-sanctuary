@@ -26,7 +26,6 @@ import ConfiguratorFooter from "@/components/ConfiguratorFooter";
 import RalPickerDialog from "@/components/RalPickerDialog";
 import { findRal, type RalColor } from "@/data/ralClassic";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useFormatPrice } from "@/lib/formatPrice";
 
 /**
  * PERGOLA CONFIGURATOR – Luxurelax
@@ -165,7 +164,6 @@ const MAX_H = 350;
 
 export default function PergolaConfigurator() {
   const { t } = useLanguage();
-  const formatPrice = useFormatPrice();
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
