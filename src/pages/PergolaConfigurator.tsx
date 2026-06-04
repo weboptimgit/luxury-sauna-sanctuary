@@ -442,7 +442,7 @@ export default function PergolaConfigurator() {
 
                   <SummaryRow label={t("pergola.summary.dimensions")} value={`${config.width} × ${config.depth} × ${config.height} cm`} />
                   <SummaryRow label={t("pergola.summary.roofArea")} value={`${areaM2.toFixed(2)} m²`} />
-                  <SummaryRow label={t("pergola.summary.color")} value={colorDisplayName + (colorObj.premium ? " (+10%)" : "")} />
+                  <SummaryRow label={t("pergola.summary.color")} value={colorDisplayName} />
                   <SummaryRow label={t("pergola.summary.roof")} value={roofName} />
                   <SummaryRow label={t("pergola.summary.transparency")} value={transparencyName} />
                   <SummaryRow
@@ -458,9 +458,6 @@ export default function PergolaConfigurator() {
                     </div>
                     <div className="text-sm text-foreground/80 leading-relaxed">
                       {t("pergola.summary.quote.desc")}
-                    </div>
-                    <div className="mt-3 font-display text-2xl text-primary">
-                      {formatPrice(price)}
                     </div>
                   </div>
                 </div>
@@ -992,11 +989,6 @@ function StepColor({
                   {active && <Check className="w-4 h-4 text-primary shrink-0" />}
                 </div>
                 <div className="text-[11px] mt-0.5 flex items-center justify-between gap-2">
-                  {c.premium ? (
-                    <span className="text-primary">{t("pergola.color.surcharge")}</span>
-                  ) : (
-                    <span className="text-foreground/50">{t("pergola.color.noSurcharge")}</span>
-                  )}
                   {tileSub && (
                     <span className="text-foreground/50 truncate">{tileSub}</span>
                   )}
@@ -1059,10 +1051,7 @@ function StepRoof({
                   </div>
                 </div>
                 <div className="font-medium mb-1">{t(`pergola.roof.${r.id}`)}</div>
-                <div className="text-xs text-foreground/50 mb-2">{t(`pergola.roof.${r.id}.desc`)}</div>
-                {r.pricePerM2 === 0 && (
-                  <div className="text-xs text-primary">{t("pergola.roof.included")}</div>
-                )}
+                <div className="text-xs text-foreground/50">{t(`pergola.roof.${r.id}.desc`)}</div>
               </button>
             );
           })}
@@ -1141,7 +1130,6 @@ function StepExtras({
                   {active && <Check className="w-4 h-4 text-primary" />}
                 </div>
                 <div className="text-xs text-foreground/50 mb-2">{m.desc}</div>
-                {m.price === 0 && <div className="text-xs text-primary">{t("pergola.roof.included")}</div>}
               </button>
             );
           })}
