@@ -702,7 +702,7 @@ add_filter('woocommerce_cart_item_name', function ($name, $cart_item, $cart_item
     if (!empty($cart_item['pergola_config'])) {
         $lang = luxurelax_pergola_normalize_lang($cart_item['pergola_lang'] ?? 'sk');
         $s = luxurelax_pergola_strings($lang);
-        $path = $lang === 'hu' ? '/konfigurator-pergoly-hu/' : ($lang === 'en' ? '/pergola-configurator/' : '/konfigurator-pergoly/');
+        $path = $lang === 'hu' ? '/konfigurator/pergoly-hu/' : ($lang === 'en' ? '/konfigurator/pergola-configurator/' : '/konfigurator/pergoly/');
         return '<a href="' . esc_url(home_url($path)) . '">' . esc_html($s['cart_item_name']) . '</a>';
     }
     return $name;
