@@ -20,10 +20,15 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Navigate to="/konfigurator" replace />} />
             <Route path="/konfigurator" element={<Configurator />} />
+            <Route path="/konfigurator/pergoly" element={<PergolaConfigurator />} />
+            <Route path="/konfigurator/pergoly-hu" element={<PergolaConfigurator />} />
+            <Route path="/konfigurator/pergola-configurator" element={<PergolaConfigurator />} />
             <Route path="/konfigurator/:modelSlug" element={<Configurator />} />
             <Route path="/configurator" element={<Configurator />} />
+            <Route path="/configurator/pergola" element={<PergolaConfigurator />} />
             <Route path="/configurator/:modelSlug" element={<Configurator />} />
             <Route path="/konfigurator-hu" element={<Configurator />} />
+            <Route path="/konfigurator-hu/pergoly" element={<PergolaConfigurator />} />
             <Route path="/konfigurator-hu/:modelSlug" element={<Configurator />} />
             <Route path="/konfigurator-pergoly" element={<PergolaConfigurator />} />
             <Route path="/pergola-configurator" element={<PergolaConfigurator />} />
