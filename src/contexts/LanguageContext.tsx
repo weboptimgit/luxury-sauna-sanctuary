@@ -624,7 +624,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.infraSaunas": "Infraszaunák",
     "nav.hotTubs": "Dézsák",
     "nav.accessories": "Kiegészítők",
-    "nav.configurator": "Konfigurátor",
+    "nav.configurator": "Konfigurator",
     "nav.contact": "Kapcsolat",
     "nav.inquiry": "Ajánlatkérés",
     "nav.blog": "Blog",
