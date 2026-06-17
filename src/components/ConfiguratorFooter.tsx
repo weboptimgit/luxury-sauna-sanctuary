@@ -130,11 +130,11 @@ const ConfiguratorFooter = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-primary mt-1 shrink-0" />
                 <span className="text-muted-foreground text-sm">
-                  B - Relax s.r.o. 
+                  LUXURELAX s.r.o. 
                   <br />
-                  Tomášikova 1973/32
+                  Karpatské námestie 7770/10A
                   <br />
-                  831 04 Bratislava - Staré Mesto
+                  831 06 Bratislava - Rača
                 </span>
               </li>
               <li className="flex items-center gap-3">
