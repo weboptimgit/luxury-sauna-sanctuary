@@ -158,19 +158,30 @@ const ConfiguratorFooter = () => {
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-primary shrink-0" />
                 <a
-                  href="tel:+421940916815"
+                  href={language === "hu" ? "tel:+36703407334" : "tel:+421940916815"}
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  +421 940 916 815
+                  {language === "hu" ? "+36 70 340 7334" : "+421 940 916 815"}
                 </a>
               </li>
+              
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-primary shrink-0" />
                 <a
-                  href="mailto:info@luxurelax.sk"
+                  href={`mailto:${
+                    language === "en"
+                      ? "info@luxurelax.com"
+                      : language === "hu"
+                        ? "info@luxurelax.hu"
+                        : "info@luxurelax.sk"
+                  }`}
                   className="text-muted-foreground hover:text-primary transition-colors text-sm"
                 >
-                  info@luxurelax.sk
+                  {language === "en"
+                    ? "info@luxurelax.com"
+                    : language === "hu"
+                      ? "info@luxurelax.hu"
+                      : "info@luxurelax.sk"}
                 </a>
               </li>
             </ul>
