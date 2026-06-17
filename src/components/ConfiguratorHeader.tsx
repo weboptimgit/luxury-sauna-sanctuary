@@ -25,7 +25,7 @@ const ConfiguratorHeader = () => {
   const categoryMap = {
     sk: { prefix: "/k", saunas: "sauny", tubs: "kade" },
     en: { prefix: "/c", saunas: "saunas", tubs: "hottubs" },
-    hu: { prefix: "/k", saunas: "szaunak", tubs: "dezsafurdok" },
+    hu: { prefix: "/k", saunas: "szaunak", tubs: "pezsgofurdok" },
   } as const;
 
   const { prefix, saunas, tubs } = categoryMap[language] || categoryMap.sk;
