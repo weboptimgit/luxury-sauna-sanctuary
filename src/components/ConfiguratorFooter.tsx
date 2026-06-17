@@ -129,13 +129,31 @@ const ConfiguratorFooter = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-primary mt-1 shrink-0" />
-                <span className="text-muted-foreground text-sm">
-                  LUXURELAX s.r.o. 
-                  <br />
-                  Karpatské námestie 7770/10A
-                  <br />
-                  831 06 Bratislava - Rača
-                </span>
+                  <span className="text-muted-foreground text-sm">
+                    LUXURELAX s.r.o.
+                    <br />
+                    Karpatské námestie 7770/10A
+                    <br />
+                    {language === "hu" ? "831 06 Pozsony - Rača" : "831 06 Bratislava - Rača"}
+                    <br />
+                    {language === "en"
+                      ? "Company ID: 57 556 245"
+                      : language === "hu"
+                        ? "Cégjegyzékszám: 57 556 245"
+                        : "IČO: 57 556 245"}
+                    <br />
+                    {language === "en"
+                      ? "VAT ID: SK2122824484"
+                      : language === "hu"
+                        ? "Közösségi adószám: SK2122824484"
+                        : "IČ DPH: SK2122824484"}
+                    <br />
+                    {language === "en"
+                      ? "Not VAT registered"
+                      : language === "hu"
+                        ? "Nem vagyunk ÁFA-fizetők"
+                        : "Nie sme platiteľmi DPH"}
+                  </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-primary shrink-0" />
