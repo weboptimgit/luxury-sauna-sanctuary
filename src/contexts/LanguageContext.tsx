@@ -811,7 +811,7 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.contact": "Kapcsolat",
     "footer.products": "Információ",
     "footer.vop": "Általános szerződési feltételek",
-    "footer.cookies": "Cookie-k",
+    "footer.cookies": "Cookies",
     "footer.gdpr": "Adatvédelmi szabályzat",
     "footer.barrelSaunas": "Hordó szaunák",
     "footer.cubeSaunas": "Kocka szaunák",
