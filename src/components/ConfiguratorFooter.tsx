@@ -49,7 +49,7 @@ const ConfiguratorFooter = () => {
       : language === "hu"
         ? [
             { label: t("footer.vop"), href: `${baseUrl}/altalanos-szerzodesi-feltetelek/` },
-            { label: t("footer.gdpr"), href: `${baseUrl}/cookies/` },
+            { label: t("footer.gdpr"), href: `${baseUrl}/adatvedelem/` },
             { label: t("footer.cookies"), href: `${baseUrl}/cookies/` },
           ]
         : [
