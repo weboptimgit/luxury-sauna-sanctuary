@@ -622,7 +622,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.home": "Főoldal",
     "nav.finnishSaunas": "Szaunák",
     "nav.infraSaunas": "Infraszaunák",
-    "nav.hotTubs": "Dézsafürdők",
+    "nav.hotTubs": "Dézsák",
     "nav.accessories": "Kiegészítők",
     "nav.configurator": "Konfigurátor",
     "nav.contact": "Kapcsolat",
