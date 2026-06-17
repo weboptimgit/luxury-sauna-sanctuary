@@ -24,9 +24,9 @@ const ConfiguratorFooter = () => {
       : language === "hu"
         ? [
             { label: t("footer.sauny"), href: `${baseUrl}/k/szaunak/` },
-            { label: t("footer.kade"), href: `${baseUrl}/k/dezsafurdok/` },
+            { label: t("footer.kade"), href: `${baseUrl}/k/pezsgofurdok/` },
             { label: t("footer.slovnik"), href: `${baseUrl}/anyagok-es-technologia/` },
-            { label: t("footer.faq"), href: `${baseUrl}/gyik/` },
+            { label: t("footer.faq"), href: `${baseUrl}/faq/` },
             { label: t("footer.konfigurator"), href: `${baseUrl}/konfigurator/` },
             { label: t("footer.contact"), href: `${baseUrl}/kapcsolat/` },
           ]
