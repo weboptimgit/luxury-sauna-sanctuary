@@ -24,6 +24,57 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Nakonfiguruj si saunu | LUXURELAX" />
     <meta name="twitter:description" content="Vytvorte si saunu podľa vlastných predstáv v našom online konfigurátore. LUXURELAX – fínske sauny na mieru." />
+
+    <!-- Localize <title>/meta by hostname (.hu, .com, .sk). Runs before React mounts. -->
+    <script>
+      (function () {
+        try {
+          var host = (location.hostname || "").toLowerCase();
+          var lang = "sk";
+          if (host.endsWith(".hu")) lang = "hu";
+          else if (host.endsWith(".com")) lang = "en";
+
+          var dict = {
+            sk: {
+              title: "Nakonfiguruj si saunu | LUXURELAX",
+              desc: "Vytvorte si saunu podľa vlastných predstáv. Vyberte model, drevo, farbu a doplnky v našom online konfigurátore. LUXURELAX – fínske sauny na mieru.",
+              ogDesc: "Vytvorte si saunu podľa vlastných predstáv v našom online konfigurátore. LUXURELAX – fínske sauny na mieru.",
+              keywords: "konfigurátor sauny, fínska sauna, sauna na mieru, LUXURELAX, outdoor sauna, wellness",
+              htmlLang: "sk"
+            },
+            en: {
+              title: "Configure your sauna | LUXURELAX",
+              desc: "Design your own sauna. Choose model, wood, color and accessories in our online configurator. LUXURELAX – custom Finnish saunas.",
+              ogDesc: "Design your own sauna in our online configurator. LUXURELAX – custom Finnish saunas.",
+              keywords: "sauna configurator, Finnish sauna, custom sauna, LUXURELAX, outdoor sauna, wellness",
+              htmlLang: "en"
+            },
+            hu: {
+              title: "Tervezze meg szaunáját | LUXURELAX",
+              desc: "Tervezze meg saját szaunáját. Válasszon modellt, fát, színt és kiegészítőket online konfigurátorunkban. LUXURELAX – egyedi finn szaunák.",
+              ogDesc: "Tervezze meg saját szaunáját online konfigurátorunkban. LUXURELAX – egyedi finn szaunák.",
+              keywords: "szauna konfigurátor, finn szauna, egyedi szauna, LUXURELAX, kültéri szauna, wellness",
+              htmlLang: "hu"
+            }
+          };
+
+          var t = dict[lang];
+          document.documentElement.lang = t.htmlLang;
+          document.title = t.title;
+
+          function setMeta(selector, attr, value) {
+            var el = document.querySelector(selector);
+            if (el) el.setAttribute(attr, value);
+          }
+          setMeta('meta[name="description"]', "content", t.desc);
+          setMeta('meta[name="keywords"]', "content", t.keywords);
+          setMeta('meta[property="og:title"]', "content", t.title);
+          setMeta('meta[property="og:description"]', "content", t.ogDesc);
+          setMeta('meta[name="twitter:title"]', "content", t.title);
+          setMeta('meta[name="twitter:description"]', "content", t.ogDesc);
+        } catch (e) { /* noop */ }
+      })();
+    </script>
   </head>
 
   <body>
