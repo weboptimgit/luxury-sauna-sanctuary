@@ -271,6 +271,7 @@ type SaunaType = {
   hasMetalBands: boolean;
   hasThermoCladding: boolean;
   hasBenchOptions: boolean;
+  comingSoon?: boolean;
   availableWoodTypes: WoodType[];
   allowedLedOptions?: string[];
   windowOptions: ConfigOption[];
@@ -1244,6 +1245,7 @@ const Configurator = () => {
         basePrice: st.basePrice,
         image: st.image ?? preset.image,
         apiImages: st.images ?? null,
+        comingSoon: st.comingSoon ?? false,
 
         hasWoodType: st.hasWoodType ?? (st.woodTypes?.length ?? 0) > 0,
         hasLed: st.hasLed ?? true,
@@ -2324,6 +2326,13 @@ const Configurator = () => {
                       <Ruler className="w-4 h-4 text-primary" />
                       <span className="text-sm font-bold text-white tracking-wide">{sauna.dimensions}</span>
                     </div>
+
+                    {/* Badge "Pripravujeme" */}
+                    {sauna.comingSoon && (
+                      <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-amber-500/90 backdrop-blur-md border border-amber-300/40 shadow-lg">
+                        <span className="text-sm font-bold text-black tracking-wide">Pripravujeme</span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Obsah karty */}
@@ -2740,10 +2749,12 @@ const Configurator = () => {
                   size="lg"
                   className="w-full gap-2"
                   onClick={addToCart}
-                  disabled={isAddingToCart}
+                  disabled={isAddingToCart || (productCategory === "sauna" && !!selectedSaunaType?.comingSoon)}
                 >
                   {isAddingToCart ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShoppingCart className="w-5 h-5" />}
-                  {isAddingToCart ? t("config.addingToCart") : t("config.addToCart")}
+                  {productCategory === "sauna" && selectedSaunaType?.comingSoon
+                    ? "Pripravujeme"
+                    : isAddingToCart ? t("config.addingToCart") : t("config.addToCart")}
                 </Button>
 
                 <p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
