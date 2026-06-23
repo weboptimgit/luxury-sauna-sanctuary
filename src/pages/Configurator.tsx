@@ -962,8 +962,13 @@ const Configurator = () => {
       return [mainImg, ...gallery];
     }
     if (selectedSaunaType) {
-      const galleryPhotos = saunaGalleryImages[selectedSaunaType.id] || [];
-      return [currentSaunaImage, ...galleryPhotos];
+        const apiGallery = (selectedSaunaType as any).apiImages as string[] | null;
+        const galleryPhotos = apiGallery && apiGallery.length > 0
+          ? apiGallery
+          : (saunaGalleryImages[selectedSaunaType.id] || []);
+        return apiGallery && apiGallery.length > 0
+          ? apiGallery
+          : [currentSaunaImage, ...galleryPhotos];
     }
     return [saunaBarrel, saunaInterior, saunaCube, saunaTraditional];
   }, [productCategory, selectedSaunaType, selectedHotTubType, selectedComboType, currentSaunaImage]);
@@ -1237,7 +1242,8 @@ const Configurator = () => {
         name: st.label,
         dimensions: st.dimensions ?? "",
         basePrice: st.basePrice,
-        image: preset.image,
+        image: st.image ?? preset.image,
+        apiImages: st.images ?? null,
 
         hasWoodType: st.hasWoodType ?? (st.woodTypes?.length ?? 0) > 0,
         hasLed: st.hasLed ?? true,
