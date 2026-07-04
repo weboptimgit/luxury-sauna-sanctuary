@@ -23,12 +23,12 @@ const ConfiguratorHeader = () => {
         : "https://www.luxurelax.sk";
 
   const categoryMap = {
-    sk: { prefix: "/k", saunas: "sauny", tubs: "kade" },
-    en: { prefix: "/c", saunas: "saunas", tubs: "hottubs" },
-    hu: { prefix: "/k", saunas: "szaunak", tubs: "pezsgofurdok" },
+    sk: { prefix: "/k", saunas: "sauny", tubs: "kade", pergolas: "pergoly" },
+    en: { prefix: "/c", saunas: "saunas", tubs: "hottubs", pergolas: "pergolas" },
+    hu: { prefix: "/k", saunas: "szaunak", tubs: "pezsgofurdok", pergolas: "pergolak" },
   } as const;
 
-  const { prefix, saunas, tubs } = categoryMap[language] || categoryMap.sk;
+  const { prefix, saunas, tubs, pergolas } = categoryMap[language] || categoryMap.sk;
 
   const configuratorPath =
     language === "en" ? "/configurator" : language === "hu" ? "/konfigurator-hu" : "/konfigurator";
@@ -41,6 +41,7 @@ const ConfiguratorHeader = () => {
   const navItems = [
     { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
     { labelKey: "nav.hotTubs", href: `${baseUrl}${prefix}/${tubs}/`, external: true },
+    { labelKey: "nav.pergolas", href: `${baseUrl}${prefix}/${pergolas}/`, external: true },
     { labelKey: "nav.configurator", href: configuratorPath, external: false },
     { labelKey: "nav.blog", href: `${baseUrl}/blog/`, external: true },
     { labelKey: "nav.about", href: aboutHref, external: true },
