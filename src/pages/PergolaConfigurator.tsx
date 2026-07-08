@@ -233,12 +233,8 @@ export default function PergolaConfigurator() {
     // 6) Doprava – 0,75 € / km
     const deliveryCost = Math.max(0, config.deliveryKm) * DELIVERY_PER_KM;
 
-    // 7) DPH 23 % sa aplikuje na (nákupná + LED + doprava)
-    const preVat = purchase + ledCost + deliveryCost;
-    const withVat = preVat * (1 + VAT_RATE);
-
-    // 8) Konečná cena pre zákazníka
-    const finalPrice = withVat + margin + mountingCost;
+    // 7) Konečná cena BEZ DPH – DPH pripočíta WooCommerce v PHP
+    const netTotal = purchase + ledCost + deliveryCost + margin + mountingCost;
 
     return {
       base,
@@ -249,8 +245,8 @@ export default function PergolaConfigurator() {
       margin,
       mountingCost,
       deliveryCost,
-      withVat,
-      finalPrice: Math.round(finalPrice),
+      netTotal,
+      finalPrice: Math.round(netTotal),
     };
   }, [config, areaM2, postLayout]);
 
