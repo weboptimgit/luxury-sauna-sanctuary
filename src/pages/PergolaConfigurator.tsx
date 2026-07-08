@@ -204,7 +204,7 @@ export default function PergolaConfigurator() {
     if (config.height > HEIGHT_BASELINE) {
       p += (config.height - HEIGHT_BASELINE) * HEIGHT_SURCHARGE_PER_CM_OVER;
     }
-    if (colorObj.premium) p *= 1.1;
+    if (colorObj.premium) p *= COLOR_SURCHARGE;
     if (config.mounting) p += MOUNTING_PRICE;
     if (config.led) p += LED_PRICE;
     p += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
