@@ -87,7 +87,7 @@ const COLORS = [
   { id: "ral", hex: "linear-gradient(135deg,#e94e77,#5b8def,#7ed957)", premium: true },
 ] as const;
 
-const COLOR_SURCHARGE = 1.2; // +20% pre RAL na mieru
+
 
 const ROOF_TYPES = [
   { id: "polycarbonate", pricePerM2: 0 },
@@ -99,10 +99,15 @@ const TRANSPARENCIES = [
   { id: "clear" },
 ] as const;
 
-const MOUNTING_PRICE = 850;
-const LED_PRICE = 420;
-const REINFORCEMENT_PRICE = 180; // EUR – výstuha pri šírkach v hraničnom pásme
-const EXTRA_POST_PRICE = 220; // EUR za každý stĺp navyše nad 2 základné
+// --- Kalkulačka konečnej ceny pre zákazníka ---
+const MARGIN_RATE = 0.40;      // marža 40 % z nákupnej ceny (vrátane farby)
+const MOUNTING_RATE = 0.20;    // montáž 20 % z (nákupná + marža)
+const LED_UNIT_PRICE = 35;     // €/ks
+const LED_MIN_QTY = 5;
+const DELIVERY_PER_KM = 0.75;  // €/km
+const VAT_RATE = 0.23;         // 23 % DPH aplikované na (nákupná + LED + doprava)
+const REINFORCEMENT_PRICE = 180; // EUR – výstuha
+const EXTRA_POST_PRICE = 220;  // EUR za každý stĺp navyše nad 2 základné
 
 /**
  * Stĺpová logika podľa technickej tabuľky (Polykarbonát).
@@ -128,13 +133,14 @@ interface Config {
   depth: number; // cm
   height: number; // cm
   color: ColorId;
-  ralCode?: string;   // vybraný RAL kód, keď color === "ral"
-  ralName?: string;   // čitateľný názov vybraného RAL odtieňa
-  ralHex?: string;    // hex aproximácia pre náhľad
+  ralCode?: string;
+  ralName?: string;
+  ralHex?: string;
   roof: RoofId;
   transparency: TransId;
   mounting: boolean;
   led: boolean;
+  deliveryKm: number; // vzdialenosť dopravy v km
 }
 
 interface LeadForm {
@@ -178,6 +184,7 @@ export default function PergolaConfigurator() {
     transparency: "clear",
     mounting: false,
     led: false,
+    deliveryKm: 0,
   });
 
   const [form, setForm] = useState<LeadForm>({
@@ -196,21 +203,59 @@ export default function PergolaConfigurator() {
 
   const postLayout = useMemo(() => computePostLayout(config.width), [config.width]);
 
-  const price = useMemo(() => {
+  const breakdown = useMemo(() => {
     const roof = ROOF_TYPES.find((r) => r.id === config.roof)!;
     const colorObj = COLORS.find((c) => c.id === config.color)!;
-    let p = lookupBasePrice(config.width, config.depth);
-    p += areaM2 * roof.pricePerM2;
+
+    // 1) Nákupná cena prístrešku (bez DPH) – tabuľka + strecha + výška + stĺpy
+    let base = lookupBasePrice(config.width, config.depth);
+    base += areaM2 * roof.pricePerM2;
     if (config.height > HEIGHT_BASELINE) {
-      p += (config.height - HEIGHT_BASELINE) * HEIGHT_SURCHARGE_PER_CM_OVER;
+      base += (config.height - HEIGHT_BASELINE) * HEIGHT_SURCHARGE_PER_CM_OVER;
     }
-    if (colorObj.premium) p *= COLOR_SURCHARGE;
-    if (config.mounting) p += MOUNTING_PRICE;
-    if (config.led) p += LED_PRICE;
-    p += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
-    if (postLayout.reinforcement) p += REINFORCEMENT_PRICE;
-    return Math.round(p);
+    base += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
+    if (postLayout.reinforcement) base += REINFORCEMENT_PRICE;
+
+    // 2) Farba: +20 % ak zákazník zvolil RAL na mieru – pripočíta sa PRED maržou
+    const colorSurcharge = colorObj.premium ? base * 0.20 : 0;
+    const purchase = base + colorSurcharge; // nákupná cena vrátane farby
+
+    // 3) LED – 35 €/ks, počet = šírka(m) − 1, min. 5
+    const widthM = config.width / 100;
+    const ledQty = config.led ? Math.max(LED_MIN_QTY, Math.ceil(widthM) - 1) : 0;
+    const ledCost = ledQty * LED_UNIT_PRICE;
+
+    // 4) Marža 40 % z nákupnej ceny (nezahŕňa LED ani dopravu)
+    const margin = purchase * MARGIN_RATE;
+
+    // 5) Montáž 20 % z (nákupná + marža) – iba ak zákazník chce montáž
+    const mountingCost = config.mounting ? (purchase + margin) * MOUNTING_RATE : 0;
+
+    // 6) Doprava – 0,75 € / km
+    const deliveryCost = Math.max(0, config.deliveryKm) * DELIVERY_PER_KM;
+
+    // 7) DPH 23 % sa aplikuje na (nákupná + LED + doprava)
+    const preVat = purchase + ledCost + deliveryCost;
+    const withVat = preVat * (1 + VAT_RATE);
+
+    // 8) Konečná cena pre zákazníka
+    const finalPrice = withVat + margin + mountingCost;
+
+    return {
+      base,
+      colorSurcharge,
+      purchase,
+      ledQty,
+      ledCost,
+      margin,
+      mountingCost,
+      deliveryCost,
+      withVat,
+      finalPrice: Math.round(finalPrice),
+    };
   }, [config, areaM2, postLayout]);
+
+  const price = breakdown.finalPrice;
 
   const colorObj = COLORS.find((c) => c.id === config.color)!;
   const ralPicked = config.color === "ral" ? findRal(config.ralCode) : undefined;
@@ -278,6 +323,19 @@ export default function PergolaConfigurator() {
           roofName,
           transparencyName,
           areaM2: Number(areaM2.toFixed(2)),
+        },
+        pricing: {
+          basePurchase: Math.round(breakdown.base * 100) / 100,
+          colorSurcharge: Math.round(breakdown.colorSurcharge * 100) / 100,
+          purchase: Math.round(breakdown.purchase * 100) / 100,
+          ledQty: breakdown.ledQty,
+          ledCost: Math.round(breakdown.ledCost * 100) / 100,
+          margin: Math.round(breakdown.margin * 100) / 100,
+          mounting: Math.round(breakdown.mountingCost * 100) / 100,
+          deliveryKm: config.deliveryKm,
+          deliveryCost: Math.round(breakdown.deliveryCost * 100) / 100,
+          vatRate: VAT_RATE,
+          finalPrice: breakdown.finalPrice,
         },
         currency: "EUR",
         customer: {
@@ -443,7 +501,14 @@ export default function PergolaConfigurator() {
                     value={`${postLayout.posts}× ${t("pergola.summary.postUnit")}${postLayout.reinforcement ? ` + ${t("pergola.summary.reinforcement")}` : ""}`}
                   />
                   <SummaryRow label={t("pergola.summary.mounting")} value={config.mounting ? t("pergola.summary.yes") : t("pergola.summary.no")} />
-                  <SummaryRow label={t("pergola.summary.led")} value={config.led ? t("pergola.summary.yes") : t("pergola.summary.no")} />
+                  <SummaryRow
+                    label={t("pergola.summary.led")}
+                    value={config.led ? `${breakdown.ledQty}× ${t("pergola.summary.ledUnit")}` : t("pergola.summary.no")}
+                  />
+                  <SummaryRow
+                    label={t("pergola.summary.delivery")}
+                    value={config.deliveryKm > 0 ? `${config.deliveryKm} km` : t("pergola.summary.no")}
+                  />
 
                   <div className="mt-6 pt-5 border-t border-border">
                     <div className="text-xs text-foreground/60 uppercase tracking-widest mb-1">
@@ -1095,8 +1160,8 @@ function StepExtras({
 }) {
   const { t } = useLanguage();
   const mountingOptions = [
-    { id: false, name: t("pergola.mounting.no"), desc: t("pergola.mounting.no.desc"), price: 0 },
-    { id: true, name: t("pergola.mounting.yes"), desc: t("pergola.mounting.yes.desc"), price: MOUNTING_PRICE },
+    { id: false, name: t("pergola.mounting.no"), desc: t("pergola.mounting.no.desc") },
+    { id: true, name: t("pergola.mounting.yes"), desc: t("pergola.mounting.yes.desc") },
   ];
   return (
     <div className="space-y-8">
@@ -1154,6 +1219,26 @@ function StepExtras({
             </div>
           </div>
         </button>
+      </div>
+
+      <div>
+        <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">{t("pergola.delivery.title")}</div>
+        <div className="rounded-xl border border-border p-5">
+          <label className="block text-sm font-medium mb-1">{t("pergola.delivery.km.label")}</label>
+          <div className="text-xs text-foreground/50 mb-3">{t("pergola.delivery.km.desc")}</div>
+          <Input
+            type="number"
+            min={0}
+            step={1}
+            value={config.deliveryKm || ""}
+            onChange={(e) => {
+              const v = Number(e.target.value);
+              setConfig((c) => ({ ...c, deliveryKm: Number.isFinite(v) && v > 0 ? v : 0 }));
+            }}
+            placeholder="0"
+            className="max-w-[200px]"
+          />
+        </div>
       </div>
     </div>
   );
