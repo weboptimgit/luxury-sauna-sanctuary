@@ -99,13 +99,12 @@ const TRANSPARENCIES = [
   { id: "clear" },
 ] as const;
 
-// --- Kalkulačka konečnej ceny pre zákazníka ---
+// --- Kalkulačka konečnej ceny pre zákazníka (bez DPH – DPH pripočíta WooCommerce) ---
 const MARGIN_RATE = 0.40;      // marža 40 % z nákupnej ceny (vrátane farby)
 const MOUNTING_RATE = 0.20;    // montáž 20 % z (nákupná + marža)
 const LED_UNIT_PRICE = 35;     // €/ks
 const LED_MIN_QTY = 5;
 const DELIVERY_PER_KM = 0.75;  // €/km
-const VAT_RATE = 0.23;         // 23 % DPH aplikované na (nákupná + LED + doprava)
 const REINFORCEMENT_PRICE = 180; // EUR – výstuha
 const EXTRA_POST_PRICE = 220;  // EUR za každý stĺp navyše nad 2 základné
 
@@ -234,12 +233,8 @@ export default function PergolaConfigurator() {
     // 6) Doprava – 0,75 € / km
     const deliveryCost = Math.max(0, config.deliveryKm) * DELIVERY_PER_KM;
 
-    // 7) DPH 23 % sa aplikuje na (nákupná + LED + doprava)
-    const preVat = purchase + ledCost + deliveryCost;
-    const withVat = preVat * (1 + VAT_RATE);
-
-    // 8) Konečná cena pre zákazníka
-    const finalPrice = withVat + margin + mountingCost;
+    // 7) Konečná cena BEZ DPH – DPH pripočíta WooCommerce v PHP
+    const netTotal = purchase + ledCost + deliveryCost + margin + mountingCost;
 
     return {
       base,
@@ -250,8 +245,8 @@ export default function PergolaConfigurator() {
       margin,
       mountingCost,
       deliveryCost,
-      withVat,
-      finalPrice: Math.round(finalPrice),
+      netTotal,
+      finalPrice: Math.round(netTotal),
     };
   }, [config, areaM2, postLayout]);
 
@@ -334,8 +329,8 @@ export default function PergolaConfigurator() {
           mounting: Math.round(breakdown.mountingCost * 100) / 100,
           deliveryKm: config.deliveryKm,
           deliveryCost: Math.round(breakdown.deliveryCost * 100) / 100,
-          vatRate: VAT_RATE,
-          finalPrice: breakdown.finalPrice,
+          netTotal: Math.round(breakdown.netTotal * 100) / 100,
+          finalPrice: breakdown.finalPrice, // bez DPH – WooCommerce si DPH pripočíta
         },
         currency: "EUR",
         customer: {
