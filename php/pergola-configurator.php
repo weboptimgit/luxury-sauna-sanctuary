@@ -449,44 +449,57 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
     $lang = luxurelax_pergola_normalize_lang($lang);
     $p = luxurelax_pergola_pricing();
 
-    $width  = max(200, min(5000, intval($cfg['width']  ?? 0)));
-    $depth  = max(200, min(600,  intval($cfg['depth']  ?? 0)));
+    // Klampovanie vstupov (rovnaké rozsahy ako FE)
+    $width  = max(300, min(2000, intval($cfg['width']  ?? 0)));
+    $depth  = max(200, min(500,  intval($cfg['depth']  ?? 0)));
     $height = max(200, min(350,  intval($cfg['height'] ?? 0)));
+    $delivery_km = max(0, intval($cfg['deliveryKm'] ?? 0));
 
     $area = ($width * $depth) / 10000.0; // m²
 
-    $color_key = $cfg['color']        ?? 'anthracite';
+    $color_key = $cfg['color']        ?? 'ral_7016';
     $roof_key  = $cfg['roof']         ?? 'polycarbonate';
     $trans_key = $cfg['transparency'] ?? 'clear';
 
-    if (!isset($p['colors'][$color_key])) $color_key = 'anthracite';
+    if (!isset($p['colors'][$color_key])) $color_key = 'ral_7016';
     if (!isset($p['roofs'][$roof_key]))   $roof_key  = 'polycarbonate';
     if (!isset($p['transparencies'][$trans_key])) $trans_key = 'clear';
 
-    // Business rule: IZO Sklo 24 = vždy číre
-    if ($roof_key === 'izo_glass_24') {
-        $trans_key = 'clear';
-    }
-
-    $price  = $p['base_price'];
-    $price += $area * $p['price_per_m2'];
-    $price += $area * $p['roofs'][$roof_key]['price_per_m2'];
-
+    // 1) Nákupná cena prístrešku (bez DPH) – tabuľka + strecha + výška + stĺpy
+    $base  = luxurelax_pergola_lookup_base_price($width, $depth);
+    $base += $area * $p['roofs'][$roof_key]['price_per_m2'];
     if ($height > $p['height_baseline_cm']) {
-        $price += ($height - $p['height_baseline_cm']) * $p['height_surcharge_per_cm'];
+        $base += ($height - $p['height_baseline_cm']) * $p['height_surcharge_per_cm'];
     }
-
-    if ($p['colors'][$color_key]['premium']) {
-        $price *= $p['premium_color_multiplier'];
-    }
-
-    if (!empty($cfg['mounting'])) $price += $p['mounting_price'];
-    if (!empty($cfg['led']))      $price += $p['led_price'];
 
     $post_layout = luxurelax_pergola_compute_post_layout($width);
     $extra_posts = max(0, $post_layout['posts'] - 2);
-    if ($extra_posts > 0)               $price += $extra_posts * $p['extra_post_price'];
-    if ($post_layout['reinforcement'])  $price += $p['reinforcement_price'];
+    if ($extra_posts > 0)               $base += $extra_posts * $p['extra_post_price'];
+    if ($post_layout['reinforcement'])  $base += $p['reinforcement_price'];
+
+    // 2) Farba: +20 % za RAL na mieru – PRED maržou
+    $color_surcharge = $p['colors'][$color_key]['premium'] ? $base * $p['premium_color_surcharge'] : 0;
+    $purchase = $base + $color_surcharge;
+
+    // 3) LED – 35 €/ks, počet = ceil(šírka(m)) − 1, minimálne 5
+    $ledQty = 0;
+    if (!empty($cfg['led'])) {
+        $widthM = $width / 100.0;
+        $ledQty = max($p['led_min_qty'], intval(ceil($widthM)) - 1);
+    }
+    $led_cost = $ledQty * $p['led_unit_price'];
+
+    // 4) Marža 40 % z nákupnej ceny (vrátane farby, bez LED a dopravy)
+    $margin = $purchase * $p['margin_rate'];
+
+    // 5) Montáž 20 % z (nákupná + marža) – iba ak je vybraná
+    $mounting_cost = !empty($cfg['mounting']) ? ($purchase + $margin) * $p['mounting_rate'] : 0;
+
+    // 6) Doprava – 0,75 € / km
+    $delivery_cost = $delivery_km * $p['delivery_per_km'];
+
+    // 7) Konečná cena BEZ DPH – DPH pripočíta WooCommerce
+    $net_total = $purchase + $led_cost + $delivery_cost + $margin + $mounting_cost;
 
     $color_label = luxurelax_pergola_t($p['colors'][$color_key]['label'], $lang);
     if ($color_key === 'ral') {
@@ -503,13 +516,27 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
     }
 
     return [
-        'price'        => round($price),
+        'price'        => (int) round($net_total),
         'area_m2'      => round($area, 2),
         'color_label'  => $color_label,
         'roof_label'   => luxurelax_pergola_t($p['roofs'][$roof_key]['label'], $lang),
         'trans_label'  => luxurelax_pergola_t($p['transparencies'][$trans_key], $lang),
         'posts'        => $post_layout['posts'],
         'reinforcement'=> $post_layout['reinforcement'],
+        'led_qty'      => $ledQty,
+        'delivery_km'  => $delivery_km,
+        'breakdown'    => [
+            'base'            => round($base, 2),
+            'color_surcharge' => round($color_surcharge, 2),
+            'purchase'        => round($purchase, 2),
+            'led_qty'         => $ledQty,
+            'led_cost'        => round($led_cost, 2),
+            'margin'          => round($margin, 2),
+            'mounting'        => round($mounting_cost, 2),
+            'delivery_km'     => $delivery_km,
+            'delivery_cost'   => round($delivery_cost, 2),
+            'net_total'       => round($net_total, 2),
+        ],
         'normalized'   => [
             'width'        => $width,
             'depth'        => $depth,
@@ -519,6 +546,7 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
             'transparency' => $trans_key,
             'mounting'     => !empty($cfg['mounting']),
             'led'          => !empty($cfg['led']),
+            'delivery_km'  => $delivery_km,
             'posts'        => $post_layout['posts'],
             'reinforcement'=> $post_layout['reinforcement'],
         ],
