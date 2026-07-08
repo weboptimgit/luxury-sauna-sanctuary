@@ -869,6 +869,8 @@ const translations: Record<Language, Record<string, string>> = {
     "pergola.summary.reinforcement": "merevítés",
     "pergola.summary.mounting": "Felszerelés",
     "pergola.summary.led": "LED világítás",
+    "pergola.summary.ledUnit": "db",
+    "pergola.summary.delivery": "Szállítás",
     "pergola.summary.yes": "Igen",
     "pergola.summary.no": "Nem",
     "pergola.summary.quote.label": "Árajánlat",
