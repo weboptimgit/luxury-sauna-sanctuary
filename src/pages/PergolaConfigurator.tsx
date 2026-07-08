@@ -156,7 +156,7 @@ const STEPS = [
 ];
 
 const MIN_W = 300;
-const MAX_W = 1100;
+const MAX_W = 2000;
 const MIN_D = 200;
 const MAX_D = 500;
 const MIN_H = 200;
