@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check,
@@ -252,6 +252,31 @@ export default function PergolaConfigurator() {
 
   const price = breakdown.finalPrice;
 
+  // --- Interný preview odomykač cien (nie pre zákazníka) ---
+  // Otvor stránku s ?preview=luxu2026 → uloží sa do localStorage, cena bude viditeľná.
+  // Otvor stránku s ?preview=off → uzamkne.
+  const PREVIEW_KEY = "luxu2026";
+  const [pricePreview, setPricePreview] = useState(false);
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("preview");
+      if (q === "off") {
+        localStorage.removeItem("lux_pergola_preview");
+      } else if (q && q === PREVIEW_KEY) {
+        localStorage.setItem("lux_pergola_preview", "1");
+      }
+      setPricePreview(localStorage.getItem("lux_pergola_preview") === "1");
+    } catch {
+      setPricePreview(false);
+    }
+  }, []);
+  const formattedPrice = new Intl.NumberFormat("sk-SK", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  }).format(price);
+
   const colorObj = COLORS.find((c) => c.id === config.color)!;
   const ralPicked = config.color === "ral" ? findRal(config.ralCode) : undefined;
   const colorBaseName = t(`pergola.color.${colorObj.id}`);
@@ -504,6 +529,25 @@ export default function PergolaConfigurator() {
                     label={t("pergola.summary.delivery")}
                     value={config.deliveryKm > 0 ? `${config.deliveryKm} km` : t("pergola.summary.no")}
                   />
+
+                  {pricePreview && (
+                    <div className="mt-5 pt-5 border-t border-dashed border-primary/40">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="text-[10px] uppercase tracking-widest text-primary/80">
+                          Interný náhľad ceny
+                        </div>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/30">
+                          preview
+                        </span>
+                      </div>
+                      <div className="font-display text-3xl font-bold text-primary">
+                        {formattedPrice}
+                      </div>
+                      <div className="text-[11px] text-foreground/50 mt-1">
+                        bez DPH · zákazník túto sumu nevidí
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mt-6 pt-5 border-t border-border">
                     <div className="text-xs text-foreground/60 uppercase tracking-widest mb-1">
