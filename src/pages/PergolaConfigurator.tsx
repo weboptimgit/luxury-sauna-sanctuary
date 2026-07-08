@@ -252,6 +252,31 @@ export default function PergolaConfigurator() {
 
   const price = breakdown.finalPrice;
 
+  // --- Interný preview odomykač cien (nie pre zákazníka) ---
+  // Otvor stránku s ?preview=luxu2026 → uloží sa do localStorage, cena bude viditeľná.
+  // Otvor stránku s ?preview=off → uzamkne.
+  const PREVIEW_KEY = "luxu2026";
+  const [pricePreview, setPricePreview] = useState(false);
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("preview");
+      if (q === "off") {
+        localStorage.removeItem("lux_pergola_preview");
+      } else if (q && q === PREVIEW_KEY) {
+        localStorage.setItem("lux_pergola_preview", "1");
+      }
+      setPricePreview(localStorage.getItem("lux_pergola_preview") === "1");
+    } catch {
+      setPricePreview(false);
+    }
+  }, []);
+  const formattedPrice = new Intl.NumberFormat("sk-SK", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  }).format(price);
+
   const colorObj = COLORS.find((c) => c.id === config.color)!;
   const ralPicked = config.color === "ral" ? findRal(config.ralCode) : undefined;
   const colorBaseName = t(`pergola.color.${colorObj.id}`);
