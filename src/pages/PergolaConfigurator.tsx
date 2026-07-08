@@ -173,7 +173,7 @@ export default function PergolaConfigurator() {
     width: 400,
     depth: 350,
     height: 250,
-    color: "anthracite",
+    color: "ral_7016",
     roof: "polycarbonate",
     transparency: "clear",
     mounting: false,
