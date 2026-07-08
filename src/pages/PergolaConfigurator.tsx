@@ -329,8 +329,8 @@ export default function PergolaConfigurator() {
           mounting: Math.round(breakdown.mountingCost * 100) / 100,
           deliveryKm: config.deliveryKm,
           deliveryCost: Math.round(breakdown.deliveryCost * 100) / 100,
-          vatRate: VAT_RATE,
-          finalPrice: breakdown.finalPrice,
+          netTotal: Math.round(breakdown.netTotal * 100) / 100,
+          finalPrice: breakdown.finalPrice, // bez DPH – WooCommerce si DPH pripočíta
         },
         currency: "EUR",
         customer: {
