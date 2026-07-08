@@ -30,36 +30,77 @@ if (!defined('LUXURELAX_PERGOLA_FROM_NAME')) {
     define('LUXURELAX_PERGOLA_FROM_NAME', 'LUXURELAX');
 }
 
-// Cenník (ilustračný – synchronizuj s frontendom!)
+// Cenník (musí byť identický s frontendom – src/pages/PergolaConfigurator.tsx)
 function luxurelax_pergola_pricing() {
     return [
-        'base_price'            => 1800,   // EUR
-        'price_per_m2'          => 220,    // EUR / m² strechy
-        'height_baseline_cm'    => 250,
-        'height_surcharge_per_cm' => 4,    // za každý cm nad baseline
-        'colors' => [
-            'anthracite'  => ['label' => ['sk' => 'Antracit',         'en' => 'Anthracite',       'hu' => 'Antracit'],         'premium' => false],
-            'white'       => ['label' => ['sk' => 'Biela',            'en' => 'White',            'hu' => 'Fehér'],            'premium' => false],
-            'brown'       => ['label' => ['sk' => 'Hnedá',            'en' => 'Brown',            'hu' => 'Barna'],            'premium' => false],
-            'golden_oak'  => ['label' => ['sk' => 'Zlatý dub',        'en' => 'Golden Oak',       'hu' => 'Aranytölgy'],       'premium' => true],
-            'walnut'      => ['label' => ['sk' => 'Orech',            'en' => 'Walnut',           'hu' => 'Dió'],              'premium' => true],
-            'ral'         => ['label' => ['sk' => 'RAL vlastná farba','en' => 'Custom RAL color', 'hu' => 'Egyedi RAL szín'],  'premium' => true],
+        // Nákupný cenník hliníkových prístreškov (bez DPH) – riadky = hĺbka (cm), stĺpce = šírka (cm)
+        'price_table_widths' => [300, 400, 500, 600, 700, 800, 900, 1000, 1100],
+        'price_table_depths' => [200, 250, 300, 350, 400, 450, 500],
+        'price_table' => [
+            //  300   400   500   600   700   800   900   1000  1100
+            [ 1350, 1481, 1593, 1836, 1971, 2164, 2461, 2600, 2830 ], // 200
+            [ 1518, 1630, 1823, 2100, 2241, 2363, 2793, 2962, 3203 ], // 250
+            [ 1622, 1796, 2020, 2262, 2410, 2535, 3041, 3308, 3459 ], // 300
+            [ 1797, 1922, 2114, 2498, 2612, 2717, 3166, 3541, 3736 ], // 350
+            [ 1933, 2090, 2325, 2594, 2717, 2834, 3302, 3833, 4150 ], // 400
+            [ 2184, 2332, 2560, 2936, 3224, 3459, 3663, 4222, 4667 ], // 450
+            [ 2351, 2456, 2691, 3226, 3450, 3720, 4215, 4750, 5250 ], // 500
         ],
-        'premium_color_multiplier' => 1.10, // +10 %
+        'height_baseline_cm'      => 250,
+        'height_surcharge_per_cm' => 4, // €/cm nad 250 cm
+        'colors' => [
+            'ral_7016' => ['label' => ['sk' => 'RAL 7016 Antracit', 'en' => 'RAL 7016 Anthracite', 'hu' => 'RAL 7016 Antracit'], 'premium' => false],
+            'ral_9005' => ['label' => ['sk' => 'RAL 9005 Čierna',   'en' => 'RAL 9005 Black',      'hu' => 'RAL 9005 Fekete'],   'premium' => false],
+            'ral_9016' => ['label' => ['sk' => 'RAL 9016 Biela',    'en' => 'RAL 9016 White',      'hu' => 'RAL 9016 Fehér'],    'premium' => false],
+            'ral_9007' => ['label' => ['sk' => 'RAL 9007 Sivá',     'en' => 'RAL 9007 Grey',       'hu' => 'RAL 9007 Szürke'],   'premium' => false],
+            'ral'      => ['label' => ['sk' => 'RAL vlastná farba', 'en' => 'Custom RAL color',    'hu' => 'Egyedi RAL szín'],   'premium' => true],
+        ],
+        'premium_color_surcharge' => 0.20, // +20 % z nákupnej ceny, PRED maržou
         'roofs' => [
-            'polycarbonate' => ['label' => ['sk' => 'Polykarbonát',      'en' => 'Polycarbonate',  'hu' => 'Polikarbonát'],   'price_per_m2' => 0],
-            'safety_glass'  => ['label' => ['sk' => 'Bezpečnostné sklo', 'en' => 'Safety glass',   'hu' => 'Biztonsági üveg'], 'price_per_m2' => 90],
-            'izo_glass_24'  => ['label' => ['sk' => 'IZO Sklo 24',       'en' => 'IZO Glass 24',   'hu' => 'IZO üveg 24'],    'price_per_m2' => 180],
+            'polycarbonate' => ['label' => ['sk' => 'Polykarbonát',      'en' => 'Polycarbonate', 'hu' => 'Polikarbonát'],    'price_per_m2' => 0],
+            'safety_glass'  => ['label' => ['sk' => 'Bezpečnostné sklo', 'en' => 'Safety glass',  'hu' => 'Biztonsági üveg'], 'price_per_m2' => 90],
         ],
         'transparencies' => [
             'milky' => ['sk' => 'Mliečne', 'en' => 'Milky', 'hu' => 'Tejüveg'],
             'clear' => ['sk' => 'Číre',    'en' => 'Clear', 'hu' => 'Átlátszó'],
         ],
-        'mounting_price'        => 850,
-        'led_price'             => 420,
-        'reinforcement_price'   => 180,
-        'extra_post_price'      => 220,
+        'margin_rate'         => 0.40, // 40 % marža z (nákup + farba)
+        'mounting_rate'       => 0.20, // 20 % montáž z (nákup + marža)
+        'led_unit_price'      => 35,   // €/ks
+        'led_min_qty'         => 5,
+        'delivery_per_km'     => 0.75, // €/km
+        'reinforcement_price' => 180,
+        'extra_post_price'    => 220,
     ];
+}
+
+// Bilineárna interpolácia z cenovej tabuľky (musí byť identická s frontendom)
+function luxurelax_pergola_lookup_base_price($width_cm, $depth_cm) {
+    $p  = luxurelax_pergola_pricing();
+    $ws = $p['price_table_widths'];
+    $ds = $p['price_table_depths'];
+    $tbl = $p['price_table'];
+
+    $w = max($ws[0], min($ws[count($ws) - 1], (int) $width_cm));
+    $d = max($ds[0], min($ds[count($ds) - 1], (int) $depth_cm));
+
+    $wi = 0;
+    while ($wi < count($ws) - 2 && $w > $ws[$wi + 1]) $wi++;
+    $di = 0;
+    while ($di < count($ds) - 2 && $d > $ds[$di + 1]) $di++;
+
+    $w0 = $ws[$wi]; $w1 = $ws[$wi + 1];
+    $d0 = $ds[$di]; $d1 = $ds[$di + 1];
+    $tw = $w1 === $w0 ? 0 : ($w - $w0) / ($w1 - $w0);
+    $td = $d1 === $d0 ? 0 : ($d - $d0) / ($d1 - $d0);
+
+    $p00 = $tbl[$di][$wi];
+    $p01 = $tbl[$di][$wi + 1];
+    $p10 = $tbl[$di + 1][$wi];
+    $p11 = $tbl[$di + 1][$wi + 1];
+    $top = $p00 + ($p01 - $p00) * $tw;
+    $bot = $p10 + ($p11 - $p10) * $tw;
+    return $top + ($bot - $top) * $td;
 }
 
 // Resolve a multilingual label array to a single string based on lang.
