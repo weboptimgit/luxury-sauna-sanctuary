@@ -576,18 +576,19 @@ function PergolaPreview({
   const fmt = (cm: number) => `${(cm / 100).toFixed(2)} m`;
 
   // ---- Roof appearance derived from selection ----
-  // Clear/milky × polycarbonate / safety_glass / izo_glass_24
   const isMilky = config.transparency === "milky";
   const roofId =
-    config.roof === "izo_glass_24"
-      ? "roof-izo"
-      : config.roof === "safety_glass"
+    config.roof === "safety_glass"
       ? isMilky
         ? "roof-glass-milky"
         : "roof-glass-clear"
       : isMilky
       ? "roof-poly-milky"
       : "roof-poly-clear";
+  const roofFill = `url(#${roofId})`;
+  // Slats viditeľné len cez priehľadné materiály
+  const slatsOpacity = isMilky ? 0.08 : config.roof === "polycarbonate" ? 0.55 : 0.35;
+  const isIzo = false;
   const roofFill = `url(#${roofId})`;
   // Slats viditeľné len cez priehľadné materiály
   const slatsOpacity = isMilky ? 0.08 : config.roof === "polycarbonate" ? 0.55 : 0.35;
