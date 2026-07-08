@@ -599,9 +599,12 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
         ['label' => $s['farba'],        'value' => $calc['color_label']],
         ['label' => $s['strecha'],      'value' => $calc['roof_label']],
         ['label' => $s['priehladnost'], 'value' => $calc['trans_label']],
+        ['label' => $s['stlpy'],        'value' => $calc['posts'] . '× ' . $s['stlp'] . ($calc['reinforcement'] ? ' + ' . $s['vystuha'] : '')],
         ['label' => $s['montaz'],       'value' => $cfg_n['mounting'] ? $s['yes'] : $s['no']],
-        ['label' => $s['led'],          'value' => $cfg_n['led'] ? $s['yes'] : $s['no']],
+        ['label' => $s['led'],          'value' => $cfg_n['led'] ? ($s['yes'] . ' (' . $calc['led_qty'] . ' ' . $s['led_ks'] . ')') : $s['no']],
+        ['label' => $s['doprava'],      'value' => $calc['delivery_km'] > 0 ? ($calc['delivery_km'] . ' km') : $s['no']],
     ];
+
 
     // Admin rows (kontaktné údaje + konfigurácia)
     $admin_rows = array_merge(
