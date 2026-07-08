@@ -133,13 +133,14 @@ interface Config {
   depth: number; // cm
   height: number; // cm
   color: ColorId;
-  ralCode?: string;   // vybraný RAL kód, keď color === "ral"
-  ralName?: string;   // čitateľný názov vybraného RAL odtieňa
-  ralHex?: string;    // hex aproximácia pre náhľad
+  ralCode?: string;
+  ralName?: string;
+  ralHex?: string;
   roof: RoofId;
   transparency: TransId;
   mounting: boolean;
   led: boolean;
+  deliveryKm: number; // vzdialenosť dopravy v km
 }
 
 interface LeadForm {
