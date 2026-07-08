@@ -530,6 +530,25 @@ export default function PergolaConfigurator() {
                     value={config.deliveryKm > 0 ? `${config.deliveryKm} km` : t("pergola.summary.no")}
                   />
 
+                  {pricePreview && (
+                    <div className="mt-5 pt-5 border-t border-dashed border-primary/40">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="text-[10px] uppercase tracking-widest text-primary/80">
+                          Interný náhľad ceny
+                        </div>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/30">
+                          preview
+                        </span>
+                      </div>
+                      <div className="font-display text-3xl font-bold text-primary">
+                        {formattedPrice}
+                      </div>
+                      <div className="text-[11px] text-foreground/50 mt-1">
+                        bez DPH · zákazník túto sumu nevidí
+                      </div>
+                    </div>
+                  )}
+
                   <div className="mt-6 pt-5 border-t border-border">
                     <div className="text-xs text-foreground/60 uppercase tracking-widest mb-1">
                       {t("pergola.summary.quote.label")}
