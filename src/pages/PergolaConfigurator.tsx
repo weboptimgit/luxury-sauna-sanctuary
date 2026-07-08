@@ -99,10 +99,15 @@ const TRANSPARENCIES = [
   { id: "clear" },
 ] as const;
 
-const MOUNTING_PRICE = 850;
-const LED_PRICE = 420;
-const REINFORCEMENT_PRICE = 180; // EUR – výstuha pri šírkach v hraničnom pásme
-const EXTRA_POST_PRICE = 220; // EUR za každý stĺp navyše nad 2 základné
+// --- Kalkulačka konečnej ceny pre zákazníka ---
+const MARGIN_RATE = 0.40;      // marža 40 % z nákupnej ceny (vrátane farby)
+const MOUNTING_RATE = 0.20;    // montáž 20 % z (nákupná + marža)
+const LED_UNIT_PRICE = 35;     // €/ks
+const LED_MIN_QTY = 5;
+const DELIVERY_PER_KM = 0.75;  // €/km
+const VAT_RATE = 0.23;         // 23 % DPH aplikované na (nákupná + LED + doprava)
+const REINFORCEMENT_PRICE = 180; // EUR – výstuha
+const EXTRA_POST_PRICE = 220;  // EUR za každý stĺp navyše nad 2 základné
 
 /**
  * Stĺpová logika podľa technickej tabuľky (Polykarbonát).
