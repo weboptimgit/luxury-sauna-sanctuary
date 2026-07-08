@@ -140,7 +140,7 @@ function luxurelax_pergola_strings($lang) {
             'rozmery' => 'Dimensions', 'plocha' => 'Roof area',
             'farba' => 'Color', 'strecha' => 'Roof', 'priehladnost' => 'Transparency',
             'stlpy' => 'Posts', 'stlp' => 'post', 'vystuha' => 'reinforcement',
-            'montaz' => 'Installation', 'led' => 'LED',
+            'montaz' => 'Installation', 'led' => 'LED', 'led_ks' => 'pcs', 'doprava' => 'Delivery',
             'cart_item_name' => 'Pergola – custom configuration',
             'expired' => 'Pergola configuration expired or is invalid. Please try again.',
             'add_failed' => 'Failed to add pergola to cart.',
