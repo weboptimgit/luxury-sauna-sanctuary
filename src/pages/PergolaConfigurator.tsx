@@ -80,18 +80,18 @@ const HEIGHT_SURCHARGE_PER_CM_OVER = 4; // over 250cm
 const HEIGHT_BASELINE = 250;
 
 const COLORS = [
-  { id: "anthracite", hex: "#2b2b2e", premium: false },
-  { id: "white", hex: "#f4f4f0", premium: false },
-  { id: "brown", hex: "#5a3a25", premium: false },
-  { id: "golden_oak", hex: "#b6883f", premium: true },
-  { id: "walnut", hex: "#3a2418", premium: true },
+  { id: "ral_7016", hex: "#293133", premium: false },
+  { id: "ral_9005", hex: "#0a0a0a", premium: false },
+  { id: "ral_9016", hex: "#f6f6f6", premium: false },
+  { id: "ral_9007", hex: "#8f8f8f", premium: false },
   { id: "ral", hex: "linear-gradient(135deg,#e94e77,#5b8def,#7ed957)", premium: true },
 ] as const;
+
+const COLOR_SURCHARGE = 1.2; // +20% pre RAL na mieru
 
 const ROOF_TYPES = [
   { id: "polycarbonate", pricePerM2: 0 },
   { id: "safety_glass", pricePerM2: 90 },
-  { id: "izo_glass_24", pricePerM2: 180 },
 ] as const;
 
 const TRANSPARENCIES = [
