@@ -99,13 +99,12 @@ const TRANSPARENCIES = [
   { id: "clear" },
 ] as const;
 
-// --- Kalkulačka konečnej ceny pre zákazníka ---
+// --- Kalkulačka konečnej ceny pre zákazníka (bez DPH – DPH pripočíta WooCommerce) ---
 const MARGIN_RATE = 0.40;      // marža 40 % z nákupnej ceny (vrátane farby)
 const MOUNTING_RATE = 0.20;    // montáž 20 % z (nákupná + marža)
 const LED_UNIT_PRICE = 35;     // €/ks
 const LED_MIN_QTY = 5;
 const DELIVERY_PER_KM = 0.75;  // €/km
-const VAT_RATE = 0.23;         // 23 % DPH aplikované na (nákupná + LED + doprava)
 const REINFORCEMENT_PRICE = 180; // EUR – výstuha
 const EXTRA_POST_PRICE = 220;  // EUR za každý stĺp navyše nad 2 základné
 
