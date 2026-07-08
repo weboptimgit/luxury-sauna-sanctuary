@@ -588,12 +588,7 @@ function PergolaPreview({
   const roofFill = `url(#${roofId})`;
   // Slats viditeľné len cez priehľadné materiály
   const slatsOpacity = isMilky ? 0.08 : config.roof === "polycarbonate" ? 0.55 : 0.35;
-  const isIzo = false;
-  const roofFill = `url(#${roofId})`;
-  // Slats viditeľné len cez priehľadné materiály
-  const slatsOpacity = isMilky ? 0.08 : config.roof === "polycarbonate" ? 0.55 : 0.35;
-  // Druhá vrstva pre IZO sklo (dvojsklo)
-  const isIzo = config.roof === "izo_glass_24";
+  // (IZO sklo odstránené)
 
   return (
     <div className="relative h-72 md:h-80 bg-gradient-to-b from-secondary/40 to-background overflow-hidden rounded-lg">
