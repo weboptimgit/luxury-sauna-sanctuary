@@ -488,7 +488,14 @@ export default function PergolaConfigurator() {
                     value={`${postLayout.posts}× ${t("pergola.summary.postUnit")}${postLayout.reinforcement ? ` + ${t("pergola.summary.reinforcement")}` : ""}`}
                   />
                   <SummaryRow label={t("pergola.summary.mounting")} value={config.mounting ? t("pergola.summary.yes") : t("pergola.summary.no")} />
-                  <SummaryRow label={t("pergola.summary.led")} value={config.led ? t("pergola.summary.yes") : t("pergola.summary.no")} />
+                  <SummaryRow
+                    label={t("pergola.summary.led")}
+                    value={config.led ? `${breakdown.ledQty}× ${t("pergola.summary.ledUnit")}` : t("pergola.summary.no")}
+                  />
+                  <SummaryRow
+                    label={t("pergola.summary.delivery")}
+                    value={config.deliveryKm > 0 ? `${config.deliveryKm} km` : t("pergola.summary.no")}
+                  />
 
                   <div className="mt-6 pt-5 border-t border-border">
                     <div className="text-xs text-foreground/60 uppercase tracking-widest mb-1">
