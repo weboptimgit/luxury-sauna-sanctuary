@@ -1140,8 +1140,8 @@ function StepExtras({
 }) {
   const { t } = useLanguage();
   const mountingOptions = [
-    { id: false, name: t("pergola.mounting.no"), desc: t("pergola.mounting.no.desc"), price: 0 },
-    { id: true, name: t("pergola.mounting.yes"), desc: t("pergola.mounting.yes.desc"), price: MOUNTING_PRICE },
+    { id: false, name: t("pergola.mounting.no"), desc: t("pergola.mounting.no.desc") },
+    { id: true, name: t("pergola.mounting.yes"), desc: t("pergola.mounting.yes.desc") },
   ];
   return (
     <div className="space-y-8">
@@ -1199,6 +1199,26 @@ function StepExtras({
             </div>
           </div>
         </button>
+      </div>
+
+      <div>
+        <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">{t("pergola.delivery.title")}</div>
+        <div className="rounded-xl border border-border p-5">
+          <label className="block text-sm font-medium mb-1">{t("pergola.delivery.km.label")}</label>
+          <div className="text-xs text-foreground/50 mb-3">{t("pergola.delivery.km.desc")}</div>
+          <Input
+            type="number"
+            min={0}
+            step={1}
+            value={config.deliveryKm || ""}
+            onChange={(e) => {
+              const v = Number(e.target.value);
+              setConfig((c) => ({ ...c, deliveryKm: Number.isFinite(v) && v > 0 ? v : 0 }));
+            }}
+            placeholder="0"
+            className="max-w-[200px]"
+          />
+        </div>
       </div>
     </div>
   );
