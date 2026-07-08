@@ -184,6 +184,7 @@ export default function PergolaConfigurator() {
     transparency: "clear",
     mounting: false,
     led: false,
+    deliveryKm: 0,
   });
 
   const [form, setForm] = useState<LeadForm>({
