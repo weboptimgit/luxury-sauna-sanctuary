@@ -119,7 +119,7 @@ function luxurelax_pergola_strings($lang) {
             'rozmery' => 'Rozmery', 'plocha' => 'Plocha strechy',
             'farba' => 'Farba', 'strecha' => 'Strecha', 'priehladnost' => 'Priehľadnosť',
             'stlpy' => 'Stĺpy', 'stlp' => 'stĺp', 'vystuha' => 'výztuha',
-            'montaz' => 'Montáž', 'led' => 'LED',
+            'montaz' => 'Montáž', 'led' => 'LED', 'led_ks' => 'ks', 'doprava' => 'Doprava',
             'cart_item_name' => 'Pergola – konfigurácia na mieru',
             'expired' => 'Konfigurácia pergoly vypršala alebo je neplatná. Skús to prosím znova.',
             'add_failed' => 'Pergolu sa nepodarilo pridať do košíka.',
