@@ -161,7 +161,7 @@ function luxurelax_pergola_strings($lang) {
             'rozmery' => 'Méretek', 'plocha' => 'Tetőfelület',
             'farba' => 'Szín', 'strecha' => 'Tető', 'priehladnost' => 'Átlátszóság',
             'stlpy' => 'Oszlopok', 'stlp' => 'oszlop', 'vystuha' => 'merevítés',
-            'montaz' => 'Telepítés', 'led' => 'LED',
+            'montaz' => 'Telepítés', 'led' => 'LED', 'led_ks' => 'db', 'doprava' => 'Szállítás',
             'cart_item_name' => 'Pergola – egyedi konfiguráció',
             'expired' => 'A pergola konfiguráció lejárt vagy érvénytelen. Kérjük, próbálja újra.',
             'add_failed' => 'A pergolát nem sikerült a kosárba helyezni.',
