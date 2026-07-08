@@ -80,18 +80,18 @@ const HEIGHT_SURCHARGE_PER_CM_OVER = 4; // over 250cm
 const HEIGHT_BASELINE = 250;
 
 const COLORS = [
-  { id: "anthracite", hex: "#2b2b2e", premium: false },
-  { id: "white", hex: "#f4f4f0", premium: false },
-  { id: "brown", hex: "#5a3a25", premium: false },
-  { id: "golden_oak", hex: "#b6883f", premium: true },
-  { id: "walnut", hex: "#3a2418", premium: true },
+  { id: "ral_7016", hex: "#293133", premium: false },
+  { id: "ral_9005", hex: "#0a0a0a", premium: false },
+  { id: "ral_9016", hex: "#f6f6f6", premium: false },
+  { id: "ral_9007", hex: "#8f8f8f", premium: false },
   { id: "ral", hex: "linear-gradient(135deg,#e94e77,#5b8def,#7ed957)", premium: true },
 ] as const;
+
+const COLOR_SURCHARGE = 1.2; // +20% pre RAL na mieru
 
 const ROOF_TYPES = [
   { id: "polycarbonate", pricePerM2: 0 },
   { id: "safety_glass", pricePerM2: 90 },
-  { id: "izo_glass_24", pricePerM2: 180 },
 ] as const;
 
 const TRANSPARENCIES = [
@@ -156,7 +156,7 @@ const STEPS = [
 ];
 
 const MIN_W = 300;
-const MAX_W = 1100;
+const MAX_W = 2000;
 const MIN_D = 200;
 const MAX_D = 500;
 const MIN_H = 200;
@@ -173,7 +173,7 @@ export default function PergolaConfigurator() {
     width: 400,
     depth: 350,
     height: 250,
-    color: "anthracite",
+    color: "ral_7016",
     roof: "polycarbonate",
     transparency: "clear",
     mounting: false,
@@ -204,7 +204,7 @@ export default function PergolaConfigurator() {
     if (config.height > HEIGHT_BASELINE) {
       p += (config.height - HEIGHT_BASELINE) * HEIGHT_SURCHARGE_PER_CM_OVER;
     }
-    if (colorObj.premium) p *= 1.1;
+    if (colorObj.premium) p *= COLOR_SURCHARGE;
     if (config.mounting) p += MOUNTING_PRICE;
     if (config.led) p += LED_PRICE;
     p += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
@@ -226,11 +226,7 @@ export default function PergolaConfigurator() {
 
   // IZO Sklo 24 forces "clear"
   const handleRoofChange = (roof: RoofId) => {
-    setConfig((c) => ({
-      ...c,
-      roof,
-      transparency: roof === "izo_glass_24" ? "clear" : c.transparency,
-    }));
+    setConfig((c) => ({ ...c, roof }));
   };
 
   const validateStep = (s: number): boolean => {
@@ -580,12 +576,9 @@ function PergolaPreview({
   const fmt = (cm: number) => `${(cm / 100).toFixed(2)} m`;
 
   // ---- Roof appearance derived from selection ----
-  // Clear/milky × polycarbonate / safety_glass / izo_glass_24
   const isMilky = config.transparency === "milky";
   const roofId =
-    config.roof === "izo_glass_24"
-      ? "roof-izo"
-      : config.roof === "safety_glass"
+    config.roof === "safety_glass"
       ? isMilky
         ? "roof-glass-milky"
         : "roof-glass-clear"
@@ -595,8 +588,7 @@ function PergolaPreview({
   const roofFill = `url(#${roofId})`;
   // Slats viditeľné len cez priehľadné materiály
   const slatsOpacity = isMilky ? 0.08 : config.roof === "polycarbonate" ? 0.55 : 0.35;
-  // Druhá vrstva pre IZO sklo (dvojsklo)
-  const isIzo = config.roof === "izo_glass_24";
+  const isIzo = false;
 
   return (
     <div className="relative h-72 md:h-80 bg-gradient-to-b from-secondary/40 to-background overflow-hidden rounded-lg">
@@ -1059,7 +1051,7 @@ function StepRoof({
         <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">{t("pergola.transparency.title")}</div>
         <div className="grid md:grid-cols-2 gap-4">
           {TRANSPARENCIES.map((tr) => {
-            const disabled = config.roof === "izo_glass_24" && tr.id === "milky";
+            const disabled = false;
             const active = config.transparency === tr.id;
             return (
               <button
