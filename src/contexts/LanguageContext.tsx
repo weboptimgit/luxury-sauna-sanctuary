@@ -561,6 +561,8 @@ const translations: Record<Language, Record<string, string>> = {
     "pergola.summary.reinforcement": "reinforcement",
     "pergola.summary.mounting": "Mounting",
     "pergola.summary.led": "LED lighting",
+    "pergola.summary.ledUnit": "pcs",
+    "pergola.summary.delivery": "Delivery",
     "pergola.summary.yes": "Yes",
     "pergola.summary.no": "No",
     "pergola.summary.quote.label": "Price quote",
