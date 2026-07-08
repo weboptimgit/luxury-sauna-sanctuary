@@ -848,8 +848,10 @@ function luxurelax_pergola_handle_add_to_cart(WP_REST_Request $request) {
         $s['priehladnost'] => $calc['trans_label'],
         $s['stlpy']        => $calc['posts'] . '× ' . $s['stlp'] . ($calc['reinforcement'] ? ' + ' . $s['vystuha'] : ''),
         $s['montaz']       => $cfg_n['mounting'] ? $s['yes'] : $s['no'],
-        $s['led']          => $cfg_n['led'] ? $s['yes'] : $s['no'],
+        $s['led']          => $cfg_n['led'] ? ($s['yes'] . ' (' . $calc['led_qty'] . ' ' . $s['led_ks'] . ')') : $s['no'],
+        $s['doprava']      => $calc['delivery_km'] > 0 ? ($calc['delivery_km'] . ' km') : $s['no'],
     ];
+
 
     $token = wp_generate_password(20, false, false);
     set_transient('luxurelax_pergola_' . $token, [
