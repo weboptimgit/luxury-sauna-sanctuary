@@ -87,7 +87,7 @@ const COLORS = [
   { id: "ral", hex: "linear-gradient(135deg,#e94e77,#5b8def,#7ed957)", premium: true },
 ] as const;
 
-const COLOR_SURCHARGE = 1.2; // +20% pre RAL na mieru
+
 
 const ROOF_TYPES = [
   { id: "polycarbonate", pricePerM2: 0 },
