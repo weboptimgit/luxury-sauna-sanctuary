@@ -1051,7 +1051,7 @@ function StepRoof({
         <div className="text-xs uppercase tracking-wider text-foreground/60 mb-3">{t("pergola.transparency.title")}</div>
         <div className="grid md:grid-cols-2 gap-4">
           {TRANSPARENCIES.map((tr) => {
-            const disabled = config.roof === "izo_glass_24" && tr.id === "milky";
+            const disabled = false;
             const active = config.transparency === tr.id;
             return (
               <button
