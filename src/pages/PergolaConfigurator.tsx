@@ -203,21 +203,59 @@ export default function PergolaConfigurator() {
 
   const postLayout = useMemo(() => computePostLayout(config.width), [config.width]);
 
-  const price = useMemo(() => {
+  const breakdown = useMemo(() => {
     const roof = ROOF_TYPES.find((r) => r.id === config.roof)!;
     const colorObj = COLORS.find((c) => c.id === config.color)!;
-    let p = lookupBasePrice(config.width, config.depth);
-    p += areaM2 * roof.pricePerM2;
+
+    // 1) Nákupná cena prístrešku (bez DPH) – tabuľka + strecha + výška + stĺpy
+    let base = lookupBasePrice(config.width, config.depth);
+    base += areaM2 * roof.pricePerM2;
     if (config.height > HEIGHT_BASELINE) {
-      p += (config.height - HEIGHT_BASELINE) * HEIGHT_SURCHARGE_PER_CM_OVER;
+      base += (config.height - HEIGHT_BASELINE) * HEIGHT_SURCHARGE_PER_CM_OVER;
     }
-    if (colorObj.premium) p *= COLOR_SURCHARGE;
-    if (config.mounting) p += MOUNTING_PRICE;
-    if (config.led) p += LED_PRICE;
-    p += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
-    if (postLayout.reinforcement) p += REINFORCEMENT_PRICE;
-    return Math.round(p);
+    base += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
+    if (postLayout.reinforcement) base += REINFORCEMENT_PRICE;
+
+    // 2) Farba: +20 % ak zákazník zvolil RAL na mieru – pripočíta sa PRED maržou
+    const colorSurcharge = colorObj.premium ? base * 0.20 : 0;
+    const purchase = base + colorSurcharge; // nákupná cena vrátane farby
+
+    // 3) LED – 35 €/ks, počet = šírka(m) − 1, min. 5
+    const widthM = config.width / 100;
+    const ledQty = config.led ? Math.max(LED_MIN_QTY, Math.ceil(widthM) - 1) : 0;
+    const ledCost = ledQty * LED_UNIT_PRICE;
+
+    // 4) Marža 40 % z nákupnej ceny (nezahŕňa LED ani dopravu)
+    const margin = purchase * MARGIN_RATE;
+
+    // 5) Montáž 20 % z (nákupná + marža) – iba ak zákazník chce montáž
+    const mountingCost = config.mounting ? (purchase + margin) * MOUNTING_RATE : 0;
+
+    // 6) Doprava – 0,75 € / km
+    const deliveryCost = Math.max(0, config.deliveryKm) * DELIVERY_PER_KM;
+
+    // 7) DPH 23 % sa aplikuje na (nákupná + LED + doprava)
+    const preVat = purchase + ledCost + deliveryCost;
+    const withVat = preVat * (1 + VAT_RATE);
+
+    // 8) Konečná cena pre zákazníka
+    const finalPrice = withVat + margin + mountingCost;
+
+    return {
+      base,
+      colorSurcharge,
+      purchase,
+      ledQty,
+      ledCost,
+      margin,
+      mountingCost,
+      deliveryCost,
+      withVat,
+      finalPrice: Math.round(finalPrice),
+    };
   }, [config, areaM2, postLayout]);
+
+  const price = breakdown.finalPrice;
 
   const colorObj = COLORS.find((c) => c.id === config.color)!;
   const ralPicked = config.color === "ral" ? findRal(config.ralCode) : undefined;
