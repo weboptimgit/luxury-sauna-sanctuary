@@ -226,11 +226,7 @@ export default function PergolaConfigurator() {
 
   // IZO Sklo 24 forces "clear"
   const handleRoofChange = (roof: RoofId) => {
-    setConfig((c) => ({
-      ...c,
-      roof,
-      transparency: roof === "izo_glass_24" ? "clear" : c.transparency,
-    }));
+    setConfig((c) => ({ ...c, roof }));
   };
 
   const validateStep = (s: number): boolean => {
