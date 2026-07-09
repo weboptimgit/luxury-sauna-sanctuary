@@ -684,6 +684,15 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
   );
 }
 
+function BreakRow({ label, value, bold }: { label: string; value: string; bold?: boolean }) {
+  return (
+    <div className={cn("flex justify-between items-start gap-3", bold && "font-bold text-primary pt-1")}>
+      <span className="text-foreground/70">{label}</span>
+      <span className="text-right whitespace-nowrap">{value}</span>
+    </div>
+  );
+}
+
 function PergolaPreview({
   config,
   colorHex,
