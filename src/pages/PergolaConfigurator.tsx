@@ -216,31 +216,36 @@ export default function PergolaConfigurator() {
     base += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
     if (postLayout.reinforcement) base += REINFORCEMENT_PRICE;
 
-    // 2) Nákupná cena (bez farebného príplatku – RAL sa pridáva až na konci po DPH)
+    // 2) Nákupná cena (bez farebného príplatku – RAL sa pridáva až na konci)
     const purchase = base;
 
-    // 3) LED – 35 €/ks, počet = šírka(m) − 1, min. 5
+    // 3) DPH 23 % zo základnej nákupnej ceny
+    const vat = purchase * VAT_RATE;
+    const baseWithVat = purchase + vat;
+
+    // 4) Marža 40 % z ceny s DPH
+    const margin = baseWithVat * MARGIN_RATE;
+
+    // 5) Montáž 20 % z (základ s DPH + marža)
+    const mountingCost = config.mounting ? (baseWithVat + margin) * MOUNTING_RATE : 0;
+
+    // 6) LED – 35 €/ks, počet = šírka(m) − 1, min. 5
     const widthM = config.width / 100;
     const ledQty = config.led ? Math.max(LED_MIN_QTY, Math.ceil(widthM) - 1) : 0;
     const ledCost = ledQty * LED_UNIT_PRICE;
 
-    // 4) Marža 40 % z nákupnej ceny (nezahŕňa LED ani dopravu)
-    const margin = purchase * MARGIN_RATE;
-
-    // 5) Montáž 20 % z (nákupná + marža) – iba ak zákazník chce montáž
-    const mountingCost = config.mounting ? (purchase + margin) * MOUNTING_RATE : 0;
-
-    // 6) Doprava – 0,75 € / km
+    // 7) Doprava – 0,75 € / km
     const deliveryCost = Math.max(0, config.deliveryKm) * DELIVERY_PER_KM;
 
-    // 7) Medzisúčet bez DPH
-    const netTotal = purchase + ledCost + deliveryCost + margin + mountingCost;
-    const vat = netTotal * VAT_RATE;
-    const grossBeforeColor = netTotal + vat;
+    // 8) Súčet pred RAL príplatkom
+    const subtotalBeforeColor = baseWithVat + margin + mountingCost + ledCost + deliveryCost;
 
-    // 8) RAL na mieru +20 % – pridáva sa AŽ NA KONCI, po DPH, z konečnej ceny s DPH
-    const colorSurcharge = colorObj.premium ? grossBeforeColor * 0.20 : 0;
-    const grossTotal = grossBeforeColor + colorSurcharge;
+    // 9) RAL na mieru +20 % – pridáva sa úplne na konci, zo subtotalu
+    const colorSurcharge = colorObj.premium ? subtotalBeforeColor * 0.20 : 0;
+    const grossTotal = subtotalBeforeColor + colorSurcharge;
+
+    // Medzisúčet bez DPH (pre spätnú kompatibilitu – e-mailový dopyt)
+    const netTotal = grossTotal - vat;
 
     return {
       base,
@@ -253,11 +258,13 @@ export default function PergolaConfigurator() {
       deliveryCost,
       netTotal,
       vat,
-      grossBeforeColor,
+      baseWithVat,
+      grossBeforeColor: subtotalBeforeColor,
       grossTotal,
-      finalPrice: Math.round(netTotal + colorSurcharge),
+      finalPrice: Math.round(netTotal),
       finalPriceWithVat: Math.round(grossTotal),
     };
+  }, [config, areaM2, postLayout]);
   }, [config, areaM2, postLayout]);
 
   const price = breakdown.finalPrice;
