@@ -265,7 +265,6 @@ export default function PergolaConfigurator() {
       finalPriceWithVat: Math.round(grossTotal),
     };
   }, [config, areaM2, postLayout]);
-  }, [config, areaM2, postLayout]);
 
   const price = breakdown.finalPrice;
 
