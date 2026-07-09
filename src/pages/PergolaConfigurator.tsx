@@ -99,7 +99,7 @@ const TRANSPARENCIES = [
   { id: "clear" },
 ] as const;
 
-// --- Kalkulačka konečnej ceny pre zákazníka (bez DPH – DPH pripočíta WooCommerce) ---
+// --- Kalkulačka konečnej ceny pre zákazníka (pergoly idú ako mailový dopyt, nie do WooCommerce košíka) ---
 const MARGIN_RATE = 0.40;      // marža 40 % z nákupnej ceny (vrátane farby)
 const MOUNTING_RATE = 0.20;    // montáž 20 % z (nákupná + marža)
 const LED_UNIT_PRICE = 35;     // €/ks
@@ -107,6 +107,7 @@ const LED_MIN_QTY = 5;
 const DELIVERY_PER_KM = 0.75;  // €/km
 const REINFORCEMENT_PRICE = 180; // EUR – výstuha
 const EXTRA_POST_PRICE = 220;  // EUR za každý stĺp navyše nad 2 základné
+const VAT_RATE = 0.23;
 
 /**
  * Stĺpová logika podľa technickej tabuľky (Polykarbonát).
@@ -233,8 +234,10 @@ export default function PergolaConfigurator() {
     // 6) Doprava – 0,75 € / km
     const deliveryCost = Math.max(0, config.deliveryKm) * DELIVERY_PER_KM;
 
-    // 7) Konečná cena BEZ DPH – DPH pripočíta WooCommerce v PHP
+    // 7) Medzisúčet bez DPH – DPH sa zobrazuje v internom náhľade a posiela do mailového dopytu
     const netTotal = purchase + ledCost + deliveryCost + margin + mountingCost;
+    const vat = netTotal * VAT_RATE;
+    const grossTotal = netTotal + vat;
 
     return {
       base,
@@ -246,16 +249,19 @@ export default function PergolaConfigurator() {
       mountingCost,
       deliveryCost,
       netTotal,
+      vat,
+      grossTotal,
       finalPrice: Math.round(netTotal),
+      finalPriceWithVat: Math.round(grossTotal),
     };
   }, [config, areaM2, postLayout]);
 
   const price = breakdown.finalPrice;
 
   // --- Interný preview odomykač cien (nie pre zákazníka) ---
-  // Otvor stránku s ?preview=luxu2026 → uloží sa do localStorage, cena bude viditeľná.
+  // Otvor stránku s ?preview=luxu2026 alebo ?preview=luxu202… → uloží sa do localStorage, cena bude viditeľná.
   // Otvor stránku s ?preview=off → uzamkne.
-  const PREVIEW_KEY = "luxu2026";
+  const PREVIEW_KEYS = ["luxu2026", "luxu202…"];
   const [pricePreview, setPricePreview] = useState(false);
   useEffect(() => {
     try {
@@ -263,7 +269,7 @@ export default function PergolaConfigurator() {
       const q = params.get("preview");
       if (q === "off") {
         localStorage.removeItem("lux_pergola_preview");
-      } else if (q && q === PREVIEW_KEY) {
+      } else if (q && PREVIEW_KEYS.includes(q)) {
         localStorage.setItem("lux_pergola_preview", "1");
       }
       setPricePreview(localStorage.getItem("lux_pergola_preview") === "1");
@@ -355,7 +361,11 @@ export default function PergolaConfigurator() {
           deliveryKm: config.deliveryKm,
           deliveryCost: Math.round(breakdown.deliveryCost * 100) / 100,
           netTotal: Math.round(breakdown.netTotal * 100) / 100,
-          finalPrice: breakdown.finalPrice, // bez DPH – WooCommerce si DPH pripočíta
+          vatRate: VAT_RATE,
+          vat: Math.round(breakdown.vat * 100) / 100,
+          grossTotal: Math.round(breakdown.grossTotal * 100) / 100,
+          finalPrice: breakdown.finalPrice,
+          finalPriceWithVat: breakdown.finalPriceWithVat,
         },
         currency: "EUR",
         customer: {
@@ -541,6 +551,32 @@ export default function PergolaConfigurator() {
                         </span>
                       </div>
 
+                      <div className="mb-4 rounded-lg border border-primary/30 bg-primary/10 p-3">
+                        <div className="text-[10px] uppercase tracking-widest text-primary/70 mb-1">
+                          Cena vrátane DPH
+                        </div>
+                        <div className="font-display text-3xl font-bold text-primary">
+                          {new Intl.NumberFormat("sk-SK", {
+                            style: "currency",
+                            currency: "EUR",
+                            maximumFractionDigits: 0,
+                          }).format(breakdown.grossTotal)}
+                        </div>
+                        <div className="mt-1 text-[11px] text-foreground/60">
+                          bez DPH {new Intl.NumberFormat("sk-SK", {
+                            style: "currency",
+                            currency: "EUR",
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }).format(breakdown.netTotal)} · DPH 23 % {new Intl.NumberFormat("sk-SK", {
+                            style: "currency",
+                            currency: "EUR",
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }).format(breakdown.vat)}
+                        </div>
+                      </div>
+
                       {(() => {
                         const eur = (n: number) =>
                           new Intl.NumberFormat("sk-SK", {
@@ -622,9 +658,6 @@ export default function PergolaConfigurator() {
                       })()}
 
                       {(() => {
-                        const VAT_RATE = 0.23;
-                        const vat = breakdown.netTotal * VAT_RATE;
-                        const gross = breakdown.netTotal + vat;
                         const eur = (n: number) =>
                           new Intl.NumberFormat("sk-SK", {
                             style: "currency",
@@ -636,11 +669,11 @@ export default function PergolaConfigurator() {
                           style: "currency",
                           currency: "EUR",
                           maximumFractionDigits: 0,
-                        }).format(gross);
+                        }).format(breakdown.grossTotal);
                         return (
                           <div className="mt-3 pt-3 border-t border-primary/20 space-y-1 text-[12px] font-mono">
                             <BreakRow label="Medzisúčet bez DPH" value={eur(breakdown.netTotal)} />
-                            <BreakRow label="DPH 23 %" value={`+ ${eur(vat)}`} />
+                            <BreakRow label="DPH 23 %" value={`+ ${eur(breakdown.vat)}`} />
                             <div className="mt-2 pt-2 border-t border-primary/20">
                               <div className="text-[10px] uppercase tracking-widest text-primary/70 mb-1">
                                 Konečná cena s DPH
