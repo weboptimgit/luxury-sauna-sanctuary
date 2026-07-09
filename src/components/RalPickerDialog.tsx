@@ -82,7 +82,7 @@ export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSe
         <div className="max-h-[60vh] overflow-y-auto px-6 py-5 space-y-7">
           {filteredGroups.length === 0 && (
             <div className="text-center text-foreground/50 py-10 text-sm">
-              Pre dopyt „{query}“ nič nenájdené.
+              {t("pergola.ral.empty").replace("{query}", query)}
             </div>
           )}
           {filteredGroups.map((g) => (
