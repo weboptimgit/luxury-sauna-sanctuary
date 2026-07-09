@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { RAL_GROUPS, type RalColor } from "@/data/ralClassic";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Props {
   open: boolean;
