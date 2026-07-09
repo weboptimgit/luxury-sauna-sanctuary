@@ -633,15 +633,16 @@ export default function PergolaConfigurator() {
                             {postLayout.reinforcement && (
                               <BreakRow label="Výstuha" value={`+ ${eur(REINFORCEMENT_PRICE)}`} />
                             )}
-                            <BreakRow label="= Základ" value={eur(breakdown.base)} bold />
-                            <BreakRow label="= Nákupná cena" value={eur(breakdown.purchase)} bold />
+                            <BreakRow label="= Základ (nákupná cena)" value={eur(breakdown.base)} bold />
+                            <BreakRow label="DPH 23 %" value={`+ ${eur(breakdown.vat)}`} />
+                            <BreakRow label="= Základ s DPH" value={eur(breakdown.baseWithVat)} bold />
                             <BreakRow
-                              label={`Marža 40 % (${eur(breakdown.purchase)} × 0,40)`}
+                              label={`Marža 40 % (${eur(breakdown.baseWithVat)} × 0,40)`}
                               value={`+ ${eur(breakdown.margin)}`}
                             />
                             {config.mounting && (
                               <BreakRow
-                                label={`Montáž 20 % z ${eur(breakdown.purchase + breakdown.margin)}`}
+                                label={`Montáž 20 % z ${eur(breakdown.baseWithVat + breakdown.margin)}`}
                                 value={`+ ${eur(breakdown.mountingCost)}`}
                               />
                             )}
