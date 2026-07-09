@@ -216,9 +216,8 @@ export default function PergolaConfigurator() {
     base += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
     if (postLayout.reinforcement) base += REINFORCEMENT_PRICE;
 
-    // 2) Farba: +20 % ak zákazník zvolil RAL na mieru – pripočíta sa PRED maržou
-    const colorSurcharge = colorObj.premium ? base * 0.20 : 0;
-    const purchase = base + colorSurcharge; // nákupná cena vrátane farby
+    // 2) Nákupná cena (bez farebného príplatku – RAL sa pridáva až na konci po DPH)
+    const purchase = base;
 
     // 3) LED – 35 €/ks, počet = šírka(m) − 1, min. 5
     const widthM = config.width / 100;
@@ -234,10 +233,14 @@ export default function PergolaConfigurator() {
     // 6) Doprava – 0,75 € / km
     const deliveryCost = Math.max(0, config.deliveryKm) * DELIVERY_PER_KM;
 
-    // 7) Medzisúčet bez DPH – DPH sa zobrazuje v internom náhľade a posiela do mailového dopytu
+    // 7) Medzisúčet bez DPH
     const netTotal = purchase + ledCost + deliveryCost + margin + mountingCost;
     const vat = netTotal * VAT_RATE;
-    const grossTotal = netTotal + vat;
+    const grossBeforeColor = netTotal + vat;
+
+    // 8) RAL na mieru +20 % – pridáva sa AŽ NA KONCI, po DPH, z konečnej ceny s DPH
+    const colorSurcharge = colorObj.premium ? grossBeforeColor * 0.20 : 0;
+    const grossTotal = grossBeforeColor + colorSurcharge;
 
     return {
       base,
@@ -250,8 +253,9 @@ export default function PergolaConfigurator() {
       deliveryCost,
       netTotal,
       vat,
+      grossBeforeColor,
       grossTotal,
-      finalPrice: Math.round(netTotal),
+      finalPrice: Math.round(netTotal + colorSurcharge),
       finalPriceWithVat: Math.round(grossTotal),
     };
   }, [config, areaM2, postLayout]);
