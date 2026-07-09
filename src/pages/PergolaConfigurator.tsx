@@ -532,7 +532,7 @@ export default function PergolaConfigurator() {
 
                   {pricePreview && (
                     <div className="mt-5 pt-5 border-t border-dashed border-primary/40">
-                      <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center justify-between mb-3">
                         <div className="text-[10px] uppercase tracking-widest text-primary/80">
                           Interný náhľad ceny
                         </div>
@@ -540,11 +540,97 @@ export default function PergolaConfigurator() {
                           preview
                         </span>
                       </div>
-                      <div className="font-display text-3xl font-bold text-primary">
-                        {formattedPrice}
-                      </div>
-                      <div className="text-[11px] text-foreground/50 mt-1">
-                        bez DPH · zákazník túto sumu nevidí
+
+                      {(() => {
+                        const eur = (n: number) =>
+                          new Intl.NumberFormat("sk-SK", {
+                            style: "currency",
+                            currency: "EUR",
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }).format(n);
+                        const tableBase =
+                          breakdown.base -
+                          areaM2 * (roofObj.pricePerM2 || 0) -
+                          (config.height > HEIGHT_BASELINE
+                            ? (config.height - HEIGHT_BASELINE) * HEIGHT_SURCHARGE_PER_CM_OVER
+                            : 0) -
+                          Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE -
+                          (postLayout.reinforcement ? REINFORCEMENT_PRICE : 0);
+                        const heightSurcharge =
+                          config.height > HEIGHT_BASELINE
+                            ? (config.height - HEIGHT_BASELINE) * HEIGHT_SURCHARGE_PER_CM_OVER
+                            : 0;
+                        const roofSurcharge = areaM2 * (roofObj.pricePerM2 || 0);
+                        const extraPosts = Math.max(0, postLayout.posts - 2);
+                        return (
+                          <div className="text-[12px] leading-relaxed space-y-1 font-mono">
+                            <BreakRow label={`Tabuľka ${config.width}×${config.depth} cm`} value={eur(tableBase)} />
+                            {roofSurcharge > 0 && (
+                              <BreakRow
+                                label={`Bezp. sklo ${areaM2.toFixed(2)} m² × 90 €`}
+                                value={`+ ${eur(roofSurcharge)}`}
+                              />
+                            )}
+                            {heightSurcharge > 0 && (
+                              <BreakRow
+                                label={`Výška +${config.height - HEIGHT_BASELINE} cm × 4 €`}
+                                value={`+ ${eur(heightSurcharge)}`}
+                              />
+                            )}
+                            {extraPosts > 0 && (
+                              <BreakRow
+                                label={`${extraPosts}× stĺp navyše × 220 €`}
+                                value={`+ ${eur(extraPosts * EXTRA_POST_PRICE)}`}
+                              />
+                            )}
+                            {postLayout.reinforcement && (
+                              <BreakRow label="Výstuha" value={`+ ${eur(REINFORCEMENT_PRICE)}`} />
+                            )}
+                            <BreakRow label="= Základ" value={eur(breakdown.base)} bold />
+                            {breakdown.colorSurcharge > 0 && (
+                              <BreakRow
+                                label="RAL na mieru +20 %"
+                                value={`+ ${eur(breakdown.colorSurcharge)}`}
+                              />
+                            )}
+                            <BreakRow label="= Nákupná cena" value={eur(breakdown.purchase)} bold />
+                            <BreakRow
+                              label={`Marža 40 % (${eur(breakdown.purchase)} × 0,40)`}
+                              value={`+ ${eur(breakdown.margin)}`}
+                            />
+                            {config.mounting && (
+                              <BreakRow
+                                label={`Montáž 20 % z ${eur(breakdown.purchase + breakdown.margin)}`}
+                                value={`+ ${eur(breakdown.mountingCost)}`}
+                              />
+                            )}
+                            {breakdown.ledQty > 0 && (
+                              <BreakRow
+                                label={`LED ${breakdown.ledQty}× × 35 €`}
+                                value={`+ ${eur(breakdown.ledCost)}`}
+                              />
+                            )}
+                            {config.deliveryKm > 0 && (
+                              <BreakRow
+                                label={`Doprava ${config.deliveryKm} km × 0,75 €`}
+                                value={`+ ${eur(breakdown.deliveryCost)}`}
+                              />
+                            )}
+                          </div>
+                        );
+                      })()}
+
+                      <div className="mt-3 pt-3 border-t border-primary/20">
+                        <div className="text-[10px] uppercase tracking-widest text-primary/70 mb-1">
+                          Konečná cena bez DPH
+                        </div>
+                        <div className="font-display text-3xl font-bold text-primary">
+                          {formattedPrice}
+                        </div>
+                        <div className="text-[11px] text-foreground/50 mt-1">
+                          bez DPH · zákazník túto sumu nevidí
+                        </div>
                       </div>
                     </div>
                   )}
