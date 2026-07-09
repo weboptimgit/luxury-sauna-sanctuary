@@ -216,9 +216,8 @@ export default function PergolaConfigurator() {
     base += Math.max(0, postLayout.posts - 2) * EXTRA_POST_PRICE;
     if (postLayout.reinforcement) base += REINFORCEMENT_PRICE;
 
-    // 2) Farba: +20 % ak zákazník zvolil RAL na mieru – pripočíta sa PRED maržou
-    const colorSurcharge = colorObj.premium ? base * 0.20 : 0;
-    const purchase = base + colorSurcharge; // nákupná cena vrátane farby
+    // 2) Nákupná cena (bez farebného príplatku – RAL sa pridáva až na konci po DPH)
+    const purchase = base;
 
     // 3) LED – 35 €/ks, počet = šírka(m) − 1, min. 5
     const widthM = config.width / 100;
@@ -234,10 +233,14 @@ export default function PergolaConfigurator() {
     // 6) Doprava – 0,75 € / km
     const deliveryCost = Math.max(0, config.deliveryKm) * DELIVERY_PER_KM;
 
-    // 7) Medzisúčet bez DPH – DPH sa zobrazuje v internom náhľade a posiela do mailového dopytu
+    // 7) Medzisúčet bez DPH
     const netTotal = purchase + ledCost + deliveryCost + margin + mountingCost;
     const vat = netTotal * VAT_RATE;
-    const grossTotal = netTotal + vat;
+    const grossBeforeColor = netTotal + vat;
+
+    // 8) RAL na mieru +20 % – pridáva sa AŽ NA KONCI, po DPH, z konečnej ceny s DPH
+    const colorSurcharge = colorObj.premium ? grossBeforeColor * 0.20 : 0;
+    const grossTotal = grossBeforeColor + colorSurcharge;
 
     return {
       base,
@@ -250,8 +253,9 @@ export default function PergolaConfigurator() {
       deliveryCost,
       netTotal,
       vat,
+      grossBeforeColor,
       grossTotal,
-      finalPrice: Math.round(netTotal),
+      finalPrice: Math.round(netTotal + colorSurcharge),
       finalPriceWithVat: Math.round(grossTotal),
     };
   }, [config, areaM2, postLayout]);
@@ -624,12 +628,6 @@ export default function PergolaConfigurator() {
                               <BreakRow label="Výstuha" value={`+ ${eur(REINFORCEMENT_PRICE)}`} />
                             )}
                             <BreakRow label="= Základ" value={eur(breakdown.base)} bold />
-                            {breakdown.colorSurcharge > 0 && (
-                              <BreakRow
-                                label="RAL na mieru +20 %"
-                                value={`+ ${eur(breakdown.colorSurcharge)}`}
-                              />
-                            )}
                             <BreakRow label="= Nákupná cena" value={eur(breakdown.purchase)} bold />
                             <BreakRow
                               label={`Marža 40 % (${eur(breakdown.purchase)} × 0,40)`}
@@ -674,6 +672,13 @@ export default function PergolaConfigurator() {
                           <div className="mt-3 pt-3 border-t border-primary/20 space-y-1 text-[12px] font-mono">
                             <BreakRow label="Medzisúčet bez DPH" value={eur(breakdown.netTotal)} />
                             <BreakRow label="DPH 23 %" value={`+ ${eur(breakdown.vat)}`} />
+                            <BreakRow label="= Cena s DPH" value={eur(breakdown.grossBeforeColor)} bold />
+                            {breakdown.colorSurcharge > 0 && (
+                              <BreakRow
+                                label="RAL na mieru +20 % (na konci, z ceny s DPH)"
+                                value={`+ ${eur(breakdown.colorSurcharge)}`}
+                              />
+                            )}
                             <div className="mt-2 pt-2 border-t border-primary/20">
                               <div className="text-[10px] uppercase tracking-widest text-primary/70 mb-1">
                                 Konečná cena s DPH
