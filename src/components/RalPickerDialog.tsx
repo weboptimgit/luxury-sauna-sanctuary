@@ -62,7 +62,7 @@ export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSe
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
             <Input
               autoFocus
-              placeholder="Hľadať: RAL 8017, antracit, modrá…"
+              placeholder={t("pergola.ral.searchPlaceholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="pl-9 pr-9 h-11 bg-background/60"
@@ -71,7 +71,7 @@ export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSe
               <button
                 onClick={() => setQuery("")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground"
-                aria-label="Vymazať"
+                aria-label={t("pergola.ral.clear")}
               >
                 <X className="w-4 h-4" />
               </button>
