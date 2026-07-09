@@ -621,17 +621,40 @@ export default function PergolaConfigurator() {
                         );
                       })()}
 
-                      <div className="mt-3 pt-3 border-t border-primary/20">
-                        <div className="text-[10px] uppercase tracking-widest text-primary/70 mb-1">
-                          Konečná cena bez DPH
-                        </div>
-                        <div className="font-display text-3xl font-bold text-primary">
-                          {formattedPrice}
-                        </div>
-                        <div className="text-[11px] text-foreground/50 mt-1">
-                          bez DPH · zákazník túto sumu nevidí
-                        </div>
-                      </div>
+                      {(() => {
+                        const VAT_RATE = 0.23;
+                        const vat = breakdown.netTotal * VAT_RATE;
+                        const gross = breakdown.netTotal + vat;
+                        const eur = (n: number) =>
+                          new Intl.NumberFormat("sk-SK", {
+                            style: "currency",
+                            currency: "EUR",
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }).format(n);
+                        const grossRounded = new Intl.NumberFormat("sk-SK", {
+                          style: "currency",
+                          currency: "EUR",
+                          maximumFractionDigits: 0,
+                        }).format(gross);
+                        return (
+                          <div className="mt-3 pt-3 border-t border-primary/20 space-y-1 text-[12px] font-mono">
+                            <BreakRow label="Medzisúčet bez DPH" value={eur(breakdown.netTotal)} />
+                            <BreakRow label="DPH 23 %" value={`+ ${eur(vat)}`} />
+                            <div className="mt-2 pt-2 border-t border-primary/20">
+                              <div className="text-[10px] uppercase tracking-widest text-primary/70 mb-1">
+                                Konečná cena s DPH
+                              </div>
+                              <div className="font-display text-3xl font-bold text-primary">
+                                {grossRounded}
+                              </div>
+                              <div className="text-[11px] text-foreground/50 mt-1">
+                                s DPH · zákazník túto sumu nevidí
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </div>
                   )}
 
