@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { RAL_GROUPS, type RalColor } from "@/data/ralClassic";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Props {
   open: boolean;
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSelect }: Props) {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
 
   const filteredGroups = useMemo(() => {
@@ -51,17 +53,16 @@ export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSe
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl p-0 gap-0 overflow-hidden bg-card border-border">
         <DialogHeader className="p-6 pb-4 border-b border-border">
-          <DialogTitle className="font-display text-2xl">Vzorkovník RAL</DialogTitle>
+          <DialogTitle className="font-display text-2xl">{t("pergola.ral.title")}</DialogTitle>
           <DialogDescription className="text-foreground/60">
-            Vyberte ľubovoľný odtieň zo vzorkovníka <span className="text-primary">RAL Classic</span>.
-            Príplatok 10 % z ceny pergoly platí pre všetky farby na mieru.
+            {t("pergola.ral.description")}
           </DialogDescription>
 
           <div className="relative mt-3">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
             <Input
               autoFocus
-              placeholder="Hľadať: RAL 8017, antracit, modrá…"
+              placeholder={t("pergola.ral.searchPlaceholder")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="pl-9 pr-9 h-11 bg-background/60"
@@ -70,7 +71,7 @@ export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSe
               <button
                 onClick={() => setQuery("")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground"
-                aria-label="Vymazať"
+                aria-label={t("pergola.ral.clear")}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -81,7 +82,7 @@ export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSe
         <div className="max-h-[60vh] overflow-y-auto px-6 py-5 space-y-7">
           {filteredGroups.length === 0 && (
             <div className="text-center text-foreground/50 py-10 text-sm">
-              Pre dopyt „{query}“ nič nenájdené.
+              {t("pergola.ral.empty").replace("{query}", query)}
             </div>
           )}
           {filteredGroups.map((g) => (
@@ -135,16 +136,16 @@ export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSe
           <div className="text-xs text-foreground/60">
             {selected ? (
               <>
-                Vybrané:{" "}
+                {t("pergola.ral.selected")}{" "}
                 <span className="text-primary font-medium">{selected.code}</span>{" "}
                 <span className="text-foreground/80">{selected.name}</span>
               </>
             ) : (
-              "Žiadny RAL odtieň zatiaľ vybraný"
+              t("pergola.ral.noneSelected")
             )}
           </div>
           <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
-            <X className="w-4 h-4" /> Zavrieť
+            <X className="w-4 h-4" /> {t("pergola.ral.close")}
           </Button>
         </DialogFooter>
       </DialogContent>
