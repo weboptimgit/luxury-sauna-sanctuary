@@ -22,6 +22,7 @@ interface Props {
 }
 
 export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSelect }: Props) {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
 
   const filteredGroups = useMemo(() => {
