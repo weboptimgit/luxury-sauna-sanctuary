@@ -677,12 +677,10 @@ export default function PergolaConfigurator() {
                         }).format(breakdown.grossTotal);
                         return (
                           <div className="mt-3 pt-3 border-t border-primary/20 space-y-1 text-[12px] font-mono">
-                            <BreakRow label="Medzisúčet bez DPH" value={eur(breakdown.netTotal)} />
-                            <BreakRow label="DPH 23 %" value={`+ ${eur(breakdown.vat)}`} />
-                            <BreakRow label="= Cena s DPH" value={eur(breakdown.grossBeforeColor)} bold />
+                            <BreakRow label="Medzisúčet" value={eur(breakdown.grossBeforeColor)} bold />
                             {breakdown.colorSurcharge > 0 && (
                               <BreakRow
-                                label="RAL na mieru +20 % (na konci, z ceny s DPH)"
+                                label="RAL na mieru +20 % (na konci)"
                                 value={`+ ${eur(breakdown.colorSurcharge)}`}
                               />
                             )}
