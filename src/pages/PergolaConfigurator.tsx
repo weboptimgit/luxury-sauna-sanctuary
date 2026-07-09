@@ -628,12 +628,6 @@ export default function PergolaConfigurator() {
                               <BreakRow label="Výstuha" value={`+ ${eur(REINFORCEMENT_PRICE)}`} />
                             )}
                             <BreakRow label="= Základ" value={eur(breakdown.base)} bold />
-                            {breakdown.colorSurcharge > 0 && (
-                              <BreakRow
-                                label="RAL na mieru +20 %"
-                                value={`+ ${eur(breakdown.colorSurcharge)}`}
-                              />
-                            )}
                             <BreakRow label="= Nákupná cena" value={eur(breakdown.purchase)} bold />
                             <BreakRow
                               label={`Marža 40 % (${eur(breakdown.purchase)} × 0,40)`}
