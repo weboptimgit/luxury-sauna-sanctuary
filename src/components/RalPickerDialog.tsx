@@ -53,10 +53,9 @@ export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSe
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl p-0 gap-0 overflow-hidden bg-card border-border">
         <DialogHeader className="p-6 pb-4 border-b border-border">
-          <DialogTitle className="font-display text-2xl">Vzorkovník RAL</DialogTitle>
+          <DialogTitle className="font-display text-2xl">{t("pergola.ral.title")}</DialogTitle>
           <DialogDescription className="text-foreground/60">
-            Vyberte ľubovoľný odtieň zo vzorkovníka <span className="text-primary">RAL Classic</span>.
-            Príplatok 10 % z ceny pergoly platí pre všetky farby na mieru.
+            {t("pergola.ral.description")}
           </DialogDescription>
 
           <div className="relative mt-3">
