@@ -136,16 +136,16 @@ export default function RalPickerDialog({ open, onOpenChange, selectedCode, onSe
           <div className="text-xs text-foreground/60">
             {selected ? (
               <>
-                Vybrané:{" "}
+                {t("pergola.ral.selected")}{" "}
                 <span className="text-primary font-medium">{selected.code}</span>{" "}
                 <span className="text-foreground/80">{selected.name}</span>
               </>
             ) : (
-              "Žiadny RAL odtieň zatiaľ vybraný"
+              t("pergola.ral.noneSelected")
             )}
           </div>
           <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
-            <X className="w-4 h-4" /> Zavrieť
+            <X className="w-4 h-4" /> {t("pergola.ral.close")}
           </Button>
         </DialogFooter>
       </DialogContent>
