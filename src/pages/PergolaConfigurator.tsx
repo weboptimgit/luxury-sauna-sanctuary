@@ -680,7 +680,7 @@ export default function PergolaConfigurator() {
                             <BreakRow label="Medzisúčet" value={eur(breakdown.grossBeforeColor)} bold />
                             {breakdown.colorSurcharge > 0 && (
                               <BreakRow
-                                label="RAL na mieru +20 % (na konci)"
+                                label="RAL na mieru +15 % (na konci)"
                                 value={`+ ${eur(breakdown.colorSurcharge)}`}
                               />
                             )}
