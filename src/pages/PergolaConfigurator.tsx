@@ -240,8 +240,8 @@ export default function PergolaConfigurator() {
     // 8) Súčet pred RAL príplatkom
     const subtotalBeforeColor = baseWithVat + margin + mountingCost + ledCost + deliveryCost;
 
-    // 9) RAL na mieru +20 % – pridáva sa úplne na konci, zo subtotalu
-    const colorSurcharge = colorObj.premium ? subtotalBeforeColor * 0.20 : 0;
+    // 9) RAL na mieru +15 % – pridáva sa úplne na konci, zo subtotalu
+    const colorSurcharge = colorObj.premium ? subtotalBeforeColor * 0.15 : 0;
     const grossTotal = subtotalBeforeColor + colorSurcharge;
 
     // Medzisúčet bez DPH (pre spätnú kompatibilitu – e-mailový dopyt)
