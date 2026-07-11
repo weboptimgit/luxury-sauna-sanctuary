@@ -55,7 +55,7 @@ function luxurelax_pergola_pricing() {
             'ral_9007' => ['label' => ['sk' => 'RAL 9007 Sivá',     'en' => 'RAL 9007 Grey',       'hu' => 'RAL 9007 Szürke'],   'premium' => false],
             'ral'      => ['label' => ['sk' => 'RAL vlastná farba', 'en' => 'Custom RAL color',    'hu' => 'Egyedi RAL szín'],   'premium' => true],
         ],
-        'premium_color_surcharge' => 0.20, // +20 % z nákupnej ceny, PRED maržou
+        'premium_color_surcharge' => 0.15, // +15 % z medzisúčtu, NA KONCI (po DPH, marži, montáži, LED, doprave)
         'roofs' => [
             'polycarbonate' => ['label' => ['sk' => 'Polykarbonát',      'en' => 'Polycarbonate', 'hu' => 'Polikarbonát'],    'price_per_m2' => 0],
             'safety_glass'  => ['label' => ['sk' => 'Bezpečnostné sklo', 'en' => 'Safety glass',  'hu' => 'Biztonsági üveg'], 'price_per_m2' => 90],
@@ -64,8 +64,9 @@ function luxurelax_pergola_pricing() {
             'milky' => ['sk' => 'Mliečne', 'en' => 'Milky', 'hu' => 'Tejüveg'],
             'clear' => ['sk' => 'Číre',    'en' => 'Clear', 'hu' => 'Átlátszó'],
         ],
-        'margin_rate'         => 0.40, // 40 % marža z (nákup + farba)
-        'mounting_rate'       => 0.20, // 20 % montáž z (nákup + marža)
+        'vat_rate'            => 0.23, // 23 % DPH pripočítaná hneď po nákupnej cene
+        'margin_rate'         => 0.40, // 40 % marža zo (základ + DPH)
+        'mounting_rate'       => 0.20, // 20 % montáž zo (základ + DPH + marža)
         'led_unit_price'      => 35,   // €/ks
         'led_min_qty'         => 5,
         'delivery_per_km'     => 0.75, // €/km
