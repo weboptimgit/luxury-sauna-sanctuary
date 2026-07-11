@@ -55,7 +55,7 @@ function luxurelax_pergola_pricing() {
             'ral_9007' => ['label' => ['sk' => 'RAL 9007 Sivá',     'en' => 'RAL 9007 Grey',       'hu' => 'RAL 9007 Szürke'],   'premium' => false],
             'ral'      => ['label' => ['sk' => 'RAL vlastná farba', 'en' => 'Custom RAL color',    'hu' => 'Egyedi RAL szín'],   'premium' => true],
         ],
-        'premium_color_surcharge' => 0.20, // +20 % z nákupnej ceny, PRED maržou
+        'premium_color_surcharge' => 0.15, // +15 % z medzisúčtu, NA KONCI (po DPH, marži, montáži, LED, doprave)
         'roofs' => [
             'polycarbonate' => ['label' => ['sk' => 'Polykarbonát',      'en' => 'Polycarbonate', 'hu' => 'Polikarbonát'],    'price_per_m2' => 0],
             'safety_glass'  => ['label' => ['sk' => 'Bezpečnostné sklo', 'en' => 'Safety glass',  'hu' => 'Biztonsági üveg'], 'price_per_m2' => 90],
@@ -64,8 +64,9 @@ function luxurelax_pergola_pricing() {
             'milky' => ['sk' => 'Mliečne', 'en' => 'Milky', 'hu' => 'Tejüveg'],
             'clear' => ['sk' => 'Číre',    'en' => 'Clear', 'hu' => 'Átlátszó'],
         ],
-        'margin_rate'         => 0.40, // 40 % marža z (nákup + farba)
-        'mounting_rate'       => 0.20, // 20 % montáž z (nákup + marža)
+        'vat_rate'            => 0.23, // 23 % DPH pripočítaná hneď po nákupnej cene
+        'margin_rate'         => 0.40, // 40 % marža zo (základ + DPH)
+        'mounting_rate'       => 0.20, // 20 % montáž zo (základ + DPH + marža)
         'led_unit_price'      => 35,   // €/ks
         'led_min_qty'         => 5,
         'delivery_per_km'     => 0.75, // €/km
@@ -128,6 +129,10 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Meno', 'email_phone' => 'Telefón', 'email_email' => 'E-mail',
             'email_city' => 'Mesto', 'email_note' => 'Poznámka',
             'email_config' => 'Konfigurácia', 'email_price' => 'Orientačná cena',
+            'price_base' => 'Základ (nákupná cena)', 'price_vat' => 'DPH 23 %', 'price_base_with_vat' => 'Základ s DPH',
+            'price_margin' => 'Marža 40 %', 'price_mounting' => 'Montáž 20 %', 'price_led' => 'LED',
+            'price_delivery' => 'Doprava', 'price_subtotal' => 'Medzisúčet',
+            'price_color' => 'RAL na mieru +15 %', 'price_total' => 'Konečná cena s DPH',
             'cust_subject' => 'Prijali sme váš dopyt – LUXURELAX pergola',
             'cust_hello' => 'Dobrý deň',
             'cust_thanks' => 'Ďakujeme za váš dopyt na pergolu. Vašu konfiguráciu sme úspešne prijali a čoskoro vás budeme kontaktovať s nezáväznou cenovou ponukou.',
@@ -149,6 +154,10 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Name', 'email_phone' => 'Phone', 'email_email' => 'E-mail',
             'email_city' => 'City', 'email_note' => 'Note',
             'email_config' => 'Configuration', 'email_price' => 'Indicative price',
+            'price_base' => 'Base (purchase price)', 'price_vat' => 'VAT 23%', 'price_base_with_vat' => 'Base incl. VAT',
+            'price_margin' => 'Margin 40%', 'price_mounting' => 'Installation 20%', 'price_led' => 'LED',
+            'price_delivery' => 'Delivery', 'price_subtotal' => 'Subtotal',
+            'price_color' => 'Custom RAL +15%', 'price_total' => 'Final price incl. VAT',
             'cust_subject' => 'We received your inquiry – LUXURELAX pergola',
             'cust_hello' => 'Hello',
             'cust_thanks' => 'Thank you for your pergola inquiry. We have successfully received your configuration and will contact you shortly with a non-binding price quote.',
@@ -170,6 +179,10 @@ function luxurelax_pergola_strings($lang) {
             'email_name' => 'Név', 'email_phone' => 'Telefon', 'email_email' => 'E-mail',
             'email_city' => 'Város', 'email_note' => 'Megjegyzés',
             'email_config' => 'Konfiguráció', 'email_price' => 'Tájékoztató ár',
+            'price_base' => 'Alapár (beszerzési ár)', 'price_vat' => 'ÁFA 23%', 'price_base_with_vat' => 'Alapár ÁFÁ-val',
+            'price_margin' => 'Árrés 40%', 'price_mounting' => 'Telepítés 20%', 'price_led' => 'LED',
+            'price_delivery' => 'Szállítás', 'price_subtotal' => 'Részösszeg',
+            'price_color' => 'Egyedi RAL +15%', 'price_total' => 'Végső ár ÁFÁ-val',
             'cust_subject' => 'Megkaptuk az ajánlatkérését – LUXURELAX pergola',
             'cust_hello' => 'Tisztelt',
             'cust_thanks' => 'Köszönjük a pergolára vonatkozó ajánlatkérését. Konfigurációját sikeresen megkaptuk, és hamarosan felvesszük Önnel a kapcsolatot egy nem kötelező árajánlattal.',
@@ -477,11 +490,18 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
     if ($extra_posts > 0)               $base += $extra_posts * $p['extra_post_price'];
     if ($post_layout['reinforcement'])  $base += $p['reinforcement_price'];
 
-    // 2) Farba: +20 % za RAL na mieru – PRED maržou
-    $color_surcharge = $p['colors'][$color_key]['premium'] ? $base * $p['premium_color_surcharge'] : 0;
-    $purchase = $base + $color_surcharge;
+    // 2) DPH 23 % – hneď zo základu (nákupnej ceny)
+    $vat_rate = $p['vat_rate'];
+    $vat = $base * $vat_rate;
+    $base_with_vat = $base + $vat;
 
-    // 3) LED – 35 €/ks, počet = ceil(šírka(m)) − 1, minimálne 5
+    // 3) Marža 40 % zo (základ + DPH)
+    $margin = $base_with_vat * $p['margin_rate'];
+
+    // 4) Montáž 20 % zo (základ + DPH + marža) – iba ak je vybraná
+    $mounting_cost = !empty($cfg['mounting']) ? ($base_with_vat + $margin) * $p['mounting_rate'] : 0;
+
+    // 5) LED – 35 €/ks, počet = ceil(šírka(m)) − 1, minimálne 5
     $ledQty = 0;
     if (!empty($cfg['led'])) {
         $widthM = $width / 100.0;
@@ -489,17 +509,19 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
     }
     $led_cost = $ledQty * $p['led_unit_price'];
 
-    // 4) Marža 40 % z nákupnej ceny (vrátane farby, bez LED a dopravy)
-    $margin = $purchase * $p['margin_rate'];
-
-    // 5) Montáž 20 % z (nákupná + marža) – iba ak je vybraná
-    $mounting_cost = !empty($cfg['mounting']) ? ($purchase + $margin) * $p['mounting_rate'] : 0;
-
     // 6) Doprava – 0,75 € / km
     $delivery_cost = $delivery_km * $p['delivery_per_km'];
 
-    // 7) Konečná cena BEZ DPH – DPH pripočíta WooCommerce
-    $net_total = $purchase + $led_cost + $delivery_cost + $margin + $mounting_cost;
+    // 7) Medzisúčet pred RAL príplatkom
+    $subtotal_before_color = $base_with_vat + $margin + $mounting_cost + $led_cost + $delivery_cost;
+
+    // 8) RAL na mieru +15 % – na konci, zo subtotalu
+    $color_surcharge = $p['colors'][$color_key]['premium'] ? $subtotal_before_color * $p['premium_color_surcharge'] : 0;
+    $gross_total = $subtotal_before_color + $color_surcharge;
+
+    // Pre spätnú kompatibilitu (WC integrácia, e-mailový dopyt)
+    $purchase   = $base + $color_surcharge; // pôvodný význam "nákup + farba"
+    $net_total  = $gross_total - $vat;
 
     $color_label = luxurelax_pergola_t($p['colors'][$color_key]['label'], $lang);
     if ($color_key === 'ral') {
@@ -516,7 +538,7 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
     }
 
     return [
-        'price'        => (int) round($net_total),
+        'price'        => (int) round($gross_total),
         'area_m2'      => round($area, 2),
         'color_label'  => $color_label,
         'roof_label'   => luxurelax_pergola_t($p['roofs'][$roof_key]['label'], $lang),
@@ -526,16 +548,22 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
         'led_qty'      => $ledQty,
         'delivery_km'  => $delivery_km,
         'breakdown'    => [
-            'base'            => round($base, 2),
-            'color_surcharge' => round($color_surcharge, 2),
-            'purchase'        => round($purchase, 2),
-            'led_qty'         => $ledQty,
-            'led_cost'        => round($led_cost, 2),
-            'margin'          => round($margin, 2),
-            'mounting'        => round($mounting_cost, 2),
-            'delivery_km'     => $delivery_km,
-            'delivery_cost'   => round($delivery_cost, 2),
-            'net_total'       => round($net_total, 2),
+            'base'                  => round($base, 2),
+            'vat_rate'              => $vat_rate,
+            'vat'                   => round($vat, 2),
+            'base_with_vat'         => round($base_with_vat, 2),
+            'margin'                => round($margin, 2),
+            'mounting'              => round($mounting_cost, 2),
+            'led_qty'               => $ledQty,
+            'led_cost'              => round($led_cost, 2),
+            'delivery_km'           => $delivery_km,
+            'delivery_cost'         => round($delivery_cost, 2),
+            'subtotal_before_color' => round($subtotal_before_color, 2),
+            'color_surcharge'       => round($color_surcharge, 2),
+            'color_premium'         => (bool) $p['colors'][$color_key]['premium'],
+            'gross_total'           => round($gross_total, 2),
+            'net_total'             => round($net_total, 2),
+            'purchase'              => round($purchase, 2),
         ],
         'normalized'   => [
             'width'        => $width,
@@ -606,7 +634,33 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
     ];
 
 
-    // Admin rows (kontaktné údaje + konfigurácia)
+    // Rozpis ceny pre admina
+    $b = $calc['breakdown'];
+    $eur = static function ($v) {
+        return number_format((float) $v, 2, ',', ' ') . ' €';
+    };
+    $price_rows = [
+        ['label' => $s['price_base'],          'value' => $eur($b['base'])],
+        ['label' => $s['price_vat'],           'value' => '+ ' . $eur($b['vat'])],
+        ['label' => $s['price_base_with_vat'], 'value' => $eur($b['base_with_vat'])],
+        ['label' => $s['price_margin'],        'value' => '+ ' . $eur($b['margin'])],
+    ];
+    if ($b['mounting'] > 0) {
+        $price_rows[] = ['label' => $s['price_mounting'], 'value' => '+ ' . $eur($b['mounting'])];
+    }
+    if ($b['led_cost'] > 0) {
+        $price_rows[] = ['label' => $s['price_led'] . ' (' . $b['led_qty'] . ' ' . $s['led_ks'] . ')', 'value' => '+ ' . $eur($b['led_cost'])];
+    }
+    if ($b['delivery_cost'] > 0) {
+        $price_rows[] = ['label' => $s['price_delivery'] . ' (' . $b['delivery_km'] . ' km)', 'value' => '+ ' . $eur($b['delivery_cost'])];
+    }
+    $price_rows[] = ['label' => $s['price_subtotal'], 'value' => $eur($b['subtotal_before_color'])];
+    if ($b['color_surcharge'] > 0) {
+        $price_rows[] = ['label' => $s['price_color'], 'value' => '+ ' . $eur($b['color_surcharge'])];
+    }
+    $price_rows[] = ['label' => $s['price_total'], 'value' => $eur($b['gross_total'])];
+
+    // Admin rows (kontaktné údaje + konfigurácia + rozpis ceny)
     $admin_rows = array_merge(
         [
             ['label' => $s['email_name'],  'value' => $name],
@@ -614,7 +668,9 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
             ['label' => $s['email_email'], 'value' => $email],
             ['label' => $s['email_city'],  'value' => $city],
         ],
-        $config_rows
+        $config_rows,
+        [['label' => '', 'value' => '']],
+        $price_rows
     );
     if ($note !== '') {
         $admin_rows[] = ['label' => $s['email_note'], 'value' => $note];
