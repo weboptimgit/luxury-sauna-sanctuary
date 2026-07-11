@@ -478,11 +478,18 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
     if ($extra_posts > 0)               $base += $extra_posts * $p['extra_post_price'];
     if ($post_layout['reinforcement'])  $base += $p['reinforcement_price'];
 
-    // 2) Farba: +20 % za RAL na mieru – PRED maržou
-    $color_surcharge = $p['colors'][$color_key]['premium'] ? $base * $p['premium_color_surcharge'] : 0;
-    $purchase = $base + $color_surcharge;
+    // 2) DPH 23 % – hneď zo základu (nákupnej ceny)
+    $vat_rate = $p['vat_rate'];
+    $vat = $base * $vat_rate;
+    $base_with_vat = $base + $vat;
 
-    // 3) LED – 35 €/ks, počet = ceil(šírka(m)) − 1, minimálne 5
+    // 3) Marža 40 % zo (základ + DPH)
+    $margin = $base_with_vat * $p['margin_rate'];
+
+    // 4) Montáž 20 % zo (základ + DPH + marža) – iba ak je vybraná
+    $mounting_cost = !empty($cfg['mounting']) ? ($base_with_vat + $margin) * $p['mounting_rate'] : 0;
+
+    // 5) LED – 35 €/ks, počet = ceil(šírka(m)) − 1, minimálne 5
     $ledQty = 0;
     if (!empty($cfg['led'])) {
         $widthM = $width / 100.0;
@@ -490,17 +497,19 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
     }
     $led_cost = $ledQty * $p['led_unit_price'];
 
-    // 4) Marža 40 % z nákupnej ceny (vrátane farby, bez LED a dopravy)
-    $margin = $purchase * $p['margin_rate'];
-
-    // 5) Montáž 20 % z (nákupná + marža) – iba ak je vybraná
-    $mounting_cost = !empty($cfg['mounting']) ? ($purchase + $margin) * $p['mounting_rate'] : 0;
-
     // 6) Doprava – 0,75 € / km
     $delivery_cost = $delivery_km * $p['delivery_per_km'];
 
-    // 7) Konečná cena BEZ DPH – DPH pripočíta WooCommerce
-    $net_total = $purchase + $led_cost + $delivery_cost + $margin + $mounting_cost;
+    // 7) Medzisúčet pred RAL príplatkom
+    $subtotal_before_color = $base_with_vat + $margin + $mounting_cost + $led_cost + $delivery_cost;
+
+    // 8) RAL na mieru +15 % – na konci, zo subtotalu
+    $color_surcharge = $p['colors'][$color_key]['premium'] ? $subtotal_before_color * $p['premium_color_surcharge'] : 0;
+    $gross_total = $subtotal_before_color + $color_surcharge;
+
+    // Pre spätnú kompatibilitu (WC integrácia, e-mailový dopyt)
+    $purchase   = $base + $color_surcharge; // pôvodný význam "nákup + farba"
+    $net_total  = $gross_total - $vat;
 
     $color_label = luxurelax_pergola_t($p['colors'][$color_key]['label'], $lang);
     if ($color_key === 'ral') {
@@ -517,7 +526,7 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
     }
 
     return [
-        'price'        => (int) round($net_total),
+        'price'        => (int) round($gross_total),
         'area_m2'      => round($area, 2),
         'color_label'  => $color_label,
         'roof_label'   => luxurelax_pergola_t($p['roofs'][$roof_key]['label'], $lang),
@@ -527,16 +536,22 @@ function luxurelax_pergola_calculate_price($cfg, $lang = 'sk') {
         'led_qty'      => $ledQty,
         'delivery_km'  => $delivery_km,
         'breakdown'    => [
-            'base'            => round($base, 2),
-            'color_surcharge' => round($color_surcharge, 2),
-            'purchase'        => round($purchase, 2),
-            'led_qty'         => $ledQty,
-            'led_cost'        => round($led_cost, 2),
-            'margin'          => round($margin, 2),
-            'mounting'        => round($mounting_cost, 2),
-            'delivery_km'     => $delivery_km,
-            'delivery_cost'   => round($delivery_cost, 2),
-            'net_total'       => round($net_total, 2),
+            'base'                  => round($base, 2),
+            'vat_rate'              => $vat_rate,
+            'vat'                   => round($vat, 2),
+            'base_with_vat'         => round($base_with_vat, 2),
+            'margin'                => round($margin, 2),
+            'mounting'              => round($mounting_cost, 2),
+            'led_qty'               => $ledQty,
+            'led_cost'              => round($led_cost, 2),
+            'delivery_km'           => $delivery_km,
+            'delivery_cost'         => round($delivery_cost, 2),
+            'subtotal_before_color' => round($subtotal_before_color, 2),
+            'color_surcharge'       => round($color_surcharge, 2),
+            'color_premium'         => (bool) $p['colors'][$color_key]['premium'],
+            'gross_total'           => round($gross_total, 2),
+            'net_total'             => round($net_total, 2),
+            'purchase'              => round($purchase, 2),
         ],
         'normalized'   => [
             'width'        => $width,
