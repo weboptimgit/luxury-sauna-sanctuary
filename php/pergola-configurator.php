@@ -622,7 +622,33 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
     ];
 
 
-    // Admin rows (kontaktné údaje + konfigurácia)
+    // Rozpis ceny pre admina
+    $b = $calc['breakdown'];
+    $eur = static function ($v) {
+        return number_format((float) $v, 2, ',', ' ') . ' €';
+    };
+    $price_rows = [
+        ['label' => $s['price_base'],          'value' => $eur($b['base'])],
+        ['label' => $s['price_vat'],           'value' => '+ ' . $eur($b['vat'])],
+        ['label' => $s['price_base_with_vat'], 'value' => $eur($b['base_with_vat'])],
+        ['label' => $s['price_margin'],        'value' => '+ ' . $eur($b['margin'])],
+    ];
+    if ($b['mounting'] > 0) {
+        $price_rows[] = ['label' => $s['price_mounting'], 'value' => '+ ' . $eur($b['mounting'])];
+    }
+    if ($b['led_cost'] > 0) {
+        $price_rows[] = ['label' => $s['price_led'] . ' (' . $b['led_qty'] . ' ' . $s['led_ks'] . ')', 'value' => '+ ' . $eur($b['led_cost'])];
+    }
+    if ($b['delivery_cost'] > 0) {
+        $price_rows[] = ['label' => $s['price_delivery'] . ' (' . $b['delivery_km'] . ' km)', 'value' => '+ ' . $eur($b['delivery_cost'])];
+    }
+    $price_rows[] = ['label' => $s['price_subtotal'], 'value' => $eur($b['subtotal_before_color'])];
+    if ($b['color_surcharge'] > 0) {
+        $price_rows[] = ['label' => $s['price_color'], 'value' => '+ ' . $eur($b['color_surcharge'])];
+    }
+    $price_rows[] = ['label' => $s['price_total'], 'value' => $eur($b['gross_total'])];
+
+    // Admin rows (kontaktné údaje + konfigurácia + rozpis ceny)
     $admin_rows = array_merge(
         [
             ['label' => $s['email_name'],  'value' => $name],
@@ -630,7 +656,9 @@ function luxurelax_pergola_handle_inquiry(WP_REST_Request $request) {
             ['label' => $s['email_email'], 'value' => $email],
             ['label' => $s['email_city'],  'value' => $city],
         ],
-        $config_rows
+        $config_rows,
+        [['label' => '', 'value' => '']],
+        $price_rows
     );
     if ($note !== '') {
         $admin_rows[] = ['label' => $s['email_note'], 'value' => $note];
