@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteChrome } from "@/hooks/useSiteChrome";
 import flagUk from "@/assets/flag-uk.png";
 import flagSk from "@/assets/flag-sk.png";
 import flagHu from "@/assets/flag-hu.png";
@@ -13,6 +13,7 @@ const currencies = ["EUR", "CZK", "HUF"] as const;
 const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, setLanguage, currency, setCurrency, t } = useLanguage();
+  const { chrome } = useSiteChrome(language);
 
   // Base URL changes based on language - .com for EN, .sk for SK, .hu for HU
   const baseUrl =
@@ -22,31 +23,17 @@ const ConfiguratorHeader = () => {
         ? "https://www.luxurelax.hu"
         : "https://www.luxurelax.sk";
 
-  const categoryMap = {
-    sk: { prefix: "/k", saunas: "sauny", tubs: "kade", pergolas: "pergoly" },
-    en: { prefix: "/c", saunas: "saunas", tubs: "hottubs", pergolas: "pergolas" },
-    hu: { prefix: "/k", saunas: "szaunak", tubs: "pezsgofurdok", pergolas: "pergolak" },
-  } as const;
-
-  const { prefix, saunas, tubs, pergolas } = categoryMap[language] || categoryMap.sk;
-
-  const configuratorPath =
-    language === "en" ? "/configurator" : language === "hu" ? "/konfigurator-hu" : "/konfigurator";
-
-  const aboutHref =
-    language === "en" ? `${baseUrl}/about-us/` : language === "hu" ? `${baseUrl}/rolunk/` : `${baseUrl}/o-nas/`;
   const contactHref =
     language === "en" ? `${baseUrl}/contact/` : language === "hu" ? `${baseUrl}/kapcsolat/` : `${baseUrl}/kontakt/`;
 
-  const navItems = [
-    { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
-    { labelKey: "nav.hotTubs", href: `${baseUrl}${prefix}/${tubs}/`, external: true },
-    { labelKey: "nav.pergolas", href: `${baseUrl}${prefix}/${pergolas}/`, external: true },
-    { labelKey: "nav.configurator", href: configuratorPath, external: false },
-    { labelKey: "nav.blog", href: `${baseUrl}/blog/`, external: true },
-    { labelKey: "nav.about", href: aboutHref, external: true },
-    { labelKey: "nav.contact", href: contactHref, external: true },
-  ];
+  // Menu items from WordPress (falls back to empty while loading; hook has offline fallback too)
+  const navItems: { label: string; href: string }[] = (chrome?.mainMenu ?? []).map((m) => ({
+    label: m.label,
+    href: m.url,
+  }));
+
+  const logoSrc = chrome?.logo || brelaxLogo;
+  const homeHref = chrome?.home || `${baseUrl}/`;
 
   // Cycle sk -> en -> hu -> sk
   const toggleLanguage = () => {
