@@ -2764,9 +2764,12 @@ const Configurator = () => {
                     : isAddingToCart ? t("config.addingToCart") : t("config.addToCart")}
                 </Button>
 
+                <QuoteRequestButton options={quoteOptions} lang={language as "sk" | "en" | "hu"} className="mt-3" />
+
                 <p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
               </div>
             </div>
+
 
             {/* Pravá strana - konfigurácia */}
             <div className="relative min-w-0">
