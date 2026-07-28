@@ -49,8 +49,8 @@ const ConfiguratorHeader = () => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between relative">
           {/* Logo */}
-          <a href={`${baseUrl}/`} className="flex items-center">
-            <img src={brelaxLogo} alt="LUXURELAX" className="w-[100px] h-auto" />
+          <a href={homeHref} className="flex items-center">
+            <img src={logoSrc} alt="LUXURELAX" className="w-[100px] h-auto" />
           </a>
 
           {/* Desktop Navigation - centered absolutely */}
