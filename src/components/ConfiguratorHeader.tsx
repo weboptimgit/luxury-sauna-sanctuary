@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteChrome } from "@/hooks/useSiteChrome";
 import flagUk from "@/assets/flag-uk.png";
 import flagSk from "@/assets/flag-sk.png";
 import flagHu from "@/assets/flag-hu.png";
@@ -13,6 +13,7 @@ const currencies = ["EUR", "CZK", "HUF"] as const;
 const ConfiguratorHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, setLanguage, currency, setCurrency, t } = useLanguage();
+  const { chrome } = useSiteChrome(language);
 
   // Base URL changes based on language - .com for EN, .sk for SK, .hu for HU
   const baseUrl =
@@ -22,31 +23,17 @@ const ConfiguratorHeader = () => {
         ? "https://www.luxurelax.hu"
         : "https://www.luxurelax.sk";
 
-  const categoryMap = {
-    sk: { prefix: "/k", saunas: "sauny", tubs: "kade", pergolas: "pergoly" },
-    en: { prefix: "/c", saunas: "saunas", tubs: "hottubs", pergolas: "pergolas" },
-    hu: { prefix: "/k", saunas: "szaunak", tubs: "pezsgofurdok", pergolas: "pergolak" },
-  } as const;
-
-  const { prefix, saunas, tubs, pergolas } = categoryMap[language] || categoryMap.sk;
-
-  const configuratorPath =
-    language === "en" ? "/configurator" : language === "hu" ? "/konfigurator-hu" : "/konfigurator";
-
-  const aboutHref =
-    language === "en" ? `${baseUrl}/about-us/` : language === "hu" ? `${baseUrl}/rolunk/` : `${baseUrl}/o-nas/`;
   const contactHref =
     language === "en" ? `${baseUrl}/contact/` : language === "hu" ? `${baseUrl}/kapcsolat/` : `${baseUrl}/kontakt/`;
 
-  const navItems = [
-    { labelKey: "nav.finnishSaunas", href: `${baseUrl}${prefix}/${saunas}/`, external: true },
-    { labelKey: "nav.hotTubs", href: `${baseUrl}${prefix}/${tubs}/`, external: true },
-    { labelKey: "nav.pergolas", href: `${baseUrl}${prefix}/${pergolas}/`, external: true },
-    { labelKey: "nav.configurator", href: configuratorPath, external: false },
-    { labelKey: "nav.blog", href: `${baseUrl}/blog/`, external: true },
-    { labelKey: "nav.about", href: aboutHref, external: true },
-    { labelKey: "nav.contact", href: contactHref, external: true },
-  ];
+  // Menu items from WordPress (falls back to empty while loading; hook has offline fallback too)
+  const navItems: { label: string; href: string }[] = (chrome?.mainMenu ?? []).map((m) => ({
+    label: m.label,
+    href: m.url,
+  }));
+
+  const logoSrc = chrome?.logo || brelaxLogo;
+  const homeHref = chrome?.home || `${baseUrl}/`;
 
   // Cycle sk -> en -> hu -> sk
   const toggleLanguage = () => {
@@ -62,31 +49,21 @@ const ConfiguratorHeader = () => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between relative">
           {/* Logo */}
-          <a href={`${baseUrl}/`} className="flex items-center">
-            <img src={brelaxLogo} alt="LUXURELAX" className="w-[100px] h-auto" />
+          <a href={homeHref} className="flex items-center">
+            <img src={logoSrc} alt="LUXURELAX" className="w-[100px] h-auto" />
           </a>
 
           {/* Desktop Navigation - centered absolutely */}
           <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-            {navItems.map((item) =>
-              item.external ? (
-                <a
-                  key={item.labelKey}
-                  href={item.href}
-                  className="text-sm font-medium transition-colors duration-300 tracking-wide uppercase text-foreground/70 hover:text-primary"
-                >
-                  {t(item.labelKey)}
-                </a>
-              ) : (
-                <Link
-                  key={item.labelKey}
-                  to={item.href}
-                  className="text-sm font-medium transition-colors duration-300 tracking-wide uppercase text-primary"
-                >
-                  {t(item.labelKey)}
-                </Link>
-              ),
-            )}
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="text-sm font-medium transition-colors duration-300 tracking-wide uppercase text-foreground/70 hover:text-primary"
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
 
           {/* Actions */}
@@ -168,27 +145,16 @@ const ConfiguratorHeader = () => {
                 {nextLangLabel}
               </button>
 
-              {navItems.map((item) =>
-                item.external ? (
-                  <a
-                    key={item.labelKey}
-                    href={item.href}
-                    className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wide uppercase"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {t(item.labelKey)}
-                  </a>
-                ) : (
-                  <Link
-                    key={item.labelKey}
-                    to={item.href}
-                    className="text-sm font-medium text-primary transition-colors duration-300 tracking-wide uppercase"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {t(item.labelKey)}
-                  </Link>
-                ),
-              )}
+              {navItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wide uppercase"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ))}
               <a href={contactHref} onClick={() => setIsMenuOpen(false)}>
                 <Button variant="luxury" size="sm" className="mt-2 w-full">
                   {t("nav.inquiry")}
