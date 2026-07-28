@@ -145,27 +145,16 @@ const ConfiguratorHeader = () => {
                 {nextLangLabel}
               </button>
 
-              {navItems.map((item) =>
-                item.external ? (
-                  <a
-                    key={item.labelKey}
-                    href={item.href}
-                    className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wide uppercase"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {t(item.labelKey)}
-                  </a>
-                ) : (
-                  <Link
-                    key={item.labelKey}
-                    to={item.href}
-                    className="text-sm font-medium text-primary transition-colors duration-300 tracking-wide uppercase"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {t(item.labelKey)}
-                  </Link>
-                ),
-              )}
+              {navItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-300 tracking-wide uppercase"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ))}
               <a href={contactHref} onClick={() => setIsMenuOpen(false)}>
                 <Button variant="luxury" size="sm" className="mt-2 w-full">
                   {t("nav.inquiry")}
