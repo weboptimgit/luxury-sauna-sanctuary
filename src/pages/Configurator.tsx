@@ -232,6 +232,7 @@ import arcticPodGallery3 from "@/assets/arctic-pod-gallery-3.jpg";
 import arcticPodGallery4 from "@/assets/arctic-pod-gallery-4.jpg";
 import arcticPodGallery5 from "@/assets/arctic-pod-gallery-5.jpg";
 import arcticPodGallery6 from "@/assets/arctic-pod-gallery-6.jpg";
+import QuoteRequestButton from "@/components/QuoteRequestButton";
 
 type ProductCategory = "sauna" | "hottub" | "combo";
 
@@ -1735,6 +1736,12 @@ const Configurator = () => {
   // Validácia - či je vybraný model ohrievača keď je vybraný typ
   const isHeaterModelRequired = saunaConfig.heaterType !== "none" && saunaConfig.heaterModel === "none";
 
+  const quoteOptions: Record<string, unknown> = productCategory === "sauna"
+    ? { productCategory, saunaTypeId: selectedSaunaType?.id, ...saunaConfig }
+    : productCategory === "combo"
+      ? { productCategory, comboTypeId: selectedComboType?.id, ...comboConfig }
+      : { productCategory, hottubTypeId: selectedHotTubType?.id, ...hotTubConfig };
+
   const addToCart = async () => {
     if (!productCategory || !apiConfig) return;
 
@@ -2757,9 +2764,12 @@ const Configurator = () => {
                     : isAddingToCart ? t("config.addingToCart") : t("config.addToCart")}
                 </Button>
 
+                <QuoteRequestButton options={quoteOptions} lang={language as "sk" | "en" | "hu"} className="mt-3" />
+
                 <p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
               </div>
             </div>
+
 
             {/* Pravá strana - konfigurácia */}
             <div className="relative min-w-0">
@@ -4392,6 +4402,8 @@ const Configurator = () => {
                     )}
                     {isAddingToCart ? t("config.addingToCart") : t("config.addToCart")}
                   </Button>
+
+                  <QuoteRequestButton options={quoteOptions} lang={language as "sk" | "en" | "hu"} className="mt-3" />
 
                   <p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
                 </div>
