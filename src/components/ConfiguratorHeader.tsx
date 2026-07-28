@@ -55,25 +55,15 @@ const ConfiguratorHeader = () => {
 
           {/* Desktop Navigation - centered absolutely */}
           <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-            {navItems.map((item) =>
-              item.external ? (
-                <a
-                  key={item.labelKey}
-                  href={item.href}
-                  className="text-sm font-medium transition-colors duration-300 tracking-wide uppercase text-foreground/70 hover:text-primary"
-                >
-                  {t(item.labelKey)}
-                </a>
-              ) : (
-                <Link
-                  key={item.labelKey}
-                  to={item.href}
-                  className="text-sm font-medium transition-colors duration-300 tracking-wide uppercase text-primary"
-                >
-                  {t(item.labelKey)}
-                </Link>
-              ),
-            )}
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="text-sm font-medium transition-colors duration-300 tracking-wide uppercase text-foreground/70 hover:text-primary"
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
 
           {/* Actions */}
