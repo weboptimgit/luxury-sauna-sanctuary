@@ -232,6 +232,7 @@ import arcticPodGallery3 from "@/assets/arctic-pod-gallery-3.jpg";
 import arcticPodGallery4 from "@/assets/arctic-pod-gallery-4.jpg";
 import arcticPodGallery5 from "@/assets/arctic-pod-gallery-5.jpg";
 import arcticPodGallery6 from "@/assets/arctic-pod-gallery-6.jpg";
+import QuoteRequestButton from "@/components/QuoteRequestButton";
 
 type ProductCategory = "sauna" | "hottub" | "combo";
 
