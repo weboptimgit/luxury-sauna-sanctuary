@@ -1736,6 +1736,12 @@ const Configurator = () => {
   // Validácia - či je vybraný model ohrievača keď je vybraný typ
   const isHeaterModelRequired = saunaConfig.heaterType !== "none" && saunaConfig.heaterModel === "none";
 
+  const quoteOptions: Record<string, unknown> = productCategory === "sauna"
+    ? { productCategory, saunaTypeId: selectedSaunaType?.id, ...saunaConfig }
+    : productCategory === "combo"
+      ? { productCategory, comboTypeId: selectedComboType?.id, ...comboConfig }
+      : { productCategory, hottubTypeId: selectedHotTubType?.id, ...hotTubConfig };
+
   const addToCart = async () => {
     if (!productCategory || !apiConfig) return;
 
