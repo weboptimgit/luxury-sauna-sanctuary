@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 /**
  * LUXURELAX – Nezáväzná cenová ponuka
@@ -11,6 +12,9 @@ import { useState } from "react";
  *   <QuoteRequestButton options={options} lang={lang} />
  *
  * `options` = ten istý objekt, ktorý sa posiela do /sauna/v1/add-to-cart
+ *
+ * POZN.: Modal sa renderuje cez createPortal priamo do document.body,
+ * aby ho neprekrývali prvky konfigurátora (z-index / stacking context).
  */
 
 const API = "https://www.luxurelax.sk/wp-json/sauna/v1/inquiry";
@@ -32,7 +36,6 @@ const T: Record<Lang, Record<string, string>> = {
     name: "Meno a priezvisko",
     email: "E-mail",
     phone: "Telefón",
-    note: "Poznámka (nepovinné)",
     notePh: "Napríklad kedy plánujete realizáciu alebo na čo sa chcete opýtať…",
     send: "Odoslať ponuku",
     sending: "Odosielam…",
@@ -51,7 +54,6 @@ const T: Record<Lang, Record<string, string>> = {
     name: "Full name",
     email: "E-mail",
     phone: "Phone",
-    note: "Note (optional)",
     notePh: "For example your timeline or any question you have…",
     send: "Send request",
     sending: "Sending…",
@@ -70,7 +72,6 @@ const T: Record<Lang, Record<string, string>> = {
     name: "Teljes név",
     email: "E-mail",
     phone: "Telefon",
-    note: "Megjegyzés (nem kötelező)",
     notePh: "Például a tervezett időpont vagy kérdése…",
     send: "Ajánlatkérés elküldése",
     sending: "Küldés…",
@@ -93,6 +94,21 @@ export default function QuoteRequestButton({ options, lang = "sk", className = "
   const [form, setForm] = useState({ name: "", email: "", phone: "", note: "", website: "" });
 
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
+
+  // zamkne scroll stránky, kým je modal otvorený
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    window.addEventListener("keydown", onEsc);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onEsc);
+    };
+  }, [open]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,6 +165,130 @@ export default function QuoteRequestButton({ options, lang = "sk", className = "
   const inputCls =
     "w-full rounded-lg border border-[#3d3529] bg-[#1c1814] px-4 py-3 text-[#f5f5f4] placeholder-[#6d6457] outline-none focus:border-[#EEA540] transition-colors";
 
+  const modal = (
+    <div
+      onClick={close}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 2147483000,
+        background: "rgba(0,0,0,0.8)",
+        backdropFilter: "blur(3px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "16px",
+        overflowY: "auto",
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          maxWidth: "440px",
+          background: "#161412",
+          border: "1px solid #3d3529",
+          borderRadius: "16px",
+          padding: "26px",
+          boxShadow: "0 30px 80px rgba(0,0,0,0.6)",
+          maxHeight: "90vh",
+          overflowY: "auto",
+        }}
+      >
+        {done ? (
+          <div style={{ textAlign: "center" }}>
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-[#EEA540]/40 bg-[#EEA540]/10">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EEA540" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </div>
+            <h3 className="mb-2 font-serif text-xl text-[#f3ede3]">{t.okTitle}</h3>
+            <p className="mb-6 text-sm leading-relaxed text-[#a89c8a]">{t.okText}</p>
+            <button
+              onClick={close}
+              className="rounded-lg bg-gradient-to-r from-[#EEA540] to-[#98641B] px-6 py-3 font-medium text-[#161412]"
+            >
+              {t.cancel}
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={submit}>
+            <h3 className="mb-2 font-serif text-xl text-[#f3ede3]">{t.title}</h3>
+            <p className="mb-5 text-sm leading-relaxed text-[#a89c8a]">{t.intro}</p>
+
+            <div className="space-y-3">
+              <input
+                className={inputCls}
+                placeholder={t.name}
+                value={form.name}
+                onChange={(e) => set("name", e.target.value)}
+                autoComplete="name"
+              />
+              <input
+                className={inputCls}
+                type="email"
+                placeholder={t.email}
+                value={form.email}
+                onChange={(e) => set("email", e.target.value)}
+                autoComplete="email"
+              />
+              <input
+                className={inputCls}
+                type="tel"
+                placeholder={t.phone}
+                value={form.phone}
+                onChange={(e) => set("phone", e.target.value)}
+                autoComplete="tel"
+              />
+              <textarea
+                className={inputCls + " min-h-[90px] resize-y"}
+                placeholder={t.notePh}
+                value={form.note}
+                onChange={(e) => set("note", e.target.value)}
+              />
+
+              {/* honeypot – neviditeľné pole proti spamu */}
+              <input
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={form.website}
+                onChange={(e) => set("website", e.target.value)}
+                style={{ position: "absolute", left: "-9999px", opacity: 0 }}
+                aria-hidden="true"
+              />
+            </div>
+
+            {error && (
+              <p className="mt-3 rounded-lg border border-red-900/50 bg-red-950/40 px-4 py-2 text-sm text-red-300">
+                {error}
+              </p>
+            )}
+
+            <div className="mt-5 flex gap-3">
+              <button
+                type="button"
+                onClick={close}
+                className="flex-1 rounded-lg border border-[#3d3529] px-4 py-3 text-[#a89c8a] transition-colors hover:bg-white/5"
+              >
+                {t.cancel}
+              </button>
+              <button
+                type="submit"
+                disabled={sending}
+                className="flex-1 rounded-lg bg-gradient-to-r from-[#EEA540] to-[#98641B] px-4 py-3 font-medium text-[#161412] transition-opacity disabled:opacity-60"
+              >
+                {sending ? t.sending : t.send}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <>
       <button
@@ -162,106 +302,7 @@ export default function QuoteRequestButton({ options, lang = "sk", className = "
         {t.cta}
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-          onClick={close}
-        >
-          <div
-            className="w-full max-w-md rounded-2xl border border-[#3d3529] bg-[#161412] p-6 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {done ? (
-              <div className="text-center">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-[#EEA540]/40 bg-[#EEA540]/10">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EEA540" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 6L9 17l-5-5" />
-                  </svg>
-                </div>
-                <h3 className="mb-2 font-serif text-xl text-[#f3ede3]">{t.okTitle}</h3>
-                <p className="mb-6 text-sm leading-relaxed text-[#a89c8a]">{t.okText}</p>
-                <button
-                  onClick={close}
-                  className="rounded-lg bg-gradient-to-r from-[#EEA540] to-[#98641B] px-6 py-3 font-medium text-[#161412]"
-                >
-                  {t.cancel}
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={submit}>
-                <h3 className="mb-2 font-serif text-xl text-[#f3ede3]">{t.title}</h3>
-                <p className="mb-5 text-sm leading-relaxed text-[#a89c8a]">{t.intro}</p>
-
-                <div className="space-y-3">
-                  <input
-                    className={inputCls}
-                    placeholder={t.name}
-                    value={form.name}
-                    onChange={(e) => set("name", e.target.value)}
-                    autoComplete="name"
-                  />
-                  <input
-                    className={inputCls}
-                    type="email"
-                    placeholder={t.email}
-                    value={form.email}
-                    onChange={(e) => set("email", e.target.value)}
-                    autoComplete="email"
-                  />
-                  <input
-                    className={inputCls}
-                    type="tel"
-                    placeholder={t.phone}
-                    value={form.phone}
-                    onChange={(e) => set("phone", e.target.value)}
-                    autoComplete="tel"
-                  />
-                  <textarea
-                    className={inputCls + " min-h-[90px] resize-y"}
-                    placeholder={t.notePh}
-                    value={form.note}
-                    onChange={(e) => set("note", e.target.value)}
-                  />
-
-                  {/* honeypot – neviditeľné pole proti spamu */}
-                  <input
-                    type="text"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    value={form.website}
-                    onChange={(e) => set("website", e.target.value)}
-                    style={{ position: "absolute", left: "-9999px", opacity: 0 }}
-                    aria-hidden="true"
-                  />
-                </div>
-
-                {error && (
-                  <p className="mt-3 rounded-lg border border-red-900/50 bg-red-950/40 px-4 py-2 text-sm text-red-300">
-                    {error}
-                  </p>
-                )}
-
-                <div className="mt-5 flex gap-3">
-                  <button
-                    type="button"
-                    onClick={close}
-                    className="flex-1 rounded-lg border border-[#3d3529] px-4 py-3 text-[#a89c8a] transition-colors hover:bg-white/5"
-                  >
-                    {t.cancel}
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={sending}
-                    className="flex-1 rounded-lg bg-gradient-to-r from-[#EEA540] to-[#98641B] px-4 py-3 font-medium text-[#161412] transition-opacity disabled:opacity-60"
-                  >
-                    {sending ? t.sending : t.send}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
+      {open && typeof document !== "undefined" && createPortal(modal, document.body)}
     </>
   );
 }
