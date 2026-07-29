@@ -34,7 +34,7 @@ export interface SiteChrome {
       city: string;
       ico: string;
       dic: string;
-      vatNote: string;
+      icDph: string;
       phone: string;
       email: string;
     };
@@ -69,8 +69,8 @@ const FALLBACK: Record<Lang, SiteChrome> = {
         street: "Karpatské námestie 7770/10A",
         city: "831 06 Bratislava - Rača",
         ico: "57 556 245",
-        dic: "SK2122824484",
-        vatNote: "Nie sme platiteľmi DPH",
+        dic: "2122824484",
+        icDph: "SK2122824484",
         phone: "+421 940 916 815",
         email: "info@luxurelax.sk",
       },
