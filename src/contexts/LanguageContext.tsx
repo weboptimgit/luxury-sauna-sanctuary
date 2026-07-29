@@ -217,6 +217,10 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.contactTitle": "Kontakt",
     "footer.copyright": "© 2026 LUXURELAX. Všetky práva vyhradené.",
     "footer.weboptim": "E-Shop od weboptim",
+    "footer.ico": "IČO",
+    "footer.dic": "DIČ",
+    "footer.icDph": "IČ DPH",
+    "footer.vatNote": "podľa §7a",
 
     // Pergola configurator
     "pergola.hero.badge": "Luxurelax Pergoly",
@@ -532,6 +536,10 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.contactTitle": "Contact",
     "footer.copyright": "© 2026 LUXURELAX. All rights reserved.",
     "footer.weboptim": "E-Shop by weboptim",
+    "footer.ico": "Company ID",
+    "footer.dic": "Tax ID",
+    "footer.icDph": "VAT ID",
+    "footer.vatNote": "under Section 7a",
 
     // Pergola configurator
     "pergola.hero.badge": "Luxurelax Pergolas",
@@ -848,6 +856,10 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.contactTitle": "Kapcsolat",
     "footer.copyright": "© 2026 LUXURELAX. Minden jog fenntartva.",
     "footer.weboptim": "E-Shop a weboptim-tól",
+    "footer.ico": "Cégjegyzékszám",
+    "footer.dic": "Adószám",
+    "footer.icDph": "Közösségi adószám: ",
+    "footer.vatNote": "a 7a. § szerint",
 
     // Pergola configurator
     "pergola.hero.badge": "Luxurelax Pergolák",
