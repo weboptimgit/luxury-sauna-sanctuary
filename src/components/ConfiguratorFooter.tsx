@@ -89,27 +89,25 @@ const ConfiguratorFooter = () => {
                     {contact.city}
                     <br />
                     {contact.ico && (
-                      <>
-                        IČO: {contact.ico}
-                        <br />
-                      </>
-                    )}
-                    
-                    {contact.dic && (
-                      <>
-                        DIČ: {contact.dic}
-                        <br />
-                      </>
-                    )}
-                    
-                    {contact.icDph && (
-                      <>
-                        IČ DPH: {contact.icDph}
-                        <br />
-                      </>
-                    )}
-                    
-                    {contact.vatNote && <>{contact.vatNote}</>}
+                    <>
+                      {t("footer.ico")}: {contact.ico}
+                      <br />
+                    </>
+                  )}
+                  
+                  {contact.dic && (
+                    <>
+                      {t("footer.dic")}: {contact.dic}
+                      <br />
+                    </>
+                  )}
+                  
+                  {contact.icDph && (
+                    <>
+                      {t("footer.icDph")}: {contact.icDph}, {t("footer.vatNote")}
+                      <br />
+                    </>
+                  )}
                   </span>
                 </li>
                 {contact.phone && (
