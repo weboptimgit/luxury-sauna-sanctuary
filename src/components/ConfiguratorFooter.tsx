@@ -88,9 +88,28 @@ const ConfiguratorFooter = () => {
                     <br />
                     {contact.city}
                     <br />
-                    {contact.ico && <>IČO: {contact.ico}<br /></>}
-                    {contact.dic && <>{contact.dic}<br /></>}
-                    {contact.vatNote}
+                    {contact.ico && (
+                      <>
+                        IČO: {contact.ico}
+                        <br />
+                      </>
+                    )}
+                    
+                    {contact.dic && (
+                      <>
+                        DIČ: {contact.dic}
+                        <br />
+                      </>
+                    )}
+                    
+                    {contact.icDph && (
+                      <>
+                        IČ DPH: {contact.icDph}
+                        <br />
+                      </>
+                    )}
+                    
+                    {contact.vatNote && <>{contact.vatNote}</>}
                   </span>
                 </li>
                 {contact.phone && (
