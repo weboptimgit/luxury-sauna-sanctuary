@@ -82,32 +82,16 @@ const ConfiguratorFooter = () => {
                 <li className="flex items-start gap-3">
                   <MapPin className="w-4 h-4 text-primary mt-1 shrink-0" />
                   <span className="text-muted-foreground text-sm">
-                    {contact.company}
-                    <br />
-                    {contact.street}
-                    <br />
-                    {contact.city}
-                    <br />
-                    {contact.ico && (
-                      <>
-                        {t("footer.ico")}: {contact.ico}
-                        <br />
-                      </>
-                    )}
-                    
-                    {contact.dic && (
-                      <>
-                        {t("footer.dic")}: {contact.dic}
-                        <br />
-                      </>
-                    )}
-                    
-                    {contact.icDph && (
-                      <>
-                        {t("footer.icDph")}: {contact.icDph}, {t("footer.vatNote")}
-                        <br />
-                      </>
-                    )}
+                    {(contact.address ?? []).map((line) => (
+                      <span key={line} className="block">
+                        {line}
+                      </span>
+                    ))}
+                    {(contact.legal ?? []).map((item) => (
+                      <span key={item.label} className="block">
+                        {item.label}: {item.value}
+                      </span>
+                    ))}
                   </span>
                 </li>
                 {contact.phone && (
