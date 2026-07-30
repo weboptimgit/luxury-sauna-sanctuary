@@ -81,19 +81,24 @@ const ConfiguratorFooter = () => {
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <MapPin className="w-4 h-4 text-primary mt-1 shrink-0" />
-                  <span className="text-muted-foreground text-sm">
-                    {(contact.address ?? []).map((line) => (
-                      <span key={line} className="block">
-                        {line}
-                      </span>
-                    ))}
-                    {(contact.legal ?? []).map((item) => (
-                      <span key={item.label} className="block">
-                        {item.label}: {item.value}
-                      </span>
-                    ))}
-                  </span>
+                  <div className="text-muted-foreground text-sm">
+                    <div className="space-y-1">
+                      {(contact.address ?? []).map((line) => (
+                        <div key={line}>{line}</div>
+                      ))}
+                    </div>
+                    {(contact.legal ?? []).length > 0 && (
+                      <div className="mt-3.5 space-y-1">
+                        {(contact.legal ?? []).map((item) => (
+                          <div key={item.label}>
+                            {item.label}: {item.value}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </li>
+
                 {contact.phone && (
                   <li className="flex items-center gap-3">
                     <Phone className="w-4 h-4 text-primary shrink-0" />
