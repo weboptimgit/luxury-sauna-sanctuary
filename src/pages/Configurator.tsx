@@ -651,6 +651,8 @@ type ApiHotTubType = {
   label: string;
   basePrice: number;
   dimensions: string;
+  image?: string;
+  images?: string[];
   sizeOptions?: ApiOption[];
   exteriorWoodOptions?: ApiOption[];
   heaterOptions?: ApiOption[];
