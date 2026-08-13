@@ -651,6 +651,8 @@ type ApiHotTubType = {
   label: string;
   basePrice: number;
   dimensions: string;
+  image?: string;
+  images?: string[];
   sizeOptions?: ApiOption[];
   exteriorWoodOptions?: ApiOption[];
   heaterOptions?: ApiOption[];
@@ -1306,8 +1308,8 @@ const Configurator = () => {
       name: ht.label,
       dimensions: ht.dimensions ?? "",
       basePrice: ht.basePrice,
-      image: hotTubImageMap[ht.id] ?? hotTub,
-      galleryImages: hotTubGalleryMap[ht.id] ?? [],
+      image: ht.image ?? hotTubImageMap[ht.id] ?? hotTub,
+      galleryImages: (ht.images && ht.images.length ? ht.images : hotTubGalleryMap[ht.id]) ?? [],
       hasSize: ht.hasSize ?? false,
       hasExteriorWood: ht.hasExteriorWood ?? true,
       hasHeater: ht.hasHeater ?? false,
