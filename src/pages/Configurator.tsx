@@ -608,6 +608,9 @@ type ApiOption = {
   price: number;
   originalPrice?: number;
   description?: string;
+  hex?: string | null;
+  pctOfBase?: number | null;
+  isRal?: boolean;
 };
 
 type ApiOptionMapValue = {
@@ -834,7 +837,7 @@ const Configurator = () => {
     exteriorLed: false,
     bluetooth: "none",
     accessoryKit: "none",
-    color: "none" as SaunaColorType,
+    color: "none" as SaunaColorType | (string & {}),
     woodType: "spruce" as WoodType,
     window: "none",
     mirror: "none",
@@ -948,7 +951,7 @@ const Configurator = () => {
 
     // Ak má farbu a existuje mapa farieb pre tento model
     if (selectedSaunaType.hasColor && saunaColorImages[selectedSaunaType.id]) {
-      return saunaColorImages[selectedSaunaType.id][saunaConfig.color] || selectedSaunaType.image;
+      return saunaColorImages[selectedSaunaType.id][saunaConfig.color as SaunaColorType] || selectedSaunaType.image;
     }
 
     return selectedSaunaType.image;
@@ -1067,6 +1070,29 @@ const Configurator = () => {
     () => saunaColorOptions.filter((o): o is ConfigOption & { id: SaunaColorType } => isSaunaColorType(o.id)),
     [saunaColorOptions],
   );
+
+  // RAL Classic paleta z API (isRal === true), príplatok = pctOfBase % zo základnej ceny modelu
+  const ralColorOptions = useMemo(
+    () => (apiConfig?.sauna?.colorOptions ?? []).filter((o) => o.isRal && o.hex),
+    [apiConfig],
+  );
+  const selectedRalOption = useMemo(
+    () => ralColorOptions.find((o) => o.id === saunaConfig.color) ?? null,
+    [ralColorOptions, saunaConfig.color],
+  );
+  const ralPct = ralColorOptions[0]?.pctOfBase ?? 5;
+  const ralSurcharge = useMemo(() => {
+    if (!selectedRalOption || !selectedSaunaType) return 0;
+    return Math.round(((selectedRalOption.pctOfBase ?? 0) / 100) * selectedSaunaType.basePrice);
+  }, [selectedRalOption, selectedSaunaType]);
+  const ralSurchargeFor = (basePrice: number, pct?: number | null) => Math.round(((pct ?? 0) / 100) * basePrice);
+  const [showRalPalette, setShowRalPalette] = useState(false);
+  const [ralSearch, setRalSearch] = useState("");
+  const filteredRalOptions = useMemo(() => {
+    const q = ralSearch.trim().toLowerCase();
+    if (!q) return ralColorOptions;
+    return ralColorOptions.filter((o) => o.label.toLowerCase().includes(q) || o.id.toLowerCase().includes(q));
+  }, [ralColorOptions, ralSearch]);
 
   const exteriorWoodImages: Record<string, string> = {
     spruce: spruceWood2Img,
@@ -1588,7 +1614,10 @@ const Configurator = () => {
 
       const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
-      const color = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
+      const colorOpt = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color);
+      const color = colorOpt?.isRal
+        ? ralSurchargeFor(basePrice, colorOpt.pctOfBase)
+        : colorOpt?.price ?? 0;
       const woodPrice = woodTypeOptionsForModel.find((w) => w.id === saunaConfig.woodType)?.price ?? 0;
       const windowPrice = selectedSaunaType.windowOptions.find((w) => w.id === saunaConfig.window)?.price ?? 0;
       const mirrorPrice = selectedSaunaType.mirrorFilmOptions.find((m) => m.id === saunaConfig.mirror)?.price ?? 0;
