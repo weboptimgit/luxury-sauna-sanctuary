@@ -4033,6 +4033,87 @@ const Configurator = () => {
                               </button>
                             ))}
                           </div>
+                          {ralColorOptions.length > 0 && (
+                            <div className="mt-4">
+                              <button
+                                type="button"
+                                onClick={() => setShowRalPalette((v) => !v)}
+                                className="w-full flex items-center justify-between gap-2 rounded-lg border border-border/60 bg-card/50 px-3 py-2 text-xs md:text-sm font-medium text-foreground hover:border-primary/50 transition-colors"
+                              >
+                                <span className="text-left">
+                                  {showRalPalette
+                                    ? t("sauna.ral.hide")
+                                    : t("sauna.ral.toggle").replace("{pct}", String(ralPct))}
+                                </span>
+                                <ChevronDown
+                                  className={cn("w-4 h-4 shrink-0 transition-transform", showRalPalette && "rotate-180")}
+                                />
+                              </button>
+
+                              {showRalPalette && (
+                                <div className="mt-3 space-y-3">
+                                  <input
+                                    type="text"
+                                    value={ralSearch}
+                                    onChange={(e) => setRalSearch(e.target.value)}
+                                    placeholder={t("sauna.ral.search")}
+                                    className="w-full rounded-md border border-border/60 bg-background px-3 py-2 text-xs md:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
+                                  />
+                                  {filteredRalOptions.length === 0 ? (
+                                    <p className="text-xs text-muted-foreground italic">{t("sauna.ral.empty")}</p>
+                                  ) : (
+                                    <div className="grid grid-cols-6 md:grid-cols-10 gap-1.5 max-h-72 overflow-y-auto pr-1">
+                                      {filteredRalOptions.map((option) => {
+                                        const isSelected = saunaConfig.color === option.id;
+                                        return (
+                                          <button
+                                            key={option.id}
+                                            type="button"
+                                            title={option.label}
+                                            onClick={() => {
+                                              setSaunaConfig((prev) => ({ ...prev, color: option.id }));
+                                              setCurrentImageIndex(0);
+                                            }}
+                                            className={cn(
+                                              "flex flex-col items-center gap-1 rounded-md p-1 border-2 transition-all",
+                                              isSelected ? "border-primary bg-primary/5" : "border-transparent hover:border-primary/40",
+                                            )}
+                                          >
+                                            <span
+                                              className="relative w-full aspect-square rounded border border-border/60 flex items-center justify-center"
+                                              style={{ backgroundColor: option.hex as string }}
+                                            >
+                                              {isSelected && <Check className="w-3.5 h-3.5 text-primary drop-shadow" />}
+                                            </span>
+                                            <span className="text-[9px] md:text-[10px] leading-tight text-muted-foreground text-center">
+                                              {option.label.replace(/^RAL\s*/i, "")}
+                                            </span>
+                                          </button>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                  <p className="text-[10px] text-muted-foreground italic">{t("sauna.ral.note")}</p>
+                                </div>
+                              )}
+
+                              {selectedRalOption && (
+                                <div className="mt-3 flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/5 px-3 py-2">
+                                  <span
+                                    className="w-6 h-6 rounded border border-border/60 shrink-0"
+                                    style={{ backgroundColor: selectedRalOption.hex as string }}
+                                  />
+                                  <span className="text-xs md:text-sm font-medium text-foreground">
+                                    {selectedRalOption.label}
+                                  </span>
+                                  <span className="ml-auto text-xs md:text-sm text-primary font-semibold">
+                                    +{formatPrice(ralSurcharge)}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
                           <Notice variant="info" className="mt-4">
                             {t("config.colorNotice")}
                           </Notice>
