@@ -608,6 +608,9 @@ type ApiOption = {
   price: number;
   originalPrice?: number;
   description?: string;
+  hex?: string | null;
+  pctOfBase?: number | null;
+  isRal?: boolean;
 };
 
 type ApiOptionMapValue = {
@@ -834,7 +837,7 @@ const Configurator = () => {
     exteriorLed: false,
     bluetooth: "none",
     accessoryKit: "none",
-    color: "none" as SaunaColorType,
+    color: "none" as SaunaColorType | (string & {}),
     woodType: "spruce" as WoodType,
     window: "none",
     mirror: "none",
@@ -948,7 +951,7 @@ const Configurator = () => {
 
     // Ak má farbu a existuje mapa farieb pre tento model
     if (selectedSaunaType.hasColor && saunaColorImages[selectedSaunaType.id]) {
-      return saunaColorImages[selectedSaunaType.id][saunaConfig.color] || selectedSaunaType.image;
+      return saunaColorImages[selectedSaunaType.id][saunaConfig.color as SaunaColorType] || selectedSaunaType.image;
     }
 
     return selectedSaunaType.image;
@@ -1067,6 +1070,29 @@ const Configurator = () => {
     () => saunaColorOptions.filter((o): o is ConfigOption & { id: SaunaColorType } => isSaunaColorType(o.id)),
     [saunaColorOptions],
   );
+
+  // RAL Classic paleta z API (isRal === true), príplatok = pctOfBase % zo základnej ceny modelu
+  const ralColorOptions = useMemo(
+    () => (apiConfig?.sauna?.colorOptions ?? []).filter((o) => o.isRal && o.hex),
+    [apiConfig],
+  );
+  const selectedRalOption = useMemo(
+    () => ralColorOptions.find((o) => o.id === saunaConfig.color) ?? null,
+    [ralColorOptions, saunaConfig.color],
+  );
+  const ralPct = ralColorOptions[0]?.pctOfBase ?? 5;
+  const ralSurcharge = useMemo(() => {
+    if (!selectedRalOption || !selectedSaunaType) return 0;
+    return Math.round(((selectedRalOption.pctOfBase ?? 0) / 100) * selectedSaunaType.basePrice);
+  }, [selectedRalOption, selectedSaunaType]);
+  const ralSurchargeFor = (basePrice: number, pct?: number | null) => Math.round(((pct ?? 0) / 100) * basePrice);
+  const [showRalPalette, setShowRalPalette] = useState(false);
+  const [ralSearch, setRalSearch] = useState("");
+  const filteredRalOptions = useMemo(() => {
+    const q = ralSearch.trim().toLowerCase();
+    if (!q) return ralColorOptions;
+    return ralColorOptions.filter((o) => o.label.toLowerCase().includes(q) || o.id.toLowerCase().includes(q));
+  }, [ralColorOptions, ralSearch]);
 
   const exteriorWoodImages: Record<string, string> = {
     spruce: spruceWood2Img,
@@ -1588,7 +1614,10 @@ const Configurator = () => {
 
       const bluetooth = apiConfig.sauna.bluetoothOptions.find((b) => b.id === saunaConfig.bluetooth)?.price ?? 0;
       const kit = apiConfig.sauna.accessoryKitOptions.find((a) => a.id === saunaConfig.accessoryKit)?.price ?? 0;
-      const color = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color)?.price ?? 0;
+      const colorOpt = apiConfig.sauna.colorOptions.find((c) => c.id === saunaConfig.color);
+      const color = colorOpt?.isRal
+        ? ralSurchargeFor(basePrice, colorOpt.pctOfBase)
+        : colorOpt?.price ?? 0;
       const woodPrice = woodTypeOptionsForModel.find((w) => w.id === saunaConfig.woodType)?.price ?? 0;
       const windowPrice = selectedSaunaType.windowOptions.find((w) => w.id === saunaConfig.window)?.price ?? 0;
       const mirrorPrice = selectedSaunaType.mirrorFilmOptions.find((m) => m.id === saunaConfig.mirror)?.price ?? 0;
@@ -4004,6 +4033,87 @@ const Configurator = () => {
                               </button>
                             ))}
                           </div>
+                          {ralColorOptions.length > 0 && (
+                            <div className="mt-4">
+                              <button
+                                type="button"
+                                onClick={() => setShowRalPalette((v) => !v)}
+                                className="w-full flex items-center justify-between gap-2 rounded-lg border border-border/60 bg-card/50 px-3 py-2 text-xs md:text-sm font-medium text-foreground hover:border-primary/50 transition-colors"
+                              >
+                                <span className="text-left">
+                                  {showRalPalette
+                                    ? t("sauna.ral.hide")
+                                    : t("sauna.ral.toggle").replace("{pct}", String(ralPct))}
+                                </span>
+                                <ChevronDown
+                                  className={cn("w-4 h-4 shrink-0 transition-transform", showRalPalette && "rotate-180")}
+                                />
+                              </button>
+
+                              {showRalPalette && (
+                                <div className="mt-3 space-y-3">
+                                  <input
+                                    type="text"
+                                    value={ralSearch}
+                                    onChange={(e) => setRalSearch(e.target.value)}
+                                    placeholder={t("sauna.ral.search")}
+                                    className="w-full rounded-md border border-border/60 bg-background px-3 py-2 text-xs md:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
+                                  />
+                                  {filteredRalOptions.length === 0 ? (
+                                    <p className="text-xs text-muted-foreground italic">{t("sauna.ral.empty")}</p>
+                                  ) : (
+                                    <div className="grid grid-cols-6 md:grid-cols-10 gap-1.5 max-h-72 overflow-y-auto pr-1">
+                                      {filteredRalOptions.map((option) => {
+                                        const isSelected = saunaConfig.color === option.id;
+                                        return (
+                                          <button
+                                            key={option.id}
+                                            type="button"
+                                            title={option.label}
+                                            onClick={() => {
+                                              setSaunaConfig((prev) => ({ ...prev, color: option.id }));
+                                              setCurrentImageIndex(0);
+                                            }}
+                                            className={cn(
+                                              "flex flex-col items-center gap-1 rounded-md p-1 border-2 transition-all",
+                                              isSelected ? "border-primary bg-primary/5" : "border-transparent hover:border-primary/40",
+                                            )}
+                                          >
+                                            <span
+                                              className="relative w-full aspect-square rounded border border-border/60 flex items-center justify-center"
+                                              style={{ backgroundColor: option.hex as string }}
+                                            >
+                                              {isSelected && <Check className="w-3.5 h-3.5 text-primary drop-shadow" />}
+                                            </span>
+                                            <span className="text-[9px] md:text-[10px] leading-tight text-muted-foreground text-center">
+                                              {option.label.replace(/^RAL\s*/i, "")}
+                                            </span>
+                                          </button>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                  <p className="text-[10px] text-muted-foreground italic">{t("sauna.ral.note")}</p>
+                                </div>
+                              )}
+
+                              {selectedRalOption && (
+                                <div className="mt-3 flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/5 px-3 py-2">
+                                  <span
+                                    className="w-6 h-6 rounded border border-border/60 shrink-0"
+                                    style={{ backgroundColor: selectedRalOption.hex as string }}
+                                  />
+                                  <span className="text-xs md:text-sm font-medium text-foreground">
+                                    {selectedRalOption.label}
+                                  </span>
+                                  <span className="ml-auto text-xs md:text-sm text-primary font-semibold">
+                                    +{formatPrice(ralSurcharge)}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
                           <Notice variant="info" className="mt-4">
                             {t("config.colorNotice")}
                           </Notice>
