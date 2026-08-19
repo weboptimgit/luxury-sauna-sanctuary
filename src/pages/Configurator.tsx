@@ -1802,10 +1802,13 @@ const Configurator = () => {
     woodHeaterModels,
     woodTypeOptionsForModel,
     exteriorLedPrice,
+    hotTubExtras,
   ]);
 
   const originalPrice = useMemo(() => Math.round(totalPrice * 1.15), [totalPrice]);
   const discount = originalPrice > 0 ? Math.round(((originalPrice - totalPrice) / originalPrice) * 100) : 0;
+  // Kade majú finálne ceny z API – žiadna fiktívna zľava
+  const showDiscount = productCategory !== "hottub" && discount > 0;
 
   // Validácia - či je vybraný model ohrievača keď je vybraný typ
   const isHeaterModelRequired = saunaConfig.heaterType !== "none" && saunaConfig.heaterModel === "none";
@@ -2755,7 +2758,7 @@ const Configurator = () => {
             {/* Ľavá strana - obrázky */}
             <div className="lg:sticky lg:top-28 lg:h-fit space-y-4 min-w-0">
               <div className="relative aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden bg-card group w-full">
-                {discount > 0 && (
+                {showDiscount && (
                   <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-destructive text-destructive-foreground text-sm font-bold rounded-full">
                     -{discount}%
                   </div>
@@ -2819,9 +2822,11 @@ const Configurator = () => {
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-lg font-medium">{t("config.total")}</span>
                   <div className="text-right">
-                    <span className="text-muted-foreground line-through text-sm mr-2">
-                      {formatPrice(originalPrice)}
-                    </span>
+                    {showDiscount && (
+                      <span className="text-muted-foreground line-through text-sm mr-2">
+                        {formatPrice(originalPrice)}
+                      </span>
+                    )}
                     <span className="text-3xl font-bold text-primary">{formatPrice(totalPrice)}</span>
                   </div>
                 </div>
@@ -2884,9 +2889,11 @@ const Configurator = () => {
                       <p className="text-muted-foreground mb-3">{selectedComboType.dimensions}</p>
                     )}
                     <div className="flex items-baseline gap-3 lg:hidden">
-                      <span className="text-muted-foreground line-through text-lg">
-                        {formatPrice(originalPrice)}
-                      </span>
+                      {showDiscount && (
+                        <span className="text-muted-foreground line-through text-lg">
+                          {formatPrice(originalPrice)}
+                        </span>
+                      )}
                       <span className="text-3xl font-bold text-primary">{formatPrice(totalPrice)}</span>
                     </div>
                   </div>
@@ -4559,9 +4566,11 @@ const Configurator = () => {
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-lg font-medium">{t("config.total")}</span>
                     <div className="text-right">
-                      <span className="text-muted-foreground line-through text-sm mr-2">
-                        {formatPrice(originalPrice)}
-                      </span>
+                      {showDiscount && (
+                        <span className="text-muted-foreground line-through text-sm mr-2">
+                          {formatPrice(originalPrice)}
+                        </span>
+                      )}
                       <span className="text-3xl font-bold text-primary">{formatPrice(totalPrice)}</span>
                     </div>
                   </div>
