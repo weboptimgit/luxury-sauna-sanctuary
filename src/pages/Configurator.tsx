@@ -523,6 +523,7 @@ type HotTubType = {
   exteriorLedOptions: ConfigOption[];
   hydroMassageOptions: ConfigOption[];
   coverOptions: ConfigOption[];
+  extraOptions: ExtraOptionGroup[];
 };
 
 type ComboType = {
@@ -649,6 +650,18 @@ type ApiSaunaType = {
   benchOptions?: ApiOptionSource;
 };
 
+type ApiExtraOptionGroup = {
+  id: string;
+  label: string;
+  options: ApiOption[];
+};
+
+type ExtraOptionGroup = {
+  id: string;
+  label: string;
+  options: ConfigOption[];
+};
+
 type ApiHotTubType = {
   id: string;
   label: string;
@@ -663,6 +676,7 @@ type ApiHotTubType = {
   exteriorLedOptions?: ApiOption[];
   hydroMassageOptions?: ApiOption[];
   coverOptions?: ApiOption[];
+  extraOptions?: ApiExtraOptionGroup[];
   hasSize: boolean;
   hasExteriorWood: boolean;
   hasHeater: boolean;
@@ -866,6 +880,9 @@ const Configurator = () => {
     bluetoothSpeaker: "none",
     headCushion: "none",
   });
+
+  // Generické extra voľby pri kadiach (id skupiny -> id možnosti)
+  const [hotTubExtras, setHotTubExtras] = useState<Record<string, string>>({});
 
   // Combo konfigurácia
   const [comboConfig, setComboConfig] = useState({
@@ -1386,8 +1403,29 @@ const Configurator = () => {
         "230cm": thermoCoverImg,
         standard: thermoCoverImg,
       }),
+      extraOptions: (ht.extraOptions || [])
+        .filter((g) => g && Array.isArray(g.options) && g.options.length > 0)
+        .map((g) => ({
+          id: g.id,
+          label: g.label,
+          options: toUIOptions(g.options),
+        })),
     }));
   }, [apiConfig]);
+
+  // Predvoľ prvú možnosť v každej generickej extra skupine pri zmene modelu kade
+  useEffect(() => {
+    const groups = selectedHotTubType?.extraOptions ?? [];
+    setHotTubExtras((prev) => {
+      const next: Record<string, string> = {};
+      groups.forEach((g) => {
+        next[g.id] = prev[g.id] && g.options.some((o) => o.id === prev[g.id])
+          ? prev[g.id]
+          : g.options[0]?.id ?? "";
+      });
+      return next;
+    });
+  }, [selectedHotTubType]);
 
   // --- Combo typy z API (s fallback hardcoded dátami) ---
   const comboTypesUI: ComboType[] = useMemo(() => {
@@ -1662,6 +1700,10 @@ const Configurator = () => {
         apiConfig.hottub.bluetoothSpeakerOptions?.find((o) => o.id === hotTubConfig.bluetoothSpeaker)?.price ?? 0;
       const headCushionPrice =
         apiConfig.hottub.headCushionOptions?.find((o) => o.id === hotTubConfig.headCushion)?.price ?? 0;
+      const extrasPrice = selectedHotTubType.extraOptions.reduce((sum, group) => {
+        const sel = hotTubExtras[group.id];
+        return sum + (group.options.find((o) => o.id === sel)?.price ?? 0);
+      }, 0);
 
       return (
         basePrice +
@@ -1681,7 +1723,8 @@ const Configurator = () => {
         electronicControllerPrice +
         thermometerPrice +
         bluetoothSpeakerPrice +
-        headCushionPrice
+        headCushionPrice +
+        extrasPrice
       );
     }
 
@@ -1771,7 +1814,7 @@ const Configurator = () => {
     ? { productCategory, saunaTypeId: selectedSaunaType?.id, ...saunaConfig }
     : productCategory === "combo"
       ? { productCategory, comboTypeId: selectedComboType?.id, ...comboConfig }
-      : { productCategory, hottubTypeId: selectedHotTubType?.id, ...hotTubConfig };
+      : { productCategory, hottubTypeId: selectedHotTubType?.id, ...hotTubConfig, ...hotTubExtras };
 
   const addToCart = async () => {
     if (!productCategory || !apiConfig) return;
@@ -1803,7 +1846,7 @@ const Configurator = () => {
       } else if (productCategory === "combo") {
         options = { productCategory, comboTypeId: selectedComboType?.id, ...comboConfig };
       } else {
-        options = { productCategory, hottubTypeId: selectedHotTubType?.id, ...hotTubConfig };
+        options = { productCategory, hottubTypeId: selectedHotTubType?.id, ...hotTubConfig, ...hotTubExtras };
       }
 
       const product_id = apiConfig.products[productCategory] ?? apiConfig.products.sauna;
@@ -1884,6 +1927,7 @@ const Configurator = () => {
       bluetoothSpeaker: "none",
       headCushion: "none",
     });
+    setHotTubExtras({});
     setComboConfig({
       woodType: "spruce",
       color: "none",
@@ -4484,6 +4528,28 @@ const Configurator = () => {
                           </ScrollableRow>
                         </div>
                       )}
+
+                      {/* Generické extra voľby z API */}
+                      {(selectedHotTubType?.extraOptions ?? []).map((group) => (
+                        <div key={group.id}>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {group.label} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {group.options.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={(hotTubExtras[group.id] ?? group.options[0]?.id) === option.id}
+                                onClick={() =>
+                                  setHotTubExtras((prev) => ({ ...prev, [group.id]: option.id }))
+                                }
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
