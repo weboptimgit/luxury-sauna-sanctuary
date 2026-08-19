@@ -2823,11 +2823,9 @@ const Configurator = () => {
                   <span className="text-lg font-medium">{t("config.total")}</span>
                   <div className="text-right">
                     {showDiscount && (
-                      {showDiscount && (
-                        <span className="text-muted-foreground line-through text-sm mr-2">
-                          {formatPrice(originalPrice)}
-                        </span>
-                      )}
+                      <span className="text-muted-foreground line-through text-sm mr-2">
+                        {formatPrice(originalPrice)}
+                      </span>
                     )}
                     <span className="text-3xl font-bold text-primary">{formatPrice(totalPrice)}</span>
                   </div>
