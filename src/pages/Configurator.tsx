@@ -1413,6 +1413,20 @@ const Configurator = () => {
     }));
   }, [apiConfig]);
 
+  // Predvoľ prvú možnosť v každej generickej extra skupine pri zmene modelu kade
+  useEffect(() => {
+    const groups = selectedHotTubType?.extraOptions ?? [];
+    setHotTubExtras((prev) => {
+      const next: Record<string, string> = {};
+      groups.forEach((g) => {
+        next[g.id] = prev[g.id] && g.options.some((o) => o.id === prev[g.id])
+          ? prev[g.id]
+          : g.options[0]?.id ?? "";
+      });
+      return next;
+    });
+  }, [selectedHotTubType]);
+
   // --- Combo typy z API (s fallback hardcoded dátami) ---
   const comboTypesUI: ComboType[] = useMemo(() => {
     if (apiConfig?.comboTypes?.length) {

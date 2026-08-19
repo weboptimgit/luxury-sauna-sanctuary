@@ -15,17 +15,20 @@ const SYMBOLS: Record<CurrencyCode, string> = {
   HUF: "Ft",
 };
 
-function formatOptions(currency: CurrencyCode): Intl.NumberFormatOptions {
-  if (currency === "EUR") return { minimumFractionDigits: 2, maximumFractionDigits: 2 };
-  if (currency === "CZK") return { minimumFractionDigits: 2, maximumFractionDigits: 2 };
-  return { maximumFractionDigits: 0 };
+function formatOptions(currency: CurrencyCode, value: number): Intl.NumberFormatOptions {
+  if (currency === "HUF") return { maximumFractionDigits: 0 };
+  // Celé čísla bez desatinných miest, inak 2 desatinné miesta
+  const isWhole = Math.abs(value - Math.round(value)) < 0.005;
+  return isWhole
+    ? { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+    : { minimumFractionDigits: 2, maximumFractionDigits: 2 };
 }
 
 // Locale-aware grouping (space for SK/CZ/HU, matches existing look)
 function groupNumber(value: number, currency: CurrencyCode): string {
   const locale =
     currency === "HUF" ? "hu-HU" : currency === "CZK" ? "cs-CZ" : "sk-SK";
-  return new Intl.NumberFormat(locale, formatOptions(currency)).format(value);
+  return new Intl.NumberFormat(locale, formatOptions(currency, value)).format(value);
 }
 
 export function formatPriceWith(eurPrice: number, currency: CurrencyCode): string {
