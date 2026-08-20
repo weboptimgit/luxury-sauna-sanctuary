@@ -4212,6 +4212,29 @@ const Configurator = () => {
                         </div>
                       )}
 
+                      {/* Typ vane */}
+                      {(selectedHotTubType?.extraOptions ?? [])
+                        .filter((g) => ["linertype"].includes(g.id))
+                        .map((group) => (
+                        <div key={group.id}>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {group.label} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {group.options.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={(hotTubExtras[group.id] ?? group.options[0]?.id) === option.id}
+                                onClick={() =>
+                                  setHotTubExtras((prev) => ({ ...prev, [group.id]: option.id }))
+                                }
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      ))}
                       {/* Acrylic Liner Color */}
                       {selectedHotTubType?.acrylicLinerOptions && selectedHotTubType.acrylicLinerOptions.length > 0 && (
                         <div>
@@ -4333,47 +4356,6 @@ const Configurator = () => {
                             </ScrollableRow>
                           </div>
                         )}
-
-                      {/* Podvodné LED */}
-                      {selectedHotTubType?.hasUnderwaterLed && selectedHotTubType.underwaterLedOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.underwaterLed")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {selectedHotTubType.underwaterLedOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.underwaterLed === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, underwaterLed: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* LED okolo kade */}
-                      {selectedHotTubType?.hasExteriorLed && selectedHotTubType.exteriorLedOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.hottubExteriorLed")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {selectedHotTubType.exteriorLedOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.exteriorLed === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, exteriorLed: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
                       {/* Hydro masáž */}
                       {selectedHotTubType?.hasHydroMassage && selectedHotTubType.hydroMassageOptions.length > 0 && (
                         <div>
@@ -4393,7 +4375,6 @@ const Configurator = () => {
                           </ScrollableRow>
                         </div>
                       )}
-
                       {/* Vzduchové bubliny */}
                       {hotTubAirBubblesOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("airBubbles") && (
                         <div>
@@ -4413,112 +4394,28 @@ const Configurator = () => {
                           </ScrollableRow>
                         </div>
                       )}
-
-                      {/* Prúdový istič */}
-                      {hotTubDrainRelayOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("drainRelay") && (
+                      {/* Podvodné LED */}
+                      {selectedHotTubType?.hasUnderwaterLed && selectedHotTubType.underwaterLedOptions.length > 0 && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.drainRelay")} <span className="text-primary">*</span>
+                            {t("config.underwaterLed")} <span className="text-primary">*</span>
                           </h3>
                           <ScrollableRow>
-                            {hotTubDrainRelayOptions.map((option) => (
+                            {selectedHotTubType.underwaterLedOptions.map((option) => (
                               <OptionCard
                                 key={option.id}
                                 option={option}
-                                isSelected={hotTubConfig.drainRelay === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, drainRelay: option.id }))}
+                                isSelected={hotTubConfig.underwaterLed === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, underwaterLed: option.id }))}
                                 showImage={!!option.image}
                               />
                             ))}
                           </ScrollableRow>
                         </div>
                       )}
-
-                      {/* Elektronický kontrolér */}
-                      {hotTubElectronicControllerOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("electronicController") && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.electronicController")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {hotTubElectronicControllerOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.electronicController === option.id}
-                                onClick={() =>
-                                  setHotTubConfig((prev) => ({ ...prev, electronicController: option.id }))
-                                }
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* Teplomer */}
-                      {hotTubThermometerOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("thermometer") && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.thermometer")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {hotTubThermometerOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.thermometer === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, thermometer: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* Bluetooth reproduktor */}
-                      {hotTubBluetoothSpeakerOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.bluetoothSpeaker")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {hotTubBluetoothSpeakerOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.bluetoothSpeaker === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, bluetoothSpeaker: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* Hlavový vankúš */}
-                      {hotTubHeadCushionOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("headCushion") && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.headCushion")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {hotTubHeadCushionOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.headCushion === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, headCushion: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
-                      {/* Extra volby - mimo pieskovej filtracie */}
+                      {/* Mini LED */}
                       {(selectedHotTubType?.extraOptions ?? [])
-                        .filter((g) => !["sandconn", "sandbox"].includes(g.id))
+                        .filter((g) => ["miniled"].includes(g.id))
                         .map((group) => (
                         <div key={group.id}>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
@@ -4539,7 +4436,25 @@ const Configurator = () => {
                           </ScrollableRow>
                         </div>
                       ))}
-
+                      {/* LED okolo kade */}
+                      {selectedHotTubType?.hasExteriorLed && selectedHotTubType.exteriorLedOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.hottubExteriorLed")} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {selectedHotTubType.exteriorLedOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.exteriorLed === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, exteriorLed: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
                       {/* Pieskový filter */}
                       {hotTubSandFilterOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("sandFilter") && (
                         <div>
@@ -4559,7 +4474,6 @@ const Configurator = () => {
                           </ScrollableRow>
                         </div>
                       )}
-
                       {/* Prislusenstvo pieskovej filtracie - hned za filtrom */}
                       {(selectedHotTubType?.extraOptions ?? [])
                         .filter((g) => ["sandconn", "sandbox"].includes(g.id))
@@ -4586,7 +4500,149 @@ const Configurator = () => {
                     </div>
                   )}
                 </div>
-
+                      {/* Technicke volby */}
+                      {(selectedHotTubType?.extraOptions ?? [])
+                        .filter((g) => ["chimney", "uvlamp", "elbows"].includes(g.id))
+                        .map((group) => (
+                        <div key={group.id}>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {group.label} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {group.options.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={(hotTubExtras[group.id] ?? group.options[0]?.id) === option.id}
+                                onClick={() =>
+                                  setHotTubExtras((prev) => ({ ...prev, [group.id]: option.id }))
+                                }
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      ))}
+                      {/* Elektronický kontrolér */}
+                      {hotTubElectronicControllerOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("electronicController") && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.electronicController")} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {hotTubElectronicControllerOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.electronicController === option.id}
+                                onClick={() =>
+                                  setHotTubConfig((prev) => ({ ...prev, electronicController: option.id }))
+                                }
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
+                      {/* Teplomer */}
+                      {hotTubThermometerOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("thermometer") && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.thermometer")} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {hotTubThermometerOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.thermometer === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, thermometer: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
+                      {/* Prúdový istič */}
+                      {hotTubDrainRelayOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("drainRelay") && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.drainRelay")} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {hotTubDrainRelayOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.drainRelay === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, drainRelay: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
+                      {/* Bluetooth reproduktor */}
+                      {hotTubBluetoothSpeakerOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.bluetoothSpeaker")} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {hotTubBluetoothSpeakerOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.bluetoothSpeaker === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, bluetoothSpeaker: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
+                      {/* Komfort a doplnky */}
+                      {(selectedHotTubType?.extraOptions ?? [])
+                        .filter((g) => ["lid", "chiller", "stairs", "drinkholder"].includes(g.id))
+                        .map((group) => (
+                        <div key={group.id}>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {group.label} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {group.options.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={(hotTubExtras[group.id] ?? group.options[0]?.id) === option.id}
+                                onClick={() =>
+                                  setHotTubExtras((prev) => ({ ...prev, [group.id]: option.id }))
+                                }
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      ))}
+                      {/* Hlavový vankúš */}
+                      {hotTubHeadCushionOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("headCushion") && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.headCushion")} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {hotTubHeadCushionOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.headCushion === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, headCushion: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
                 {/* Mobile price summary */}
                 <div className="lg:hidden border border-border/50 rounded-2xl p-6 bg-card/50">
                   <div className="flex items-center justify-between mb-4">
