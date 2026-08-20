@@ -523,7 +523,7 @@ type HotTubType = {
   exteriorLedOptions: ConfigOption[];
   hydroMassageOptions: ConfigOption[];
   coverOptions: ConfigOption[];
-  extraOptions: ExtraOptionGroup[];
+  extraOptions: ExtraOptionGroup[];  hiddenSharedOptions: string[];
 };
 
 type ComboType = {
@@ -676,7 +676,7 @@ type ApiHotTubType = {
   exteriorLedOptions?: ApiOption[];
   hydroMassageOptions?: ApiOption[];
   coverOptions?: ApiOption[];
-  extraOptions?: ApiExtraOptionGroup[];
+  extraOptions?: ApiExtraOptionGroup[];  hiddenSharedOptions?: string[];
   hasSize: boolean;
   hasExteriorWood: boolean;
   hasHeater: boolean;
@@ -1403,7 +1403,7 @@ const Configurator = () => {
         "230cm": thermoCoverImg,
         standard: thermoCoverImg,
       }),
-      extraOptions: (ht.extraOptions || [])
+      hiddenSharedOptions: ht.hiddenSharedOptions || [],      extraOptions: (ht.extraOptions || [])
         .filter((g) => g && Array.isArray(g.options) && g.options.length > 0)
         .map((g) => ({
           id: g.id,
@@ -3533,7 +3533,7 @@ const Configurator = () => {
                             )}
 
                           {/* Vzduchové bubliny */}
-                          {hotTubAirBubblesOptions.length > 0 && (
+                          {hotTubAirBubblesOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("airBubbles") && (
                             <div>
                               <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                                 {t("config.airBubbles")} <span className="text-primary">*</span>
@@ -3553,7 +3553,7 @@ const Configurator = () => {
                           )}
 
                           {/* Prúdový istič */}
-                          {hotTubDrainRelayOptions.length > 0 && (
+                          {hotTubDrainRelayOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("drainRelay") && (
                             <div>
                               <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                                 {t("config.drainRelay")} <span className="text-primary">*</span>
@@ -4395,7 +4395,7 @@ const Configurator = () => {
                       )}
 
                       {/* Vzduchové bubliny */}
-                      {hotTubAirBubblesOptions.length > 0 && (
+                      {hotTubAirBubblesOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("airBubbles") && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.airBubbles")} <span className="text-primary">*</span>
@@ -4415,7 +4415,7 @@ const Configurator = () => {
                       )}
 
                       {/* Prúdový istič */}
-                      {hotTubDrainRelayOptions.length > 0 && (
+                      {hotTubDrainRelayOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("drainRelay") && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.drainRelay")} <span className="text-primary">*</span>
