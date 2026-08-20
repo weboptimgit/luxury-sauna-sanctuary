@@ -4434,26 +4434,6 @@ const Configurator = () => {
                         </div>
                       )}
 
-                      {/* Pieskový filter */}
-                      {hotTubSandFilterOptions.length > 0 && (
-                        <div>
-                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
-                            {t("config.sandFilter")} <span className="text-primary">*</span>
-                          </h3>
-                          <ScrollableRow>
-                            {hotTubSandFilterOptions.map((option) => (
-                              <OptionCard
-                                key={option.id}
-                                option={option}
-                                isSelected={hotTubConfig.sandFilter === option.id}
-                                onClick={() => setHotTubConfig((prev) => ({ ...prev, sandFilter: option.id }))}
-                                showImage={!!option.image}
-                              />
-                            ))}
-                          </ScrollableRow>
-                        </div>
-                      )}
-
                       {/* Elektronický kontrolér */}
                       {hotTubElectronicControllerOptions.length > 0 && (
                         <div>
@@ -4536,8 +4516,54 @@ const Configurator = () => {
                         </div>
                       )}
 
-                      {/* Generické extra voľby z API */}
-                      {(selectedHotTubType?.extraOptions ?? []).map((group) => (
+                      {/* Extra volby - mimo pieskovej filtracie */}
+                      {(selectedHotTubType?.extraOptions ?? [])
+                        .filter((g) => !["sandconn", "sandbox"].includes(g.id))
+                        .map((group) => (
+                        <div key={group.id}>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {group.label} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {group.options.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={(hotTubExtras[group.id] ?? group.options[0]?.id) === option.id}
+                                onClick={() =>
+                                  setHotTubExtras((prev) => ({ ...prev, [group.id]: option.id }))
+                                }
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      ))}
+
+                      {/* Pieskový filter */}
+                      {hotTubSandFilterOptions.length > 0 && (
+                        <div>
+                          <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
+                            {t("config.sandFilter")} <span className="text-primary">*</span>
+                          </h3>
+                          <ScrollableRow>
+                            {hotTubSandFilterOptions.map((option) => (
+                              <OptionCard
+                                key={option.id}
+                                option={option}
+                                isSelected={hotTubConfig.sandFilter === option.id}
+                                onClick={() => setHotTubConfig((prev) => ({ ...prev, sandFilter: option.id }))}
+                                showImage={!!option.image}
+                              />
+                            ))}
+                          </ScrollableRow>
+                        </div>
+                      )}
+
+                      {/* Prislusenstvo pieskovej filtracie - hned za filtrom */}
+                      {(selectedHotTubType?.extraOptions ?? [])
+                        .filter((g) => ["sandconn", "sandbox"].includes(g.id))
+                        .map((group) => (
                         <div key={group.id}>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {group.label} <span className="text-primary">*</span>
