@@ -87,7 +87,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Hot tub options
     "config.size": "Veľkosť",
-    "config.hottubHeater": "Ohrievač kade",
+    "config.hottubHeater": "Pec na drevo",
     "config.hottubElectricHeater": "Elektrický ohrievač",
     "config.underwaterLed": "Podvodné LED osvetlenie",
     "config.hottubExteriorLed": "LED osvetlenie okolo kade",
@@ -132,7 +132,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Option labels
     "config.noLed": "Bez LED",
     "config.noBluetooth": "Bez Bluetooth",
-    "config.noHeater": "Bez pece",
+    "config.noHeater": "Bez ohrievača",
     "config.noColor": "Bez farby",
     "config.noAccessoryKit": "Bez sady",
 
@@ -411,7 +411,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Hot tub options
     "config.size": "Size",
-    "config.hottubHeater": "Hot Tub Heater",
+    "config.hottubHeater": "Wood-fired stove",
     "config.hottubElectricHeater": "Electric Heater",
     "config.underwaterLed": "Underwater LED Lighting",
     "config.hottubExteriorLed": "LED Lighting Around the Tub",
@@ -735,7 +735,7 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Hot tub options
     "config.size": "Méret",
-    "config.hottubHeater": "Dézsafürdő kályhája",
+    "config.hottubHeater": "Fatüzelésű kályha",
     "config.hottubElectricHeater": "Elektromos kályha",
     "config.underwaterLed": "Vízalatti LED világítás",
     "config.hottubExteriorLed": "LED világítás a dézsa körül",
@@ -780,7 +780,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Option labels
     "config.noLed": "LED nélkül",
     "config.noBluetooth": "Bluetooth nélkül",
-    "config.noHeater": "Kályha nélkül",
+    "config.noHeater": "Fűtés nélkül",
     "config.noColor": "Szín nélkül",
     "config.noAccessoryKit": "Szett nélkül",
 
