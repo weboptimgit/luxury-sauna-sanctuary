@@ -3375,7 +3375,7 @@ const Configurator = () => {
                           </button>
 
                           {/* Ohrievač kade */}
-                          {selectedComboType.hasHeater && selectedComboType.heaterOptions.length > 0 && (
+                          {selectedComboType.hasHeater && selectedComboType.heaterOptions.filter((o) => !o.id.startsWith("electric-") && o.id !== "none").length > 0 && (
                             <div>
                               <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                                 {t("config.hottubHeater")} <span className="text-primary">*</span>
@@ -4255,7 +4255,7 @@ const Configurator = () => {
                         </div>
                       )}
 
-                      {selectedHotTubType?.hasHeater && selectedHotTubType.heaterOptions.length > 0 && (
+                      {selectedHotTubType?.hasHeater && selectedHotTubType.heaterOptions.filter((o) => !o.id.startsWith("electric-") && o.id !== "none").length > 0 && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.hottubHeater")} <span className="text-primary">*</span>
