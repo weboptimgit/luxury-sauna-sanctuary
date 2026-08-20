@@ -17,7 +17,7 @@ import {
   Lightbulb,
   Bluetooth,
   ArrowRight,
-  ZoomIn,
+  ZoomIn, Truck, Wrench, ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -2846,7 +2846,7 @@ const Configurator = () => {
 
                 <QuoteRequestButton options={quoteOptions} lang={language as "sk" | "en" | "hu"} className="mt-3" />
 
-                <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5"><p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitDelivery")}</p><p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitInstall")}</p>{productCategory === "hottub" && (<p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitInsulation")}</p>)}</div><p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
+                <div className={"mt-4 pt-4 border-t border-white/10 grid gap-2 " + (productCategory === "hottub" ? "grid-cols-3" : "grid-cols-2")}><div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><Truck className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitDelivery")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div><div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><Wrench className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitInstall")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div>{productCategory === "hottub" && (<div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><ShieldCheck className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitInsulation")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitIncluded")}</div></div>)}</div><p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
               </div>
             </div>
 
@@ -4618,7 +4618,7 @@ const Configurator = () => {
 
                   <QuoteRequestButton options={quoteOptions} lang={language as "sk" | "en" | "hu"} className="mt-3" />
 
-                  <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5"><p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitDelivery")}</p><p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitInstall")}</p>{productCategory === "hottub" && (<p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitInsulation")}</p>)}</div><p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
+                  <div className={"mt-4 pt-4 border-t border-white/10 grid gap-2 " + (productCategory === "hottub" ? "grid-cols-3" : "grid-cols-2")}><div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><Truck className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitDelivery")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div><div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><Wrench className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitInstall")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div>{productCategory === "hottub" && (<div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><ShieldCheck className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitInsulation")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitIncluded")}</div></div>)}</div><p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
                 </div>
               </ConfigScrollWrapper>
             </div>
