@@ -753,7 +753,7 @@ const toUIOptions = (api: ApiOptionSource | undefined, withImages?: Record<strin
     price: Number(o.price || 0),
     originalPrice: o.originalPrice,
     description: o.description,
-    image: withImages?.[o.id],
+    image: withImages?.[o.id] ?? (o as { image?: string }).image,
   }));
 };
 
