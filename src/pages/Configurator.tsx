@@ -2846,7 +2846,7 @@ const Configurator = () => {
 
                 <QuoteRequestButton options={quoteOptions} lang={language as "sk" | "en" | "hu"} className="mt-3" />
 
-                <p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
+                <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5"><p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitDelivery")}</p><p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitInstall")}</p>{productCategory === "hottub" && (<p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitInsulation")}</p>)}</div><p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
               </div>
             </div>
 
@@ -4618,7 +4618,7 @@ const Configurator = () => {
 
                   <QuoteRequestButton options={quoteOptions} lang={language as "sk" | "en" | "hu"} className="mt-3" />
 
-                  <p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
+                  <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5"><p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitDelivery")}</p><p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitInstall")}</p>{productCategory === "hottub" && (<p className="flex items-center gap-2 text-xs text-muted-foreground"><Check className="w-3.5 h-3.5 text-primary shrink-0" />{t("config.benefitInsulation")}</p>)}</div><p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
                 </div>
               </ConfigScrollWrapper>
             </div>
