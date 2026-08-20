@@ -3573,7 +3573,7 @@ const Configurator = () => {
                           )}
 
                           {/* Pieskový filter */}
-                          {hotTubSandFilterOptions.length > 0 && (
+                          {hotTubSandFilterOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("sandFilter") && (
                             <div>
                               <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                                 {t("config.sandFilter")} <span className="text-primary">*</span>
@@ -3593,7 +3593,7 @@ const Configurator = () => {
                           )}
 
                           {/* Elektronický kontrolér */}
-                          {hotTubElectronicControllerOptions.length > 0 && (
+                          {hotTubElectronicControllerOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("electronicController") && (
                             <div>
                               <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                                 {t("config.electronicController")} <span className="text-primary">*</span>
@@ -3615,7 +3615,7 @@ const Configurator = () => {
                           )}
 
                           {/* Teplomer */}
-                          {hotTubThermometerOptions.length > 0 && (
+                          {hotTubThermometerOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("thermometer") && (
                             <div>
                               <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                                 {t("config.thermometer")} <span className="text-primary">*</span>
@@ -3655,7 +3655,7 @@ const Configurator = () => {
                           )}
 
                           {/* Hlavový vankúš */}
-                          {hotTubHeadCushionOptions.length > 0 && (
+                          {hotTubHeadCushionOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("headCushion") && (
                             <div>
                               <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                                 {t("config.headCushion")} <span className="text-primary">*</span>
@@ -4435,7 +4435,7 @@ const Configurator = () => {
                       )}
 
                       {/* Elektronický kontrolér */}
-                      {hotTubElectronicControllerOptions.length > 0 && (
+                      {hotTubElectronicControllerOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("electronicController") && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.electronicController")} <span className="text-primary">*</span>
@@ -4457,7 +4457,7 @@ const Configurator = () => {
                       )}
 
                       {/* Teplomer */}
-                      {hotTubThermometerOptions.length > 0 && (
+                      {hotTubThermometerOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("thermometer") && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.thermometer")} <span className="text-primary">*</span>
@@ -4497,7 +4497,7 @@ const Configurator = () => {
                       )}
 
                       {/* Hlavový vankúš */}
-                      {hotTubHeadCushionOptions.length > 0 && (
+                      {hotTubHeadCushionOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("headCushion") && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.headCushion")} <span className="text-primary">*</span>
@@ -4541,7 +4541,7 @@ const Configurator = () => {
                       ))}
 
                       {/* Pieskový filter */}
-                      {hotTubSandFilterOptions.length > 0 && (
+                      {hotTubSandFilterOptions.length > 0 && !(selectedHotTubType?.hiddenSharedOptions ?? []).includes("sandFilter") && (
                         <div>
                           <h3 className="text-sm md:text-base font-semibold text-foreground mb-2">
                             {t("config.sandFilter")} <span className="text-primary">*</span>
