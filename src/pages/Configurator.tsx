@@ -523,7 +523,7 @@ type HotTubType = {
   exteriorLedOptions: ConfigOption[];
   hydroMassageOptions: ConfigOption[];
   coverOptions: ConfigOption[];
-  extraOptions: ExtraOptionGroup[];  hiddenSharedOptions: string[];
+  extraOptions: ExtraOptionGroup[];  hiddenSharedOptions: string[];  hasInsulation: boolean;
 };
 
 type ComboType = {
@@ -676,7 +676,7 @@ type ApiHotTubType = {
   exteriorLedOptions?: ApiOption[];
   hydroMassageOptions?: ApiOption[];
   coverOptions?: ApiOption[];
-  extraOptions?: ApiExtraOptionGroup[];  hiddenSharedOptions?: string[];
+  extraOptions?: ApiExtraOptionGroup[];  hiddenSharedOptions?: string[];  hasInsulation?: boolean;
   hasSize: boolean;
   hasExteriorWood: boolean;
   hasHeater: boolean;
@@ -1403,7 +1403,7 @@ const Configurator = () => {
         "230cm": thermoCoverImg,
         standard: thermoCoverImg,
       }),
-      hiddenSharedOptions: ht.hiddenSharedOptions || [],      extraOptions: (ht.extraOptions || [])
+      hiddenSharedOptions: ht.hiddenSharedOptions || [], hasInsulation: !!ht.hasInsulation,      extraOptions: (ht.extraOptions || [])
         .filter((g) => g && Array.isArray(g.options) && g.options.length > 0)
         .map((g) => ({
           id: g.id,
@@ -2846,7 +2846,7 @@ const Configurator = () => {
 
                 <QuoteRequestButton options={quoteOptions} lang={language as "sk" | "en" | "hu"} className="mt-3" />
 
-                <div className={"mt-4 pt-4 border-t border-white/10 grid gap-2 " + (productCategory === "hottub" ? "grid-cols-3" : "grid-cols-2")}><div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><Truck className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitDelivery")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div><div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><Wrench className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitInstall")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div>{productCategory === "hottub" && (<div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><ShieldCheck className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitInsulation")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitIncluded")}</div></div>)}</div><p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
+                <div className={"mt-4 pt-4 border-t border-white/10 grid gap-2 " + (productCategory === "hottub" && selectedHotTubType?.hasInsulation ? "grid-cols-3" : "grid-cols-2")}><div className="rounded-xl bg-white/5 border border-white/10 p-3.5 text-center"><Truck className="w-[22px] h-[22px] text-primary mx-auto" /><div className="text-[13px] text-foreground mt-2 leading-tight">{t("config.benefitDelivery")}</div><div className="text-[13px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div><div className="rounded-xl bg-white/5 border border-white/10 p-3.5 text-center"><Wrench className="w-[22px] h-[22px] text-primary mx-auto" /><div className="text-[13px] text-foreground mt-2 leading-tight">{t("config.benefitInstall")}</div><div className="text-[13px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div>{productCategory === "hottub" && selectedHotTubType?.hasInsulation && (<div className="rounded-xl bg-white/5 border border-white/10 p-3.5 text-center"><ShieldCheck className="w-[22px] h-[22px] text-primary mx-auto" /><div className="text-[13px] text-foreground mt-2 leading-tight">{t("config.benefitInsulation")}</div><div className="text-[13px] text-emerald-400 leading-tight">{t("config.benefitIncluded")}</div></div>)}</div><p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
               </div>
             </div>
 
@@ -4674,7 +4674,7 @@ const Configurator = () => {
 
                   <QuoteRequestButton options={quoteOptions} lang={language as "sk" | "en" | "hu"} className="mt-3" />
 
-                  <div className={"mt-4 pt-4 border-t border-white/10 grid gap-2 " + (productCategory === "hottub" ? "grid-cols-3" : "grid-cols-2")}><div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><Truck className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitDelivery")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div><div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><Wrench className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitInstall")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div>{productCategory === "hottub" && (<div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center"><ShieldCheck className="w-[19px] h-[19px] text-primary mx-auto" /><div className="text-[11px] text-foreground mt-1.5 leading-tight">{t("config.benefitInsulation")}</div><div className="text-[11px] text-emerald-400 leading-tight">{t("config.benefitIncluded")}</div></div>)}</div><p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
+                  <div className={"mt-4 pt-4 border-t border-white/10 grid gap-2 " + (productCategory === "hottub" && selectedHotTubType?.hasInsulation ? "grid-cols-3" : "grid-cols-2")}><div className="rounded-xl bg-white/5 border border-white/10 p-3.5 text-center"><Truck className="w-[22px] h-[22px] text-primary mx-auto" /><div className="text-[13px] text-foreground mt-2 leading-tight">{t("config.benefitDelivery")}</div><div className="text-[13px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div><div className="rounded-xl bg-white/5 border border-white/10 p-3.5 text-center"><Wrench className="w-[22px] h-[22px] text-primary mx-auto" /><div className="text-[13px] text-foreground mt-2 leading-tight">{t("config.benefitInstall")}</div><div className="text-[13px] text-emerald-400 leading-tight">{t("config.benefitFree")}</div></div>{productCategory === "hottub" && selectedHotTubType?.hasInsulation && (<div className="rounded-xl bg-white/5 border border-white/10 p-3.5 text-center"><ShieldCheck className="w-[22px] h-[22px] text-primary mx-auto" /><div className="text-[13px] text-foreground mt-2 leading-tight">{t("config.benefitInsulation")}</div><div className="text-[13px] text-emerald-400 leading-tight">{t("config.benefitIncluded")}</div></div>)}</div><p className="text-xs text-muted-foreground text-center mt-3">{t("config.priceNote")}</p>
                 </div>
               </ConfigScrollWrapper>
             </div>
