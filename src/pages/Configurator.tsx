@@ -254,7 +254,157 @@ type SaunaColorType =
   | "18-tmavy-orech"
   | "20-tmavy-mahagon";
 
+/* ---------- Filtre modelov (typ, kapacita, material, rozmery, cena) ---------- */
+type ProductFilters = {
+  type?: string[];
+  heat?: string[];
+  capacity?: string[];
+  material?: string[];
+  size?: string[];
+};
+
+type FilterableItem = { basePrice: number; filters?: ProductFilters };
+
+const FILTER_DICT: Record<string, Record<string, string>> = {
+  sk: { type: "Typ", heat: "Ohrev", capacity: "Kapacita", material: "Materiál", size: "Rozmery", price: "Cena", clear: "Zrušiť filtre", found: "modelov", none: "Žiadny model nezodpovedá zvoleným filtrom." },
+  en: { type: "Type", heat: "Heating", capacity: "Capacity", material: "Material", size: "Dimensions", price: "Price", clear: "Clear filters", found: "models", none: "No model matches the selected filters." },
+  hu: { type: "Típus", heat: "Fűtés", capacity: "Kapacitás", material: "Anyag", size: "Méretek", price: "Ár", clear: "Szűrők törlése", found: "modell", none: "Egy modell sem felel meg a szűrőknek." },
+};
+
+const priceBands = (items: FilterableItem[]) => {
+  const prices = items.map((i) => i.basePrice).filter((p) => p > 0);
+  if (prices.length < 4) return [];
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  if (max - min < 500) return [];
+  const step = Math.ceil((max - min) / 4 / 100) * 100;
+  const fmt = (n: number) => Math.round(n).toLocaleString("sk-SK") + " €";
+  const out: { id: string; label: string }[] = [];
+  for (let i = 0; i < 4; i++) {
+    const from = min + step * i;
+    const last = i === 3;
+    const to = last ? 0 : min + step * (i + 1);
+    out.push({
+      id: from + "|" + (last ? "" : to),
+      label: last ? "> " + fmt(from) : fmt(from) + " – " + fmt(to),
+    });
+  }
+  return out;
+};
+
+const inBand = (price: number, band: string) => {
+  const parts = band.split("|");
+  const from = Number(parts[0]);
+  const to = parts[1] === "" ? Infinity : Number(parts[1]);
+  return price >= from && price < to;
+};
+
+function applyModelFilters<T extends FilterableItem>(items: T[], active: Record<string, string[]>): T[] {
+  const keys = Object.keys(active).filter((k) => (active[k] || []).length > 0);
+  if (keys.length === 0) return items;
+  return items.filter((item) =>
+    keys.every((k) => {
+      if (k === "price") return active[k].some((b) => inBand(item.basePrice, b));
+      const vals = (item.filters || {})[k as keyof ProductFilters] || [];
+      return active[k].some((v) => vals.indexOf(v) !== -1);
+    })
+  );
+}
+
+const ModelFilters = ({
+  items,
+  active,
+  onChange,
+  variant,
+}: {
+  items: FilterableItem[];
+  active: Record<string, string[]>;
+  onChange: (v: Record<string, string[]>) => void;
+  variant: string;
+}) => {
+  const { language } = useLanguage();
+  const dict = FILTER_DICT[language] || FILTER_DICT.sk;
+
+  useEffect(() => {
+    onChange({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variant]);
+
+  const groups = useMemo(() => {
+    const keys: (keyof ProductFilters)[] = ["type", "heat", "capacity", "material", "size"];
+    const out: { key: string; label: string; options: { id: string; label: string }[] }[] = [];
+    keys.forEach((k) => {
+      const set = new Set<string>();
+      items.forEach((i) => ((i.filters || {})[k] || []).forEach((v) => set.add(v)));
+      if (set.size > 1) {
+        out.push({
+          key: k,
+          label: dict[k],
+          options: Array.from(set)
+            .sort((a, b) => a.localeCompare(b))
+            .map((v) => ({ id: v, label: v })),
+        });
+      }
+    });
+    const bands = priceBands(items);
+    if (bands.length > 0) out.push({ key: "price", label: dict.price, options: bands });
+    return out;
+  }, [items, dict]);
+
+  if (groups.length === 0) return null;
+
+  const toggle = (key: string, id: string) => {
+    const cur = active[key] || [];
+    const next = cur.indexOf(id) !== -1 ? cur.filter((x) => x !== id) : cur.concat([id]);
+    onChange({ ...active, [key]: next });
+  };
+
+  const activeCount = Object.keys(active).reduce((n, k) => n + (active[k] || []).length, 0);
+  const shown = applyModelFilters(items, active).length;
+
+  return (
+    <div className="max-w-6xl mx-auto mb-8 space-y-2.5">
+      {groups.map((g) => (
+        <div key={g.key} className="flex flex-wrap items-center gap-2">
+          <span className="text-[11px] uppercase tracking-wider text-muted-foreground w-full sm:w-24 shrink-0">
+            {g.label}
+          </span>
+          {g.options.map((o) => {
+            const on = (active[g.key] || []).indexOf(o.id) !== -1;
+            return (
+              <button
+                key={o.id}
+                type="button"
+                onClick={() => toggle(g.key, o.id)}
+                className={cn(
+                  "px-3 py-1.5 text-xs font-medium rounded-full border transition-all",
+                  on
+                    ? "bg-primary/20 text-primary border-primary/40"
+                    : "bg-card/40 text-muted-foreground border-border/50 hover:text-foreground hover:border-border"
+                )}
+              >
+                {o.label}
+              </button>
+            );
+          })}
+        </div>
+      ))}
+      {activeCount > 0 && (
+        <div className="flex items-center gap-3 pt-1">
+          <span className="text-sm text-muted-foreground">
+            {shown} {dict.found}
+          </span>
+          <button type="button" onClick={() => onChange({})} className="text-xs text-primary hover:underline">
+            {dict.clear}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 type SaunaType = {
+  filters?: ProductFilters;
   id: string;
   name: string;
   dimensions: string;
@@ -501,6 +651,7 @@ type ConfigOption = {
 };
 
 type HotTubType = {
+  filters?: ProductFilters;
   id: string;
   name: string;
   dimensions: string;
@@ -832,6 +983,7 @@ const Configurator = () => {
   const [selectedHotTubType, setSelectedHotTubType] = useState<HotTubType | null>(null);
   const [selectedComboType, setSelectedComboType] = useState<ComboType | null>(null);
   const [sortOrder, setSortOrder] = useState<"price-asc" | "price-desc" | "name-asc">("price-asc");
+  const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>({});
 
   const metaTitle = useMemo(() => {
     const base = t("config.metaTitle");
@@ -1287,6 +1439,7 @@ const Configurator = () => {
       return {
         id: st.id,
         name: st.label,
+        filters: st.filters ?? {},
         dimensions: st.dimensions ?? "",
         basePrice: st.basePrice,
         image: st.image ?? preset.image,
@@ -1349,6 +1502,7 @@ const Configurator = () => {
     return apiConfig.hottub.hottubTypes.map((ht) => ({
       id: ht.id,
       name: ht.label,
+      filters: ht.filters ?? {},
       dimensions: ht.dimensions ?? "",
       basePrice: ht.basePrice,
       image: ht.image ?? hotTubImageMap[ht.id] ?? hotTub,
@@ -2376,8 +2530,15 @@ const Configurator = () => {
               </div>
             </div>
 
+            <ModelFilters
+              items={saunaTypesUI}
+              active={activeFilters}
+              onChange={setActiveFilters}
+              variant="sauna"
+            />
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {[...saunaTypesUI].sort((a, b) => {
+              {applyModelFilters(saunaTypesUI, activeFilters).slice().sort((a, b) => {
                 if (sortOrder === "price-asc") return a.basePrice - b.basePrice;
                 if (sortOrder === "price-desc") return b.basePrice - a.basePrice;
                 return a.name.localeCompare(b.name);
@@ -2542,8 +2703,15 @@ const Configurator = () => {
               </div>
             </div>
 
+            <ModelFilters
+              items={hottubTypesUI}
+              active={activeFilters}
+              onChange={setActiveFilters}
+              variant="hottub"
+            />
+
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 max-w-6xl mx-auto">
-              {[...hottubTypesUI].sort((a, b) => {
+              {applyModelFilters(hottubTypesUI, activeFilters).slice().sort((a, b) => {
                 if (sortOrder === "price-asc") return a.basePrice - b.basePrice;
                 if (sortOrder === "price-desc") return b.basePrice - a.basePrice;
                 return a.name.localeCompare(b.name);
