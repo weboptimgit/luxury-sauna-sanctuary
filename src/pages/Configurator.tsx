@@ -266,9 +266,9 @@ type ProductFilters = {
 type FilterableItem = { basePrice: number; filters?: ProductFilters };
 
 const FILTER_DICT: Record<string, Record<string, string>> = {
-  sk: { type: "Typ", heat: "Ohrev", capacity: "Kapacita", material: "Materiál", size: "Rozmery", price: "Cena", clear: "Zrušiť filtre", found: "modelov", none: "Žiadny model nezodpovedá zvoleným filtrom." },
-  en: { type: "Type", heat: "Heating", capacity: "Capacity", material: "Material", size: "Dimensions", price: "Price", clear: "Clear filters", found: "models", none: "No model matches the selected filters." },
-  hu: { type: "Típus", heat: "Fűtés", capacity: "Kapacitás", material: "Anyag", size: "Méretek", price: "Ár", clear: "Szűrők törlése", found: "modell", none: "Egy modell sem felel meg a szűrőknek." },
+  sk: { type: "Typ", heat: "Ohrev", capacity: "Kapacita", material: "Materiál", size: "Rozmery", price: "Cena", filters: "Filtre", clear: "Zrušiť filtre", found: "modelov", none: "Žiadny model nezodpovedá zvoleným filtrom." },
+  en: { type: "Type", heat: "Heating", capacity: "Capacity", material: "Material", size: "Dimensions", price: "Price", filters: "Filters", clear: "Clear filters", found: "models", none: "No model matches the selected filters." },
+  hu: { type: "Típus", heat: "Fűtés", capacity: "Kapacitás", material: "Anyag", size: "Méretek", price: "Ár", filters: "Szűrők", clear: "Szűrők törlése", found: "modell", none: "Egy modell sem felel meg a szűrőknek." },
 };
 
 const priceBands = (items: FilterableItem[]) => {
@@ -324,9 +324,11 @@ const ModelFilters = ({
 }) => {
   const { language } = useLanguage();
   const dict = FILTER_DICT[language] || FILTER_DICT.sk;
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     onChange({});
+    setOpen(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variant]);
 
@@ -363,40 +365,78 @@ const ModelFilters = ({
   const shown = applyModelFilters(items, active).length;
 
   return (
-    <div className="max-w-6xl mx-auto mb-8 space-y-2.5">
-      {groups.map((g) => (
-        <div key={g.key} className="flex flex-wrap items-center gap-2">
-          <span className="text-[11px] uppercase tracking-wider text-muted-foreground w-full sm:w-24 shrink-0">
-            {g.label}
-          </span>
-          {g.options.map((o) => {
-            const on = (active[g.key] || []).indexOf(o.id) !== -1;
-            return (
-              <button
-                key={o.id}
-                type="button"
-                onClick={() => toggle(g.key, o.id)}
+    <div className="max-w-6xl mx-auto mb-8">
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className={cn(
+            "inline-flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-colors",
+            open || activeCount > 0
+              ? "bg-primary/15 text-primary border-primary/40"
+              : "bg-card/50 text-foreground border-border/60 hover:border-primary/40"
+          )}
+        >
+          <span>{dict.filters}</span>
+          {activeCount > 0 && (
+            <span className="px-1.5 py-0.5 rounded-full bg-primary/25 text-primary text-[11px] leading-none">
+              {activeCount}
+            </span>
+          )}
+          <ChevronDown className={cn("w-4 h-4 transition-transform", open && "rotate-180")} />
+        </button>
+
+        {activeCount > 0 && (
+          <>
+            <span className="text-sm text-muted-foreground">
+              {shown} {dict.found}
+            </span>
+            <button
+              type="button"
+              onClick={() => onChange({})}
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="w-3 h-3" />
+              {dict.clear}
+            </button>
+          </>
+        )}
+      </div>
+
+      {open && (
+        <div className="mt-3 rounded-xl border border-border/50 bg-card/40 p-4 space-y-3">
+          {groups.map((g) => (
+            <div key={g.key} className="flex flex-wrap items-start gap-2">
+              <span className="text-[11px] uppercase tracking-wider text-muted-foreground w-full sm:w-24 shrink-0 sm:pt-2">
+                {g.label}
+              </span>
+              <div
                 className={cn(
-                  "px-3 py-1.5 text-xs font-medium rounded-full border transition-all",
-                  on
-                    ? "bg-primary/20 text-primary border-primary/40"
-                    : "bg-card/40 text-muted-foreground border-border/50 hover:text-foreground hover:border-border"
+                  "flex flex-wrap gap-2 flex-1",
+                  g.options.length > 12 && "max-h-32 overflow-y-auto pr-1"
                 )}
               >
-                {o.label}
-              </button>
-            );
-          })}
-        </div>
-      ))}
-      {activeCount > 0 && (
-        <div className="flex items-center gap-3 pt-1">
-          <span className="text-sm text-muted-foreground">
-            {shown} {dict.found}
-          </span>
-          <button type="button" onClick={() => onChange({})} className="text-xs text-primary hover:underline">
-            {dict.clear}
-          </button>
+                {g.options.map((o) => {
+                  const on = (active[g.key] || []).indexOf(o.id) !== -1;
+                  return (
+                    <button
+                      key={o.id}
+                      type="button"
+                      onClick={() => toggle(g.key, o.id)}
+                      className={cn(
+                        "px-3 py-1.5 text-xs font-medium rounded-full border transition-all",
+                        on
+                          ? "bg-primary/20 text-primary border-primary/40"
+                          : "bg-card/40 text-muted-foreground border-border/50 hover:text-foreground hover:border-border"
+                      )}
+                    >
+                      {o.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
